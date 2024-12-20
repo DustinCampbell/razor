@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language.Components;
+using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,7 +31,7 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
     private readonly CodeAnalysis.Workspace _workspace;
 
     private readonly CancellationTokenSource _disposeTokenSource;
-    private readonly AsyncBatchingWorkQueue<(Project?, IProjectSnapshot)> _workQueue;
+    private readonly AsyncBatchingWorkQueue<(ProjectId?, ProjectKey)> _workQueue;
 
     private WorkspaceChangedListener? _workspaceChangedListener;
 
@@ -56,7 +57,7 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
         _options = options;
 
         _disposeTokenSource = new();
-        _workQueue = new AsyncBatchingWorkQueue<(Project?, IProjectSnapshot)>(
+        _workQueue = new AsyncBatchingWorkQueue<(ProjectId?, ProjectKey)>(
             delay,
             ProcessBatchAsync,
             _disposeTokenSource.Token);
@@ -85,16 +86,24 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
         _disposeTokenSource.Dispose();
     }
 
-    private ValueTask ProcessBatchAsync(ImmutableArray<(Project? Project, IProjectSnapshot ProjectSnapshot)> items, CancellationToken token)
+    private ValueTask ProcessBatchAsync(ImmutableArray<(ProjectId? ProjectId, ProjectKey ProjectKey)> items, CancellationToken token)
     {
-        foreach (var (project, projectSnapshot) in items.GetMostRecentUniqueItems(Comparer.Instance))
+        foreach (var (projectId, projectKey) in items.GetMostRecentUniqueItems(Comparer.Instance))
         {
             if (token.IsCancellationRequested)
             {
                 return default;
             }
 
-            _generator.EnqueueUpdate(project, projectSnapshot);
+            if (!_projectManager.TryGetProject(projectKey, out var project))
+            {
+                continue;
+            }
+
+            // Note: Passing a null ProjectId to Solution.GetProject returns null.
+            var workspaceProject = _workspace.CurrentSolution.GetProject(projectId);
+
+            _generator.EnqueueUpdate(workspaceProject, project);
         }
 
         return default;
@@ -247,7 +256,7 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
                     {
                         if (TryGetProjectSnapshot(project, out var projectSnapshot))
                         {
-                            EnqueueUpdate(project: null, projectSnapshot);
+                            EnqueueUpdate(projectId: null, projectSnapshot);
                         }
                     }
 
@@ -328,7 +337,7 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
         {
             if (TryGetProjectSnapshot(project, out var projectSnapshot))
             {
-                EnqueueUpdate(project, projectSnapshot);
+                EnqueueUpdate(project.Id, projectSnapshot);
             }
         }
     }
@@ -379,7 +388,7 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
 
     private void EnqueueUpdateOnProjectAndDependencies(ProjectId projectId, Project? project, Solution solution, IProjectSnapshot projectSnapshot)
     {
-        EnqueueUpdate(project, projectSnapshot);
+        EnqueueUpdate(project?.Id, projectSnapshot);
 
         var dependencyGraph = solution.GetProjectDependencyGraph();
         var dependentProjectIds = dependencyGraph.GetProjectsThatTransitivelyDependOnThisProject(projectId);
@@ -389,14 +398,14 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
             if (solution.GetProject(dependentProjectId) is { } dependentProject &&
                 TryGetProjectSnapshot(dependentProject, out var dependentProjectSnapshot))
             {
-                EnqueueUpdate(dependentProject, dependentProjectSnapshot);
+                EnqueueUpdate(dependentProject.Id, dependentProjectSnapshot);
             }
         }
     }
 
-    private void EnqueueUpdate(Project? project, IProjectSnapshot projectSnapshot)
+    private void EnqueueUpdate(ProjectId? projectId, IProjectSnapshot projectSnapshot)
     {
-        _workQueue.AddWork((project, projectSnapshot));
+        _workQueue.AddWork((projectId, projectSnapshot.Key));
     }
 
     private bool TryGetProjectSnapshot(Project? project, [NotNullWhen(true)] out IProjectSnapshot? projectSnapshot)

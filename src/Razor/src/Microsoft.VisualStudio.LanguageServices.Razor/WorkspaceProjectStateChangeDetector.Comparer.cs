@@ -2,15 +2,14 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Razor;
-using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
 namespace Microsoft.VisualStudio.Razor;
 
 internal partial class WorkspaceProjectStateChangeDetector
 {
-    private sealed class Comparer : IEqualityComparer<(Project?, IProjectSnapshot)>
+    private sealed class Comparer : IEqualityComparer<(ProjectId?, ProjectKey)>
     {
         public static readonly Comparer Instance = new();
 
@@ -18,19 +17,19 @@ internal partial class WorkspaceProjectStateChangeDetector
         {
         }
 
-        public bool Equals((Project?, IProjectSnapshot) x, (Project?, IProjectSnapshot) y)
+        public bool Equals((ProjectId?, ProjectKey) x, (ProjectId?, ProjectKey) y)
         {
-            var (_, snapshotX) = x;
-            var (_, snapshotY) = y;
+            var (_, keyX) = x;
+            var (_, keyY) = y;
 
-            return FilePathComparer.Instance.Equals(snapshotX.Key.Id, snapshotY.Key.Id);
+            return keyX.Equals(keyY);
         }
 
-        public int GetHashCode((Project?, IProjectSnapshot) obj)
+        public int GetHashCode((ProjectId?, ProjectKey) obj)
         {
-            var (_, snapshot) = obj;
+            var (_, key) = obj;
 
-            return FilePathComparer.Instance.GetHashCode(snapshot.Key.Id);
+            return key.GetHashCode();
         }
     }
 }

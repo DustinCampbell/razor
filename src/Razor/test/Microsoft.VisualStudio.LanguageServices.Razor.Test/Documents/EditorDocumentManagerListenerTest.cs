@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.AspNetCore.Razor.Test.Common.Editor;
-using Microsoft.AspNetCore.Razor.Test.Common.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.VisualStudio;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor;
@@ -180,7 +179,7 @@ public class EditorDocumentManagerListenerTest(ITestOutputHelper testOutput) : V
 
         var projectFilePath = "/Path/to/project.csproj";
         var project = StrictMock.Of<IProjectSnapshot>(p =>
-            p.Key == TestProjectKey.Create("/Path/to/obj") &&
+            p.Key == new ProjectKey("/Path/to/obj") &&
             p.FilePath == projectFilePath);
 
         // Act

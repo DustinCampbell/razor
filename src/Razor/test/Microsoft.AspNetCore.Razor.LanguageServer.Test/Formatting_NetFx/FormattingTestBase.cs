@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Mvc.Razor.Extensions;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.IntegrationTests;
 using Microsoft.AspNetCore.Razor.LanguageServer.Hosting;
+using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
-using Microsoft.AspNetCore.Razor.Test.Common.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -339,7 +339,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
             .Returns(path);
         documentSnapshot
             .Setup(d => d.Project.Key)
-            .Returns(TestProjectKey.Create("/obj"));
+            .Returns(new ProjectKey("/obj"));
         documentSnapshot
             .Setup(d => d.TargetPath)
             .Returns(path);

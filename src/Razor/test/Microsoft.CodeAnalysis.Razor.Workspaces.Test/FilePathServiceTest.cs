@@ -3,7 +3,6 @@
 
 using System;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
-using Microsoft.AspNetCore.Razor.Test.Common.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Xunit;
 
@@ -17,7 +16,7 @@ public class FilePathServiceTest
     public void GetRazorCSharpFilePath_ReturnsExpectedPath(bool includeProjectKey, string expected)
     {
         // Arrange
-        var projectKey = TestProjectKey.Create("Hello");
+        var projectKey = new ProjectKey("Hello");
         var filePathService = new TestFilePathService(new TestLanguageServerFeatureOptions(includeProjectKeyInGeneratedFilePath: includeProjectKey));
 
         // Act

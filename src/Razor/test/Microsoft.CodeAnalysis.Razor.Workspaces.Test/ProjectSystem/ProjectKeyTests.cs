@@ -1,8 +1,11 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
@@ -11,13 +14,8 @@ using Xunit.Abstractions;
 
 namespace Microsoft.CodeAnalysis.Razor.Workspaces.Test.ProjectSystem;
 
-public class ProjectKeyTests : WorkspaceTestBase
+public class ProjectKeyTests(ITestOutputHelper testOutput) : WorkspaceTestBase(testOutput)
 {
-    public ProjectKeyTests(ITestOutputHelper testOutput)
-    : base(testOutput)
-    {
-    }
-
     [Theory]
     [InlineData("/path/to/dir", @"\path\to\dir")]
     [InlineData("/path%2Fto/dir", @"\path\to\dir")]
@@ -102,5 +100,27 @@ public class ProjectKeyTests : WorkspaceTestBase
         var razorKey = TestProjectKey.Create(intermediateOutputPath);
 
         Assert.Equal(roslynKey, razorKey);
+    }
+
+    [Fact]
+    public void ComparisonTest()
+    {
+        IEnumerable<ProjectKey> expected = [
+            new("/c:/path/razor/project"),
+            new("/c:/razor/project"),
+            new("/d:/path/blazor/project"),
+            new("/d:/path/razor/project"),
+            ProjectKey.Unknown];
+
+        IEnumerable<ProjectKey> keys = [
+            new("/d:/path/blazor/project"),
+            new("/c:/path/razor/project"),
+            ProjectKey.Unknown,
+            new("/d:/path/razor/project"),
+            new("/c:/razor/project")];
+
+        var actual = keys.OrderBy(x => x);
+
+        Assert.Equal(expected, actual);
     }
 }

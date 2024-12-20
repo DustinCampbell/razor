@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
-using Microsoft.AspNetCore.Razor.Test.Common.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Xunit;
@@ -23,8 +22,8 @@ public class ProjectKeyTests(ITestOutputHelper testOutput) : WorkspaceTestBase(t
     [InlineData(@"\path%5Cto\dir\", @"\path\to\dir")]
     public void EqualityTests(string id1, string id2)
     {
-        var key1 = TestProjectKey.Create(id1);
-        var key2 = TestProjectKey.Create(id2);
+        var key1 = new ProjectKey(id1);
+        var key2 = new ProjectKey(id2);
 
         // I'm covering all bases out of a complete lack of trust in compilers
         Assert.True(key1 == key2);
@@ -48,8 +47,8 @@ public class ProjectKeyTests(ITestOutputHelper testOutput) : WorkspaceTestBase(t
     [InlineData(@"\PATH\TO\DIR\", @"\path\to\dir")]
     public void EqualityTests_Windows(string id1, string id2)
     {
-        var key1 = TestProjectKey.Create(id1);
-        var key2 = TestProjectKey.Create(id2);
+        var key1 = new ProjectKey(id1);
+        var key2 = new ProjectKey(id2);
 
         // I'm covering all bases out of a complete lack of trust in compilers
         Assert.True(key1 == key2);
@@ -72,8 +71,8 @@ public class ProjectKeyTests(ITestOutputHelper testOutput) : WorkspaceTestBase(t
     [InlineData(@"\PATH\TO\OTHER\DIR\", @"\path\to\dir")]
     public void InequalityTests(string id1, string id2)
     {
-        var key1 = TestProjectKey.Create(id1);
-        var key2 = TestProjectKey.Create(id2);
+        var key1 = new ProjectKey(id1);
+        var key2 = new ProjectKey(id2);
 
         // I'm covering all bases out of a complete lack of trust in compilers
         Assert.False(key1 == key2);
@@ -93,13 +92,18 @@ public class ProjectKeyTests(ITestOutputHelper testOutput) : WorkspaceTestBase(t
         var intermediateOutputPath = @"c:\project\obj";
         var assemblyPath = Path.Combine(intermediateOutputPath, "project.dll");
 
-        var projectInfo = ProjectInfo.Create(ProjectId.CreateNewId(), VersionStamp.Default, "Project", "Assembly", "C#").WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(assemblyPath));
-        var project = Workspace.CurrentSolution.AddProject(projectInfo).GetProject(projectInfo.Id).AssumeNotNull();
+        var projectInfo = ProjectInfo
+            .Create(ProjectId.CreateNewId(), VersionStamp.Default, "Project", "Assembly", "C#")
+            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(assemblyPath));
+        var project = Workspace.CurrentSolution
+            .AddProject(projectInfo)
+            .GetRequiredProject(projectInfo.Id);
+
+        var razorKey = new ProjectKey(intermediateOutputPath);
+        Assert.True(razorKey.Matches(project));
 
         var roslynKey = project.ToProjectKey();
-        var razorKey = TestProjectKey.Create(intermediateOutputPath);
-
-        Assert.Equal(roslynKey, razorKey);
+        Assert.Equal(razorKey, roslynKey);
     }
 
     [Fact]

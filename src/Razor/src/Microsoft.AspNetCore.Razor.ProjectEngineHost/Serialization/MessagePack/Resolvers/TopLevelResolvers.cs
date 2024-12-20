@@ -8,10 +8,13 @@ namespace Microsoft.AspNetCore.Razor.Serialization.MessagePack.Resolvers;
 
 internal static class TopLevelResolvers
 {
-    public static readonly ImmutableArray<IFormatterResolver> All = ImmutableArray.Create<IFormatterResolver>(
+    public static readonly ImmutableArray<IFormatterResolver> All =
+    [
         ChecksumResolver.Instance,
+        CSharpParseOptionsResolver.Instance,
         FetchTagHelpersResultResolver.Instance,
         ProjectSnapshotHandleResolver.Instance,
         RazorProjectInfoResolver.Instance,
-        TagHelperDeltaResultResolver.Instance);
+        TagHelperDeltaResultResolver.Instance,
+    ];
 }

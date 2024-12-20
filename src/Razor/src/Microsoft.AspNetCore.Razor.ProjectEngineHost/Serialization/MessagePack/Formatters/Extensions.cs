@@ -1,6 +1,9 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Runtime.InteropServices;
 using MessagePack;
 
 namespace Microsoft.AspNetCore.Razor.Serialization.MessagePack.Formatters;
@@ -20,6 +23,50 @@ internal static class Extensions
         {
             throw new MessagePackSerializationException($"Expected {expectedCount} values, but there were {count}");
         }
+    }
+
+    public delegate T MessagePackValueReader<T>(ref MessagePackReader reader);
+
+    public static ImmutableArray<T> ReadArray<T>(
+        this ref MessagePackReader reader,
+        ref int countRemaining,
+        MessagePackValueReader<T> valueReader)
+    {
+        return reader.ReadArray(ref countRemaining, valueSize: 1, valueReader);
+    }
+
+    public static ImmutableArray<KeyValuePair<TKey, TValue>> ReadArray<TKey, TValue>(
+        this ref MessagePackReader reader,
+        ref int countRemaining,
+        MessagePackValueReader<KeyValuePair<TKey, TValue>> valueReader)
+    {
+        return reader.ReadArray(ref countRemaining, valueSize: 2, valueReader);
+    }
+
+    public static ImmutableArray<T> ReadArray<T>(
+        this ref MessagePackReader reader,
+        ref int countRemaining,
+        int valueSize,
+        MessagePackValueReader<T> valueReader)
+    {
+        ArgHelper.ThrowIfLessThanOrEqual(countRemaining, 0);
+        ArgHelper.ThrowIfLessThan(valueSize, 1);
+
+        var length = reader.ReadInt32();
+        countRemaining--;
+
+        Assumed.True(countRemaining >= length * valueSize);
+
+        var array = new T[length];
+
+        for (var i = 0; i < length; i++)
+        {
+            array[i] = valueReader(ref reader);
+        }
+
+        countRemaining -= length * valueSize;
+
+        return ImmutableCollectionsMarshal.AsImmutableArray(array);
     }
 
     public static void Serialize<T>(this ref MessagePackWriter writer, T? value, MessagePackSerializerOptions options)

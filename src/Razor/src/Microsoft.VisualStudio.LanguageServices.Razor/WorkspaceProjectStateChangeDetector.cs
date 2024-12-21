@@ -101,7 +101,12 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
             }
 
             // Note: Passing a null ProjectId to Solution.GetProject returns null.
+            // If projectId is not null, we expect to find a project in the workspace.
             var workspaceProject = _workspace.CurrentSolution.GetProject(projectId);
+            if ((workspaceProject is null) != (projectId is null))
+            {
+                continue;
+            }
 
             _generator.EnqueueUpdate(workspaceProject, project);
         }
@@ -161,7 +166,7 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
                     if (IsRazorFileOrRazorVirtual(newDocument))
                     {
                         EnqueueUpdateOnProjectAndDependencies(project, newSolution);
-                        return;
+                        break;
                     }
 
                     // We now know we're not operating directly on a Razor file. However, it's possible the user
@@ -186,13 +191,13 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
 
                     if (removedDocument.FilePath is null)
                     {
-                        return;
+                        break;
                     }
 
                     if (IsRazorFileOrRazorVirtual(removedDocument))
                     {
                         EnqueueUpdateOnProjectAndDependencies(project, newSolution);
-                        return;
+                        break;
                     }
 
                     // We now know we're not operating directly on a Razor file. However, it's possible the user
@@ -222,14 +227,14 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
 
                     if (document.FilePath is null)
                     {
-                        return;
+                        break;
                     }
 
                     if (IsRazorFileOrRazorVirtual(document))
                     {
                         var newProject = newSolution.GetRequiredProject(projectId);
                         EnqueueUpdateOnProjectAndDependencies(newProject, newSolution);
-                        return;
+                        break;
                     }
 
                     // We now know we're not operating directly on a Razor file. However, it's possible the user
@@ -435,14 +440,26 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
             await instance._workQueue.WaitUntilCurrentBatchCompletesAsync();
         }
 
-        public Task ListenForWorkspaceChangesAsync(params WorkspaceChangeKind[] kinds)
+        public async Task DrainBatchesAsync()
+        {
+            var task = instance._workQueue.WaitUntilCurrentBatchCompletesAsync();
+
+            while (!task.IsCompleted)
+            {
+                await task;
+
+                task = instance._workQueue.WaitUntilCurrentBatchCompletesAsync();
+            }
+        }
+
+        public Task ListenForWorkspaceChangesAsync(params ImmutableArray<WorkspaceChangeKind> kinds)
         {
             if (instance._workspaceChangedListener is not null)
             {
                 throw new InvalidOperationException($"There's already a {nameof(WorkspaceChangedListener)} installed.");
             }
 
-            var listener = new WorkspaceChangedListener(kinds.ToImmutableArray());
+            var listener = new WorkspaceChangedListener(instance, kinds);
             instance._workspaceChangedListener = listener;
 
             return listener.Task;
@@ -454,8 +471,11 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
         }
     }
 
-    private class WorkspaceChangedListener(ImmutableArray<WorkspaceChangeKind> kinds)
+    private sealed class WorkspaceChangedListener(
+        WorkspaceProjectStateChangeDetector instance,
+        ImmutableArray<WorkspaceChangeKind> kinds)
     {
+        private readonly WorkspaceProjectStateChangeDetector _instance = instance;
         private readonly ImmutableArray<WorkspaceChangeKind> _kinds = kinds;
         private readonly TaskCompletionSource<bool> _completionSource = new();
         private int _index;
@@ -479,6 +499,7 @@ internal partial class WorkspaceProjectStateChangeDetector : IRazorStartupServic
             if (_index == _kinds.Length)
             {
                 _completionSource.TrySetResult(true);
+                _instance._workspaceChangedListener = null;
             }
         }
     }

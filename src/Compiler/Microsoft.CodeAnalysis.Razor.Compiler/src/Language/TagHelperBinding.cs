@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -68,8 +67,7 @@ internal sealed class TagHelperBinding
             {
                 foreach (var descriptor in descriptors)
                 {
-                    if (!descriptor.Metadata.TryGetValue(TagHelperMetadata.Common.ClassifyAttributesOnly, out var value) ||
-                        !string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase))
+                    if (!descriptor.ClassifyAttributesOnly)
                     {
                         return false;
                     }

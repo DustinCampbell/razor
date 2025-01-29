@@ -141,11 +141,7 @@ internal static class ComponentMetadata
         /// </summary>
         public const string TypeParameterWithAttributesKey = "Component.TypeParameterWithAttributes";
 
-        public const string NameMatchKey = "Components.NameMatch";
-
         public const string HasRenderModeDirectiveKey = "Components.HasRenderModeDirective";
-
-        public const string FullyQualifiedNameMatch = "Components.FullyQualifiedNameMatch";
 
         public const string InitOnlyProperty = "Components.InitOnlyProperty";
 

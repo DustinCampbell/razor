@@ -359,7 +359,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
                     continue;
                 }
 
-                if (tagHelper.IsComponentFullyQualifiedNameMatch)
+                if (tagHelper.UseFullyQualifiedNameMatch)
                 {
                     // If the component descriptor matches for a fully qualified name, using directives shouldn't matter.
                     AddMatch(tagHelper);
@@ -486,7 +486,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
                         // Add all tag helpers that have an empty type namespace
                         foreach (var tagHelper in componentsWithEmptyTypeNamespace)
                         {
-                            Debug.Assert(!tagHelper.IsComponentFullyQualifiedNameMatch, "We've already processed these.");
+                            Debug.Assert(!tagHelper.UseFullyQualifiedNameMatch, "We've already processed these.");
 
                             AddMatch(tagHelper);
                         }
@@ -499,7 +499,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
                         {
                             foreach (var tagHelper in tagHelpers)
                             {
-                                Debug.Assert(!tagHelper.IsComponentFullyQualifiedNameMatch, "We've already processed these.");
+                                Debug.Assert(!tagHelper.UseFullyQualifiedNameMatch, "We've already processed these.");
 
                                 AddMatch(tagHelper);
                             }

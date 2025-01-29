@@ -1301,8 +1301,8 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         bool fullyQualified = false,
         bool childContent = false)
     {
-        kind ??= ComponentMetadata.Component.TagHelperKind;
-        return CreateDescriptor(kind, tagName, typeName, assemblyName, typeNamespace, typeNameIdentifier, attributes, ruleBuilders, fullyQualified, childContent);
+        kind ??= childContent ? ComponentMetadata.ChildContent.TagHelperKind : ComponentMetadata.Component.TagHelperKind;
+        return CreateDescriptor(kind, tagName, typeName, assemblyName, typeNamespace, typeNameIdentifier, attributes, ruleBuilders, fullyQualified);
     }
     #endregion
 
@@ -1315,8 +1315,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         string typeNameIdentifier,
         IEnumerable<Action<BoundAttributeDescriptorBuilder>> attributes = null,
         IEnumerable<Action<TagMatchingRuleDescriptorBuilder>> ruleBuilders = null,
-        bool componentFullyQualified = false,
-        bool componentChildContent = false)
+        bool componentFullyQualified = false)
     {
         var builder = TagHelperDescriptorBuilder.Create(kind, typeName, assemblyName);
         using var metadata = builder.GetMetadataBuilder();
@@ -1352,11 +1351,6 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         if (componentFullyQualified)
         {
             builder.UseFullyQualifiedNameMatch = true;
-        }
-
-        if (componentChildContent)
-        {
-            metadata.Add(SpecialKind(ComponentMetadata.ChildContent.TagHelperKind));
         }
 
         builder.SetMetadata(metadata.Build());

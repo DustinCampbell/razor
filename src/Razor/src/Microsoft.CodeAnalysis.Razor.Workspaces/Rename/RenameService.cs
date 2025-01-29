@@ -192,7 +192,7 @@ internal class RenameService(
         foreach (var originTagHelper in originTagHelpers)
         {
             var editedName = newName;
-            if (originTagHelper.IsComponentFullyQualifiedNameMatch)
+            if (originTagHelper.UseFullyQualifiedNameMatch)
             {
                 // Fully qualified binding, our "new name" needs to be fully qualified.
                 var @namespace = originTagHelper.GetTypeNamespace();

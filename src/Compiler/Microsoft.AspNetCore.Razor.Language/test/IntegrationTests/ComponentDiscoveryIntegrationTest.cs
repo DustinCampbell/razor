@@ -62,13 +62,13 @@ namespace Test.AnotherNamespace
         Assert.Contains(context.TagHelpers, t =>
         {
             return t.Name == "Test.AnotherNamespace.MyComponent" &&
-                t.IsComponentFullyQualifiedNameMatch;
+                t.UseFullyQualifiedNameMatch;
         });
 
         Assert.DoesNotContain(context.TagHelpers, t =>
         {
             return t.Name == "Test.AnotherNamespace.MyComponent" &&
-                !t.IsComponentFullyQualifiedNameMatch;
+                !t.UseFullyQualifiedNameMatch;
         });
     }
 

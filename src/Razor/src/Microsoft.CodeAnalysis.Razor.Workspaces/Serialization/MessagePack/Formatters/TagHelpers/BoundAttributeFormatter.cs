@@ -18,9 +18,8 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
 
     public override BoundAttributeDescriptor Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(12);
+        reader.ReadArrayHeaderAndVerify(11);
 
-        var kind = (TagHelperKind)reader.ReadByte();
         var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var typeName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var flags = (BoundAttributeFlags)reader.ReadInt32();
@@ -35,7 +34,7 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
         var diagnostics = reader.Deserialize<ImmutableArray<RazorDiagnostic>>(options);
 
         return new BoundAttributeDescriptor(
-            kind, name!, typeName, flags,
+            name!, typeName, flags,
             indexerNamePrefix, indexerTypeName,
             documentationObject, displayName, containingType,
             parameters, metadata, diagnostics);
@@ -43,9 +42,8 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
 
     public override void Serialize(ref MessagePackWriter writer, BoundAttributeDescriptor value, SerializerCachingOptions options)
     {
-        writer.WriteArrayHeader(12);
+        writer.WriteArrayHeader(11);
 
-        writer.Write((byte)value.Kind);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Name, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.TypeName, options);
         writer.Write((int)value.Flags);
@@ -62,9 +60,8 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
 
     public override void Skim(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(12);
+        reader.ReadArrayHeaderAndVerify(11);
 
-        reader.Skip(); // Kind;
         CachedStringFormatter.Instance.Skim(ref reader, options); // Name
         CachedStringFormatter.Instance.Skim(ref reader, options); // TypeName
         reader.Skip(); // Flags

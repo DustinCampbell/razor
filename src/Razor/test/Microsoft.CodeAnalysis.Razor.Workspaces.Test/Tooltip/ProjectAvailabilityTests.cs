@@ -4,7 +4,6 @@
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Roslyn.Test.Utilities;
@@ -30,7 +29,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
     [Fact]
     public async Task GetProjectAvailabilityText_OneProject_ReturnsNull()
     {
-        var builder = TagHelperDescriptorBuilder.Create(ComponentMetadata.Component.TagHelperKind, "TestTagHelper", "TestAssembly");
+        var builder = TagHelperDescriptorBuilder.Create(TagHelperKind.Component, "TestTagHelper", "TestAssembly");
         builder.TagMatchingRule(rule => rule.TagName = "Test");
         var tagHelperTypeName = "TestNamespace.TestTagHelper";
         builder.Metadata(TypeName(tagHelperTypeName));
@@ -68,7 +67,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
     [Fact]
     public async Task GetProjectAvailabilityText_AvailableInAllProjects_ReturnsNull()
     {
-        var builder = TagHelperDescriptorBuilder.Create(ComponentMetadata.Component.TagHelperKind, "TestTagHelper", "TestAssembly");
+        var builder = TagHelperDescriptorBuilder.Create(TagHelperKind.Component, "TestTagHelper", "TestAssembly");
         builder.TagMatchingRule(rule => rule.TagName = "Test");
         var tagHelperTypeName = "TestNamespace.TestTagHelper";
         builder.Metadata(TypeName(tagHelperTypeName));
@@ -117,7 +116,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
     [Fact]
     public async Task GetProjectAvailabilityText_NotAvailableInAllProjects_ReturnsText()
     {
-        var builder = TagHelperDescriptorBuilder.Create(ComponentMetadata.Component.TagHelperKind, "TestTagHelper", "TestAssembly");
+        var builder = TagHelperDescriptorBuilder.Create(TagHelperKind.Component, "TestTagHelper", "TestAssembly");
         builder.TagMatchingRule(rule => rule.TagName = "Test");
         var tagHelperTypeName = "TestNamespace.TestTagHelper";
         builder.Metadata(TypeName(tagHelperTypeName));

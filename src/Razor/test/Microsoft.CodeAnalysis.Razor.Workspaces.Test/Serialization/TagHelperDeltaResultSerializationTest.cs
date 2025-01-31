@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using MessagePack;
 using MessagePack.Resolvers;
-using Microsoft.AspNetCore.Mvc.Razor.Extensions;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.CodeAnalysis.Razor.Serialization.MessagePack.Resolvers;
@@ -54,7 +53,7 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
     {
         // Arrange
         var descriptor = CreateTagHelperDescriptor(
-            kind: TagHelperConventions.DefaultKind,
+            kind: TagHelperKind.Default,
             tagName: "tag-name",
             typeName: "type name",
             assemblyName: "assembly name",
@@ -104,7 +103,7 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
     {
         // Arrange
         var descriptor = CreateTagHelperDescriptor(
-            kind: ViewComponentTagHelperConventions.Kind,
+            kind: TagHelperKind.ViewComponent,
             tagName: "tag-name",
             typeName: "type name",
             assemblyName: "assembly name",
@@ -154,7 +153,7 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
     {
         // Arrange
         var descriptor = CreateTagHelperDescriptor(
-            kind: TagHelperConventions.DefaultKind,
+            kind: TagHelperKind.Default,
             tagName: "tag-name",
             typeName: "type name",
             assemblyName: "assembly name",
@@ -202,7 +201,7 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
     {
         // Arrange
         var descriptor = CreateTagHelperDescriptor(
-            kind: TagHelperConventions.DefaultKind,
+            kind: TagHelperKind.Default,
             tagName: "tag-name",
             typeName: "type name",
             assemblyName: "assembly name",
@@ -247,7 +246,7 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
     }
 
     private static TagHelperDescriptor CreateTagHelperDescriptor(
-        string kind,
+        TagHelperKind kind,
         string tagName,
         string typeName,
         string assemblyName,

@@ -21,13 +21,22 @@ internal static class RazorFileKinds
     internal const RazorFileKind MaxValue = RazorFileKind.ComponentImport;
 
     public static bool IsComponent(string fileKind)
-        => FromString(fileKind) is RazorFileKind.Component or RazorFileKind.ComponentImport;
+        => IsComponent(FromString(fileKind));
+
+    public static bool IsComponent(RazorFileKind fileKind)
+        => fileKind is RazorFileKind.Component or RazorFileKind.ComponentImport;
 
     public static bool IsComponentImport(string fileKind)
-        => FromString(fileKind) is RazorFileKind.ComponentImport;
+        => IsComponentImport(FromString(fileKind));
+
+    public static bool IsComponentImport(RazorFileKind fileKind)
+        => fileKind is RazorFileKind.ComponentImport;
 
     public static bool IsLegacy(string fileKind)
         => FromString(fileKind) is RazorFileKind.Legacy;
+
+    public static bool IsLegacy(RazorFileKind fileKind)
+        => fileKind is RazorFileKind.Legacy;
 
     public static RazorFileKind FromString(string? fileKind)
         => fileKind is not null && s_fileKindMap.TryGetValue(fileKind, out var result)

@@ -196,7 +196,7 @@ public sealed class RazorProjectEngine
         var codeDocument = RazorCodeDocument.Create(source, importSources, parserOptions, codeGenerationOptions);
 
         codeDocument.SetTagHelpers(tagHelpers);
-        codeDocument.SetFileKind(fileKind);
+        codeDocument.SetFileKind(RazorFileKinds.FromString(fileKind));
 
         if (cssScope != null)
         {
@@ -246,7 +246,7 @@ public sealed class RazorProjectEngine
         var codeDocument = RazorCodeDocument.Create(sourceDocument, importSources, parserOptions, codeGenerationOptions);
 
         codeDocument.SetTagHelpers(tagHelpers);
-        codeDocument.SetFileKind(fileKind);
+        codeDocument.SetFileKind(RazorFileKinds.FromString(fileKind));
 
         return codeDocument;
     }

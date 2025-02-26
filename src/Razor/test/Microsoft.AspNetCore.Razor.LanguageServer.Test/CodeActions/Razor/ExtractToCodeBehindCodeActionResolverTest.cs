@@ -64,7 +64,7 @@ public class ExtractToCodeBehindCodeActionResolverTest(ITestOutputHelper testOut
             @code { private int x = 1; }
             """;
         var codeDocument = CreateCodeDocument(contents);
-        codeDocument.SetFileKind(FileKinds.Legacy);
+        codeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var documentContext = CreateDocumentContext(documentPath, codeDocument);
         var roslynCodeActionHelpers = new RoslynCodeActionHelpers(_languageServer);
@@ -718,7 +718,7 @@ public class ExtractToCodeBehindCodeActionResolverTest(ITestOutputHelper testOut
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty, (builder) => builder.SetRootNamespace("test.Pages"));
 
         var codeDocument = projectEngine.Process(projectItem);
-        codeDocument.SetFileKind(FileKinds.Component);
+        codeDocument.SetFileKind(RazorFileKind.Component);
 
         return codeDocument;
     }

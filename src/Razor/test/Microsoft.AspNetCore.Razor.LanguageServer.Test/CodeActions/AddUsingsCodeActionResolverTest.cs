@@ -173,7 +173,7 @@ public class AddUsingsCodeActionResolverTest(ITestOutputHelper testOutput) : Lan
             ModelDirective.Register(builder);
         });
         var codeDocument = projectEngine.Process(projectItem);
-        codeDocument.SetFileKind(FileKinds.Legacy);
+        codeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var documentContext = CreateDocumentContext(documentPath, codeDocument);
         var resolver = new AddUsingsCodeActionResolver();
@@ -394,7 +394,7 @@ public class AddUsingsCodeActionResolverTest(ITestOutputHelper testOutput) : Lan
         var projectItem = new TestRazorProjectItem(filePath, filePath, fileName) { Content = text };
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty, (builder) => PageDirective.Register(builder));
         var codeDocument = projectEngine.Process(projectItem);
-        codeDocument.SetFileKind(FileKinds.Component);
+        codeDocument.SetFileKind(RazorFileKind.Component);
         return codeDocument;
     }
 }

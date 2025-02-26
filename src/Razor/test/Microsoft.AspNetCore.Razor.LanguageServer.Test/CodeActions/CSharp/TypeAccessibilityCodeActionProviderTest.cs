@@ -43,7 +43,7 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         };
 
         var context = CreateRazorCodeActionContext(request, absoluteIndex: 0, documentPath, contents, new SourceSpan(0, 0));
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new TypeAccessibilityCodeActionProvider();
         ImmutableArray<RazorVSInternalCodeAction> csharpCodeActions =
@@ -97,7 +97,7 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         };
 
         var context = CreateRazorCodeActionContext(request, absoluteIndex: 0, documentPath, contents, new SourceSpan(0, 0), supportsCodeActionResolve: false);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new TypeAccessibilityCodeActionProvider();
         ImmutableArray<RazorVSInternalCodeAction> csharpCodeActions =
@@ -138,7 +138,7 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         };
 
         var context = CreateRazorCodeActionContext(request, absoluteIndex: 0, documentPath, contents, new SourceSpan(0, 0));
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new TypeAccessibilityCodeActionProvider();
         var csharpCodeActions = ImmutableArray<RazorVSInternalCodeAction>.Empty;
@@ -188,7 +188,7 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         };
 
         var context = CreateRazorCodeActionContext(request, absoluteIndex: 0, documentPath, contents, new SourceSpan(8, 4), supportsCodeActionResolve: false);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new TypeAccessibilityCodeActionProvider();
         ImmutableArray<RazorVSInternalCodeAction> csharpCodeActions =
@@ -246,7 +246,7 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         };
 
         var context = CreateRazorCodeActionContext(request, absoluteIndex: 8, documentPath, contents, new SourceSpan(8, 4), supportsCodeActionResolve: true);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new TypeAccessibilityCodeActionProvider();
         ImmutableArray<RazorVSInternalCodeAction> csharpCodeActions =
@@ -297,7 +297,7 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         };
 
         var context = CreateRazorCodeActionContext(request, absoluteIndex: 0, documentPath, contents, new SourceSpan(8, 4), supportsCodeActionResolve: true);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new TypeAccessibilityCodeActionProvider();
         ImmutableArray<RazorVSInternalCodeAction> csharpCodeActions =
@@ -371,7 +371,7 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         };
 
         var context = CreateRazorCodeActionContext(request, absoluteIndex: 0, documentPath, contents, new SourceSpan(8, 4), supportsCodeActionResolve: false);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new TypeAccessibilityCodeActionProvider();
         ImmutableArray<RazorVSInternalCodeAction> csharpCodeActions =

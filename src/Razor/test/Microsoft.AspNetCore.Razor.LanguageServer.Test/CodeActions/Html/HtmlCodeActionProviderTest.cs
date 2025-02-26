@@ -41,7 +41,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
         };
 
         var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var documentMappingService = StrictMock.Of<IEditMappingService>();
         var provider = new HtmlCodeActionProvider(documentMappingService);
@@ -73,7 +73,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
         };
 
         var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var remappedEdit = new WorkspaceEdit
         {

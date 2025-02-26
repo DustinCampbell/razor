@@ -71,7 +71,7 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
         };
 
         var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(0, 0));
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new ComponentAccessibilityCodeActionProvider(new FileSystem());
 

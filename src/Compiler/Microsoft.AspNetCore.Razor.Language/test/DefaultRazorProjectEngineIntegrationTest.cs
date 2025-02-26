@@ -150,11 +150,11 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), "test", importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), FileKinds.ComponentImport, importSources: default, tagHelpers: null);
 
         // Assert
         var actual = codeDocument.GetFileKind();
-        Assert.Equal("test", actual);
+        Assert.Equal(RazorFileKind.ComponentImport, actual);
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class DefaultRazorProjectEngineIntegrationTest
 
         // Assert
         var actual = codeDocument.GetFileKind();
-        Assert.Same(FileKinds.Legacy, actual);
+        Assert.Equal(RazorFileKind.Legacy, actual);
     }
 
     [Fact]
@@ -218,7 +218,7 @@ public class DefaultRazorProjectEngineIntegrationTest
 
         // Assert
         var actual = codeDocument.GetFileKind();
-        Assert.Same(FileKinds.Component, actual);
+        Assert.Equal(RazorFileKind.Component, actual);
     }
 
     [Fact]
@@ -289,7 +289,7 @@ public class DefaultRazorProjectEngineIntegrationTest
 
         // Assert
         var actual = codeDocument.GetFileKind();
-        Assert.Same(FileKinds.Legacy, actual);
+        Assert.Equal(RazorFileKind.Legacy, actual);
     }
 
     [Fact]
@@ -305,7 +305,7 @@ public class DefaultRazorProjectEngineIntegrationTest
 
         // Assert
         var actual = codeDocument.GetFileKind();
-        Assert.Same(FileKinds.Component, actual);
+        Assert.Equal(RazorFileKind.Component, actual);
     }
 
     [Fact]

@@ -66,7 +66,7 @@ public class ExtractToComponentCodeActionProviderTest(ITestOutputHelper testOutp
         };
 
         var context = CreateRazorCodeActionContext(request, selectionSpan, documentPath, contents);
-        context.CodeDocument.SetFileKind(FileKinds.Legacy);
+        context.CodeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var provider = new ExtractToComponentCodeActionProvider();
 
@@ -623,7 +623,7 @@ public class ExtractToComponentCodeActionProviderTest(ITestOutputHelper testOutp
 
         var syntaxTree = RazorSyntaxTree.Parse(source, codeDocument.ParserOptions);
 
-        codeDocument.SetFileKind(FileKinds.Component);
+        codeDocument.SetFileKind(RazorFileKind.Component);
         codeDocument.SetSyntaxTree(syntaxTree);
 
         var documentSnapshot = new StrictMock<IDocumentSnapshot>();

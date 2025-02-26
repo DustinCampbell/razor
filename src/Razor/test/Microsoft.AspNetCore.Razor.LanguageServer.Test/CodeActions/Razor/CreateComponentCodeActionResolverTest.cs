@@ -50,7 +50,7 @@ public class CreateComponentCodeActionResolverTest(ITestOutputHelper testOutput)
         var documentPath = new Uri("c:/Test.razor");
         var contents = $"@page \"/test\"";
         var codeDocument = CreateCodeDocument(contents);
-        codeDocument.SetFileKind(FileKinds.Legacy);
+        codeDocument.SetFileKind(RazorFileKind.Legacy);
 
         var documentContext = CreateDocumentContext(documentPath, codeDocument);
         var resolver = new CreateComponentCodeActionResolver(TestLanguageServerFeatureOptions.Instance);
@@ -135,7 +135,7 @@ public class CreateComponentCodeActionResolverTest(ITestOutputHelper testOutput)
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty, (builder) => builder.SetRootNamespace("test.Pages"));
 
         var codeDocument = projectEngine.Process(projectItem);
-        codeDocument.SetFileKind(FileKinds.Component);
+        codeDocument.SetFileKind(RazorFileKind.Component);
 
         return codeDocument;
     }

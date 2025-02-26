@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
@@ -202,25 +203,32 @@ public static class RazorCodeDocumentExtensions
         document.Items[typeof(RazorCSharpDocument)] = csharp;
     }
 
-    public static string GetFileKind(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
+#nullable enable
 
-        return (string)document.Items[typeof(FileKinds)];
+    public static RazorFileKind GetFileKind(this RazorCodeDocument codeDocument)
+    {
+        ArgHelper.ThrowIfNull(codeDocument);
+
+        return codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(FileKinds), out var strongBox)
+            ? strongBox.Value
+            : RazorFileKind.None;
     }
 
-    public static void SetFileKind(this RazorCodeDocument document, string fileKind)
+    public static void SetFileKind(this RazorCodeDocument codeDocument, RazorFileKind value)
     {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
+        ArgHelper.ThrowIfNull(codeDocument);
 
-        document.Items[typeof(FileKinds)] = fileKind;
+        if (codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(FileKinds), out var strongBox))
+        {
+            strongBox.Value = value;
+        }
+        else
+        {
+            codeDocument.Items.Add(typeof(FileKinds), new StrongBox<RazorFileKind>(value));
+        }
     }
+
+#nullable disable
 
     public static string GetCssScope(this RazorCodeDocument document)
     {
@@ -360,7 +368,7 @@ public static class RazorCodeDocumentExtensions
                 appendSuffix = true;
 
                 // Empty RootNamespace is allowed only in components.
-                if (!FileKinds.IsComponent(codeDocument.GetFileKind()) && string.IsNullOrEmpty(baseNamespace))
+                if (!RazorFileKinds.IsComponent(codeDocument.GetFileKind()) && string.IsNullOrEmpty(baseNamespace))
                 {
                     @namespace = null;
                     return false;

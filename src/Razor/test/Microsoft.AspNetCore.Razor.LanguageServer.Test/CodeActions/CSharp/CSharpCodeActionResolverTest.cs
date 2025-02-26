@@ -180,7 +180,7 @@ public class CSharpCodeActionResolverTest(ITestOutputHelper testOutput) : Langua
         var projectItem = new TestRazorProjectItem(documentPath) { Content = text };
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty, (builder) => PageDirective.Register(builder));
         var codeDocument = projectEngine.Process(projectItem);
-        codeDocument.SetFileKind(FileKinds.Component);
+        codeDocument.SetFileKind(RazorFileKind.Component);
         return codeDocument;
     }
 }

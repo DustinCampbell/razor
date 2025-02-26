@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Razor.Language.Components;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-public static class RazorFileKinds
+internal static class RazorFileKinds
 {
     private static readonly FrozenDictionary<string, RazorFileKind> s_fileKindMap = new Dictionary<string, RazorFileKind>(StringComparer.OrdinalIgnoreCase)
     {
@@ -17,6 +17,8 @@ public static class RazorFileKinds
         [FileKinds.ComponentImport] = RazorFileKind.ComponentImport,
         [FileKinds.Legacy] = RazorFileKind.Legacy
     }.ToFrozenDictionary();
+
+    internal const RazorFileKind MaxValue = RazorFileKind.ComponentImport;
 
     public static bool IsComponent(string fileKind)
         => FromString(fileKind) is RazorFileKind.Component or RazorFileKind.ComponentImport;

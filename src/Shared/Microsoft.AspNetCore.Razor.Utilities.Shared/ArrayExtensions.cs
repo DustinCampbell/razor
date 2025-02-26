@@ -184,4 +184,43 @@ internal static class ArrayExtensions
         this (TKey key, TValue value)[] array, IEqualityComparer<TKey> keyComparer)
         where TKey : notnull
         => array.ToImmutableDictionary(keySelector: t => t.key, elementSelector: t => t.value, keyComparer);
+
+    public static T GetOrSet<T>(this T?[] array, int index, T value)
+    {
+        var result = array[index];
+
+        if (result is null)
+        {
+            result = value;
+            array[index] = result;
+        }
+
+        return result;
+    }
+
+    public static T GetOrSet<T>(this T?[] array, int index, Func<T> valueFactory)
+    {
+        var result = array[index];
+
+        if (result is null)
+        {
+            result = valueFactory();
+            array[index] = result;
+        }
+
+        return result;
+    }
+
+    public static T GetOrSet<T>(this T?[] array, int index, Func<int, T> valueFactory)
+    {
+        var result = array[index];
+
+        if (result is null)
+        {
+            result = valueFactory(index);
+            array[index] = result;
+        }
+
+        return result;
+    }
 }

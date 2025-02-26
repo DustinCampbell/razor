@@ -56,7 +56,10 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
 
     private static RazorCodeDocument CreateCodeDocument(SourceText text, string path, IReadOnlyList<TagHelperDescriptor> tagHelpers = null, string fileKind = default)
     {
-        fileKind ??= FileKinds.Component;
+        var newFileKind = fileKind is not null
+            ? RazorFileKinds.FromString(fileKind)
+            : RazorFileKind.Component;
+
         tagHelpers ??= Array.Empty<TagHelperDescriptor>();
         var sourceDocument = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(path, path));
         var projectEngine = RazorProjectEngine.Create(builder =>
@@ -66,7 +69,7 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
                 builder.UseRoslynTokenizer = true;
             });
         });
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, newFileKind, importSources: default, tagHelpers);
         return codeDocument;
     }
 }

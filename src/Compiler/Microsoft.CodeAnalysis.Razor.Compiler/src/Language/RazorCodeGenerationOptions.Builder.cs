@@ -8,7 +8,7 @@ public sealed partial class RazorCodeGenerationOptions
     public sealed class Builder
     {
         public RazorLanguageVersion LanguageVersion { get; }
-        public string FileKind { get; }
+        public RazorFileKind FileKind { get; }
 
         private Flags _flags;
 
@@ -25,10 +25,10 @@ public sealed partial class RazorCodeGenerationOptions
         /// </summary>
         public string? SuppressUniqueIds { get; set; }
 
-        internal Builder(RazorLanguageVersion languageVersion, string fileKind)
+        internal Builder(RazorLanguageVersion languageVersion, RazorFileKind fileKind)
         {
             LanguageVersion = languageVersion ?? DefaultLanguageVersion;
-            FileKind = fileKind ?? DefaultFileKind;
+            FileKind = fileKind;
             IndentSize = DefaultIndentSize;
             NewLine = DefaultNewLine;
         }

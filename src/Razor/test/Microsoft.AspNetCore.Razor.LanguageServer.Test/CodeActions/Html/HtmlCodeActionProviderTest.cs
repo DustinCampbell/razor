@@ -156,7 +156,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
                 builder.UseRoslynTokenizer = true;
             });
         });
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, FileKinds.Component, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, RazorFileKind.Component, importSources: default, tagHelpers);
 
         var documentSnapshotMock = new StrictMock<IDocumentSnapshot>();
         documentSnapshotMock

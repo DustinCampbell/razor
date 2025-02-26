@@ -226,7 +226,7 @@ public static class RazorProjectEngineExtensions
         var source = TestRazorSourceDocument.Create(content);
         fileKind ??= DefaultFileKind;
 
-        return projectEngine.CreateDesignTimeCodeDocument(source, fileKind, importSources, tagHelpers);
+        return projectEngine.CreateDesignTimeCodeDocument(source, RazorFileKinds.FromString(fileKind), importSources, tagHelpers);
     }
 
     public static void ExecutePhasesThrough<T>(

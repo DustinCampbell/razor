@@ -124,7 +124,7 @@ public sealed class RazorProjectEngine
 
     public RazorCodeDocument ProcessDesignTime(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         CancellationToken cancellationToken = default)
@@ -160,7 +160,7 @@ public sealed class RazorProjectEngine
 
     internal RazorCodeDocument CreateDesignTimeCodeDocument(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers)
     {
@@ -190,13 +190,15 @@ public sealed class RazorProjectEngine
         Action<RazorParserOptions.Builder>? configureParser,
         Action<RazorCodeGenerationOptions.Builder>? configureCodeGeneration)
     {
-        var parserOptions = ComputeParserOptions(fileKind, configureParser);
-        var codeGenerationOptions = ComputeCodeGenerationOptions(fileKind, configureCodeGeneration);
+        var newFileKind = RazorFileKinds.FromString(fileKind);
+
+        var parserOptions = ComputeParserOptions(newFileKind, configure: configureParser);
+        var codeGenerationOptions = ComputeCodeGenerationOptions(newFileKind, configureCodeGeneration);
 
         var codeDocument = RazorCodeDocument.Create(source, importSources, parserOptions, codeGenerationOptions);
 
         codeDocument.SetTagHelpers(tagHelpers);
-        codeDocument.SetFileKind(RazorFileKinds.FromString(fileKind));
+        codeDocument.SetFileKind(newFileKind);
 
         if (cssScope != null)
         {
@@ -214,12 +216,13 @@ public sealed class RazorProjectEngine
         var source = projectItem.GetSource();
         var importSources = GetImportSources(projectItem, designTime: true);
 
-        return CreateCodeDocumentDesignTimeCore(source, projectItem.FileKind, importSources, tagHelpers: null, configureParser, configureCodeGeneration);
+        return CreateCodeDocumentDesignTimeCore(
+            source, RazorFileKinds.FromString(projectItem.FileKind), importSources, tagHelpers: null, configureParser, configureCodeGeneration);
     }
 
     private RazorCodeDocument CreateCodeDocumentDesignTimeCore(
         RazorSourceDocument sourceDocument,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         Action<RazorParserOptions.Builder>? configureParser,
@@ -246,14 +249,14 @@ public sealed class RazorProjectEngine
         var codeDocument = RazorCodeDocument.Create(sourceDocument, importSources, parserOptions, codeGenerationOptions);
 
         codeDocument.SetTagHelpers(tagHelpers);
-        codeDocument.SetFileKind(RazorFileKinds.FromString(fileKind));
+        codeDocument.SetFileKind(fileKind);
 
         return codeDocument;
     }
 
-    private RazorParserOptions ComputeParserOptions(string fileKind, Action<RazorParserOptions.Builder>? configure)
+    private RazorParserOptions ComputeParserOptions(RazorFileKind fileKind, Action<RazorParserOptions.Builder>? configure)
     {
-        var builder = new RazorParserOptions.Builder(Configuration.LanguageVersion, RazorFileKinds.FromString(fileKind));
+        var builder = new RazorParserOptions.Builder(Configuration.LanguageVersion, fileKind);
 
         configure?.Invoke(builder);
 
@@ -265,10 +268,10 @@ public sealed class RazorProjectEngine
         return builder.ToOptions();
     }
 
-    private RazorCodeGenerationOptions ComputeCodeGenerationOptions(string fileKind, Action<RazorCodeGenerationOptions.Builder>? configure)
+    private RazorCodeGenerationOptions ComputeCodeGenerationOptions(RazorFileKind fileKind, Action<RazorCodeGenerationOptions.Builder>? configure)
     {
         var configuration = Configuration;
-        var builder = new RazorCodeGenerationOptions.Builder(configuration.LanguageVersion, RazorFileKinds.FromString(fileKind))
+        var builder = new RazorCodeGenerationOptions.Builder(configuration.LanguageVersion, fileKind)
         {
             SuppressAddComponentParameter = configuration.SuppressAddComponentParameter
         };

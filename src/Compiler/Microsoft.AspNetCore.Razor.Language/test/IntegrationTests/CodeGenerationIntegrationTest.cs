@@ -413,7 +413,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
         AddTagHelperStubs(descriptors);
 
         // Act
-        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), FileKinds.Legacy, imports, descriptors.ToList());
+        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, imports, descriptors.ToList());
 
         // Assert
         AssertDocumentNodeMatchesBaseline(codeDocument.GetDocumentIntermediateNode(), testName);

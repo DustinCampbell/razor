@@ -129,6 +129,6 @@ public static class RazorProjectEngineExtensions
             ? FileKinds.GetFileKindFromFilePath(filePath)
             : DefaultFileKind;
 
-        return projectEngine.CreateDesignTimeCodeDocument(source, fileKind, importSources, tagHelpers);
+        return projectEngine.CreateDesignTimeCodeDocument(source, RazorFileKinds.FromString(fileKind), importSources, tagHelpers);
     }
 }

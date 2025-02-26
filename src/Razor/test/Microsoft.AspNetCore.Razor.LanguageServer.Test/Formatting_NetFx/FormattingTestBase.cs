@@ -266,7 +266,10 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
 
     private static (RazorCodeDocument, IDocumentSnapshot) CreateCodeDocumentAndSnapshot(SourceText text, string path, ImmutableArray<TagHelperDescriptor> tagHelpers = default, string? fileKind = null, bool allowDiagnostics = false, bool inGlobalNamespace = false)
     {
-        fileKind ??= FileKinds.Component;
+        var newFileKind = fileKind is not null
+            ? RazorFileKinds.FromString(fileKind)
+            : RazorFileKind.Component;
+
         tagHelpers = tagHelpers.NullToEmpty();
 
         if (fileKind == FileKinds.Component)
@@ -322,7 +325,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
                 RazorExtensions.Register(builder);
             });
 
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, [importSource], tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, newFileKind, [importSource], tagHelpers);
 
         if (!allowDiagnostics)
         {
@@ -379,7 +382,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
                     filePath: path,
                     relativePath: inGlobalNamespace ? Path.GetFileName(path) : path));
 
-                var codeDocument = projectEngine.ProcessDesignTime(source, fileKind, importDocuments, tagHelpers);
+                var codeDocument = projectEngine.ProcessDesignTime(source, RazorFileKinds.FromString(fileKind), importDocuments, tagHelpers);
 
                 return CreateDocumentSnapshot(
                     path, fileKind, codeDocument, projectEngine, imports, importDocuments, tagHelpers, inGlobalNamespace);

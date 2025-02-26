@@ -12,17 +12,17 @@ namespace Microsoft.AspNetCore.Razor.Language;
 public sealed partial class RazorParserOptions
 {
     private static RazorLanguageVersion DefaultLanguageVersion => RazorLanguageVersion.Latest;
-    private static string DefaultFileKind => FileKinds.Legacy;
+    private static RazorFileKind DefaultFileKind => RazorFileKind.Legacy;
 
     public static RazorParserOptions Default { get; } = new(
         languageVersion: DefaultLanguageVersion,
-        fileKind: FileKinds.Legacy,
+        fileKind: RazorFileKind.Legacy,
         directives: [],
         csharpParseOptions: CSharpParseOptions.Default,
         flags: GetDefaultFlags(DefaultLanguageVersion, DefaultFileKind));
 
     public RazorLanguageVersion LanguageVersion { get; }
-    internal string FileKind { get; }
+    public RazorFileKind FileKind { get; }
 
     public ImmutableArray<DirectiveDescriptor> Directives { get; }
     public CSharpParseOptions CSharpParseOptions { get; }
@@ -31,7 +31,7 @@ public sealed partial class RazorParserOptions
 
     private RazorParserOptions(
         RazorLanguageVersion languageVersion,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<DirectiveDescriptor> directives,
         CSharpParseOptions csharpParseOptions,
         Flags flags)
@@ -43,7 +43,7 @@ public sealed partial class RazorParserOptions
         }
 
         LanguageVersion = languageVersion ?? DefaultLanguageVersion;
-        FileKind = fileKind ?? DefaultFileKind;
+        FileKind = fileKind;
         Directives = directives;
         CSharpParseOptions = csharpParseOptions;
         _flags = flags;

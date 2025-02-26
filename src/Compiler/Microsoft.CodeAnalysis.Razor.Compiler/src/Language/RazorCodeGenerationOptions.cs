@@ -9,7 +9,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 public sealed partial class RazorCodeGenerationOptions
 {
     private static RazorLanguageVersion DefaultLanguageVersion => RazorLanguageVersion.Latest;
-    private static string DefaultFileKind => FileKinds.Legacy;
+    private static RazorFileKind DefaultFileKind => RazorFileKind.Legacy;
     private static int DefaultIndentSize => 4;
     private static string DefaultNewLine => Environment.NewLine;
 
@@ -32,7 +32,7 @@ public sealed partial class RazorCodeGenerationOptions
         flags: Flags.DefaultDesignTimeFlags);
 
     public RazorLanguageVersion LanguageVersion { get; }
-    internal string FileKind { get; }
+    public RazorFileKind FileKind { get; }
 
     public int IndentSize { get; }
     public string NewLine { get; }
@@ -51,7 +51,7 @@ public sealed partial class RazorCodeGenerationOptions
 
     private RazorCodeGenerationOptions(
         RazorLanguageVersion languageVersion,
-        string fileKind,
+        RazorFileKind fileKind,
         int indentSize,
         string newLine,
         string? rootNamespace,
@@ -59,7 +59,7 @@ public sealed partial class RazorCodeGenerationOptions
         Flags flags)
     {
         LanguageVersion = languageVersion ?? DefaultLanguageVersion;
-        FileKind = fileKind ?? DefaultFileKind;
+        FileKind = fileKind;
         IndentSize = indentSize;
         NewLine = newLine;
         RootNamespace = rootNamespace;

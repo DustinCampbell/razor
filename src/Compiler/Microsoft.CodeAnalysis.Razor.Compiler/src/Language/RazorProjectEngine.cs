@@ -268,7 +268,7 @@ public sealed class RazorProjectEngine
     private RazorCodeGenerationOptions ComputeCodeGenerationOptions(string fileKind, Action<RazorCodeGenerationOptions.Builder>? configure)
     {
         var configuration = Configuration;
-        var builder = new RazorCodeGenerationOptions.Builder(configuration.LanguageVersion, fileKind)
+        var builder = new RazorCodeGenerationOptions.Builder(configuration.LanguageVersion, RazorFileKinds.FromString(fileKind))
         {
             SuppressAddComponentParameter = configuration.SuppressAddComponentParameter
         };

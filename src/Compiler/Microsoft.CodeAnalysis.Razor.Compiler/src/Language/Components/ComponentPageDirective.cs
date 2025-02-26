@@ -3,7 +3,6 @@
 
 #nullable disable
 
-using System;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
@@ -26,12 +25,9 @@ internal class ComponentPageDirective
 
     public static RazorProjectEngineBuilder Register(RazorProjectEngineBuilder builder)
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, FileKinds.Component, FileKinds.ComponentImport);
+        builder.AddDirective(Directive, RazorFileKind.Component, RazorFileKind.ComponentImport);
         builder.Features.Add(new ComponentPageDirectivePass());
         return builder;
     }

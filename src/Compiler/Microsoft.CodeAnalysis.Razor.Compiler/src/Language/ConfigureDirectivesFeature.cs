@@ -9,30 +9,43 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 internal sealed class ConfigureDirectivesFeature : RazorEngineFeatureBase, IConfigureRazorParserOptionsFeature
 {
-    private readonly Dictionary<string, ImmutableArray<DirectiveDescriptor>.Builder> _fileKindToDirectivesMap = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<RazorFileKind, ImmutableArray<DirectiveDescriptor>.Builder> _fileKindToDirectivesMap = [];
 
-    public void AddDirective(DirectiveDescriptor directive, params ReadOnlySpan<string> fileKinds)
+    public void AddDirective(DirectiveDescriptor directive, params ReadOnlySpan<RazorFileKind> fileKinds)
     {
         lock (_fileKindToDirectivesMap)
         {
             // To maintain backwards compatibility, FileKinds.Legacy is assumed when a file kind is not specified.
             if (fileKinds.IsEmpty)
             {
-                fileKinds = [FileKinds.Legacy];
+                fileKinds = [RazorFileKind.Legacy];
             }
 
             foreach (var fileKind in fileKinds)
             {
+                if (fileKind == RazorFileKind.None)
+                {
+                    continue;
+                }
+
                 var directives = _fileKindToDirectivesMap.GetOrAdd(fileKind, _ => ImmutableArray.CreateBuilder<DirectiveDescriptor>());
                 directives.Add(directive);
             }
         }
     }
 
-    public ImmutableArray<DirectiveDescriptor> GetDirectives(string? fileKind = null)
+    public ImmutableArray<DirectiveDescriptor> GetDirectives()
     {
         // To maintain backwards compatibility, FileKinds.Legacy is assumed when a file kind is not specified.
-        fileKind ??= FileKinds.Legacy;
+        return GetDirectives(RazorFileKind.Legacy);
+    }
+
+    public ImmutableArray<DirectiveDescriptor> GetDirectives(RazorFileKind fileKind)
+    {
+        if (fileKind == RazorFileKind.None)
+        {
+            return [];
+        }
 
         lock (_fileKindToDirectivesMap)
         {
@@ -46,6 +59,7 @@ internal sealed class ConfigureDirectivesFeature : RazorEngineFeatureBase, IConf
 
     void IConfigureRazorParserOptionsFeature.Configure(RazorParserOptions.Builder builder)
     {
-        builder.Directives = GetDirectives(builder.FileKind);
+        var newKind = RazorFileKinds.FromString(builder.FileKind);
+        builder.Directives = GetDirectives(newKind);
     }
 }

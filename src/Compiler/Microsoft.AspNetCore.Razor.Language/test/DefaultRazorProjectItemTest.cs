@@ -26,7 +26,7 @@ public class DefaultRazorProjectItemTest
             filePath: "/Home.cshtml",
             physicalPath,
             relativePhysicalPath,
-            FileKinds.ComponentImport,
+            RazorFileKind.ComponentImport,
             "MyCssScope");
 
         // Assert
@@ -53,7 +53,7 @@ public class DefaultRazorProjectItemTest
             filePath: "/Home.razor",
             physicalPath,
             relativePhysicalPath,
-            fileKind: null,
+            fileKind: RazorFileKind.None,
             cssScope: null);
 
         // Assert
@@ -73,7 +73,7 @@ public class DefaultRazorProjectItemTest
             filePath: "/Home.cshtml",
             physicalPath,
             relativePhysicalPath,
-            fileKind: null,
+            fileKind: RazorFileKind.None,
             cssScope: null);
 
         // Assert
@@ -90,10 +90,10 @@ public class DefaultRazorProjectItemTest
         // Act
         var projectItem = new DefaultRazorProjectItem(
             basePath: "/",
-            filePath: null,
+            filePath: null!,
             physicalPath,
             relativePhysicalPath,
-            fileKind: null,
+            fileKind: RazorFileKind.None,
             cssScope: null);
 
         // Assert
@@ -113,7 +113,7 @@ public class DefaultRazorProjectItemTest
             filePath: "/FileDoesNotExist.cshtml",
             physicalPath,
             relativePhysicalPath,
-            fileKind: null,
+            fileKind: RazorFileKind.None,
             cssScope: null);
 
         // Assert
@@ -132,7 +132,7 @@ public class DefaultRazorProjectItemTest
             "/Home.cshtml",
             physicalPath,
             relativePhysicalPath,
-            fileKind: null,
+            fileKind: RazorFileKind.None,
             cssScope: null);
 
         // Act

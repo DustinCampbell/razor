@@ -209,7 +209,7 @@ public static class RazorCodeDocumentExtensions
     {
         ArgHelper.ThrowIfNull(codeDocument);
 
-        return codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(FileKinds), out var strongBox)
+        return codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(RazorFileKinds), out var strongBox)
             ? strongBox.Value
             : RazorFileKind.None;
     }
@@ -218,13 +218,13 @@ public static class RazorCodeDocumentExtensions
     {
         ArgHelper.ThrowIfNull(codeDocument);
 
-        if (codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(FileKinds), out var strongBox))
+        if (codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(RazorFileKinds), out var strongBox))
         {
             strongBox.Value = value;
         }
         else
         {
-            codeDocument.Items.Add(typeof(FileKinds), new StrongBox<RazorFileKind>(value));
+            codeDocument.Items.Add(typeof(RazorFileKinds), new StrongBox<RazorFileKind>(value));
         }
     }
 

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.AspNetCore.Razor.Test.Common;
@@ -32,7 +33,14 @@ public abstract class CohostCodeActionsEndpointTestBase(FuseTestContext context,
 {
     protected bool ForceRuntimeCodeGeneration => context.ForceRuntimeCodeGeneration;
 
-    private protected async Task VerifyCodeActionAsync(TestCode input, string? expected, string codeActionName, int childActionIndex = 0, string? fileKind = null, (string filePath, string contents)[]? additionalFiles = null, (Uri fileUri, string contents)[]? additionalExpectedFiles = null)
+    private protected async Task VerifyCodeActionAsync(
+        TestCode input,
+        string? expected,
+        string codeActionName,
+        int childActionIndex = 0,
+        RazorFileKind fileKind = RazorFileKind.Component,
+        (string filePath, string contents)[]? additionalFiles = null,
+        (Uri fileUri, string contents)[]? additionalExpectedFiles = null)
     {
         UpdateClientInitializationOptions(c => c with { ForceRuntimeCodeGeneration = context.ForceRuntimeCodeGeneration });
 

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language;
@@ -25,7 +23,12 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
 
     internal abstract IOnAutoInsertProvider CreateProvider();
 
-    protected void RunAutoInsertTest(string input, string expected, int tabSize = 4, bool insertSpaces = true, bool enableAutoClosingTags = true, string fileKind = default, IReadOnlyList<TagHelperDescriptor> tagHelpers = default)
+    protected void RunAutoInsertTest(
+        string input,
+        string expected,
+        bool enableAutoClosingTags = true,
+        RazorFileKind fileKind = RazorFileKind.Component,
+        IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
     {
         // Arrange
         TestFileMarkupParser.GetPosition(input, out input, out var location);
@@ -54,13 +57,14 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
         return source.WithChanges(change);
     }
 
-    private static RazorCodeDocument CreateCodeDocument(SourceText text, string path, IReadOnlyList<TagHelperDescriptor> tagHelpers = null, string fileKind = default)
+    private static RazorCodeDocument CreateCodeDocument(
+        SourceText text,
+        string path,
+        IReadOnlyList<TagHelperDescriptor>? tagHelpers,
+        RazorFileKind fileKind = RazorFileKind.Component)
     {
-        var newFileKind = fileKind is not null
-            ? RazorFileKinds.FromString(fileKind)
-            : RazorFileKind.Component;
+        tagHelpers ??= [];
 
-        tagHelpers ??= Array.Empty<TagHelperDescriptor>();
         var sourceDocument = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(path, path));
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
@@ -69,7 +73,7 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
                 builder.UseRoslynTokenizer = true;
             });
         });
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, newFileKind, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers);
         return codeDocument;
     }
 }

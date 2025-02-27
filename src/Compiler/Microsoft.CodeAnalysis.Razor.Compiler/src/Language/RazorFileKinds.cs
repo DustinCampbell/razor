@@ -52,7 +52,7 @@ internal static class RazorFileKinds
             : RazorFileKind.Component;
     }
 
-    public static RazorFileKind GetFileKindFromFilePath(string filePath)
+    public static RazorFileKind GetFileKindFromFilePath(string? filePath)
     {
         ArgHelper.ThrowIfNull(filePath);
 

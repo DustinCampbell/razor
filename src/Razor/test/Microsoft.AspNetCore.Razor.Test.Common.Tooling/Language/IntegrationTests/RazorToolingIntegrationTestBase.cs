@@ -84,7 +84,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
     /// Gets a hardcoded document kind to be added to each code document that's created. This can
     /// be used to generate components.
     /// </summary>
-    internal virtual string FileKind { get; }
+    internal virtual RazorFileKind FileKind => RazorFileKind.None;
 
     internal virtual VirtualRazorProjectFileSystem FileSystem { get; }
 
@@ -142,7 +142,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
         });
     }
 
-    internal RazorProjectItem CreateProjectItem(string cshtmlRelativePath, string cshtmlContent, string fileKind = null)
+    internal RazorProjectItem CreateProjectItem(string cshtmlRelativePath, string cshtmlContent, RazorFileKind fileKind = RazorFileKind.None)
     {
         var fullPath = WorkingDirectory + PathSeparator + cshtmlRelativePath;
 
@@ -163,7 +163,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
             physicalPath: fullPath,
             relativePhysicalPath: cshtmlRelativePath,
             basePath: WorkingDirectory,
-            fileKind: RazorFileKinds.FromString(fileKind ?? FileKind))
+            fileKind: fileKind == RazorFileKind.None ? FileKind : fileKind)
         {
             Content = cshtmlContent.TrimStart(),
         };
@@ -174,7 +174,11 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
         return CompileToCSharp(DefaultFileName, cshtmlContent, throwOnFailure);
     }
 
-    protected CompileToCSharpResult CompileToCSharp(string cshtmlRelativePath, string cshtmlContent, bool throwOnFailure = true, string fileKind = null)
+    protected CompileToCSharpResult CompileToCSharp(
+        string cshtmlRelativePath,
+        string cshtmlContent,
+        bool throwOnFailure = true,
+        RazorFileKind fileKind = RazorFileKind.None)
     {
         if (DeclarationOnly && DesignTime)
         {
@@ -190,7 +194,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
         {
             // The first phase won't include any metadata references for component discovery. This mirrors
             // what the build does.
-            var projectEngine = CreateProjectEngine(RazorConfiguration.Default, Array.Empty<MetadataReference>());
+            var projectEngine = CreateProjectEngine(RazorConfiguration.Default, references: []);
 
             RazorCodeDocument codeDocument;
             foreach (var item in AdditionalRazorItems)

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-#nullable disable
-
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Xunit;
@@ -10,13 +8,8 @@ using Xunit.Abstractions;
 
 namespace Microsoft.AspNetCore.Razor.LanguageServer;
 
-public class RemoteRazorProjectFileSystemTest : ToolingTestBase
+public class RemoteRazorProjectFileSystemTest(ITestOutputHelper testOutput) : ToolingTestBase(testOutput)
 {
-    public RemoteRazorProjectFileSystemTest(ITestOutputHelper testOutput)
-        : base(testOutput)
-    {
-    }
-
     [Fact]
     public void GetItem_RootlessFilePath()
     {
@@ -25,7 +18,7 @@ public class RemoteRazorProjectFileSystemTest : ToolingTestBase
         var documentFilePath = "file.cshtml";
 
         // Act
-        var item = fileSystem.GetItem(documentFilePath, fileKind: null);
+        var item = fileSystem.GetItem(documentFilePath);
 
         // Assert
         Assert.Equal(documentFilePath, item.FilePath);
@@ -40,7 +33,7 @@ public class RemoteRazorProjectFileSystemTest : ToolingTestBase
         var documentFilePath = "C:/path/to/file.cshtml";
 
         // Act
-        var item = fileSystem.GetItem(documentFilePath, fileKind: null);
+        var item = fileSystem.GetItem(documentFilePath);
 
         // Assert
         Assert.Equal("file.cshtml", item.FilePath);
@@ -66,7 +59,7 @@ public class RemoteRazorProjectFileSystemTest : ToolingTestBase
         }
 
         // Act
-        var item = fileSystem.GetItem(documentFilePath, fileKind: null);
+        var item = fileSystem.GetItem(documentFilePath);
 
         // Assert
         Assert.Equal(documentFilePath, item.FilePath);

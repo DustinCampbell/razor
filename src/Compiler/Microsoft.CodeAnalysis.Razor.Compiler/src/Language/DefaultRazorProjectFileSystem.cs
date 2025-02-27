@@ -48,16 +48,16 @@ internal class DefaultRazorProjectFileSystem : RazorProjectFileSystem
 
         foreach (var filePath in Directory.EnumerateFiles(absoluteBasePath, "*.cshtml", SearchOption.AllDirectories))
         {
-            yield return CreateItem(filePath, fileKind: null, basePath, absoluteBasePath);
+            yield return CreateItem(filePath, fileKind: RazorFileKind.None, basePath, absoluteBasePath);
         }
 
         foreach (var filePath in Directory.EnumerateFiles(absoluteBasePath, "*.razor", SearchOption.AllDirectories))
         {
-            yield return CreateItem(filePath, fileKind: null, basePath, absoluteBasePath);
+            yield return CreateItem(filePath, fileKind: RazorFileKind.None, basePath, absoluteBasePath);
         }
     }
 
-    public override RazorProjectItem GetItem(string path, string? fileKind)
+    public override RazorProjectItem GetItem(string path, RazorFileKind fileKind)
     {
         var absoluteBasePath = Root;
         var absolutePath = NormalizeAndEnsureValidPath(path);
@@ -70,14 +70,14 @@ internal class DefaultRazorProjectFileSystem : RazorProjectFileSystem
         return CreateItem(absolutePath, fileKind, DefaultBasePath, absoluteBasePath);
     }
 
-    private static DefaultRazorProjectItem CreateItem(string path, string? fileKind, string basePath, string absoluteBasePath)
+    private static DefaultRazorProjectItem CreateItem(string path, RazorFileKind fileKind, string basePath, string absoluteBasePath)
     {
         var physicalPath = Path.GetFullPath(path);
         var relativePhysicalPath = physicalPath[(absoluteBasePath.Length + 1)..]; // Don't include leading separator
 
         var filePath = "/" + relativePhysicalPath.Replace(Path.DirectorySeparatorChar, '/');
 
-        return new DefaultRazorProjectItem(basePath, filePath, physicalPath, relativePhysicalPath, RazorFileKinds.FromString(fileKind), cssScope: null);
+        return new DefaultRazorProjectItem(basePath, filePath, physicalPath, relativePhysicalPath, fileKind, cssScope: null);
     }
 
     protected override string NormalizeAndEnsureValidPath(string path)

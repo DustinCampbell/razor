@@ -12,7 +12,7 @@ internal readonly struct CodeDocumentGenerator(RazorProjectEngine projectEngine,
 {
     public RazorCodeDocument Generate(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         ImmutableArray<TagHelperDescriptor> tagHelpers,
         CancellationToken cancellationToken)
@@ -21,16 +21,16 @@ internal readonly struct CodeDocumentGenerator(RazorProjectEngine projectEngine,
 
         return forceRuntimeCodeGeneration
             ? projectEngine.Process(source, fileKind, importSources, tagHelpers, cancellationToken)
-            : projectEngine.ProcessDesignTime(source, RazorFileKinds.FromString(fileKind), importSources, tagHelpers, cancellationToken);
+            : projectEngine.ProcessDesignTime(source, fileKind, importSources, tagHelpers, cancellationToken);
     }
 
     public RazorCodeDocument GenerateDesignTime(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         ImmutableArray<TagHelperDescriptor> tagHelpers,
         CancellationToken cancellationToken)
     {
-        return projectEngine.ProcessDesignTime(source, RazorFileKinds.FromString(fileKind), importSources, tagHelpers, cancellationToken);
+        return projectEngine.ProcessDesignTime(source, fileKind, importSources, tagHelpers, cancellationToken);
     }
 }

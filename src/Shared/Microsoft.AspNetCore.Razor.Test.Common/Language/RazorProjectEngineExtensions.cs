@@ -11,7 +11,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public static class RazorProjectEngineExtensions
 {
-    private static string DefaultFileKind => FileKinds.Legacy;
+    private const RazorFileKind DefaultFileKind = RazorFileKind.Legacy;
 
     public static RazorCodeDocument CreateEmptyCodeDocument(this RazorProjectEngine projectEngine)
         => projectEngine.CreateEmptyCodeDocumentCore();
@@ -164,9 +164,12 @@ public static class RazorProjectEngineExtensions
         IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
     {
         var source = TestRazorSourceDocument.Create(content);
-        fileKind ??= DefaultFileKind;
 
-        return projectEngine.CreateCodeDocument(source, fileKind, importSources, tagHelpers, cssScope: null);
+        var newFileKind = fileKind is not null
+            ? RazorFileKinds.FromString(fileKind)
+            : DefaultFileKind;
+
+        return projectEngine.CreateCodeDocument(source, newFileKind, importSources, tagHelpers, cssScope: null);
     }
 
     public static RazorCodeDocument CreateDesignTimeCodeDocument(this RazorProjectEngine projectEngine, string content)
@@ -224,9 +227,12 @@ public static class RazorProjectEngineExtensions
         IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
     {
         var source = TestRazorSourceDocument.Create(content);
-        fileKind ??= DefaultFileKind;
 
-        return projectEngine.CreateDesignTimeCodeDocument(source, RazorFileKinds.FromString(fileKind), importSources, tagHelpers);
+        var newFileKind = fileKind is not null
+            ? RazorFileKinds.FromString(fileKind)
+            : DefaultFileKind;
+
+        return projectEngine.CreateDesignTimeCodeDocument(source, newFileKind, importSources, tagHelpers);
     }
 
     public static void ExecutePhasesThrough<T>(

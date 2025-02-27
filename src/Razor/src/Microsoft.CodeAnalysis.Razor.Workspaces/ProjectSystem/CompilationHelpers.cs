@@ -42,7 +42,7 @@ internal static class CompilationHelpers
 
     private static async Task<ImmutableArray<RazorSourceDocument>> GetImportSourcesAsync(IDocumentSnapshot document, RazorProjectEngine projectEngine, CancellationToken cancellationToken)
     {
-        var projectItem = projectEngine.FileSystem.GetItem(document.FilePath, document.FileKind);
+        var projectItem = projectEngine.FileSystem.GetItem(document.FilePath, RazorFileKinds.FromString(document.FileKind));
 
         using var importProjectItems = new PooledArrayBuilder<RazorProjectItem>();
         projectEngine.CollectImports(projectItem, ref importProjectItems.AsRef());

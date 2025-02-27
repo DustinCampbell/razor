@@ -34,7 +34,7 @@ public abstract partial class RazorProjectFileSystem
     /// <param name="path">The path.</param>
     /// <returns>The <see cref="RazorProjectItem"/>.</returns>
     public RazorProjectItem GetItem(string path)
-        => GetItem(path, fileKind: null);
+        => GetItem(path, fileKind: RazorFileKind.None);
 
     /// <summary>
     /// Gets a <see cref="RazorProjectItem"/> for the specified path.
@@ -42,7 +42,7 @@ public abstract partial class RazorProjectFileSystem
     /// <param name="path">The path.</param>
     /// <param name="fileKind">The file kind</param>
     /// <returns>The <see cref="RazorProjectItem"/>.</returns>
-    public abstract RazorProjectItem GetItem(string path, string? fileKind);
+    public abstract RazorProjectItem GetItem(string path, RazorFileKind fileKind);
 
     /// <summary>
     /// Gets the sequence of files named <paramref name="fileName"/> that are applicable to the specified path.
@@ -134,7 +134,7 @@ public abstract partial class RazorProjectFileSystem
                     Debug.Assert(span[fileName.Length..].IsEmpty);
                 });
 
-            var item = GetItem(itemPath, fileKind: null);
+            var item = GetItem(itemPath);
             result.Add(item);
 
             // Slice to exclude the trailing '/' for the next pass.

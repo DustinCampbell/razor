@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
@@ -203,33 +202,6 @@ public static class RazorCodeDocumentExtensions
         document.Items[typeof(RazorCSharpDocument)] = csharp;
     }
 
-#nullable enable
-
-    public static RazorFileKind GetFileKind(this RazorCodeDocument codeDocument)
-    {
-        ArgHelper.ThrowIfNull(codeDocument);
-
-        return codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(RazorFileKinds), out var strongBox)
-            ? strongBox.Value
-            : RazorFileKind.None;
-    }
-
-    public static void SetFileKind(this RazorCodeDocument codeDocument, RazorFileKind value)
-    {
-        ArgHelper.ThrowIfNull(codeDocument);
-
-        if (codeDocument.Items.TryGetValue<Type, StrongBox<RazorFileKind>>(typeof(RazorFileKinds), out var strongBox))
-        {
-            strongBox.Value = value;
-        }
-        else
-        {
-            codeDocument.Items.Add(typeof(RazorFileKinds), new StrongBox<RazorFileKind>(value));
-        }
-    }
-
-#nullable disable
-
     public static string GetCssScope(this RazorCodeDocument document)
     {
         if (document == null)
@@ -368,7 +340,7 @@ public static class RazorCodeDocumentExtensions
                 appendSuffix = true;
 
                 // Empty RootNamespace is allowed only in components.
-                if (!RazorFileKinds.IsComponent(codeDocument.GetFileKind()) && string.IsNullOrEmpty(baseNamespace))
+                if (!RazorFileKinds.IsComponent(codeDocument.FileKind) && string.IsNullOrEmpty(baseNamespace))
                 {
                     @namespace = null;
                     return false;

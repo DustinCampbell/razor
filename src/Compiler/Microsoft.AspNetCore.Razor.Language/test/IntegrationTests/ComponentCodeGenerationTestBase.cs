@@ -1,9 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -17,11 +14,11 @@ using Xunit;
 namespace Microsoft.AspNetCore.Razor.Language.IntegrationTests;
 
 public class ComponentCodeGenerationTestBase(bool designTime = false)
-        : RazorBaselineIntegrationTestBase(layer: TestProject.Layer.Compiler)
+    : RazorBaselineIntegrationTestBase(layer: TestProject.Layer.Compiler)
 {
-    private RazorConfiguration _configuration;
+    private RazorConfiguration? _configuration;
 
-    internal override string FileKind => FileKinds.Component;
+    internal override RazorFileKind FileKind => RazorFileKind.Component;
 
     internal override bool UseTwoPhaseCompilation => true;
 
@@ -9137,7 +9134,7 @@ namespace Test
     [InlineData("notnull", null, "1")]
     [InlineData("unmanaged", null, "1")]
     [InlineData(null, "new()", "1")]
-    public void GenericComponent_ConstraintOrdering(string first, string last, string arg)
+    public void GenericComponent_ConstraintOrdering(string? first, string? last, string arg)
     {
         // Arrange
         if (first != null)
@@ -10480,7 +10477,7 @@ namespace Test
 @using System.Reflection
 @attribute [Serializable]
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, FileKinds.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
         ImportItems.Add(importItem);
         AdditionalSyntaxTrees.Add(Parse(@"
 using Microsoft.AspNetCore.Components;
@@ -10527,16 +10524,18 @@ namespace Test
 @layout MainLayout
 @Foo
 <div>Hello</div>
-", fileKind: FileKinds.ComponentImport, expectedCSharpDiagnostics: [
-            // (4,31): error CS0246: The type or namespace name 'ComponentBase' could not be found (are you missing a using directive or an assembly reference?)
-            //     public class MainLayout : ComponentBase, ILayoutComponent
-            Diagnostic(ErrorCode.ERR_SingleTypeNameNotFound, "ComponentBase").WithArguments("ComponentBase").WithLocation(4, 31),
-            // (4,46): error CS0246: The type or namespace name 'ILayoutComponent' could not be found (are you missing a using directive or an assembly reference?)
-            //     public class MainLayout : ComponentBase, ILayoutComponent
-            Diagnostic(ErrorCode.ERR_SingleTypeNameNotFound, "ILayoutComponent").WithArguments("ILayoutComponent").WithLocation(4, 46),
-            // (6,16): error CS0246: The type or namespace name 'RenderFragment' could not be found (are you missing a using directive or an assembly reference?)
-            //         public RenderFragment Body { get; set; }
-            Diagnostic(ErrorCode.ERR_SingleTypeNameNotFound, "RenderFragment").WithArguments("RenderFragment").WithLocation(6, 16)]);
+",
+            fileKind: RazorFileKind.ComponentImport,
+            expectedCSharpDiagnostics: [
+                // (4,31): error CS0246: The type or namespace name 'ComponentBase' could not be found (are you missing a using directive or an assembly reference?)
+                //     public class MainLayout : ComponentBase, ILayoutComponent
+                Diagnostic(ErrorCode.ERR_SingleTypeNameNotFound, "ComponentBase").WithArguments("ComponentBase").WithLocation(4, 31),
+                // (4,46): error CS0246: The type or namespace name 'ILayoutComponent' could not be found (are you missing a using directive or an assembly reference?)
+                //     public class MainLayout : ComponentBase, ILayoutComponent
+                Diagnostic(ErrorCode.ERR_SingleTypeNameNotFound, "ILayoutComponent").WithArguments("ILayoutComponent").WithLocation(4, 46),
+                // (6,16): error CS0246: The type or namespace name 'RenderFragment' could not be found (are you missing a using directive or an assembly reference?)
+                //         public RenderFragment Body { get; set; }
+                Diagnostic(ErrorCode.ERR_SingleTypeNameNotFound, "RenderFragment").WithArguments("RenderFragment").WithLocation(6, 16)]);
 
         // Assert
         AssertDocumentNodeMatchesBaseline(generated.CodeDocument);
@@ -10608,7 +10607,7 @@ namespace Test
 @using System.Reflection
 @namespace New.Test
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, FileKinds.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
         ImportItems.Add(importItem);
         AdditionalSyntaxTrees.Add(Parse(@"
 using Microsoft.AspNetCore.Components;
@@ -10642,7 +10641,7 @@ namespace New.Test
 @using System.Reflection
 @namespace Import.Test
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, FileKinds.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
         ImportItems.Add(importItem);
         AdditionalSyntaxTrees.Add(Parse(@"
 using Microsoft.AspNetCore.Components;
@@ -10687,7 +10686,7 @@ namespace New.Test
         var importContent = @"
 @preservewhitespace true
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, FileKinds.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
         ImportItems.Add(importItem);
 
         // Act
@@ -10712,7 +10711,7 @@ namespace New.Test
         var importContent = @"
 @preservewhitespace true
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, FileKinds.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
         ImportItems.Add(importItem);
 
         // Act

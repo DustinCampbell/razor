@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -19,7 +17,7 @@ public class ComponentDirectiveIntegrationTest : RazorIntegrationTestBase
         AdditionalSyntaxTrees.Add(Parse(AdditionalCode));
     }
 
-    internal override string FileKind => FileKinds.Component;
+    internal override RazorFileKind FileKind => RazorFileKind.Component;
 
     [Fact]
     public void ComponentsDoNotHaveLayoutAttributeByDefault()
@@ -28,7 +26,7 @@ public class ComponentDirectiveIntegrationTest : RazorIntegrationTestBase
         var component = CompileToComponent("Hello");
 
         // Assert
-        Assert.Null(component.GetAttributes().FirstOrDefault(a => a.AttributeClass.Name == "LayoutAttribute"));
+        Assert.Null(component.GetAttributes().FirstOrDefault(a => a.AttributeClass?.Name == "LayoutAttribute"));
     }
 
     [Fact]
@@ -40,7 +38,7 @@ public class ComponentDirectiveIntegrationTest : RazorIntegrationTestBase
             "Hello");
 
         // Assert
-        var layoutAttribute = component.GetAttributes().Single(a => a.AttributeClass.Name == "LayoutAttribute");
+        var layoutAttribute = component.GetAttributes().Single(a => a.AttributeClass?.Name == "LayoutAttribute");
         Assert.NotNull(layoutAttribute);
     }
 
@@ -80,7 +78,7 @@ public class ComponentDirectiveIntegrationTest : RazorIntegrationTestBase
             "Hello");
 
         // Assert
-        AssertEx.Equal("TestNamespace.TestBaseClass", component.BaseType.ToTestDisplayString());
+        AssertEx.Equal("TestNamespace.TestBaseClass", component.BaseType?.ToTestDisplayString());
     }
 
     [Fact]
@@ -94,7 +92,7 @@ public class ComponentDirectiveIntegrationTest : RazorIntegrationTestBase
 
         // Assert 1: Compiled type has correct properties
         var injectableProperties = component.GetMembers().OfType<IPropertySymbol>()
-            .Where(p => p.GetAttributes().Any(a => a.AttributeClass.Name == "InjectAttribute"));
+            .Where(p => p.GetAttributes().Any(a => a.AttributeClass?.Name == "InjectAttribute"));
         Assert.Collection(injectableProperties.OrderBy(p => p.Name),
             s => AssertEx.Equal("private TestNamespace.IMyService1 Test.TestComponent.MyService1 { get; set; }", s.ToTestDisplayString()),
             s => AssertEx.Equal("private TestNamespace.IMyService2 Test.TestComponent.MyService2 { get; set; }", s.ToTestDisplayString()));
@@ -111,7 +109,7 @@ public class ComponentDirectiveIntegrationTest : RazorIntegrationTestBase
 
         // Assert 1: Compiled type has correct properties
         var injectableProperties = component.GetMembers().OfType<IPropertySymbol>()
-            .Where(p => p.GetAttributes().Any(a => a.AttributeClass.Name == "InjectAttribute"));
+            .Where(p => p.GetAttributes().Any(a => a.AttributeClass?.Name == "InjectAttribute"));
         Assert.Collection(injectableProperties.OrderBy(p => p.Name),
             s => AssertEx.Equal("private System.DateTime Test.TestComponent.Member___UniqueIdSuppressedForTesting__ { get; set; }", s.ToTestDisplayString()),
             s => AssertEx.Equal("private System.DateTime Test.TestComponent.Value { get; set; }", s.ToTestDisplayString()));

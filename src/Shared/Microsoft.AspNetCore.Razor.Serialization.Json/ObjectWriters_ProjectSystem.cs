@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 #if JSONSERIALIZATION_PROJECTSYSTEM
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
 
 namespace Microsoft.AspNetCore.Razor.Serialization.Json;
@@ -25,7 +26,7 @@ internal static partial class ObjectWriters
     {
         writer.Write(nameof(value.FilePath), value.FilePath);
         writer.Write(nameof(value.TargetPath), value.TargetPath);
-        writer.Write(nameof(value.FileKind), value.FileKind);
+        writer.WriteIfNotDefault(nameof(value.FileKind), (int)value.FileKind, (int)RazorFileKind.Component);
     }
 
     public static void Write(JsonDataWriter writer, ProjectWorkspaceState? value)

@@ -123,7 +123,7 @@ public class FormattingContentValidationPassTest(ITestOutputHelper testOutput) :
             .ReturnsAsync(tagHelpers);
         documentSnapshot
             .Setup(d => d.FileKind)
-            .Returns(fileKind);
+            .Returns(newFileKind);
 
         return (codeDocument, documentSnapshot.Object);
     }

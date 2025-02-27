@@ -348,6 +348,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         ImmutableArray<TagHelperDescriptor> tagHelpers,
         bool inGlobalNamespace)
     {
+        var newFileKind = RazorFileKinds.FromString(fileKind);
         var snapshotMock = new StrictMock<IDocumentSnapshot>();
 
         snapshotMock
@@ -370,7 +371,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
             .ReturnsAsync(tagHelpers);
         snapshotMock
             .Setup(d => d.FileKind)
-            .Returns(fileKind);
+            .Returns(newFileKind);
         snapshotMock
             .Setup(d => d.Version)
             .Returns(1);
@@ -382,7 +383,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
                     filePath: path,
                     relativePath: inGlobalNamespace ? Path.GetFileName(path) : path));
 
-                var codeDocument = projectEngine.ProcessDesignTime(source, RazorFileKinds.FromString(fileKind), importDocuments, tagHelpers);
+                var codeDocument = projectEngine.ProcessDesignTime(source, newFileKind, importDocuments, tagHelpers);
 
                 return CreateDocumentSnapshot(
                     path, fileKind, codeDocument, projectEngine, imports, importDocuments, tagHelpers, inGlobalNamespace);

@@ -24,7 +24,7 @@ internal static class CompilationHelpers
         var source = await document.GetSourceAsync(projectEngine, cancellationToken).ConfigureAwait(false);
 
         var generator = new CodeDocumentGenerator(projectEngine, compilerOptions);
-        return generator.Generate(source, RazorFileKinds.FromString(document.FileKind), importSources, tagHelpers, cancellationToken);
+        return generator.Generate(source, document.FileKind, importSources, tagHelpers, cancellationToken);
     }
 
     internal static async Task<RazorCodeDocument> GenerateDesignTimeCodeDocumentAsync(
@@ -37,12 +37,12 @@ internal static class CompilationHelpers
         var source = await document.GetSourceAsync(projectEngine, cancellationToken).ConfigureAwait(false);
 
         var generator = new CodeDocumentGenerator(projectEngine, RazorCompilerOptions.None);
-        return generator.GenerateDesignTime(source, RazorFileKinds.FromString(document.FileKind), importSources, tagHelpers, cancellationToken);
+        return generator.GenerateDesignTime(source, document.FileKind, importSources, tagHelpers, cancellationToken);
     }
 
     private static async Task<ImmutableArray<RazorSourceDocument>> GetImportSourcesAsync(IDocumentSnapshot document, RazorProjectEngine projectEngine, CancellationToken cancellationToken)
     {
-        var projectItem = projectEngine.FileSystem.GetItem(document.FilePath, RazorFileKinds.FromString(document.FileKind));
+        var projectItem = projectEngine.FileSystem.GetItem(document.FilePath, document.FileKind);
 
         using var importProjectItems = new PooledArrayBuilder<RazorProjectItem>();
         projectEngine.CollectImports(projectItem, ref importProjectItems.AsRef());

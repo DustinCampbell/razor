@@ -323,7 +323,7 @@ internal class DefaultWindowsRazorProjectHost(
                     !string.IsNullOrWhiteSpace(targetPath))
                 {
                     var filePath = CommonServices.UnconfiguredProject.MakeRooted(kvp.Key);
-                    var fileKind = FileKinds.GetComponentFileKindFromFilePath(filePath);
+                    var fileKind = RazorFileKinds.GetComponentFileKindFromFilePath(filePath);
 
                     documents.Add(new HostDocument(filePath, targetPath, fileKind));
                 }
@@ -339,7 +339,7 @@ internal class DefaultWindowsRazorProjectHost(
                     !string.IsNullOrWhiteSpace(targetPath))
                 {
                     var filePath = CommonServices.UnconfiguredProject.MakeRooted(kvp.Key);
-                    documents.Add(new HostDocument(filePath, targetPath, FileKinds.Legacy));
+                    documents.Add(new HostDocument(filePath, targetPath, RazorFileKind.Legacy));
                 }
             }
         }
@@ -361,7 +361,7 @@ internal class DefaultWindowsRazorProjectHost(
                         !string.IsNullOrWhiteSpace(targetPath))
                     {
                         var filePath = CommonServices.UnconfiguredProject.MakeRooted(key);
-                        var fileKind = FileKinds.GetComponentFileKindFromFilePath(filePath);
+                        var fileKind = RazorFileKinds.GetComponentFileKindFromFilePath(filePath);
 
                         documents.Add(new HostDocument(filePath, targetPath, fileKind));
                     }
@@ -380,7 +380,7 @@ internal class DefaultWindowsRazorProjectHost(
                         !string.IsNullOrWhiteSpace(targetPath))
                     {
                         var filePath = CommonServices.UnconfiguredProject.MakeRooted(key);
-                        documents.Add(new HostDocument(filePath, targetPath, FileKinds.Legacy));
+                        documents.Add(new HostDocument(filePath, targetPath, RazorFileKind.Legacy));
                     }
                 }
             }

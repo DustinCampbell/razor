@@ -38,7 +38,7 @@ internal abstract class AbstractRazorComponentDefinitionService(
             return null;
         }
 
-        if (!FileKinds.IsComponent(documentSnapshot.FileKind))
+        if (!RazorFileKinds.IsComponent(documentSnapshot.FileKind))
         {
             _logger.LogInformation($"'{documentSnapshot.FileKind}' is not a component type.");
             return null;

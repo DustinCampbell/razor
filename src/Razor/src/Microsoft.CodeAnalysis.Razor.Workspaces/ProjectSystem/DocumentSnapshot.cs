@@ -72,7 +72,7 @@ internal sealed class DocumentSnapshot(ProjectSnapshot project, DocumentState st
 
     #region ILegacyDocumentSnapshot support
 
-    string ILegacyDocumentSnapshot.FileKind => FileKind;
+    RazorFileKind ILegacyDocumentSnapshot.FileKind => RazorFileKinds.FromString(FileKind);
 
     #endregion
 }

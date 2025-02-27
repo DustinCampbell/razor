@@ -21,7 +21,9 @@ internal class NotFoundProjectItem(string path, string? fileKind) : RazorProject
     public override string FilePath => path;
 
     /// <inheritdoc />
-    public override string FileKind { get; } = fileKind ?? FileKinds.GetFileKindFromFilePath(path);
+    public override RazorFileKind FileKind { get; } = fileKind is not null
+        ? RazorFileKinds.FromString(fileKind)
+        : RazorFileKinds.GetFileKindFromFilePath(path);
 
     /// <inheritdoc />
     public override bool Exists => false;

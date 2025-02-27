@@ -119,6 +119,12 @@ public abstract class RazorProjectItem
         }
     }
 
+
+    protected static RazorFileKind ComputeFileKind(RazorFileKind fileKind, string filePath)
+        => fileKind == RazorFileKind.None && filePath is not null
+            ? RazorFileKinds.GetFileKindFromFilePath(filePath)
+            : fileKind;
+
     internal virtual RazorSourceDocument GetSource()
         => RazorSourceDocument.ReadFrom(this);
 

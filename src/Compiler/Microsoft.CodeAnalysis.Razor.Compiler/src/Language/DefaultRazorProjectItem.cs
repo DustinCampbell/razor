@@ -27,11 +27,6 @@ internal sealed class DefaultRazorProjectItem(
     public override RazorFileKind FileKind { get; } = ComputeFileKind(fileKind, filePath);
     public override string? CssScope { get; } = cssScope;
 
-    private static RazorFileKind ComputeFileKind(RazorFileKind fileKind, string filePath)
-        => fileKind == RazorFileKind.None && filePath is not null
-            ? RazorFileKinds.GetFileKindFromFilePath(filePath)
-            : fileKind;
-
     public override bool Exists
         => File.Exists(PhysicalPath);
 

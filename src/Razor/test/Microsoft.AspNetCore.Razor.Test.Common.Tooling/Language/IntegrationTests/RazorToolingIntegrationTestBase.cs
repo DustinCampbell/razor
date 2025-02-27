@@ -163,7 +163,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
             physicalPath: fullPath,
             relativePhysicalPath: cshtmlRelativePath,
             basePath: WorkingDirectory,
-            fileKind: fileKind ?? FileKind)
+            fileKind: RazorFileKinds.FromString(fileKind ?? FileKind))
         {
             Content = cshtmlContent.TrimStart(),
         };

@@ -7,19 +7,17 @@ using Microsoft.CodeAnalysis.Razor.Language;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-public class TestRazorProjectItem(
+public sealed class TestRazorProjectItem(
     string filePath,
     string? physicalPath = null,
     string? relativePhysicalPath = null,
     string? basePath = "/",
-    string? fileKind = null,
+    RazorFileKind fileKind = RazorFileKind.None,
     string? cssScope = null,
     Func<Stream>? onRead = null) : RazorProjectItem
 {
-    private readonly RazorFileKind _fileKind = RazorFileKinds.FromString(fileKind);
-
     public override string BasePath => basePath!;
-    public override RazorFileKind FileKind => _fileKind == RazorFileKind.None ? base.FileKind : _fileKind;
+    public override RazorFileKind FileKind { get; } = ComputeFileKind(fileKind, filePath);
     public override string FilePath => filePath;
     public override string PhysicalPath => physicalPath!;
     public override string RelativePhysicalPath => relativePhysicalPath!;

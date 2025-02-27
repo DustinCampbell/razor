@@ -186,7 +186,7 @@ public abstract class IntegrationTestBase
             filePath: filePath,
             physicalPath: fullPath,
             relativePhysicalPath: sourceFileName,
-            fileKind: fileKind)
+            fileKind: RazorFileKinds.FromString(fileKind))
         {
             Content = fileContent,
         };

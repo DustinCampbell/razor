@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Roslyn.Test.Utilities;
@@ -17,7 +15,7 @@ public class ComponentDeclarationRazorIntegrationTest : RazorIntegrationTestBase
         AdditionalSyntaxTrees.Add(Parse(AdditionalCode));
     }
 
-    internal override string FileKind => FileKinds.Component;
+    internal override RazorFileKind FileKind => RazorFileKind.Component;
 
     internal override bool DeclarationOnly => true;
 
@@ -72,7 +70,7 @@ public class ComponentDeclarationRazorIntegrationTest : RazorIntegrationTestBase
 
         // Assert
         AssertEx.Equal("Test.TestComponent", component.ToTestDisplayString());
-        AssertEx.Equal("TestNamespace.BaseClass", component.BaseType.ToTestDisplayString());
+        AssertEx.Equal("TestNamespace.BaseClass", component.BaseType?.ToTestDisplayString());
     }
 
     [Fact]

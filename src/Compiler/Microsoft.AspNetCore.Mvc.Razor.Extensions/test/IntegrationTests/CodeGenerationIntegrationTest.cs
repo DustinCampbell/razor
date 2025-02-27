@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.IntegrationTests;
@@ -223,7 +221,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
     public void BasicComponent_Runtime()
     {
         // Arrange
-        var projectItem = CreateProjectItemFromFile(fileKind: FileKinds.Component);
+        var projectItem = CreateProjectItemFromFile(fileKind: RazorFileKind.Component);
 
         // Act
         var compiled = CompileToAssembly(projectItem, designTime: false);
@@ -1116,7 +1114,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
     public void BasicComponent_DesignTime()
     {
         // Arrange
-        var projectItem = CreateProjectItemFromFile(fileKind: FileKinds.Component);
+        var projectItem = CreateProjectItemFromFile(fileKind: RazorFileKind.Component);
 
         // Act
         var compiled = CompileToAssembly(projectItem, designTime: true);

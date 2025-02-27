@@ -91,10 +91,6 @@ internal sealed class MapCodeEndpoint(
                 continue;
             }
 
-            var tagHelperContext = await documentContext.GetTagHelperContextAsync(cancellationToken).ConfigureAwait(false);
-            var fileKind = FileKinds.GetFileKindFromFilePath(documentContext.FilePath);
-            var extension = Path.GetExtension(documentContext.FilePath);
-
             var snapshot = documentContext.Snapshot;
 
             foreach (var content in mapping.Contents)

@@ -68,7 +68,7 @@ public sealed class RazorProjectEngine
 
     public RazorCodeDocument Process(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         CancellationToken cancellationToken = default)
@@ -96,7 +96,7 @@ public sealed class RazorProjectEngine
 
     public RazorCodeDocument ProcessDeclarationOnly(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         CancellationToken cancellationToken = default)
@@ -148,7 +148,7 @@ public sealed class RazorProjectEngine
 
     internal RazorCodeDocument CreateCodeDocument(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         string? cssScope)
@@ -178,27 +178,25 @@ public sealed class RazorProjectEngine
         var importSources = GetImportSources(projectItem, designTime: false);
 
         return CreateCodeDocumentCore(
-            source, projectItem.FileKind, importSources, tagHelpers: null, cssScope: projectItem.CssScope, configureParser, configureCodeGeneration);
+            source, RazorFileKinds.FromString(projectItem.FileKind), importSources, tagHelpers: null, cssScope: projectItem.CssScope, configureParser, configureCodeGeneration);
     }
 
     private RazorCodeDocument CreateCodeDocumentCore(
         RazorSourceDocument source,
-        string fileKind,
+        RazorFileKind fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         string? cssScope,
         Action<RazorParserOptions.Builder>? configureParser,
         Action<RazorCodeGenerationOptions.Builder>? configureCodeGeneration)
     {
-        var newFileKind = RazorFileKinds.FromString(fileKind);
-
-        var parserOptions = ComputeParserOptions(newFileKind, configure: configureParser);
-        var codeGenerationOptions = ComputeCodeGenerationOptions(newFileKind, configureCodeGeneration);
+        var parserOptions = ComputeParserOptions(fileKind, configure: configureParser);
+        var codeGenerationOptions = ComputeCodeGenerationOptions(fileKind, configureCodeGeneration);
 
         var codeDocument = RazorCodeDocument.Create(source, importSources, parserOptions, codeGenerationOptions);
 
         codeDocument.SetTagHelpers(tagHelpers);
-        codeDocument.SetFileKind(newFileKind);
+        codeDocument.SetFileKind(fileKind);
 
         if (cssScope != null)
         {

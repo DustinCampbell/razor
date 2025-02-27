@@ -8,7 +8,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public static class RazorProjectEngineExtensions
 {
-    private static string DefaultFileKind => FileKinds.Legacy;
+    private const RazorFileKind DefaultFileKind = RazorFileKind.Legacy;
 
     public static RazorCodeDocument CreateCodeDocument(this RazorProjectEngine projectEngine, RazorSourceDocument source)
         => projectEngine.CreateCodeDocumentCore(source);
@@ -64,11 +64,13 @@ public static class RazorProjectEngineExtensions
         ImmutableArray<RazorSourceDocument> importSources = default,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
     {
-        fileKind ??= source.FilePath is string filePath
-            ? FileKinds.GetFileKindFromFilePath(filePath)
-            : DefaultFileKind;
+        var newFileKind = fileKind is not null
+            ? RazorFileKinds.FromString(fileKind)
+            : source.FilePath is string filePath
+                ? RazorFileKinds.GetFileKindFromFilePath(filePath)
+                : DefaultFileKind;
 
-        return projectEngine.CreateCodeDocument(source, fileKind, importSources, tagHelpers, cssScope: null);
+        return projectEngine.CreateCodeDocument(source, newFileKind, importSources, tagHelpers, cssScope: null);
     }
 
     public static RazorCodeDocument CreateDesignTimeCodeDocument(this RazorProjectEngine projectEngine, RazorSourceDocument source)
@@ -125,10 +127,12 @@ public static class RazorProjectEngineExtensions
         ImmutableArray<RazorSourceDocument> importSources = default,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
     {
-        fileKind ??= source.FilePath is string filePath
-            ? FileKinds.GetFileKindFromFilePath(filePath)
-            : DefaultFileKind;
+        var newFileKind = fileKind is not null
+            ? RazorFileKinds.FromString(fileKind)
+            : source.FilePath is string filePath
+                ? RazorFileKinds.GetFileKindFromFilePath(filePath)
+                : DefaultFileKind;
 
-        return projectEngine.CreateDesignTimeCodeDocument(source, RazorFileKinds.FromString(fileKind), importSources, tagHelpers);
+        return projectEngine.CreateDesignTimeCodeDocument(source, newFileKind, importSources, tagHelpers);
     }
 }

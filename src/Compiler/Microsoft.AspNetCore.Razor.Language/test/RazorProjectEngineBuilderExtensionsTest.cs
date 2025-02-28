@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 using Moq;
@@ -103,36 +102,26 @@ public class RazorProjectEngineBuilderExtensionsTest
     }
 
     [Fact]
-    public void SetCSharpLanguageVersion_ResolvesLatestCSharpLangVersions()
+    public void SetCSharpParseOptions_ResolvesLatestCSharpLangVersions()
     {
         // Arrange
         var csharpLanguageVersion = LanguageVersion.Latest;
+        var csharpParseOptions = CSharpParseOptions.Default.WithLanguageVersion(csharpLanguageVersion);
 
-        // Act
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.SetCSharpLanguageVersion(csharpLanguageVersion);
-
-            builder.ConfigureParserOptions(builder =>
-            {
-                builder.UseRoslynTokenizer = true;
-                builder.CSharpParseOptions = CSharpParseOptions.Default.WithLanguageVersion(csharpLanguageVersion);
-            });
+            builder.SetCSharpParseOptions(csharpParseOptions);
         });
 
-        var features = projectEngine.Engine.GetFeatures<IConfigureRazorCodeGenerationOptionsFeature>().OrderByAsArray(static x => x.Order);
-        var builder = new RazorCodeGenerationOptions.Builder();
-
-        foreach (var feature in features)
-        {
-            feature.Configure(builder);
-        }
-
-        var options = builder.ToOptions();
+        // Act
+        var codeDocument = projectEngine.CreateEmptyCodeDocument();
 
         // Assert
-        Assert.False(options.SuppressNullabilityEnforcement);
-        Assert.True(options.UseEnhancedLinePragma);
-        Assert.True(options.OmitMinimizedComponentAttributeValues);
+        var effectiveLanguageVersion = LanguageVersionFacts.MapSpecifiedToEffectiveVersion(csharpLanguageVersion);
+
+        Assert.Equal(effectiveLanguageVersion, codeDocument.ParserOptions.CSharpParseOptions.LanguageVersion);
+        Assert.False(codeDocument.CodeGenerationOptions.SuppressNullabilityEnforcement);
+        Assert.True(codeDocument.CodeGenerationOptions.UseEnhancedLinePragma);
+        Assert.True(codeDocument.CodeGenerationOptions.OmitMinimizedComponentAttributeValues);
     }
 }

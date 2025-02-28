@@ -1,6 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Microsoft.CodeAnalysis.CSharp;
+
 namespace Microsoft.AspNetCore.Razor.Language;
 
 public sealed partial class RazorCodeGenerationOptions
@@ -22,10 +24,11 @@ public sealed partial class RazorCodeGenerationOptions
         /// </summary>
         public string? SuppressUniqueIds { get; set; }
 
-        internal Builder()
+        internal Builder(RazorLanguageVersion languageVersion, LanguageVersion csharpLanguageVersion)
         {
             IndentSize = DefaultIndentSize;
             NewLine = DefaultNewLine;
+            _flags = GetDefaultFlags(languageVersion, csharpLanguageVersion);
         }
 
         public bool DesignTime

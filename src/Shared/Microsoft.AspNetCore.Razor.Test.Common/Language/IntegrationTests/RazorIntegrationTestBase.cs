@@ -132,14 +132,10 @@ public class RazorIntegrationTestBase
                 References = references,
             });
 
-            csharpParseOptions ??= CSharpParseOptions;
-
-            b.SetCSharpLanguageVersion(csharpParseOptions.LanguageVersion);
-
             b.ConfigureParserOptions(builder =>
             {
                 builder.UseRoslynTokenizer = true;
-                builder.CSharpParseOptions = csharpParseOptions;
+                builder.CSharpParseOptions = csharpParseOptions ?? CSharpParseOptions;
             });
 
             CompilerFeatures.Register(b);

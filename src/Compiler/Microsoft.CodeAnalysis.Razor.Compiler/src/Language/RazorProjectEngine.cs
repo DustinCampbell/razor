@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -190,7 +191,10 @@ public sealed class RazorProjectEngine
         Action<RazorCodeGenerationOptions.Builder>? configureCodeGeneration)
     {
         var parserOptions = ComputeParserOptions(fileKind, configure: configureParser);
-        var codeGenerationOptions = ComputeCodeGenerationOptions(configureCodeGeneration);
+        var codeGenerationOptions = ComputeCodeGenerationOptions(
+            parserOptions.LanguageVersion,
+            parserOptions.CSharpParseOptions.LanguageVersion,
+            configure: configureCodeGeneration);
 
         var codeDocument = RazorCodeDocument.Create(source, importSources, parserOptions, codeGenerationOptions);
 
@@ -232,14 +236,17 @@ public sealed class RazorProjectEngine
             configureParser?.Invoke(builder);
         });
 
-        var codeGenerationOptions = ComputeCodeGenerationOptions(builder =>
-        {
-            builder.DesignTime = true;
-            builder.SuppressChecksum = true;
-            builder.SuppressMetadataAttributes = true;
+        var codeGenerationOptions = ComputeCodeGenerationOptions(
+            parserOptions.LanguageVersion,
+            parserOptions.CSharpParseOptions.LanguageVersion,
+            builder =>
+            {
+                builder.DesignTime = true;
+                builder.SuppressChecksum = true;
+                builder.SuppressMetadataAttributes = true;
 
-            configureCodeGeneration?.Invoke(builder);
-        });
+                configureCodeGeneration?.Invoke(builder);
+            });
 
         var codeDocument = RazorCodeDocument.Create(sourceDocument, importSources, parserOptions, codeGenerationOptions);
 
@@ -262,9 +269,12 @@ public sealed class RazorProjectEngine
         return builder.ToOptions();
     }
 
-    private RazorCodeGenerationOptions ComputeCodeGenerationOptions(Action<RazorCodeGenerationOptions.Builder>? configure)
+    private RazorCodeGenerationOptions ComputeCodeGenerationOptions(
+        RazorLanguageVersion languageVersion,
+        LanguageVersion csharpLanguageVersion,
+        Action<RazorCodeGenerationOptions.Builder>? configure)
     {
-        var builder = new RazorCodeGenerationOptions.Builder()
+        var builder = new RazorCodeGenerationOptions.Builder(languageVersion, csharpLanguageVersion)
         {
             SuppressAddComponentParameter = Configuration.SuppressAddComponentParameter
         };

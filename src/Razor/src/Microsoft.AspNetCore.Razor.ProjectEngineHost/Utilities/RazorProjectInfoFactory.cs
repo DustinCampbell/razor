@@ -69,23 +69,20 @@ internal static class RazorProjectInfoFactory
 
         var fileSystem = RazorProjectFileSystem.Create(projectPath);
 
-        var defaultConfigure = (RazorProjectEngineBuilder builder) =>
-        {
-            if (defaultNamespace is not null)
-            {
-                builder.SetRootNamespace(defaultNamespace);
-            }
-
-            builder.SetCSharpLanguageVersion(configuration.CSharpLanguageVersion);
-            builder.SetSupportLocalizedComponentNames(); // ProjectState in MS.CA.Razor.Workspaces does this, so I'm doing it too!
-        };
-
         var engineFactory = ProjectEngineFactories.DefaultProvider.GetFactory(configuration);
 
-        var engine = engineFactory.Create(
-            configuration,
-            fileSystem,
-            configure: defaultConfigure);
+        var csharpParseOptions = project.ParseOptions as CSharpParseOptions ?? CSharpParseOptions.Default;
+
+        var engine = engineFactory.Create(configuration, fileSystem, builder =>
+        {
+            builder.SetCSharpParseOptions(csharpParseOptions);
+
+            builder.ConfigureCodeGenerationOptions(builder =>
+            {
+                builder.RootNamespace = defaultNamespace;
+                builder.SupportLocalizedComponentNames = true;
+            });
+        });
 
         var tagHelpers = await project.GetTagHelpersAsync(engine, NoOpTelemetryReporter.Instance, cancellationToken).ConfigureAwait(false);
 

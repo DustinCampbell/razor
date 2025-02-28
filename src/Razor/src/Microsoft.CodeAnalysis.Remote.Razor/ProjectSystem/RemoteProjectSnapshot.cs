@@ -241,9 +241,11 @@ internal sealed class RemoteProjectSnapshot : IProjectSnapshot
             rootDirectoryPath: Path.GetDirectoryName(FilePath).AssumeNotNull(),
             configure: builder =>
             {
-                builder.SetRootNamespace(RootNamespace);
-                builder.SetCSharpLanguageVersion(CSharpLanguageVersion);
-                builder.SetSupportLocalizedComponentNames();
+                builder.ConfigureCodeGenerationOptions(builder =>
+                {
+                    builder.RootNamespace = RootNamespace;
+                    builder.SupportLocalizedComponentNames = true;
+                });
 
                 builder.ConfigureParserOptions(builder =>
                 {

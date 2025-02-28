@@ -107,10 +107,10 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
     {
         return RazorProjectEngine.Create(configuration, FileSystem, b =>
         {
-            b.SetRootNamespace(DefaultRootNamespace);
-
             b.ConfigureCodeGenerationOptions(builder =>
             {
+                builder.RootNamespace = DefaultRootNamespace;
+
                 // Turn off checksums, we're testing code generation.
                 builder.SuppressChecksum = true;
 
@@ -129,8 +129,6 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
             {
                 References = references,
             });
-
-            b.SetCSharpLanguageVersion(CSharpParseOptions.LanguageVersion);
 
             b.ConfigureParserOptions(builder =>
             {

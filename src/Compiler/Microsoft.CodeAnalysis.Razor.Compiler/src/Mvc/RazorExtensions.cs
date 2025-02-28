@@ -1,11 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
-using System.Diagnostics;
-using System.Threading;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.CodeAnalysis.CSharp;
@@ -17,10 +13,7 @@ public static class RazorExtensions
 {
     public static void Register(RazorProjectEngineBuilder builder)
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgHelper.ThrowIfNull(builder);
 
         InjectDirective.Register(builder, considerNullabilityEnforcement: true);
         ModelDirective.Register(builder);
@@ -47,7 +40,13 @@ public static class RazorExtensions
         builder.Features.Add(new MvcImportProjectFeature());
 
         // The default C# language version for what this Razor configuration supports.
-        builder.SetCSharpLanguageVersion(LanguageVersion.CSharp8);
+        builder.ConfigureParserOptions(builder =>
+        {
+            if (builder.CSharpParseOptions is { LanguageVersion: < LanguageVersion.CSharp8 } parseOptions)
+            {
+                builder.CSharpParseOptions = parseOptions.WithLanguageVersion(LanguageVersion.CSharp8);
+            }
+        });
 
         if (builder.Configuration.LanguageVersion >= RazorLanguageVersion.Version_6_0)
         {

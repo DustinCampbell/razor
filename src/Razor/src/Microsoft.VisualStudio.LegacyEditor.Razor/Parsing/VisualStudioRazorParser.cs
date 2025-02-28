@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.AspNetCore.Razor.ProjectEngineHost;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.Extensions.Internal;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -501,25 +502,31 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
     private void ConfigureProjectEngine(RazorProjectEngineBuilder builder)
     {
         var projectSnapshot = _documentTracker.ProjectSnapshot;
-        if (projectSnapshot != null)
-        {
-            builder.SetCSharpLanguageVersion(projectSnapshot.CSharpLanguageVersion);
-        }
-
-        builder.SetRootNamespace(projectSnapshot?.RootNamespace);
-
         var settings = _documentTracker.EditorSettings;
+
+        var csharpParseOptions = new CSharpParseOptions(
+            languageVersion: builder.Configuration.CSharpLanguageVersion,
+            preprocessorSymbols: builder.Configuration.PreprocessorSymbols);
+
+        builder.ConfigureParserOptions(builder =>
+        {
+            builder.CSharpParseOptions = csharpParseOptions;
+            ConfigureParserOptions(builder);
+        });
 
         builder.ConfigureCodeGenerationOptions(builder =>
         {
             builder.IndentSize = settings.IndentSize;
             builder.IndentWithTabs = settings.IndentWithTabs;
             builder.RemapLinePragmaPathsOnWindows = true;
+
+            if (projectSnapshot is not null)
+            {
+                builder.RootNamespace = projectSnapshot.RootNamespace;
+            }
         });
 
         builder.Features.Add(new VisualStudioTagHelperFeature(_documentTracker.TagHelpers));
-
-        builder.ConfigureParserOptions(ConfigureParserOptions);
     }
 
     private void UpdateParserState(RazorCodeDocument codeDocument, ITextSnapshot snapshot)

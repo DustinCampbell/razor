@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -52,6 +53,17 @@ public sealed partial class RazorCodeGenerationOptions
         RootNamespace = rootNamespace;
         SuppressUniqueIds = suppressUniqueIds;
         _flags = flags;
+    }
+
+    public static RazorCodeGenerationOptions Create(
+        RazorLanguageVersion languageVersion,
+        LanguageVersion csharpLanguageVersion,
+        Action<Builder>? configure = null)
+    {
+        var builder = new Builder(languageVersion, csharpLanguageVersion);
+        configure?.Invoke(builder);
+
+        return builder.ToOptions();
     }
 
     public bool DesignTime

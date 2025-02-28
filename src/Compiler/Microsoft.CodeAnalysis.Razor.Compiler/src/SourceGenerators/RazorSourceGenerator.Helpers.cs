@@ -54,6 +54,7 @@ namespace Microsoft.NET.Sdk.Razor.SourceGenerators
                 {
                     builder.SuppressPrimaryMethodBody = true;
                     builder.SuppressChecksum = true;
+                    builder.RootNamespace = razorSourceGeneratorOptions.RootNamespace;
                     builder.SupportLocalizedComponentNames = razorSourceGeneratorOptions.SupportLocalizedComponentNames;
                 });
 
@@ -63,12 +64,8 @@ namespace Microsoft.NET.Sdk.Razor.SourceGenerators
                     builder.CSharpParseOptions = razorSourceGeneratorOptions.CSharpParseOptions;
                 });
 
-                b.SetRootNamespace(razorSourceGeneratorOptions.RootNamespace);
-
                 CompilerFeatures.Register(b);
                 RazorExtensions.Register(b);
-
-                b.SetCSharpLanguageVersion(razorSourceGeneratorOptions.CSharpParseOptions.LanguageVersion);
             });
 
             return discoveryProjectEngine;
@@ -106,10 +103,10 @@ namespace Microsoft.NET.Sdk.Razor.SourceGenerators
             var projectEngine = RazorProjectEngine.Create(razorSourceGeneratorOptions.Configuration, fileSystem, b =>
             {
                 b.Features.Add(new DefaultTypeNameFeature());
-                b.SetRootNamespace(razorSourceGeneratorOptions.RootNamespace);
 
                 b.ConfigureCodeGenerationOptions(builder =>
                 {
+                    builder.RootNamespace = razorSourceGeneratorOptions.RootNamespace;
                     builder.SuppressMetadataSourceChecksumAttributes = !razorSourceGeneratorOptions.GenerateMetadataSourceChecksumAttributes;
                     builder.SupportLocalizedComponentNames = razorSourceGeneratorOptions.SupportLocalizedComponentNames;
                     builder.SuppressUniqueIds = razorSourceGeneratorOptions.TestSuppressUniqueIds;
@@ -121,11 +118,9 @@ namespace Microsoft.NET.Sdk.Razor.SourceGenerators
                     builder.UseRoslynTokenizer = razorSourceGeneratorOptions.UseRoslynTokenizer;
                     builder.CSharpParseOptions = razorSourceGeneratorOptions.CSharpParseOptions;
                 });
-
+                
                 CompilerFeatures.Register(b);
                 RazorExtensions.Register(b);
-
-                b.SetCSharpLanguageVersion(razorSourceGeneratorOptions.CSharpParseOptions.LanguageVersion);
             });
 
             return new SourceGeneratorProjectEngine(projectEngine);

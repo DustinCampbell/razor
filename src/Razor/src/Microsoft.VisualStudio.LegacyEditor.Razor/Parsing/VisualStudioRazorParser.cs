@@ -235,7 +235,9 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
         var filePath = _documentTracker.FilePath;
         var documentSnapshot = projectSnapshot.GetDocument(filePath);
 
-        var fileKind = documentSnapshot?.FileKind ?? RazorFileKinds.GetFileKindFromFilePath(filePath);
+        var fileKind = documentSnapshot is { FileKind: var documentFileKind }
+            ? documentFileKind
+            : RazorFileKinds.GetFileKindFromFilePath(filePath);
 
         var projectDirectory = Path.GetDirectoryName(_documentTracker.ProjectPath);
         _parser = new BackgroundParser(_projectEngine, FilePath, projectDirectory, fileKind);

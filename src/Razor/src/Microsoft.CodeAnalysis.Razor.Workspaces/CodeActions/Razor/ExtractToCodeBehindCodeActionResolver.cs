@@ -45,7 +45,7 @@ internal class ExtractToCodeBehindCodeActionResolver(
             return null;
         }
 
-        if (!RazorFileKinds.IsComponent(codeDocument.FileKind))
+        if (!codeDocument.FileKind.IsComponent())
         {
             return null;
         }

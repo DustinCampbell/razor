@@ -94,8 +94,10 @@ internal static class HoverFactory
 
             var span = containingTagNameToken.GetLinePositionSpan(codeDocument.Source);
 
+            var filePath = codeDocument.Source.FilePath.AssumeNotNull();
+
             return ElementInfoToHoverAsync(
-                codeDocument.Source.FilePath, binding.Descriptors, span, options, componentAvailabilityService, cancellationToken);
+                filePath, binding.Descriptors, span, options, componentAvailabilityService, cancellationToken);
         }
 
         if (HtmlFacts.TryGetAttributeInfo(owner, out containingTagNameToken, out _, out var selectedAttributeName, out var selectedAttributeNameLocation, out attributes) &&
@@ -217,7 +219,7 @@ internal static class HoverFactory
     }
 
     private static async Task<LspHover?> ElementInfoToHoverAsync(
-        string? documentFilePath,
+        string documentFilePath,
         ImmutableArray<TagHelperDescriptor> descriptors,
         LinePositionSpan span,
         HoverDisplayOptions options,

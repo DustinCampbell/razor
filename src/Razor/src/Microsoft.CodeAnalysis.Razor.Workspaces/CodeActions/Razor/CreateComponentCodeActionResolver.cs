@@ -40,7 +40,7 @@ internal class CreateComponentCodeActionResolver(LanguageServerFeatureOptions la
             return null;
         }
 
-        if (!RazorFileKinds.IsComponent(codeDocument.FileKind))
+        if (!codeDocument.FileKind.IsComponent())
         {
             return null;
         }

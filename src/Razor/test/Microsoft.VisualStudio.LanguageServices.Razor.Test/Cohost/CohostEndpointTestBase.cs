@@ -145,8 +145,8 @@ public abstract class CohostEndpointTestBase(ITestOutputHelper testOutputHelper)
         bool createSeparateRemoteAndLocalWorkspaces = false,
         bool inGlobalNamespace = false)
     {
-        // Using IsLegacy means null == component, so easier for test authors
-        var isComponent = !RazorFileKinds.IsLegacy(fileKind);
+        // Using IsLegacy means None == component, so easier for test authors
+        var isComponent = !fileKind.IsLegacy();
 
         var documentFilePath = isComponent
             ? TestProjectData.SomeProjectComponentFile1.FilePath

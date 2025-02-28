@@ -33,9 +33,12 @@ internal sealed class RemoteDocumentSnapshot : IDocumentSnapshot
 
         TextDocument = textDocument;
         ProjectSnapshot = projectSnapshot;
+
+        var filePath = TextDocument.FilePath.AssumeNotNull();
+        FileKind = RazorFileKinds.GetFileKindFromFilePath(filePath);
     }
 
-    public RazorFileKind FileKind => RazorFileKinds.GetFileKindFromFilePath(FilePath);
+    public RazorFileKind FileKind { get; }
     public string FilePath => TextDocument.FilePath.AssumeNotNull();
     public string TargetPath => TextDocument.FilePath.AssumeNotNull();
 

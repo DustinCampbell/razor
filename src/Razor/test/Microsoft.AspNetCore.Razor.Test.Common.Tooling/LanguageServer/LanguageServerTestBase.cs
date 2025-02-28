@@ -25,6 +25,7 @@ using Microsoft.CodeAnalysis.Razor.Protocol;
 using Microsoft.CodeAnalysis.Razor.Workspaces;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CommonLanguageServerProtocol.Framework;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
@@ -58,12 +59,16 @@ public abstract class LanguageServerTestBase : ToolingTestBase
         ILspServices? lspServices = null)
         => new(documentContext, lspServices ?? StrictMock.Of<ILspServices>(), "lsp/method", uri: null);
 
-    protected static RazorCodeDocument CreateCodeDocument(string text, ImmutableArray<TagHelperDescriptor> tagHelpers = default, string? filePath = null, string? rootNamespace = null)
+    protected static RazorCodeDocument CreateCodeDocument(
+        string text,
+        ImmutableArray<TagHelperDescriptor> tagHelpers = default,
+        string? filePath = null,
+        string? rootNamespace = null)
     {
+        tagHelpers = tagHelpers.NullToEmpty();
         filePath ??= "test.cshtml";
 
-        var fileKind = RazorFileKinds.GetFileKindFromFilePath(filePath);
-        tagHelpers = tagHelpers.NullToEmpty();
+        Assert.True(RazorFileKinds.TryGetFileKind(filePath, out var fileKind));
 
         if (fileKind == RazorFileKind.Component)
         {
@@ -87,7 +92,11 @@ public abstract class LanguageServerTestBase : ToolingTestBase
 
             b.Features.Add(new DefaultTypeNameFeature());
         });
-        var importDocumentName = fileKind == RazorFileKind.Legacy ? "_ViewImports.cshtml" : "_Imports.razor";
+
+        var importDocumentName = fileKind == RazorFileKind.Legacy
+            ? "_ViewImports.cshtml"
+            : "_Imports.razor";
+
         var defaultImportDocument = TestRazorSourceDocument.Create(
             """
                 @using BlazorApp1
@@ -101,8 +110,8 @@ public abstract class LanguageServerTestBase : ToolingTestBase
                 @using Microsoft.AspNetCore.Components.Web
                 """,
             RazorSourceDocumentProperties.Create(importDocumentName, importDocumentName));
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, [defaultImportDocument], tagHelpers);
-        return codeDocument;
+
+        return projectEngine.ProcessDesignTime(sourceDocument, fileKind, [defaultImportDocument], tagHelpers);
     }
 
     private protected static IDocumentContextFactory CreateDocumentContextFactory(Uri documentPath, string sourceText)

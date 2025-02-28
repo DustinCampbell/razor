@@ -46,7 +46,7 @@ public sealed partial class RazorParserOptions
             result.SetFlag(Flags.AllowNullableForgivenessOperator);
         }
 
-        if (RazorFileKinds.IsComponent(fileKind))
+        if (fileKind.IsComponent())
         {
             result.SetFlag(Flags.AllowConditionalDataDashAttributes);
             result.ClearFlag(Flags.AllowCSharpInMarkupAttributeArea);

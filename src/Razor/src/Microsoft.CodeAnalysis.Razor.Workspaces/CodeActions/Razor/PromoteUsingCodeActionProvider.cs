@@ -70,7 +70,7 @@ internal class PromoteUsingCodeActionProvider : IRazorCodeActionProvider
 
     public static string GetImportsFileName(RazorFileKind fileKind)
     {
-        return RazorFileKinds.IsLegacy(fileKind)
+        return fileKind.IsLegacy()
             ? MvcImportProjectFeature.ImportsFileName
             : ComponentMetadata.ImportsFileName;
     }

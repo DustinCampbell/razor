@@ -12,20 +12,20 @@ public sealed partial class RazorParserOptions
     public sealed class Builder
     {
         public RazorLanguageVersion LanguageVersion { get; }
-        public RazorFileKind FileKind { get; }
+        public RazorSourceCodeKind SourceCodeKind { get; }
 
         private Flags _flags;
 
         public ImmutableArray<DirectiveDescriptor> Directives { get; set => field = value.NullToEmpty(); }
         public CSharpParseOptions CSharpParseOptions { get; set => field = value ?? CSharpParseOptions.Default; }
 
-        internal Builder(RazorLanguageVersion languageVersion, RazorFileKind fileKind)
+        internal Builder(RazorLanguageVersion languageVersion, RazorSourceCodeKind sourceCodeKind)
         {
             LanguageVersion = languageVersion ?? DefaultLanguageVersion;
-            FileKind = fileKind;
+            SourceCodeKind = sourceCodeKind;
             Directives = [];
             CSharpParseOptions = CSharpParseOptions.Default;
-            _flags = GetDefaultFlags(LanguageVersion, FileKind);
+            _flags = GetDefaultFlags(LanguageVersion, SourceCodeKind);
         }
 
         public bool DesignTime
@@ -101,6 +101,6 @@ public sealed partial class RazorParserOptions
         }
 
         public RazorParserOptions ToOptions()
-            => new(LanguageVersion, FileKind, Directives, CSharpParseOptions, _flags);
+            => new(LanguageVersion, SourceCodeKind, Directives, CSharpParseOptions, _flags);
     }
 }

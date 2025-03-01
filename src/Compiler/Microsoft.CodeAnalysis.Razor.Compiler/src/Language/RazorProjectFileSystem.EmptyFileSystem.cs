@@ -15,10 +15,10 @@ public abstract partial class RazorProjectFileSystem
             return [];
         }
 
-        public override RazorProjectItem GetItem(string path, RazorFileKind fileKind)
+        public override RazorProjectItem GetItem(string path, RazorSourceCodeKind? sourceCodeKind)
         {
             NormalizeAndEnsureValidPath(path);
-            return new NotFoundProjectItem(path, fileKind);
+            return new NotFoundProjectItem(path, sourceCodeKind);
         }
     }
 }

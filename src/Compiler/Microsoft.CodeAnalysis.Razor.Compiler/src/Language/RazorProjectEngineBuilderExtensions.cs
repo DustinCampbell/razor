@@ -138,9 +138,9 @@ public static class RazorProjectEngineBuilderExtensions
     /// </summary>
     /// <param name="builder">The <see cref="RazorProjectEngineBuilder"/>.</param>
     /// <param name="directive">The <see cref="DirectiveDescriptor"/> to add.</param>
-    /// <param name="fileKinds">The file kinds, for which to register the directive. See <see cref="RazorFileKinds"/>.</param>
+    /// <param name="fileKinds">The file kinds, for which to register the directive. See <see cref="SourceCodeFileKinds"/>.</param>
     /// <returns>The <see cref="RazorProjectEngineBuilder"/>.</returns>
-    internal static RazorProjectEngineBuilder AddDirective(this RazorProjectEngineBuilder builder, DirectiveDescriptor directive, params ReadOnlySpan<RazorFileKind> fileKinds)
+    internal static RazorProjectEngineBuilder AddDirective(this RazorProjectEngineBuilder builder, DirectiveDescriptor directive, params ReadOnlySpan<RazorSourceCodeKind> fileKinds)
     {
         ArgHelper.ThrowIfNull(builder);
         ArgHelper.ThrowIfNull(directive);

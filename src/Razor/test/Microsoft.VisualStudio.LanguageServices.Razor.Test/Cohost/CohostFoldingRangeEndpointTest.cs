@@ -153,7 +153,7 @@ public class CohostFoldingRangeEndpointTest(FuseTestContext context, ITestOutput
 
             <p>hello!</p>
             """,
-            fileKind: RazorFileKind.Legacy);
+            sourceCodeKind: RazorSourceCodeKind.Legacy);
 
     [FuseFact]
     public Task Section()
@@ -166,7 +166,7 @@ public class CohostFoldingRangeEndpointTest(FuseTestContext context, ITestOutput
 
             <p>hello!</p>
             """,
-            fileKind: RazorFileKind.Legacy);
+            sourceCodeKind: RazorSourceCodeKind.Legacy);
 
     [FuseFact]
     public Task Section_Invalid()
@@ -179,7 +179,7 @@ public class CohostFoldingRangeEndpointTest(FuseTestContext context, ITestOutput
 
             <p>hello!</p>
             """,
-            fileKind: RazorFileKind.Legacy);
+            sourceCodeKind: RazorSourceCodeKind.Legacy);
 
     [FuseFact]
     public Task CSharpCodeInCodeBlocks()
@@ -215,12 +215,12 @@ public class CohostFoldingRangeEndpointTest(FuseTestContext context, ITestOutput
             }|]
             """);
 
-    private async Task VerifyFoldingRangesAsync(string input, RazorFileKind fileKind = RazorFileKind.Component)
+    private async Task VerifyFoldingRangesAsync(string input, RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         UpdateClientInitializationOptions(c => c with { ForceRuntimeCodeGeneration = context.ForceRuntimeCodeGeneration });
 
         TestFileMarkupParser.GetSpans(input, out var source, out ImmutableDictionary<string, ImmutableArray<TextSpan>> spans);
-        var document = CreateProjectAndRazorDocument(source, fileKind);
+        var document = CreateProjectAndRazorDocument(source, sourceCodeKind);
         var inputText = await document.GetTextAsync(DisposalToken);
 
         var htmlSpans = spans.GetValueOrDefault("html").NullToEmpty();

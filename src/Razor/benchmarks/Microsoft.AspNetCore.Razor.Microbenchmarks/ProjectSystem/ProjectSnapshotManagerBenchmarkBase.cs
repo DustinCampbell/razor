@@ -43,7 +43,7 @@ public abstract partial class ProjectSnapshotManagerBenchmarkBase
         {
             var filePath = Path.Combine(projectRoot, "Views", "Home", $"View00{i % 4}.cshtml");
             documents.Add(
-                new HostDocument(filePath, $"/Views/Home/View00{i}.cshtml", RazorFileKind.Legacy));
+                new HostDocument(filePath, $"/Views/Home/View00{i}.cshtml", RazorSourceCodeKind.Legacy));
         }
 
         Documents = documents.ToImmutable();

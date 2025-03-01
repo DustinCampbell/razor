@@ -221,7 +221,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
     public void BasicComponent_Runtime()
     {
         // Arrange
-        var projectItem = CreateProjectItemFromFile(fileKind: RazorFileKind.Component);
+        var projectItem = CreateProjectItemFromFile(sourceCodeKind: RazorSourceCodeKind.Component);
 
         // Act
         var compiled = CompileToAssembly(projectItem, designTime: false);
@@ -1114,7 +1114,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
     public void BasicComponent_DesignTime()
     {
         // Arrange
-        var projectItem = CreateProjectItemFromFile(fileKind: RazorFileKind.Component);
+        var projectItem = CreateProjectItemFromFile(sourceCodeKind: RazorSourceCodeKind.Component);
 
         // Act
         var compiled = CompileToAssembly(projectItem, designTime: true);

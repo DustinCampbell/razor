@@ -165,7 +165,7 @@ public class DirectiveCompletionItemProviderTest(ITestOutputHelper testOutput) :
             builder.DisplayName = knownDirective;
             builder.Description = string.Empty; // Doesn't matter for this test. Just need to provide something to avoid ArgumentNullException
         });
-        var syntaxTree = CreateSyntaxTree("@", RazorFileKind.Component, customDirective);
+        var syntaxTree = CreateSyntaxTree("@", RazorSourceCodeKind.Component, customDirective);
 
         // Act
         var completionItems = DirectiveCompletionItemProvider.GetDirectiveCompletionItems(syntaxTree);
@@ -189,7 +189,7 @@ public class DirectiveCompletionItemProviderTest(ITestOutputHelper testOutput) :
             builder.DisplayName = "model"; // Currently "model" is the only cshtml-only single-line directive. "add(remove)TagHelper" and "tagHelperPrefix" are there by default
             builder.Description = string.Empty; // Doesn't matter for this test. Just need to provide something to avoid ArgumentNullException
         });
-        var syntaxTree = CreateSyntaxTree("@", RazorFileKind.Legacy, customDirective);
+        var syntaxTree = CreateSyntaxTree("@", RazorSourceCodeKind.Legacy, customDirective);
 
         // Act
         var completionItems = DirectiveCompletionItemProvider.GetDirectiveCompletionItems(syntaxTree);
@@ -209,7 +209,7 @@ public class DirectiveCompletionItemProviderTest(ITestOutputHelper testOutput) :
     public void GetDirectiveCompletionItems_ComponentDocument_ReturnsDefaultComponentDirectivesAsCompletionItems()
     {
         // Arrange
-        var syntaxTree = CreateSyntaxTree("@addTag", RazorFileKind.Component);
+        var syntaxTree = CreateSyntaxTree("@addTag", RazorSourceCodeKind.Component);
 
         // Act
         var completionItems = DirectiveCompletionItemProvider.GetDirectiveCompletionItems(syntaxTree);
@@ -463,14 +463,14 @@ public class DirectiveCompletionItemProviderTest(ITestOutputHelper testOutput) :
 
     private static RazorSyntaxTree CreateSyntaxTree(string text, params DirectiveDescriptor[] directives)
     {
-        return CreateSyntaxTree(text, RazorFileKind.Legacy, directives);
+        return CreateSyntaxTree(text, RazorSourceCodeKind.Legacy, directives);
     }
 
-    private static RazorSyntaxTree CreateSyntaxTree(string text, RazorFileKind fileKind, params DirectiveDescriptor[] directives)
+    private static RazorSyntaxTree CreateSyntaxTree(string text, RazorSourceCodeKind sourceCodeKind, params DirectiveDescriptor[] directives)
     {
         var sourceDocument = TestRazorSourceDocument.Create(text);
 
-        var builder = new RazorParserOptions.Builder(RazorLanguageVersion.Latest, fileKind)
+        var builder = new RazorParserOptions.Builder(RazorLanguageVersion.Latest, sourceCodeKind)
         {
             Directives = [.. directives]
         };

@@ -63,7 +63,7 @@ public class ExtractToCodeBehindCodeActionResolverTest(ITestOutputHelper testOut
             @page "/test"
             @code { private int x = 1; }
             """;
-        var codeDocument = CreateCodeDocument(contents, RazorFileKind.Legacy);
+        var codeDocument = CreateCodeDocument(contents, RazorSourceCodeKind.Legacy);
 
         var documentContext = CreateDocumentContext(documentPath, codeDocument);
         var roslynCodeActionHelpers = new RoslynCodeActionHelpers(_languageServer);
@@ -711,9 +711,9 @@ public class ExtractToCodeBehindCodeActionResolverTest(ITestOutputHelper testOut
             editCodeBehindEdit.NewText);
     }
 
-    private static RazorCodeDocument CreateCodeDocument(string text, RazorFileKind fileKind = RazorFileKind.Component)
+    private static RazorCodeDocument CreateCodeDocument(string text, RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
-        var projectItem = new TestRazorProjectItem("c:/Test.razor", "c:/Test.razor", "Test.razor", fileKind: fileKind) { Content = text };
+        var projectItem = new TestRazorProjectItem("c:/Test.razor", "c:/Test.razor", "Test.razor", sourceCodeKind: sourceCodeKind) { Content = text };
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty, (builder) => builder.SetRootNamespace("test.Pages"));
 
         return projectEngine.Process(projectItem);

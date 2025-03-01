@@ -17825,7 +17825,7 @@
     {
       "FilePath": "C:\\Users\\admin\\location\\blazorserver\\Pages\\_Host.cshtml",
       "TargetPath": "Pages\\_Host.cshtml",
-      "FileKind": 1
+      "SourceCodeKind": 1
     },
     {
       "FilePath": "C:\\Users\\admin\\location\\blazorserver\\Pages\\Error.razor",
@@ -17834,7 +17834,7 @@
     {
       "FilePath": "C:\\Users\\admin\\location\\blazorserver\\_Imports.razor",
       "TargetPath": "_Imports.razor",
-      "FileKind": 3
+      "SourceCodeKind": 3
     },
     {
       "FilePath": "C:\\Users\\admin\\location\\blazorserver\\Shared\\NavMenu.razor",

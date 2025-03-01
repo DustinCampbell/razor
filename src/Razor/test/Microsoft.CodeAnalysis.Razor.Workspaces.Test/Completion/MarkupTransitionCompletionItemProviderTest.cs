@@ -335,14 +335,14 @@ public class MarkupTransitionCompletionItemProviderTest(ITestOutputHelper testOu
 
     private static RazorSyntaxTree CreateSyntaxTree(string text, params DirectiveDescriptor[] directives)
     {
-        return CreateSyntaxTree(text, RazorFileKind.Legacy, directives);
+        return CreateSyntaxTree(text, RazorSourceCodeKind.Legacy, directives);
     }
 
-    private static RazorSyntaxTree CreateSyntaxTree(string text, RazorFileKind fileKind, params DirectiveDescriptor[] directives)
+    private static RazorSyntaxTree CreateSyntaxTree(string text, RazorSourceCodeKind sourceCodeKind, params DirectiveDescriptor[] directives)
     {
         var sourceDocument = TestRazorSourceDocument.Create(text);
 
-        var builder = new RazorParserOptions.Builder(RazorLanguageVersion.Latest, fileKind)
+        var builder = new RazorParserOptions.Builder(RazorLanguageVersion.Latest, sourceCodeKind)
         {
             Directives = [.. directives]
         };

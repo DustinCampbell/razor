@@ -10,7 +10,7 @@ namespace Microsoft.CodeAnalysis.Razor.ProjectSystem;
 internal static class Extensions
 {
     public static DocumentSnapshotHandle ToHandle(this IDocumentSnapshot snapshot)
-        => new(snapshot.FilePath, snapshot.TargetPath, snapshot.FileKind);
+        => new(snapshot.FilePath, snapshot.TargetPath, snapshot.SourceCodeKind);
 
     public static ProjectKey ToProjectKey(this Project project)
     {

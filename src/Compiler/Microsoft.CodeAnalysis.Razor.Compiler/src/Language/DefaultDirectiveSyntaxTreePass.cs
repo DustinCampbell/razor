@@ -14,7 +14,7 @@ internal class DefaultDirectiveSyntaxTreePass : RazorEngineFeatureBase, IRazorSy
 
     public RazorSyntaxTree Execute(RazorCodeDocument codeDocument, RazorSyntaxTree syntaxTree)
     {
-        if (codeDocument.FileKind.IsComponent())
+        if (codeDocument.SourceCodeKind.IsComponent())
         {
             // Nothing to do here.
             return syntaxTree;

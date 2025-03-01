@@ -155,7 +155,7 @@ public abstract class IntegrationTestBase
 
     protected RazorProjectItem CreateProjectItemFromFile(
         string? filePath = null,
-        RazorFileKind fileKind = RazorFileKind.None,
+        RazorSourceCodeKind? sourceCodeKind = null,
         [CallerMemberName] string? testName = "")
     {
         var fileName = GetTestFileName(testName);
@@ -185,11 +185,11 @@ public abstract class IntegrationTestBase
         }
 
         var projectItem = new TestRazorProjectItem(
-            basePath: workingDirectory,
-            filePath: filePath,
+            filePath,
             physicalPath: fullPath,
             relativePhysicalPath: sourceFileName,
-            fileKind: fileKind)
+            basePath: workingDirectory,
+            sourceCodeKind)
         {
             Content = fileContent,
         };

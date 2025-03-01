@@ -38,7 +38,7 @@ public abstract class CohostCodeActionsEndpointTestBase(FuseTestContext context,
         string? expected,
         string codeActionName,
         int childActionIndex = 0,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         (string filePath, string contents)[]? additionalFiles = null,
         (Uri fileUri, string contents)[]? additionalExpectedFiles = null)
     {
@@ -60,7 +60,7 @@ public abstract class CohostCodeActionsEndpointTestBase(FuseTestContext context,
             return options;
         });
 
-        var document = CreateProjectAndRazorDocument(input.Text, fileKind, createSeparateRemoteAndLocalWorkspaces: true, additionalFiles: additionalFiles);
+        var document = CreateProjectAndRazorDocument(input.Text, sourceCodeKind, createSeparateRemoteAndLocalWorkspaces: true, additionalFiles: additionalFiles);
 
         var codeAction = await VerifyCodeActionRequestAsync(document, input, codeActionName, childActionIndex, expectOffer: expected is not null);
 

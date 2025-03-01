@@ -59,7 +59,7 @@ internal sealed class TestDocumentSnapshot : IDocumentSnapshot
 
     public HostDocument HostDocument => RealSnapshot.HostDocument;
 
-    public RazorFileKind FileKind => RealSnapshot.FileKind;
+    public RazorSourceCodeKind SourceCodeKind => RealSnapshot.SourceCodeKind;
     public string FilePath => RealSnapshot.FilePath;
     public string TargetPath => RealSnapshot.TargetPath;
     public IProjectSnapshot Project => RealSnapshot.Project;

@@ -445,7 +445,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
 
             var currentHostDocument = document.HostDocument;
             var newFilePath = EnsureFullPath(documentHandle.FilePath, projectDirectory);
-            var newHostDocument = new HostDocument(newFilePath, documentHandle.TargetPath, documentHandle.FileKind);
+            var newHostDocument = new HostDocument(newFilePath, documentHandle.TargetPath, documentHandle.SourceCodeKind);
 
             if (HostDocumentComparer.Instance.Equals(currentHostDocument, newHostDocument))
             {
@@ -453,7 +453,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
                 continue;
             }
 
-            _logger.LogTrace($"Updating document '{newHostDocument.FilePath}''s file kind to '{newHostDocument.FileKind}' and target path to '{newHostDocument.TargetPath}'.");
+            _logger.LogTrace($"Updating document '{newHostDocument.FilePath}''s file kind to '{newHostDocument.SourceCodeKind}' and target path to '{newHostDocument.TargetPath}'.");
 
             // If the physical file name hasn't changed, we use the current document snapshot as the source of truth for text, in case
             // it has received text change info from LSP. eg, if someone changes the TargetPath of the file while its open in the editor
@@ -487,7 +487,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
             {
                 var documentHandle = documentKvp.Value;
                 var remoteTextLoader = _remoteTextLoaderFactory.Create(documentFilePath);
-                var newHostDocument = new HostDocument(documentFilePath, documentHandle.TargetPath, documentHandle.FileKind);
+                var newHostDocument = new HostDocument(documentFilePath, documentHandle.TargetPath, documentHandle.SourceCodeKind);
 
                 _logger.LogInformation($"Adding new document '{documentFilePath}' to project '{currentProjectKey}'.");
 
@@ -524,7 +524,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
             newTargetPath = newTargetPath[projectDirectory.Length..];
         }
 
-        var newHostDocument = new HostDocument(document.FilePath, newTargetPath, document.FileKind);
+        var newHostDocument = new HostDocument(document.FilePath, newTargetPath, document.SourceCodeKind);
 
         _logger.LogInformation($"Moving '{documentFilePath}' from the '{fromProject.Key}' project to '{toProject.Key}' project.");
 

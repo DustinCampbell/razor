@@ -56,7 +56,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         string expected,
         int tabSize = 4,
         bool insertSpaces = true,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         ImmutableArray<TagHelperDescriptor> tagHelpers = default,
         bool allowDiagnostics = false,
         bool codeBlockBraceOnNextLine = false,
@@ -66,7 +66,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
 
         var razorLSPOptions = RazorLSPOptions.Default with { CodeBlockBraceOnNextLine = codeBlockBraceOnNextLine };
 
-        await RunFormattingTestInternalAsync(input, expected, tabSize, insertSpaces, fileKind, tagHelpers, allowDiagnostics, razorLSPOptions, inGlobalNamespace);
+        await RunFormattingTestInternalAsync(input, expected, tabSize, insertSpaces, sourceCodeKind, tagHelpers, allowDiagnostics, razorLSPOptions, inGlobalNamespace);
     }
 
     private async Task RunFormattingTestInternalAsync(
@@ -74,7 +74,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         string expected,
         int tabSize,
         bool insertSpaces,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<TagHelperDescriptor> tagHelpers,
         bool allowDiagnostics,
         RazorLSPOptions? razorLSPOptions,
@@ -90,9 +90,9 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
             ? null
             : source.GetLinePositionSpan(spans.Single());
 
-        var path = "file:///path/to/Document." + fileKind;
+        var path = "file:///path/to/Document." + sourceCodeKind.ToString();
         var uri = new Uri(path);
-        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(source, uri.AbsolutePath, tagHelpers, fileKind, allowDiagnostics, inGlobalNamespace);
+        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(source, uri.AbsolutePath, tagHelpers, sourceCodeKind, allowDiagnostics, inGlobalNamespace);
         var options = new FormattingOptions()
         {
             TabSize = tabSize,
@@ -132,7 +132,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         char triggerCharacter,
         int tabSize = 4,
         bool insertSpaces = true,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         int? expectedChangedLines = null,
         RazorLSPOptions? razorLSPOptions = null,
         bool inGlobalNamespace = false)
@@ -145,7 +145,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         var razorSourceText = SourceText.From(input);
         var path = "file:///path/to/Document.razor";
         var uri = new Uri(path);
-        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(razorSourceText, uri.AbsolutePath, fileKind: fileKind, inGlobalNamespace: inGlobalNamespace);
+        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(razorSourceText, uri.AbsolutePath, sourceCodeKind: sourceCodeKind, inGlobalNamespace: inGlobalNamespace);
 
         var languageServerFeatureOptions = new TestLanguageServerFeatureOptions(useNewFormattingEngine: _context.UseNewFormattingEngine);
 
@@ -221,7 +221,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         string expected,
         int tabSize = 4,
         bool insertSpaces = true,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         bool inGlobalNamespace = false)
     {
         // Arrange
@@ -230,7 +230,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         var razorSourceText = SourceText.From(input);
         var path = "file:///path/to/Document.razor";
         var uri = new Uri(path);
-        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(razorSourceText, uri.AbsolutePath, fileKind: fileKind, inGlobalNamespace: inGlobalNamespace);
+        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(razorSourceText, uri.AbsolutePath, sourceCodeKind: sourceCodeKind, inGlobalNamespace: inGlobalNamespace);
 
         var filePathService = new LSPFilePathService(TestLanguageServerFeatureOptions.Instance);
         var mappingService = new LspDocumentMappingService(filePathService, new TestDocumentContextFactory(), LoggerFactory);
@@ -272,13 +272,13 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         SourceText text,
         string path,
         ImmutableArray<TagHelperDescriptor> tagHelpers = default,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         bool allowDiagnostics = false,
         bool inGlobalNamespace = false)
     {
         tagHelpers = tagHelpers.NullToEmpty();
 
-        if (fileKind == RazorFileKind.Component)
+        if (sourceCodeKind == RazorSourceCodeKind.Component)
         {
             tagHelpers = tagHelpers.AddRange(RazorTestResources.BlazorServerAppTagHelpers);
         }
@@ -312,8 +312,8 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
             .Returns(importPath);
 
         var projectFileSystem = new TestRazorProjectFileSystem([
-            new TestRazorProjectItem(path, fileKind: fileKind),
-            new TestRazorProjectItem(importPath, fileKind: RazorFileKind.ComponentImport)]);
+            new TestRazorProjectItem(path, sourceCodeKind: sourceCodeKind),
+            new TestRazorProjectItem(importPath, sourceCodeKind: RazorSourceCodeKind.ComponentImport)]);
 
         var projectEngine = RazorProjectEngine.Create(
             new RazorConfiguration(RazorLanguageVersion.Latest, "TestConfiguration", Extensions: []),
@@ -331,7 +331,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
                 RazorExtensions.Register(builder);
             });
 
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, [importSource], tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, [importSource], tagHelpers);
 
         if (!allowDiagnostics)
         {
@@ -339,14 +339,14 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         }
 
         var documentSnapshot = CreateDocumentSnapshot(
-            path, fileKind, codeDocument, projectEngine, [importSnapshotMock.Object], [importSource], tagHelpers, inGlobalNamespace);
+            path, sourceCodeKind, codeDocument, projectEngine, [importSnapshotMock.Object], [importSource], tagHelpers, inGlobalNamespace);
 
         return (codeDocument, documentSnapshot);
     }
 
     internal static IDocumentSnapshot CreateDocumentSnapshot(
         string path,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         RazorCodeDocument codeDocument,
         RazorProjectEngine projectEngine,
         ImmutableArray<IDocumentSnapshot> imports,
@@ -375,8 +375,8 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
             .Setup(d => d.Project.GetTagHelpersAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(tagHelpers);
         snapshotMock
-            .Setup(d => d.FileKind)
-            .Returns(fileKind);
+            .Setup(d => d.SourceCodeKind)
+            .Returns(sourceCodeKind);
         snapshotMock
             .Setup(d => d.Version)
             .Returns(1);
@@ -388,10 +388,10 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
                     filePath: path,
                     relativePath: inGlobalNamespace ? Path.GetFileName(path) : path));
 
-                var codeDocument = projectEngine.ProcessDesignTime(source, fileKind, importDocuments, tagHelpers);
+                var codeDocument = projectEngine.ProcessDesignTime(source, sourceCodeKind, importDocuments, tagHelpers);
 
                 return CreateDocumentSnapshot(
-                    path, fileKind, codeDocument, projectEngine, imports, importDocuments, tagHelpers, inGlobalNamespace);
+                    path, sourceCodeKind, codeDocument, projectEngine, imports, importDocuments, tagHelpers, inGlobalNamespace);
             });
 
 #if !FORMAT_FUSE

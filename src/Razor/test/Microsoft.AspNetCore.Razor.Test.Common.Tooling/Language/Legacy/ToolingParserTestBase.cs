@@ -178,10 +178,10 @@ public abstract class ToolingParserTestBase : ToolingTestBase, IParserTest
         string document,
         bool designTime = false,
         IEnumerable<DirectiveDescriptor> directives = null,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         Action<RazorParserOptions.Builder> configureParserOptions = null)
     {
-        return ParseDocument(RazorLanguageVersion.Latest, document, directives, designTime, fileKind, configureParserOptions);
+        return ParseDocument(RazorLanguageVersion.Latest, document, directives, designTime, sourceCodeKind, configureParserOptions);
     }
 
     internal virtual RazorSyntaxTree ParseDocument(
@@ -189,13 +189,13 @@ public abstract class ToolingParserTestBase : ToolingTestBase, IParserTest
         string document,
         IEnumerable<DirectiveDescriptor> directives,
         bool designTime = false,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         Action<RazorParserOptions.Builder> configureParserOptions = null)
     {
         directives ??= [];
 
         var source = TestRazorSourceDocument.Create(document, filePath: null, relativePath: null, normalizeNewLines: true);
-        var parserOptions = CreateParserOptions(version, directives, designTime, fileKind, configureParserOptions);
+        var parserOptions = CreateParserOptions(version, directives, designTime, sourceCodeKind, configureParserOptions);
         var codeDocument = RazorCodeDocument.Create(source, parserOptions);
 
         using var context = new ParserContext(source, parserOptions);
@@ -223,9 +223,9 @@ public abstract class ToolingParserTestBase : ToolingTestBase, IParserTest
         ParseDocumentTest(document, directives: null, designTime: false);
     }
 
-    internal virtual void ParseDocumentTest(string document, RazorFileKind fileKind)
+    internal virtual void ParseDocumentTest(string document, RazorSourceCodeKind sourceCodeKind)
     {
-        ParseDocumentTest(document, directives: null, designTime: false, fileKind);
+        ParseDocumentTest(document, directives: null, designTime: false, sourceCodeKind);
     }
 
     internal virtual void ParseDocumentTest(string document, IEnumerable<DirectiveDescriptor> directives)
@@ -242,9 +242,9 @@ public abstract class ToolingParserTestBase : ToolingTestBase, IParserTest
         string document,
         IEnumerable<DirectiveDescriptor> directives,
         bool designTime,
-        RazorFileKind fileKind = RazorFileKind.Legacy)
+        RazorSourceCodeKind? sourceCodeKind = null)
     {
-        ParseDocumentTest(RazorLanguageVersion.Latest, document, directives, designTime, fileKind);
+        ParseDocumentTest(RazorLanguageVersion.Latest, document, directives, designTime, sourceCodeKind);
     }
 
     internal virtual void ParseDocumentTest(
@@ -252,9 +252,9 @@ public abstract class ToolingParserTestBase : ToolingTestBase, IParserTest
         string document,
         IEnumerable<DirectiveDescriptor> directives,
         bool designTime,
-        RazorFileKind fileKind = RazorFileKind.Legacy)
+        RazorSourceCodeKind? sourceCodeKind = null)
     {
-        var result = ParseDocument(version, document, directives, designTime, fileKind: fileKind);
+        var result = ParseDocument(version, document, directives, designTime, sourceCodeKind: sourceCodeKind);
 
         BaselineTest(result);
     }
@@ -263,10 +263,10 @@ public abstract class ToolingParserTestBase : ToolingTestBase, IParserTest
         RazorLanguageVersion version,
         IEnumerable<DirectiveDescriptor> directives,
         bool designTime,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         Action<RazorParserOptions.Builder> configureParserOptions = null)
     {
-        var builder = new RazorParserOptions.Builder(version, fileKind)
+        var builder = new RazorParserOptions.Builder(version, sourceCodeKind ?? RazorSourceCodeKind.Legacy)
         {
             DesignTime = designTime,
             Directives = [.. directives],

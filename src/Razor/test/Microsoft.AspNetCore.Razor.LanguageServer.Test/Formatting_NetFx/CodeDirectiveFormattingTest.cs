@@ -180,7 +180,7 @@ public class CodeDirectiveFormattingTest(FormattingTestContext context, HtmlForm
                 }
                 """;
 
-        var generated = CompileToCSharp("TestGeneric.razor", input, throwOnFailure: true, fileKind: RazorFileKind.Component);
+        var generated = CompileToCSharp("TestGeneric.razor", input, throwOnFailure: true, sourceCodeKind: RazorSourceCodeKind.Component);
 
         return generated.CodeDocument.GetTagHelperContext().TagHelpers.ToImmutableArray();
     }
@@ -205,7 +205,7 @@ public class CodeDirectiveFormattingTest(FormattingTestContext context, HtmlForm
                 }
                 """;
 
-        var generated = CompileToCSharp("TestGenericTwo.razor", input, throwOnFailure: true, fileKind: RazorFileKind.Component);
+        var generated = CompileToCSharp("TestGenericTwo.razor", input, throwOnFailure: true, sourceCodeKind: RazorSourceCodeKind.Component);
 
         return generated.CodeDocument.GetTagHelperContext().TagHelpers.ToImmutableArray();
     }

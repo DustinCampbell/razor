@@ -15,7 +15,7 @@ public sealed class RazorCodeDocument
     public RazorParserOptions ParserOptions { get; }
     public RazorCodeGenerationOptions CodeGenerationOptions { get; }
 
-    public RazorFileKind FileKind => ParserOptions.FileKind;
+    public RazorSourceCodeKind SourceCodeKind => ParserOptions.SourceCodeKind;
 
     private RazorCodeDocument(
         RazorSourceDocument source,

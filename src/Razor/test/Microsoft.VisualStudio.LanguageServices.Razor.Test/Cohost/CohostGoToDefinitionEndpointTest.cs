@@ -104,7 +104,7 @@ public class CohostGoToDefinitionEndpointTest(FuseTestContext context, ITestOutp
             }
             """;
 
-        await VerifyGoToDefinitionAsync(input, RazorFileKind.Component);
+        await VerifyGoToDefinitionAsync(input, RazorSourceCodeKind.Component);
     }
 
     [FuseFact(Skip = "IFilePathService does not yet map generated documents")]
@@ -123,7 +123,7 @@ public class CohostGoToDefinitionEndpointTest(FuseTestContext context, ITestOutp
             }
             """;
 
-        await VerifyGoToDefinitionAsync(input, RazorFileKind.Component);
+        await VerifyGoToDefinitionAsync(input, RazorSourceCodeKind.Component);
     }
 
     [FuseFact]
@@ -145,7 +145,7 @@ public class CohostGoToDefinitionEndpointTest(FuseTestContext context, ITestOutp
             }
             """;
 
-        var result = await GetGoToDefinitionResultAsync(input, RazorFileKind.Component,
+        var result = await GetGoToDefinitionResultAsync(input, RazorSourceCodeKind.Component,
             (FileName("SurveyPrompt.razor"), surveyPrompt.Text));
 
         Assert.NotNull(result.Value.Second);
@@ -191,7 +191,7 @@ public class CohostGoToDefinitionEndpointTest(FuseTestContext context, ITestOutp
             }
             """;
 
-        var result = await GetGoToDefinitionResultAsync(input, RazorFileKind.Component,
+        var result = await GetGoToDefinitionResultAsync(input, RazorSourceCodeKind.Component,
             (FileName("SurveyPrompt.razor"), surveyPrompt.Text));
 
         Assert.NotNull(result.Value.Second);
@@ -238,12 +238,12 @@ public class CohostGoToDefinitionEndpointTest(FuseTestContext context, ITestOutp
 
     private async Task VerifyGoToDefinitionAsync(
         TestCode input,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         SumType<Location, Location[], DocumentLink[]>? htmlResponse = null)
     {
         UpdateClientInitializationOptions(c => c with { ForceRuntimeCodeGeneration = context.ForceRuntimeCodeGeneration });
 
-        var document = CreateProjectAndRazorDocument(input.Text, fileKind);
+        var document = CreateProjectAndRazorDocument(input.Text, sourceCodeKind);
         var result = await GetGoToDefinitionResultCoreAsync(document, input, htmlResponse);
 
         Assumes.NotNull(result);
@@ -261,12 +261,12 @@ public class CohostGoToDefinitionEndpointTest(FuseTestContext context, ITestOutp
 
     private async Task<SumType<RoslynLocation, RoslynLocation[], RoslynDocumentLink[]>?> GetGoToDefinitionResultAsync(
         TestCode input,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         params (string fileName, string contents)[]? additionalFiles)
     {
         UpdateClientInitializationOptions(c => c with { ForceRuntimeCodeGeneration = context.ForceRuntimeCodeGeneration });
 
-        var document = CreateProjectAndRazorDocument(input.Text, fileKind, additionalFiles);
+        var document = CreateProjectAndRazorDocument(input.Text, sourceCodeKind, additionalFiles);
         return await GetGoToDefinitionResultCoreAsync(document, input, htmlResponse: null);
     }
 

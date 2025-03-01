@@ -7,7 +7,7 @@ namespace Microsoft.AspNetCore.Razor.Language.IntegrationTests;
 
 public class ComponentRenderModeAttributeIntegrationTests : RazorIntegrationTestBase
 {
-    internal override RazorFileKind FileKind => RazorFileKind.Component;
+    internal override RazorSourceCodeKind SourceCodeKind => RazorSourceCodeKind.Component;
 
     internal string ComponentName = "TestComponent";
 

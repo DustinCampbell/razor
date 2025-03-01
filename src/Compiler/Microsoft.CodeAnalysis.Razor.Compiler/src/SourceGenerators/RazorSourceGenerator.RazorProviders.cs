@@ -90,13 +90,18 @@ namespace Microsoft.NET.Sdk.Razor.SourceGenerators
             options.TryGetValue("build_metadata.AdditionalFiles.CssScope", out var cssScope);
             var relativePath = Encoding.UTF8.GetString(Convert.FromBase64String(encodedRelativePath));
 
+            if (!SourceCodeFileKinds.TryGetSourceCodeKind(additionalText.Path, out var sourceCodeKind))
+            {
+                sourceCodeKind = RazorSourceCodeKind.Legacy;
+            }
+
             var projectItem = new SourceGeneratorProjectItem(
                 basePath: "/",
                 filePath: '/' + relativePath
                     .Replace(Path.DirectorySeparatorChar, '/')
                     .Replace("//", "/"),
                 relativePhysicalPath: relativePath,
-                fileKind: RazorFileKinds.GetFileKindFromFilePath(additionalText.Path),
+                sourceCodeKind: sourceCodeKind,
                 additionalText: additionalText,
                 cssScope: cssScope);
             return (projectItem, null);

@@ -65,7 +65,7 @@ public class ExtractToComponentCodeActionProviderTest(ITestOutputHelper testOutp
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, selectionSpan, documentPath, contents, fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, selectionSpan, documentPath, contents, sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new ExtractToComponentCodeActionProvider();
 
@@ -611,13 +611,13 @@ public class ExtractToComponentCodeActionProviderTest(ITestOutputHelper testOutp
         string text,
         string? relativePath = null,
         bool supportsFileCreation = true,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         relativePath ??= filePath;
 
         var source = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(filePath, relativePath));
 
-        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, fileKind, builder =>
+        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, sourceCodeKind, builder =>
         {
             builder.Directives = [ComponentCodeDirective.Directive, FunctionsDirective.Directive];
         });

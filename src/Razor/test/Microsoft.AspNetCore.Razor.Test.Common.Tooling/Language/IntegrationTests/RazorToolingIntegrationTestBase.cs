@@ -84,7 +84,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
     /// Gets a hardcoded document kind to be added to each code document that's created. This can
     /// be used to generate components.
     /// </summary>
-    internal virtual RazorFileKind FileKind => RazorFileKind.None;
+    internal virtual RazorSourceCodeKind? SourceCodeKind => null;
 
     internal virtual VirtualRazorProjectFileSystem FileSystem { get; }
 
@@ -140,7 +140,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
         });
     }
 
-    internal RazorProjectItem CreateProjectItem(string cshtmlRelativePath, string cshtmlContent, RazorFileKind fileKind = RazorFileKind.None)
+    internal RazorProjectItem CreateProjectItem(string cshtmlRelativePath, string cshtmlContent, RazorSourceCodeKind? sourceCodeKind = null)
     {
         var fullPath = WorkingDirectory + PathSeparator + cshtmlRelativePath;
 
@@ -161,7 +161,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
             physicalPath: fullPath,
             relativePhysicalPath: cshtmlRelativePath,
             basePath: WorkingDirectory,
-            fileKind: fileKind == RazorFileKind.None ? FileKind : fileKind)
+            sourceCodeKind ?? SourceCodeKind)
         {
             Content = cshtmlContent.TrimStart(),
         };
@@ -176,7 +176,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
         string cshtmlRelativePath,
         string cshtmlContent,
         bool throwOnFailure = true,
-        RazorFileKind fileKind = RazorFileKind.None)
+        RazorSourceCodeKind? sourceCodeKind = null)
     {
         if (DeclarationOnly && DesignTime)
         {
@@ -206,7 +206,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
             }
 
             // Result of generating declarations
-            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, fileKind);
+            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, sourceCodeKind);
             codeDocument = projectEngine.ProcessDeclarationOnly(projectItem);
             var declaration = new CompileToCSharpResult
             {
@@ -252,7 +252,7 @@ public class RazorToolingIntegrationTestBase : ToolingTestBase
             // This will include the built-in components.
             var projectEngine = CreateProjectEngine(Configuration, BaseCompilation.References.ToArray());
 
-            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, fileKind);
+            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, sourceCodeKind);
 
             var codeDocument = DeclarationOnly
                 ? projectEngine.ProcessDeclarationOnly(projectItem)

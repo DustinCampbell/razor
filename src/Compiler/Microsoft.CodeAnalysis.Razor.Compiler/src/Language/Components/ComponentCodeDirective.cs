@@ -17,6 +17,6 @@ public static class ComponentCodeDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Component);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Component);
     }
 }

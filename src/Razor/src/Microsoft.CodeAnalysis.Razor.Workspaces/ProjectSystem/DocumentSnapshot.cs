@@ -22,7 +22,7 @@ internal sealed class DocumentSnapshot(ProjectSnapshot project, DocumentState st
 
     public HostDocument HostDocument => _state.HostDocument;
 
-    public RazorFileKind FileKind => _state.HostDocument.FileKind;
+    public RazorSourceCodeKind SourceCodeKind => _state.HostDocument.SourceCodeKind;
     public string FilePath => _state.HostDocument.FilePath;
     public string TargetPath => _state.HostDocument.TargetPath;
     public int Version => _state.Version;
@@ -72,7 +72,7 @@ internal sealed class DocumentSnapshot(ProjectSnapshot project, DocumentState st
 
     #region ILegacyDocumentSnapshot support
 
-    RazorFileKind ILegacyDocumentSnapshot.FileKind => FileKind;
+    RazorSourceCodeKind ILegacyDocumentSnapshot.SourceCodeKind => SourceCodeKind;
 
     #endregion
 }

@@ -35,7 +35,7 @@ internal class PromoteUsingCodeActionResolver(IFileSystem fileSystem) : IRazorCo
 
         var sourceText = await documentContext.GetSourceTextAsync(cancellationToken).ConfigureAwait(false);
 
-        var importsFileName = PromoteUsingCodeActionProvider.GetImportsFileName(documentContext.FileKind);
+        var importsFileName = PromoteUsingCodeActionProvider.GetImportsFileName(documentContext.SourceCodeKind);
 
         var file = FilePathNormalizer.Normalize(documentContext.Uri.GetAbsoluteOrUNCPath());
         var folder = Path.GetDirectoryName(file).AssumeNotNull();

@@ -40,7 +40,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var documentMappingService = StrictMock.Of<IEditMappingService>();
         var provider = new HtmlCodeActionProvider(documentMappingService);
@@ -71,7 +71,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var remappedEdit = new WorkspaceEdit
         {
@@ -142,7 +142,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
         string text,
         bool supportsFileCreation = true,
         bool supportsCodeActionResolve = true,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         var tagHelpers = ImmutableArray<TagHelperDescriptor>.Empty;
         var sourceDocument = TestRazorSourceDocument.Create(text, filePath: filePath, relativePath: filePath);
@@ -155,7 +155,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
                 builder.UseRoslynTokenizer = true;
             });
         });
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, importSources: default, tagHelpers);
 
         var documentSnapshotMock = new StrictMock<IDocumentSnapshot>();
         documentSnapshotMock

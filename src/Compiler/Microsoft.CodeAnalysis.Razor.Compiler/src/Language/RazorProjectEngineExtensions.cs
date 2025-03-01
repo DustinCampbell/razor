@@ -8,18 +8,22 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public static class RazorProjectEngineExtensions
 {
-    private const RazorFileKind DefaultFileKind = RazorFileKind.Legacy;
+    private const RazorSourceCodeKind DefaultSourceCodeKind = RazorSourceCodeKind.Legacy;
 
-    private static RazorFileKind ComputeFileKindIfNeeded(RazorFileKind fileKind, RazorSourceDocument source)
+    private static RazorSourceCodeKind ComputeFileKindIfNeeded(RazorSourceCodeKind sourceCodeKind, RazorSourceDocument source)
     {
-        if (fileKind is not RazorFileKind.None)
+        if (sourceCodeKind is not RazorSourceCodeKind.None)
         {
-            return fileKind;
+            return sourceCodeKind;
         }
 
-        return source.FilePath is string filePath
-            ? RazorFileKinds.GetFileKindFromFilePath(filePath)
-            : DefaultFileKind;
+        if (source.FilePath is string filePath &&
+            SourceCodeFileKinds.TryGetSourceCodeKind(filePath, out var result))
+        {
+            return result;
+        }
+
+        return DefaultSourceCodeKind;
     }
 
     public static RazorCodeDocument CreateCodeDocument(
@@ -30,8 +34,8 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind)
-        => projectEngine.CreateCodeDocumentCore(source, fileKind);
+        RazorSourceCodeKind sourceCodeKind)
+        => projectEngine.CreateCodeDocumentCore(source, sourceCodeKind);
 
     public static RazorCodeDocument CreateCodeDocument(
         this RazorProjectEngine projectEngine,
@@ -42,9 +46,9 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources)
-        => projectEngine.CreateCodeDocumentCore(source, fileKind, importSources);
+        => projectEngine.CreateCodeDocumentCore(source, sourceCodeKind, importSources);
 
     public static RazorCodeDocument CreateCodeDocument(
         this RazorProjectEngine projectEngine,
@@ -55,9 +59,9 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         IReadOnlyList<TagHelperDescriptor> tagHelpers)
-        => projectEngine.CreateCodeDocumentCore(source, fileKind, tagHelpers: tagHelpers);
+        => projectEngine.CreateCodeDocumentCore(source, sourceCodeKind, tagHelpers: tagHelpers);
 
     public static RazorCodeDocument CreateCodeDocument(
         this RazorProjectEngine projectEngine,
@@ -69,18 +73,18 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor> tagHelpers)
-        => projectEngine.CreateCodeDocumentCore(source, fileKind, importSources, tagHelpers);
+        => projectEngine.CreateCodeDocumentCore(source, sourceCodeKind, importSources, tagHelpers);
 
     private static RazorCodeDocument CreateCodeDocumentCore(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind = RazorFileKind.None,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.None,
         ImmutableArray<RazorSourceDocument> importSources = default,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
-        => projectEngine.CreateCodeDocument(source, ComputeFileKindIfNeeded(fileKind, source), importSources, tagHelpers, cssScope: null);
+        => projectEngine.CreateCodeDocument(source, ComputeFileKindIfNeeded(sourceCodeKind, source), importSources, tagHelpers, cssScope: null);
 
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
@@ -90,8 +94,8 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind)
-        => projectEngine.CreateDesignTimeCodeDocumentCore(source, fileKind);
+        RazorSourceCodeKind sourceCodeKind)
+        => projectEngine.CreateDesignTimeCodeDocumentCore(source, sourceCodeKind);
 
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
@@ -102,9 +106,9 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources)
-        => projectEngine.CreateDesignTimeCodeDocumentCore(source, fileKind, importSources);
+        => projectEngine.CreateDesignTimeCodeDocumentCore(source, sourceCodeKind, importSources);
 
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
@@ -115,9 +119,9 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         IReadOnlyList<TagHelperDescriptor> tagHelpers)
-        => projectEngine.CreateDesignTimeCodeDocumentCore(source, fileKind, tagHelpers: tagHelpers);
+        => projectEngine.CreateDesignTimeCodeDocumentCore(source, sourceCodeKind, tagHelpers: tagHelpers);
 
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
@@ -129,16 +133,16 @@ public static class RazorProjectEngineExtensions
     public static RazorCodeDocument CreateDesignTimeCodeDocument(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor> tagHelpers)
-        => projectEngine.CreateDesignTimeCodeDocumentCore(source, fileKind, importSources, tagHelpers);
+        => projectEngine.CreateDesignTimeCodeDocumentCore(source, sourceCodeKind, importSources, tagHelpers);
 
     private static RazorCodeDocument CreateDesignTimeCodeDocumentCore(
         this RazorProjectEngine projectEngine,
         RazorSourceDocument source,
-        RazorFileKind fileKind = RazorFileKind.None,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.None,
         ImmutableArray<RazorSourceDocument> importSources = default,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
-        => projectEngine.CreateDesignTimeCodeDocument(source, ComputeFileKindIfNeeded(fileKind, source), importSources, tagHelpers);
+        => projectEngine.CreateDesignTimeCodeDocument(source, ComputeFileKindIfNeeded(sourceCodeKind, source), importSources, tagHelpers);
 }

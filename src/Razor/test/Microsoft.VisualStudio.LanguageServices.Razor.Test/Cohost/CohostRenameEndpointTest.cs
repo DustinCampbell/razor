@@ -165,20 +165,20 @@ public class CohostRenameEndpointTest(FuseTestContext context, ITestOutputHelper
            ],
            newName: "DifferentName",
            expected: "",
-           fileKind: RazorFileKind.Legacy);
+           sourceCodeKind: RazorSourceCodeKind.Legacy);
 
     private async Task VerifyRenamesAsync(
         string input,
         string newName,
         string expected,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         (string fileName, string contents)[]? additionalFiles = null,
         (string oldName, string newName)[]? renames = null)
     {
         UpdateClientInitializationOptions(c => c with { ForceRuntimeCodeGeneration = context.ForceRuntimeCodeGeneration });
 
         TestFileMarkupParser.GetPosition(input, out var source, out var cursorPosition);
-        var document = CreateProjectAndRazorDocument(source, fileKind, additionalFiles);
+        var document = CreateProjectAndRazorDocument(source, sourceCodeKind, additionalFiles);
         var inputText = await document.GetTextAsync(DisposalToken);
         var position = inputText.GetPosition(cursorPosition);
 

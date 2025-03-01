@@ -9,10 +9,9 @@ namespace Microsoft.AspNetCore.Razor.Language;
 /// <summary>
 /// A <see cref="RazorProjectItem"/> that does not exist.
 /// </summary>
-/// <param name="basePath">The base path.</param>
 /// <param name="filePath">The path.</param>
-/// <param name="fileKind">The file kind</param>
-internal sealed class NotFoundProjectItem(string filePath, RazorFileKind fileKind) : RazorProjectItem
+/// <param name="sourceCodeKind">The file kind</param>
+internal sealed class NotFoundProjectItem(string filePath, RazorSourceCodeKind? sourceCodeKind) : RazorProjectItem
 {
     /// <inheritdoc />
     public override string BasePath => string.Empty;
@@ -21,7 +20,7 @@ internal sealed class NotFoundProjectItem(string filePath, RazorFileKind fileKin
     public override string FilePath => filePath;
 
     /// <inheritdoc />
-    public override RazorFileKind FileKind { get; } = ComputeFileKind(fileKind, filePath);
+    public override RazorSourceCodeKind SourceCodeKind { get; } = ComputeFileKind(sourceCodeKind, filePath);
 
     /// <inheritdoc />
     public override bool Exists => false;

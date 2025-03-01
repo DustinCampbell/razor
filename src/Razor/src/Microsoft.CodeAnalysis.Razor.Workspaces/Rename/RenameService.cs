@@ -40,7 +40,7 @@ internal class RenameService(
         CancellationToken cancellationToken)
     {
         // We only support renaming of .razor components, not .cshtml tag helpers
-        if (!documentContext.FileKind.IsComponent())
+        if (!documentContext.SourceCodeKind.IsComponent())
         {
             return null;
         }
@@ -165,7 +165,7 @@ internal class RenameService(
         IDocumentSnapshot documentSnapshot,
         CancellationToken cancellationToken)
     {
-        if (!documentSnapshot.FileKind.IsComponent())
+        if (!documentSnapshot.SourceCodeKind.IsComponent())
         {
             return;
         }

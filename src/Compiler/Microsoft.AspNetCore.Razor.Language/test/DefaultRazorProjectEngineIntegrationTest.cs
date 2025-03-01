@@ -133,7 +133,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, expectedImports, expectedTagHelpers);
+        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorSourceCodeKind.Legacy, expectedImports, expectedTagHelpers);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -150,11 +150,11 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.ComponentImport, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorSourceCodeKind.ComponentImport, importSources: default, tagHelpers: null);
 
         // Assert
-        var actual = codeDocument.FileKind;
-        Assert.Equal(RazorFileKind.ComponentImport, actual);
+        var actual = codeDocument.SourceCodeKind;
+        Assert.Equal(RazorSourceCodeKind.ComponentImport, actual);
     }
 
     [Fact]
@@ -166,7 +166,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorSourceCodeKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -201,8 +201,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.Process(projectItem);
 
         // Assert
-        var actual = codeDocument.FileKind;
-        Assert.Equal(RazorFileKind.Legacy, actual);
+        var actual = codeDocument.SourceCodeKind;
+        Assert.Equal(RazorSourceCodeKind.Legacy, actual);
     }
 
     [Fact]
@@ -217,8 +217,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.Process(projectItem);
 
         // Assert
-        var actual = codeDocument.FileKind;
-        Assert.Equal(RazorFileKind.Component, actual);
+        var actual = codeDocument.SourceCodeKind;
+        Assert.Equal(RazorSourceCodeKind.Component, actual);
     }
 
     [Fact]
@@ -230,7 +230,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorSourceCodeKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         Assert.Empty(codeDocument.Imports);
@@ -252,7 +252,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, expectedImports, expectedTagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorSourceCodeKind.Legacy, expectedImports, expectedTagHelpers);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -269,7 +269,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, default, tagHelpers: null);
+        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorSourceCodeKind.Legacy, default, tagHelpers: null);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -288,8 +288,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.ProcessDesignTime(projectItem);
 
         // Assert
-        var actual = codeDocument.FileKind;
-        Assert.Equal(RazorFileKind.Legacy, actual);
+        var actual = codeDocument.SourceCodeKind;
+        Assert.Equal(RazorSourceCodeKind.Legacy, actual);
     }
 
     [Fact]
@@ -304,8 +304,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.ProcessDesignTime(projectItem);
 
         // Assert
-        var actual = codeDocument.FileKind;
-        Assert.Equal(RazorFileKind.Component, actual);
+        var actual = codeDocument.SourceCodeKind;
+        Assert.Equal(RazorSourceCodeKind.Component, actual);
     }
 
     [Fact]
@@ -333,7 +333,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorSourceCodeKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         Assert.Empty(codeDocument.Imports);

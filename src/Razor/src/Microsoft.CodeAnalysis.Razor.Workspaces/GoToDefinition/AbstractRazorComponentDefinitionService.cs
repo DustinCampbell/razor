@@ -38,9 +38,9 @@ internal abstract class AbstractRazorComponentDefinitionService(
             return null;
         }
 
-        if (!documentSnapshot.FileKind.IsComponent())
+        if (!documentSnapshot.SourceCodeKind.IsComponent())
         {
-            _logger.LogInformation($"'{documentSnapshot.FileKind}' is not a component type.");
+            _logger.LogInformation($"'{documentSnapshot.SourceCodeKind}' is not a component type.");
             return null;
         }
 

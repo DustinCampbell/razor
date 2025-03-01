@@ -27,7 +27,7 @@ internal class ComponentPageDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Component, RazorFileKind.ComponentImport);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Component, RazorSourceCodeKind.ComponentImport);
         builder.Features.Add(new ComponentPageDirectivePass());
         return builder;
     }

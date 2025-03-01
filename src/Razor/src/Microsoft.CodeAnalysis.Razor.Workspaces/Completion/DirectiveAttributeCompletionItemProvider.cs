@@ -16,7 +16,7 @@ internal class DirectiveAttributeCompletionItemProvider : DirectiveAttributeComp
 {
     public override ImmutableArray<RazorCompletionItem> GetCompletionItems(RazorCompletionContext context)
     {
-        if (!context.SyntaxTree.Options.FileKind.IsComponent())
+        if (!context.SyntaxTree.Options.SourceCodeKind.IsComponent())
         {
             // Directive attributes are only supported in components
             return [];

@@ -46,7 +46,7 @@ public class ExtractToCodeBehindCodeActionProviderTest(ITestOutputHelper testOut
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new ExtractToCodeBehindCodeActionProvider(LoggerFactory);
 
@@ -373,8 +373,8 @@ public class ExtractToCodeBehindCodeActionProviderTest(ITestOutputHelper testOut
         string filePath,
         string text,
         bool supportsFileCreation = true,
-        RazorFileKind fileKind = RazorFileKind.Component)
-        => CreateRazorCodeActionContext(request, absoluteIndex, filePath, text, relativePath: filePath, supportsFileCreation, fileKind);
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
+        => CreateRazorCodeActionContext(request, absoluteIndex, filePath, text, relativePath: filePath, supportsFileCreation, sourceCodeKind);
 
     private static RazorCodeActionContext CreateRazorCodeActionContext(
         VSCodeActionParams request,
@@ -383,11 +383,11 @@ public class ExtractToCodeBehindCodeActionProviderTest(ITestOutputHelper testOut
         string text,
         string? relativePath,
         bool supportsFileCreation = true,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         var source = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(filePath, relativePath));
 
-        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, fileKind, builder =>
+        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, sourceCodeKind, builder =>
         {
             builder.Directives = [ComponentCodeDirective.Directive, FunctionsDirective.Directive];
         });

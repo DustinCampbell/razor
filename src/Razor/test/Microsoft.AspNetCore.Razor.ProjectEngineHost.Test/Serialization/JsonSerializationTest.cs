@@ -88,8 +88,8 @@ public class JsonSerializationTest(ITestOutputHelper testOutput) : ToolingTestBa
     public void RazorProjectInfo_CanRoundTrip()
     {
         // Arrange
-        var legacyDocument = new DocumentSnapshotHandle("/path/to/file.cshtml", "file.cshtml", RazorFileKind.Legacy);
-        var componentDocument = new DocumentSnapshotHandle("/path/to/otherfile.razor", "otherfile.razor", RazorFileKind.Component);
+        var legacyDocument = new DocumentSnapshotHandle("/path/to/file.cshtml", "file.cshtml", RazorSourceCodeKind.Legacy);
+        var componentDocument = new DocumentSnapshotHandle("/path/to/otherfile.razor", "otherfile.razor", RazorSourceCodeKind.Component);
         var projectInfo = new RazorProjectInfo(
             new ProjectKey("/path/to/obj/"),
             "/path/to/project.csproj",
@@ -116,13 +116,13 @@ public class JsonSerializationTest(ITestOutputHelper testOutput) : ToolingTestBa
             {
                 Assert.Equal(legacyDocument.FilePath, document.FilePath);
                 Assert.Equal(legacyDocument.TargetPath, document.TargetPath);
-                Assert.Equal(legacyDocument.FileKind, document.FileKind);
+                Assert.Equal(legacyDocument.SourceCodeKind, document.SourceCodeKind);
             },
             document =>
             {
                 Assert.Equal(componentDocument.FilePath, document.FilePath);
                 Assert.Equal(componentDocument.TargetPath, document.TargetPath);
-                Assert.Equal(componentDocument.FileKind, document.FileKind);
+                Assert.Equal(componentDocument.SourceCodeKind, document.SourceCodeKind);
             });
     }
 

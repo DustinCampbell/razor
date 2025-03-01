@@ -34,15 +34,15 @@ public abstract partial class RazorProjectFileSystem
     /// <param name="path">The path.</param>
     /// <returns>The <see cref="RazorProjectItem"/>.</returns>
     public RazorProjectItem GetItem(string path)
-        => GetItem(path, fileKind: RazorFileKind.None);
+        => GetItem(path, sourceCodeKind: null);
 
     /// <summary>
     /// Gets a <see cref="RazorProjectItem"/> for the specified path.
     /// </summary>
     /// <param name="path">The path.</param>
-    /// <param name="fileKind">The file kind</param>
+    /// <param name="sourceCodeKind">The source code kind</param>
     /// <returns>The <see cref="RazorProjectItem"/>.</returns>
-    public abstract RazorProjectItem GetItem(string path, RazorFileKind fileKind);
+    public abstract RazorProjectItem GetItem(string path, RazorSourceCodeKind? sourceCodeKind);
 
     /// <summary>
     /// Gets the sequence of files named <paramref name="fileName"/> that are applicable to the specified path.

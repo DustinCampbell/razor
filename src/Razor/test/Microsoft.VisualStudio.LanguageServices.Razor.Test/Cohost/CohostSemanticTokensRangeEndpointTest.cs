@@ -86,7 +86,7 @@ public class CohostSemanticTokensRangeEndpointTest(FuseTestContext context, ITes
             }
             """;
 
-        await VerifySemanticTokensAsync(input, colorBackground, precise, fileKind: RazorFileKind.Legacy);
+        await VerifySemanticTokensAsync(input, colorBackground, precise, RazorSourceCodeKind.Legacy);
     }
 
     [FuseTheory]
@@ -111,19 +111,19 @@ public class CohostSemanticTokensRangeEndpointTest(FuseTestContext context, ITes
             }
             """;
 
-        await VerifySemanticTokensAsync(input, colorBackground, precise, fileKind: RazorFileKind.Legacy);
+        await VerifySemanticTokensAsync(input, colorBackground, precise, RazorSourceCodeKind.Legacy);
     }
 
     private async Task VerifySemanticTokensAsync(
         string input,
         bool colorBackground,
         bool precise,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         [CallerMemberName] string? testName = null)
     {
         UpdateClientInitializationOptions(c => c with { ForceRuntimeCodeGeneration = context.ForceRuntimeCodeGeneration });
 
-        var document = CreateProjectAndRazorDocument(input, fileKind);
+        var document = CreateProjectAndRazorDocument(input, sourceCodeKind);
         var sourceText = await document.GetTextAsync(DisposalToken);
 
         var legend = TestRazorSemanticTokensLegendService.Instance;

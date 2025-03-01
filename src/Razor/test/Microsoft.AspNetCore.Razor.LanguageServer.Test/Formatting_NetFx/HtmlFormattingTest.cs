@@ -431,8 +431,8 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
                     }
                     """;
 
-            var selectComponent = CompileToCSharp("Select.razor", select, throwOnFailure: true, fileKind: RazorFileKind.Component);
-            var selectItemComponent = CompileToCSharp("SelectItem.razor", selectItem, throwOnFailure: true, fileKind: RazorFileKind.Component);
+            var selectComponent = CompileToCSharp("Select.razor", select, throwOnFailure: true, sourceCodeKind: RazorSourceCodeKind.Component);
+            var selectItemComponent = CompileToCSharp("SelectItem.razor", selectItem, throwOnFailure: true, sourceCodeKind: RazorSourceCodeKind.Component);
 
             using var _ = ArrayBuilderPool<TagHelperDescriptor>.GetPooledObject(out var tagHelpers);
             tagHelpers.AddRange(selectComponent.CodeDocument.GetTagHelperContext().TagHelpers);
@@ -538,7 +538,7 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
                 }
                 """));
 
-        var generated = CompileToCSharp("Test.razor", string.Empty, throwOnFailure: false, fileKind: RazorFileKind.Component);
+        var generated = CompileToCSharp("Test.razor", string.Empty, throwOnFailure: false, sourceCodeKind: RazorSourceCodeKind.Component);
 
         return generated.CodeDocument.GetTagHelperContext().TagHelpers.ToImmutableArray();
     }

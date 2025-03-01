@@ -17,10 +17,10 @@ internal class BackgroundParser : IDisposable
     private readonly MainThreadState _main;
     private readonly BackgroundThread _bg;
 
-    public BackgroundParser(RazorProjectEngine projectEngine, string filePath, string projectDirectory, RazorFileKind fileKind)
+    public BackgroundParser(RazorProjectEngine projectEngine, string filePath, string projectDirectory, RazorSourceCodeKind sourceCodeKind)
     {
         _main = new MainThreadState();
-        _bg = new BackgroundThread(_main, projectEngine, filePath, projectDirectory, fileKind);
+        _bg = new BackgroundThread(_main, projectEngine, filePath, projectDirectory, sourceCodeKind);
 
         _main.ResultsReady += (sender, args) => OnResultsReady(args);
     }
@@ -275,14 +275,14 @@ internal class BackgroundParser : IDisposable
         private readonly string _filePath;
         private readonly string _relativeFilePath;
         private readonly string _projectDirectory;
-        private readonly RazorFileKind _fileKind;
+        private readonly RazorSourceCodeKind _sourceCodeKind;
         private readonly MainThreadState _main;
         private readonly Thread _backgroundThread;
         private CancellationToken _shutdownToken;
         private readonly RazorProjectEngine _projectEngine;
         private IList<ChangeReference>? _previouslyDiscarded = new List<ChangeReference>();
 
-        public BackgroundThread(MainThreadState main, RazorProjectEngine projectEngine, string filePath, string projectDirectory, RazorFileKind fileKind)
+        public BackgroundThread(MainThreadState main, RazorProjectEngine projectEngine, string filePath, string projectDirectory, RazorSourceCodeKind sourceCodeKind)
         {
             // Run on MAIN thread!
             _main = main;
@@ -291,7 +291,7 @@ internal class BackgroundParser : IDisposable
             _filePath = filePath;
             _relativeFilePath = GetNormalizedRelativeFilePath(filePath, projectDirectory);
             _projectDirectory = projectDirectory;
-            _fileKind = fileKind;
+            _sourceCodeKind = sourceCodeKind;
 
             _backgroundThread = new Thread(WorkerLoop)
             {
@@ -381,7 +381,7 @@ internal class BackgroundParser : IDisposable
         {
             EnsureOnThread();
 
-            var projectItem = new TextSnapshotProjectItem(snapshot, _projectDirectory, _relativeFilePath, _filePath, _fileKind);
+            var projectItem = new TextSnapshotProjectItem(snapshot, _projectDirectory, _relativeFilePath, _filePath, _sourceCodeKind);
             var codeDocument = _projectEngine.ProcessDesignTime(projectItem);
 
             return codeDocument;

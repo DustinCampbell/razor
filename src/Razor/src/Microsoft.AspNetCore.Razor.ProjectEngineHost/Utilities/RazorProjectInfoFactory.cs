@@ -146,7 +146,7 @@ internal static class RazorProjectInfoFactory
         foreach (var document in project.AdditionalDocuments)
         {
             if (document.FilePath is { } filePath &&
-                RazorFileKinds.TryGetFileKind(filePath, out var kind))
+                SourceCodeFileKinds.TryGetSourceCodeKind(filePath, out var kind))
             {
                 documents.Add(new DocumentSnapshotHandle(filePath, GetTargetPath(filePath, normalizedProjectPath), kind));
             }
@@ -161,7 +161,7 @@ internal static class RazorProjectInfoFactory
             foreach (var document in project.Documents)
             {
                 if (TryGetRazorFileName(document.FilePath, out var razorFilePath) &&
-                    RazorFileKinds.TryGetFileKind(razorFilePath, out var kind))
+                    SourceCodeFileKinds.TryGetSourceCodeKind(razorFilePath, out var kind))
                 {
                     documents.Add(new DocumentSnapshotHandle(razorFilePath, GetTargetPath(razorFilePath, normalizedProjectPath), kind));
                 }

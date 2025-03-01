@@ -12,7 +12,7 @@ namespace Microsoft.AspNetCore.Razor.ProjectSystem;
 
 internal interface IDocumentSnapshot
 {
-    RazorFileKind FileKind { get; }
+    RazorSourceCodeKind SourceCodeKind { get; }
     string FilePath { get; }
     string TargetPath { get; }
     IProjectSnapshot Project { get; }

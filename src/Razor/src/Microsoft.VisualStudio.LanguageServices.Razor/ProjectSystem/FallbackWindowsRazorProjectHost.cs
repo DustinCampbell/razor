@@ -248,7 +248,7 @@ internal class FallbackWindowsRazorProjectHost : WindowsRazorProjectHostBase
             if (targetPath.EndsWith(".cshtml", StringComparison.OrdinalIgnoreCase))
             {
                 targetPath = CommonServices.UnconfiguredProject.MakeRooted(targetPath);
-                razorDocument = new HostDocument(filePath, targetPath, RazorFileKind.Legacy);
+                razorDocument = new HostDocument(filePath, targetPath, RazorSourceCodeKind.Legacy);
                 return true;
             }
         }

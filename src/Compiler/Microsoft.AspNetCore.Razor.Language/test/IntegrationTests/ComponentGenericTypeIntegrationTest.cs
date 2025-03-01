@@ -76,7 +76,7 @@ namespace Test
 }
 ");
 
-    internal override RazorFileKind FileKind => RazorFileKind.Component;
+    internal override RazorSourceCodeKind SourceCodeKind => RazorSourceCodeKind.Component;
 
     internal override bool UseTwoPhaseCompilation => true;
 

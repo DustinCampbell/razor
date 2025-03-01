@@ -75,12 +75,12 @@ public class FormattingContentValidationPassTest(ITestOutputHelper testOutput) :
         TestCode input,
         int tabSize = 4,
         bool insertSpaces = true,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         var source = SourceText.From(input.Text);
         var path = "file:///path/to/document.razor";
         var uri = new Uri(path);
-        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(source, uri.AbsolutePath, fileKind: fileKind);
+        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(source, uri.AbsolutePath, sourceCodeKind);
         var options = new RazorFormattingOptions()
         {
             TabSize = tabSize,
@@ -95,12 +95,8 @@ public class FormattingContentValidationPassTest(ITestOutputHelper testOutput) :
     }
 
     private static (RazorCodeDocument, IDocumentSnapshot) CreateCodeDocumentAndSnapshot(
-        SourceText text,
-        string path,
-        ImmutableArray<TagHelperDescriptor> tagHelpers = default,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        SourceText text, string path, RazorSourceCodeKind sourceCodeKind)
     {
-        tagHelpers = tagHelpers.NullToEmpty();
 
         var sourceDocument = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(path, path));
         var projectEngine = RazorProjectEngine.Create(builder =>
@@ -113,7 +109,7 @@ public class FormattingContentValidationPassTest(ITestOutputHelper testOutput) :
             });
         });
 
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, importSources: default, tagHelpers: []);
 
         var documentSnapshot = new StrictMock<IDocumentSnapshot>();
         documentSnapshot
@@ -124,10 +120,10 @@ public class FormattingContentValidationPassTest(ITestOutputHelper testOutput) :
             .Returns(path);
         documentSnapshot
             .Setup(d => d.Project.GetTagHelpersAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(tagHelpers);
+            .ReturnsAsync([]);
         documentSnapshot
-            .Setup(d => d.FileKind)
-            .Returns(fileKind);
+            .Setup(d => d.SourceCodeKind)
+            .Returns(sourceCodeKind);
 
         return (codeDocument, documentSnapshot.Object);
     }

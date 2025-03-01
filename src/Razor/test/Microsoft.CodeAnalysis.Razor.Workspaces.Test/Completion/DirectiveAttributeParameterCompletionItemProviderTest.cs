@@ -16,7 +16,7 @@ public class DirectiveAttributeParameterCompletionItemProviderTest : RazorToolin
     private readonly DirectiveAttributeParameterCompletionItemProvider _provider;
     private readonly TagHelperDocumentContext _defaultTagHelperDocumentContext;
 
-    internal override RazorFileKind FileKind => RazorFileKind.Component;
+    internal override RazorSourceCodeKind? SourceCodeKind => RazorSourceCodeKind.Component;
     internal override bool UseTwoPhaseCompilation => true;
 
     public DirectiveAttributeParameterCompletionItemProviderTest(ITestOutputHelper testOutput)

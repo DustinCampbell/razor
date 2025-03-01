@@ -45,7 +45,7 @@ internal class ExtractToCodeBehindCodeActionResolver(
             return null;
         }
 
-        if (!codeDocument.FileKind.IsComponent())
+        if (!codeDocument.SourceCodeKind.IsComponent())
         {
             return null;
         }

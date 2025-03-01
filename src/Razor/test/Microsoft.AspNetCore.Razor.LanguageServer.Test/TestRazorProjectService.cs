@@ -39,8 +39,12 @@ internal class TestRazorProjectService(
 
     public async Task AddDocumentToPotentialProjectsAsync(string textDocumentPath, CancellationToken cancellationToken)
     {
-        var document = new DocumentSnapshotHandle(
-            textDocumentPath, textDocumentPath, RazorFileKinds.GetFileKindFromFilePath(textDocumentPath));
+        if (!SourceCodeFileKinds.TryGetSourceCodeKind(textDocumentPath, out var sourceCodeKind))
+        {
+            sourceCodeKind = RazorSourceCodeKind.Legacy;
+        }
+
+        var document = new DocumentSnapshotHandle(textDocumentPath, textDocumentPath, sourceCodeKind);
 
         foreach (var projectSnapshot in _projectManager.FindPotentialProjects(textDocumentPath))
         {

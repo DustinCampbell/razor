@@ -45,7 +45,7 @@ internal class LinkedEditingRangeEndpoint(ILoggerFactory loggerFactory)
         var codeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
         if (codeDocument.IsUnsupported())
         {
-            _logger.LogWarning($"FileKind {codeDocument.FileKind} is unsupported");
+            _logger.LogWarning($"SourceCodeKind '{codeDocument.SourceCodeKind}' is unsupported");
             return null;
         }
 

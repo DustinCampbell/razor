@@ -28,9 +28,9 @@ internal static partial class ObjectReaders
     {
         var filePath = reader.ReadNonNullString(nameof(DocumentSnapshotHandle.FilePath));
         var targetPath = reader.ReadNonNullString(nameof(DocumentSnapshotHandle.TargetPath));
-        var fileKind = (RazorFileKind)reader.ReadInt32OrDefault(nameof(DocumentSnapshotHandle.FileKind), (int)RazorFileKind.Component);
+        var sourceCodeKind = (RazorSourceCodeKind)reader.ReadInt32OrDefault(nameof(DocumentSnapshotHandle.SourceCodeKind), (int)RazorSourceCodeKind.Component);
 
-        return new DocumentSnapshotHandle(filePath, targetPath, fileKind);
+        return new DocumentSnapshotHandle(filePath, targetPath, sourceCodeKind);
     }
 
     public static ProjectWorkspaceState ReadProjectWorkspaceStateFromProperties(JsonDataReader reader)

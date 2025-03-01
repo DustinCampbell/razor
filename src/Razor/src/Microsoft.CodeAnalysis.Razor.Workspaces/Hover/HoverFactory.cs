@@ -227,7 +227,7 @@ internal static class HoverFactory
         CancellationToken cancellationToken)
     {
         // Filter out attribute descriptors since we're creating an element hover
-        var keepAttributeInfo = RazorFileKinds.GetFileKindFromFilePath(documentFilePath) == RazorFileKind.Legacy;
+        var keepAttributeInfo = !SourceCodeFileKinds.TryGetSourceCodeKind(documentFilePath, out var sourceCodeKind) || sourceCodeKind == RazorSourceCodeKind.Legacy;
         var descriptionInfos = descriptors
             .Where(d => keepAttributeInfo || !d.IsAttributeDescriptor())
             .SelectAsArray(BoundElementDescriptionInfo.From);

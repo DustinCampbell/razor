@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Razor.Language;
 
 namespace Microsoft.AspNetCore.Razor.LanguageServer;
 
-internal sealed class RemoteProjectItem(string filePath, string physicalPath, RazorFileKind fileKind) : RazorProjectItem
+internal sealed class RemoteProjectItem(string filePath, string physicalPath, RazorSourceCodeKind? sourceCodeKind) : RazorProjectItem
 {
     public override string BasePath => "/";
     public override string FilePath { get; } = filePath;
     public override string PhysicalPath { get; } = physicalPath;
-    public override RazorFileKind FileKind { get; } = ComputeFileKind(fileKind, filePath);
+    public override RazorSourceCodeKind SourceCodeKind { get; } = ComputeFileKind(sourceCodeKind, filePath);
     public override string RelativePhysicalPath { get; } = filePath.StartsWith('/') ? filePath[1..] : filePath;
 
     public override bool Exists

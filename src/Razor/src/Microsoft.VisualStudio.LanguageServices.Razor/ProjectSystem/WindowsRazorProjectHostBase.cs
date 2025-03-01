@@ -229,7 +229,7 @@ internal abstract partial class WindowsRazorProjectHostBase : OnceInitializedOnc
                         var hostDocument = new HostDocument(
                             documentSnapshot.FilePath,
                             documentSnapshot.TargetPath,
-                            documentSnapshot.FileKind);
+                            documentSnapshot.SourceCodeKind);
                         updater.AddDocument(projectKey, hostDocument, new FileTextLoader(hostDocument.FilePath, null));
                     }
                 }

@@ -19,7 +19,7 @@ internal static class ComponentTypeParamDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Component, RazorFileKind.ComponentImport);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Component, RazorSourceCodeKind.ComponentImport);
         return builder;
     }
 }

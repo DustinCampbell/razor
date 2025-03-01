@@ -21,7 +21,7 @@ public static class NamespaceDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Legacy, RazorFileKind.Component, RazorFileKind.ComponentImport);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Legacy, RazorSourceCodeKind.Component, RazorSourceCodeKind.ComponentImport);
         return builder;
     }
 }

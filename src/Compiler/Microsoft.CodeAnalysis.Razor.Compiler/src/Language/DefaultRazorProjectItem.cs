@@ -13,18 +13,18 @@ namespace Microsoft.AspNetCore.Razor.Language;
 /// <param name="filePath">The file path.</param>
 /// <param name="physicalPath">The physical path of the file path.</param>
 /// <param name="relativePhysicalPath">The physical path of the base path.</param>
-/// <param name="fileKind">The file kind. If null, the document kind will be inferred from the file extension.</param>
+/// <param name="sourceCodeKind">The file kind. If null, the document kind will be inferred from the file extension.</param>
 /// <param name="cssScope">A scope identifier that will be used on elements in the generated class, or <see langword="null"/>.</param>
 internal sealed class DefaultRazorProjectItem(
     string basePath, string filePath,
     string physicalPath, string relativePhysicalPath,
-    RazorFileKind fileKind, string? cssScope) : RazorProjectItem
+    RazorSourceCodeKind? sourceCodeKind, string? cssScope) : RazorProjectItem
 {
     public override string BasePath { get; } = basePath;
     public override string FilePath { get; } = filePath;
     public override string PhysicalPath { get; } = physicalPath;
     public override string RelativePhysicalPath { get; } = relativePhysicalPath;
-    public override RazorFileKind FileKind { get; } = ComputeFileKind(fileKind, filePath);
+    public override RazorSourceCodeKind SourceCodeKind { get; } = ComputeFileKind(sourceCodeKind, filePath);
     public override string? CssScope { get; } = cssScope;
 
     public override bool Exists

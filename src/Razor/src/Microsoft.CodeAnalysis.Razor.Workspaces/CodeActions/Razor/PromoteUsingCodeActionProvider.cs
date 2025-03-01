@@ -43,7 +43,7 @@ internal class PromoteUsingCodeActionProvider : IRazorCodeActionProvider
             return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
         }
 
-        var importFileName = GetImportsFileName(context.DocumentSnapshot.FileKind);
+        var importFileName = GetImportsFileName(context.DocumentSnapshot.SourceCodeKind);
 
         var line = context.CodeDocument.Source.Text.Lines.GetLineFromPosition(context.StartAbsoluteIndex);
         var data = new PromoteToUsingCodeActionParams
@@ -68,9 +68,9 @@ internal class PromoteUsingCodeActionProvider : IRazorCodeActionProvider
         return Task.FromResult<ImmutableArray<RazorVSInternalCodeAction>>([action]);
     }
 
-    public static string GetImportsFileName(RazorFileKind fileKind)
+    public static string GetImportsFileName(RazorSourceCodeKind sourceCodeKind)
     {
-        return fileKind.IsLegacy()
+        return sourceCodeKind.IsLegacy()
             ? MvcImportProjectFeature.ImportsFileName
             : ComponentMetadata.ImportsFileName;
     }

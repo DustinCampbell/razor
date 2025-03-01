@@ -20,7 +20,7 @@ internal static class ComponentConstrainedTypeParamDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Component, RazorFileKind.ComponentImport);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Component, RazorSourceCodeKind.ComponentImport);
         return builder;
     }
 }

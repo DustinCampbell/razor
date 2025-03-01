@@ -68,9 +68,9 @@ public abstract class LanguageServerTestBase : ToolingTestBase
         tagHelpers = tagHelpers.NullToEmpty();
         filePath ??= "test.cshtml";
 
-        Assert.True(RazorFileKinds.TryGetFileKind(filePath, out var fileKind));
+        Assert.True(SourceCodeFileKinds.TryGetSourceCodeKind(filePath, out var sourceCodeKind));
 
-        if (fileKind == RazorFileKind.Component)
+        if (sourceCodeKind == RazorSourceCodeKind.Component)
         {
             tagHelpers = tagHelpers.AddRange(RazorTestResources.BlazorServerAppTagHelpers);
         }
@@ -93,7 +93,7 @@ public abstract class LanguageServerTestBase : ToolingTestBase
             b.Features.Add(new DefaultTypeNameFeature());
         });
 
-        var importDocumentName = fileKind == RazorFileKind.Legacy
+        var importDocumentName = sourceCodeKind == RazorSourceCodeKind.Legacy
             ? "_ViewImports.cshtml"
             : "_Imports.razor";
 
@@ -111,7 +111,7 @@ public abstract class LanguageServerTestBase : ToolingTestBase
                 """,
             RazorSourceDocumentProperties.Create(importDocumentName, importDocumentName));
 
-        return projectEngine.ProcessDesignTime(sourceDocument, fileKind, [defaultImportDocument], tagHelpers);
+        return projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, [defaultImportDocument], tagHelpers);
     }
 
     private protected static IDocumentContextFactory CreateDocumentContextFactory(Uri documentPath, string sourceText)

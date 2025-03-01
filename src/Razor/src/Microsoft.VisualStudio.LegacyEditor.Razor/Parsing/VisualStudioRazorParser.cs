@@ -230,17 +230,19 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
         Debug.Assert(_projectEngine.FileSystem is not null);
 
         // We might not have a document snapshot in the case of an ephemeral project.
-        // If we don't have a document then infer the FileKind from the FilePath.
+        // If we don't have a document then infer the SourceCodeKind from the FilePath.
 
         var filePath = _documentTracker.FilePath;
         var documentSnapshot = projectSnapshot.GetDocument(filePath);
 
-        var fileKind = documentSnapshot is { FileKind: var documentFileKind }
-            ? documentFileKind
-            : RazorFileKinds.GetFileKindFromFilePath(filePath);
+        if (documentSnapshot is not { SourceCodeKind: var sourceCodeKind } &&
+            !SourceCodeFileKinds.TryGetSourceCodeKind(filePath, out sourceCodeKind))
+        {
+            sourceCodeKind = RazorSourceCodeKind.Legacy;
+        }
 
         var projectDirectory = Path.GetDirectoryName(_documentTracker.ProjectPath);
-        _parser = new BackgroundParser(_projectEngine, FilePath, projectDirectory, fileKind);
+        _parser = new BackgroundParser(_projectEngine, FilePath, projectDirectory, sourceCodeKind);
         _parser.ResultsReady += OnResultsReady;
         _parser.Start();
 

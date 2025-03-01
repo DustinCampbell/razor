@@ -13,5 +13,5 @@ namespace Microsoft.CodeAnalysis.Razor.ProjectSystem.Legacy;
 /// </remarks>
 internal interface ILegacyDocumentSnapshot
 {
-    RazorFileKind FileKind { get; }
+    RazorSourceCodeKind SourceCodeKind { get; }
 }

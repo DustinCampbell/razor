@@ -45,8 +45,8 @@ public abstract class RazorProjectItem
     /// <summary>
     /// Gets the document kind that should be used for the generated document. If possible this will be inferred from the file path. May be null.
     /// </summary>
-    public virtual RazorFileKind FileKind
-        => ComputeFileKind(RazorFileKind.None, FilePath);
+    public virtual RazorSourceCodeKind SourceCodeKind
+        => ComputeFileKind(sourceCodeKind: null, FilePath);
 
     /// <summary>
     /// Gets the file contents as readonly <see cref="Stream"/>.
@@ -118,10 +118,21 @@ public abstract class RazorProjectItem
     }
 
 
-    protected static RazorFileKind ComputeFileKind(RazorFileKind fileKind, string filePath)
-        => fileKind == RazorFileKind.None && filePath is not null
-            ? RazorFileKinds.GetFileKindFromFilePath(filePath)
-            : fileKind;
+    protected static RazorSourceCodeKind ComputeFileKind(RazorSourceCodeKind? sourceCodeKind, string filePath)
+    {
+        if (sourceCodeKind is not (null or RazorSourceCodeKind.None))
+        {
+            return sourceCodeKind.GetValueOrDefault();
+        }
+
+        if (filePath is not null &&
+            SourceCodeFileKinds.TryGetSourceCodeKind(filePath, out var result))
+        {
+            return result;
+        }
+
+        return RazorSourceCodeKind.None;
+    }
 
     internal virtual RazorSourceDocument GetSource()
         => RazorSourceDocument.ReadFrom(this);

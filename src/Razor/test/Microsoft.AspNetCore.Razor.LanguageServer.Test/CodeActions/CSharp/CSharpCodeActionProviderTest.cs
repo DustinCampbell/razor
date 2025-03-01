@@ -58,7 +58,7 @@ public class CSharpCodeActionProviderTest : LanguageServerTestBase
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new CSharpCodeActionProvider(TestLanguageServerFeatureOptions.Instance);
 
@@ -87,7 +87,7 @@ public class CSharpCodeActionProviderTest : LanguageServerTestBase
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), supportsCodeActionResolve: false, fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), supportsCodeActionResolve: false, sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new CSharpCodeActionProvider(TestLanguageServerFeatureOptions.Instance);
 
@@ -113,7 +113,7 @@ public class CSharpCodeActionProviderTest : LanguageServerTestBase
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(13, 4), fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(13, 4), sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new CSharpCodeActionProvider(TestLanguageServerFeatureOptions.Instance);
 
@@ -144,7 +144,7 @@ $$Path;
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(13, 4), fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(13, 4), sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new CSharpCodeActionProvider(TestLanguageServerFeatureOptions.Instance);
 
@@ -176,7 +176,7 @@ $$Path;
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(13, 4), fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(13, 4), sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new CSharpCodeActionProvider(TestLanguageServerFeatureOptions.Instance);
 
@@ -205,7 +205,7 @@ $$Path;
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new CSharpCodeActionProvider(TestLanguageServerFeatureOptions.Instance);
 
@@ -240,7 +240,7 @@ $$Path;
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var options = new ConfigurableLanguageServerFeatureOptions(new[] { $"--{nameof(ConfigurableLanguageServerFeatureOptions.ShowAllCSharpCodeActions)}" });
         var provider = new CSharpCodeActionProvider(options);
@@ -284,7 +284,7 @@ $$Path;
             Context = new VSInternalCodeActionContext()
         };
 
-        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), fileKind: RazorFileKind.Legacy);
+        var context = CreateRazorCodeActionContext(request, cursorPosition, documentPath, contents, new SourceSpan(8, 4), sourceCodeKind: RazorSourceCodeKind.Legacy);
 
         var provider = new CSharpCodeActionProvider(TestLanguageServerFeatureOptions.Instance);
 
@@ -306,7 +306,7 @@ $$Path;
         SourceSpan componentSourceSpan,
         bool supportsFileCreation = true,
         bool supportsCodeActionResolve = true,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         var tagHelpers = ImmutableArray<TagHelperDescriptor>.Empty;
         var sourceDocument = TestRazorSourceDocument.Create(text, filePath: filePath, relativePath: filePath);
@@ -320,7 +320,7 @@ $$Path;
             });
         });
 
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, importSources: default, tagHelpers);
 
         var csharpDocument = codeDocument.GetCSharpDocument();
         var diagnosticDescriptor = new RazorDiagnosticDescriptor("RZ10012", "diagnostic", RazorDiagnosticSeverity.Error);

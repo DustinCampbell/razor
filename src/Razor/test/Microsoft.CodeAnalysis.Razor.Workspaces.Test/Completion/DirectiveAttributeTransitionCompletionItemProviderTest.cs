@@ -129,7 +129,7 @@ public class DirectiveAttributeTransitionCompletionItemProviderTest : ToolingTes
     public void GetCompletionItems_AttributeAreaInNonComponentFile_ReturnsEmptyList()
     {
         // Arrange
-        var context = CreateContext(absoluteIndex: 7, "<input  />", RazorFileKind.Legacy);
+        var context = CreateContext(absoluteIndex: 7, "<input  />", RazorSourceCodeKind.Legacy);
 
         // Act
         var result = _provider.GetCompletionItems(context);
@@ -327,7 +327,7 @@ public class DirectiveAttributeTransitionCompletionItemProviderTest : ToolingTes
         }
     }
 
-    private static RazorSyntaxTree GetSyntaxTree(string text, RazorFileKind fileKind = RazorFileKind.Component)
+    private static RazorSyntaxTree GetSyntaxTree(string text, RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         var sourceDocument = TestRazorSourceDocument.Create(text);
         var projectEngine = RazorProjectEngine.Create(builder =>
@@ -338,14 +338,14 @@ public class DirectiveAttributeTransitionCompletionItemProviderTest : ToolingTes
             });
         });
 
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers: []);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, importSources: default, tagHelpers: []);
 
         return codeDocument.GetSyntaxTree();
     }
 
-    private RazorCompletionContext CreateContext(int absoluteIndex, string documentContent, RazorFileKind fileKind = RazorFileKind.Component)
+    private RazorCompletionContext CreateContext(int absoluteIndex, string documentContent, RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
-        var syntaxTree = GetSyntaxTree(documentContent, fileKind);
+        var syntaxTree = GetSyntaxTree(documentContent, sourceCodeKind);
         var owner = syntaxTree.Root.FindInnermostNode(absoluteIndex, includeWhitespace: true, walkMarkersBack: true);
         owner = AbstractRazorCompletionFactsService.AdjustSyntaxNodeForWordBoundary(owner, absoluteIndex);
 

@@ -26,7 +26,7 @@ public class DefaultRazorProjectItemTest
             filePath: "/Home.cshtml",
             physicalPath,
             relativePhysicalPath,
-            RazorFileKind.ComponentImport,
+            RazorSourceCodeKind.ComponentImport,
             "MyCssScope");
 
         // Assert
@@ -34,7 +34,7 @@ public class DefaultRazorProjectItemTest
         Assert.Equal("/", projectItem.BasePath);
         Assert.True(projectItem.Exists);
         Assert.Equal("Home.cshtml", projectItem.FileName);
-        Assert.Equal(RazorFileKind.ComponentImport, projectItem.FileKind);
+        Assert.Equal(RazorSourceCodeKind.ComponentImport, projectItem.SourceCodeKind);
         Assert.Equal(physicalPath, projectItem.PhysicalPath);
         Assert.Equal("Home.cshtml", projectItem.RelativePhysicalPath);
         Assert.Equal("MyCssScope", projectItem.CssScope);
@@ -53,11 +53,11 @@ public class DefaultRazorProjectItemTest
             filePath: "/Home.razor",
             physicalPath,
             relativePhysicalPath,
-            fileKind: RazorFileKind.None,
+            sourceCodeKind: RazorSourceCodeKind.None,
             cssScope: null);
 
         // Assert
-        Assert.Equal(RazorFileKind.Component, projectItem.FileKind);
+        Assert.Equal(RazorSourceCodeKind.Component, projectItem.SourceCodeKind);
     }
 
     [Fact]
@@ -73,11 +73,11 @@ public class DefaultRazorProjectItemTest
             filePath: "/Home.cshtml",
             physicalPath,
             relativePhysicalPath,
-            fileKind: RazorFileKind.None,
+            sourceCodeKind: RazorSourceCodeKind.None,
             cssScope: null);
 
         // Assert
-        Assert.Equal(RazorFileKind.Legacy, projectItem.FileKind);
+        Assert.Equal(RazorSourceCodeKind.Legacy, projectItem.SourceCodeKind);
     }
 
     [Fact]
@@ -93,11 +93,11 @@ public class DefaultRazorProjectItemTest
             filePath: null!,
             physicalPath,
             relativePhysicalPath,
-            fileKind: RazorFileKind.None,
+            sourceCodeKind: RazorSourceCodeKind.None,
             cssScope: null);
 
         // Assert
-        Assert.Equal(RazorFileKind.None, projectItem.FileKind);
+        Assert.Equal(RazorSourceCodeKind.None, projectItem.SourceCodeKind);
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class DefaultRazorProjectItemTest
             filePath: "/FileDoesNotExist.cshtml",
             physicalPath,
             relativePhysicalPath,
-            fileKind: RazorFileKind.None,
+            sourceCodeKind: RazorSourceCodeKind.None,
             cssScope: null);
 
         // Assert
@@ -132,7 +132,7 @@ public class DefaultRazorProjectItemTest
             "/Home.cshtml",
             physicalPath,
             relativePhysicalPath,
-            fileKind: RazorFileKind.None,
+            sourceCodeKind: RazorSourceCodeKind.None,
             cssScope: null);
 
         // Act

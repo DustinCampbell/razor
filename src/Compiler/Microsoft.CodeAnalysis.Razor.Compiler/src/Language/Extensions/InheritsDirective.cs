@@ -21,7 +21,7 @@ public static class InheritsDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Legacy, RazorFileKind.Component, RazorFileKind.ComponentImport);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Legacy, RazorSourceCodeKind.Component, RazorSourceCodeKind.ComponentImport);
         builder.Features.Add(new InheritsDirectivePass());
     }
 }

@@ -847,7 +847,7 @@ internal static class TagHelperBlockRewriter
                 if (kind != SyntaxKind.MarkupLiteralAttributeValue &&
                     // We only want to collapse dynamic values if we're in a legacy file.
                     // Mixed C#/HTML content is not allowed in components.
-                    (kind != SyntaxKind.MarkupDynamicAttributeValue || !_options.FileKind.IsLegacy()))
+                    (kind != SyntaxKind.MarkupDynamicAttributeValue || !_options.SourceCodeKind.IsLegacy()))
                 {
                     return false;
                 }

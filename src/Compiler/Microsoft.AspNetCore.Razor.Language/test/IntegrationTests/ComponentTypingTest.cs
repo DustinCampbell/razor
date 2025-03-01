@@ -13,7 +13,7 @@ public class ComponentTypingTest : RazorIntegrationTestBase
 {
     internal override bool DesignTime => true;
 
-    internal override RazorFileKind FileKind => RazorFileKind.Component;
+    internal override RazorSourceCodeKind SourceCodeKind => RazorSourceCodeKind.Component;
 
     internal override bool UseTwoPhaseCompilation => true;
 

@@ -18,7 +18,7 @@ public class ComponentCodeGenerationTestBase(bool designTime = false)
 {
     private RazorConfiguration? _configuration;
 
-    internal override RazorFileKind FileKind => RazorFileKind.Component;
+    internal override RazorSourceCodeKind SourceCodeKind => RazorSourceCodeKind.Component;
 
     internal override bool UseTwoPhaseCompilation => true;
 
@@ -10477,7 +10477,7 @@ namespace Test
 @using System.Reflection
 @attribute [Serializable]
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorSourceCodeKind.ComponentImport);
         ImportItems.Add(importItem);
         AdditionalSyntaxTrees.Add(Parse(@"
 using Microsoft.AspNetCore.Components;
@@ -10525,7 +10525,7 @@ namespace Test
 @Foo
 <div>Hello</div>
 ",
-            fileKind: RazorFileKind.ComponentImport,
+            sourceCodeKind: RazorSourceCodeKind.ComponentImport,
             expectedCSharpDiagnostics: [
                 // (4,31): error CS0246: The type or namespace name 'ComponentBase' could not be found (are you missing a using directive or an assembly reference?)
                 //     public class MainLayout : ComponentBase, ILayoutComponent
@@ -10607,7 +10607,7 @@ namespace Test
 @using System.Reflection
 @namespace New.Test
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorSourceCodeKind.ComponentImport);
         ImportItems.Add(importItem);
         AdditionalSyntaxTrees.Add(Parse(@"
 using Microsoft.AspNetCore.Components;
@@ -10641,7 +10641,7 @@ namespace New.Test
 @using System.Reflection
 @namespace Import.Test
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorSourceCodeKind.ComponentImport);
         ImportItems.Add(importItem);
         AdditionalSyntaxTrees.Add(Parse(@"
 using Microsoft.AspNetCore.Components;
@@ -10686,7 +10686,7 @@ namespace New.Test
         var importContent = @"
 @preservewhitespace true
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorSourceCodeKind.ComponentImport);
         ImportItems.Add(importItem);
 
         // Act
@@ -10711,7 +10711,7 @@ namespace New.Test
         var importContent = @"
 @preservewhitespace true
 ";
-        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorFileKind.ComponentImport);
+        var importItem = CreateProjectItem("_Imports.razor", importContent, RazorSourceCodeKind.ComponentImport);
         ImportItems.Add(importItem);
 
         // Act

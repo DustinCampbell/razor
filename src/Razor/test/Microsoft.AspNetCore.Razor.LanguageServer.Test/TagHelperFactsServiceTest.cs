@@ -250,7 +250,7 @@ public class TagHelperFactsServiceTest(ITestOutputHelper testOutput) : TagHelper
                 builder.UseRoslynTokenizer = true;
             });
         });
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, RazorFileKind.Component, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, RazorSourceCodeKind.Component, importSources: default, tagHelpers);
         return codeDocument;
     }
 }

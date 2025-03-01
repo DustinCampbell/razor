@@ -305,12 +305,12 @@ public class HtmlAttributeTest() : ParserTestBase(layer: TestProject.Layer.Compi
     [Fact]
     public void ComponentFileKind_ParsesDirectiveAttributesAsMarkup()
     {
-        ParseDocumentTest("<span @class='@foo'></span>", fileKind: RazorFileKind.Component);
+        ParseDocumentTest("<span @class='@foo'></span>", sourceCodeKind: RazorSourceCodeKind.Component);
     }
 
     [Fact]
     public void ComponentFileKind_ParsesDirectiveAttributesWithParameterAsMarkup()
     {
-        ParseDocumentTest("<span @class:param='@foo'></span>", fileKind: RazorFileKind.Component);
+        ParseDocumentTest("<span @class:param='@foo'></span>", sourceCodeKind: RazorSourceCodeKind.Component);
     }
 }

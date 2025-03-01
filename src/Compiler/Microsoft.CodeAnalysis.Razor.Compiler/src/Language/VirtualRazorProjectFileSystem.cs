@@ -18,10 +18,10 @@ internal class VirtualRazorProjectFileSystem : RazorProjectFileSystem
         return directory?.EnumerateItems() ?? [];
     }
 
-    public override RazorProjectItem GetItem(string path, RazorFileKind fileKind)
+    public override RazorProjectItem GetItem(string path, RazorSourceCodeKind? sourceCodeKind)
     {
         path = NormalizeAndEnsureValidPath(path);
-        return _root.GetItem(path) ?? new NotFoundProjectItem(path, fileKind);
+        return _root.GetItem(path) ?? new NotFoundProjectItem(path, sourceCodeKind);
     }
 
     public void Add(RazorProjectItem projectItem)

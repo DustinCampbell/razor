@@ -177,7 +177,7 @@ public class CSharpCodeActionResolverTest(ITestOutputHelper testOutput) : Langua
 
     private static RazorCodeDocument CreateCodeDocument(string text, string documentPath)
     {
-        var projectItem = new TestRazorProjectItem(documentPath, fileKind: RazorFileKind.Component) { Content = text };
+        var projectItem = new TestRazorProjectItem(documentPath, sourceCodeKind: RazorSourceCodeKind.Component) { Content = text };
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty, (builder) => PageDirective.Register(builder));
 
         return projectEngine.Process(projectItem);

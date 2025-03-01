@@ -20,7 +20,7 @@ public static class SectionDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Legacy, RazorFileKind.Component);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Legacy, RazorSourceCodeKind.Component);
         builder.Features.Add(new SectionDirectivePass());
         builder.AddTargetExtension(new SectionTargetExtension());
     }

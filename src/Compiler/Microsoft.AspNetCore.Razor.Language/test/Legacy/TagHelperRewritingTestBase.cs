@@ -39,10 +39,10 @@ public class TagHelperRewritingTestBase() : ParserTestBase(layer: TestProject.La
         string documentContent,
         string tagHelperPrefix = null,
         RazorLanguageVersion languageVersion = null,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         Action<RazorParserOptions.Builder> configureParserOptions = null)
     {
-        var syntaxTree = ParseDocument(languageVersion, documentContent, directives: null, fileKind: fileKind, configureParserOptions: configureParserOptions);
+        var syntaxTree = ParseDocument(languageVersion, documentContent, directives: null, designTime: false, sourceCodeKind, csharpParseOptions: null, configureParserOptions);
 
         var binder = new TagHelperBinder(tagHelperPrefix, descriptors);
         var rewrittenTree = TagHelperParseTreeRewriter.Rewrite(syntaxTree, binder, out _);

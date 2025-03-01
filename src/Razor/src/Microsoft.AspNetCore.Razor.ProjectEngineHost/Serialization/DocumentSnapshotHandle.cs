@@ -5,4 +5,4 @@ using Microsoft.AspNetCore.Razor.Language;
 
 namespace Microsoft.AspNetCore.Razor.Serialization;
 
-internal record DocumentSnapshotHandle(string FilePath, string TargetPath, RazorFileKind FileKind);
+internal record DocumentSnapshotHandle(string FilePath, string TargetPath, RazorSourceCodeKind SourceCodeKind);

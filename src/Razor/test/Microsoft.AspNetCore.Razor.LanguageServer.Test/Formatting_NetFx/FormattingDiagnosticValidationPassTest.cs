@@ -73,12 +73,12 @@ public class FormattingDiagnosticValidationPassTest(ITestOutputHelper testOutput
         TestCode input,
         int tabSize = 4,
         bool insertSpaces = true,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component)
     {
         var source = SourceText.From(input.Text);
         var path = "file:///path/to/document.razor";
         var uri = new Uri(path);
-        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(source, uri.AbsolutePath, fileKind: fileKind);
+        var (codeDocument, documentSnapshot) = CreateCodeDocumentAndSnapshot(source, uri.AbsolutePath, sourceCodeKind);
         var options = new RazorFormattingOptions()
         {
             TabSize = tabSize,
@@ -93,13 +93,8 @@ public class FormattingDiagnosticValidationPassTest(ITestOutputHelper testOutput
     }
 
     private static (RazorCodeDocument, IDocumentSnapshot) CreateCodeDocumentAndSnapshot(
-        SourceText text,
-        string path,
-        ImmutableArray<TagHelperDescriptor> tagHelpers = default,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        SourceText text, string path, RazorSourceCodeKind sourceCodeKind)
     {
-        tagHelpers = tagHelpers.NullToEmpty();
-
         var sourceDocument = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(path, path));
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
@@ -111,10 +106,10 @@ public class FormattingDiagnosticValidationPassTest(ITestOutputHelper testOutput
             });
         });
 
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, importSources: default, tagHelpers: []);
 
         var documentSnapshot = FormattingTestBase.CreateDocumentSnapshot(
-            path, fileKind, codeDocument, projectEngine, imports: [], importDocuments: [], tagHelpers, inGlobalNamespace: false);
+            path, sourceCodeKind, codeDocument, projectEngine, imports: [], importDocuments: [], tagHelpers: [], inGlobalNamespace: false);
 
         return (codeDocument, documentSnapshot);
     }

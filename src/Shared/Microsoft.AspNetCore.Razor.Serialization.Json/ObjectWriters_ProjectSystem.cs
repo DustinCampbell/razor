@@ -26,7 +26,7 @@ internal static partial class ObjectWriters
     {
         writer.Write(nameof(value.FilePath), value.FilePath);
         writer.Write(nameof(value.TargetPath), value.TargetPath);
-        writer.WriteIfNotDefault(nameof(value.FileKind), (int)value.FileKind, (int)RazorFileKind.Component);
+        writer.WriteIfNotDefault(nameof(value.SourceCodeKind), (int)value.SourceCodeKind, (int)RazorSourceCodeKind.Component);
     }
 
     public static void Write(JsonDataWriter writer, ProjectWorkspaceState? value)

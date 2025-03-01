@@ -323,9 +323,9 @@ internal class DefaultWindowsRazorProjectHost(
                     !string.IsNullOrWhiteSpace(targetPath))
                 {
                     var filePath = CommonServices.UnconfiguredProject.MakeRooted(kvp.Key);
-                    var fileKind = RazorFileKinds.GetComponentFileKindFromFilePath(filePath);
+                    var sourceCodeKind = SourceCodeFileKinds.GetComponentFileKindFromFilePath(filePath);
 
-                    documents.Add(new HostDocument(filePath, targetPath, fileKind));
+                    documents.Add(new HostDocument(filePath, targetPath, sourceCodeKind));
                 }
             }
         }
@@ -339,7 +339,7 @@ internal class DefaultWindowsRazorProjectHost(
                     !string.IsNullOrWhiteSpace(targetPath))
                 {
                     var filePath = CommonServices.UnconfiguredProject.MakeRooted(kvp.Key);
-                    documents.Add(new HostDocument(filePath, targetPath, RazorFileKind.Legacy));
+                    documents.Add(new HostDocument(filePath, targetPath, RazorSourceCodeKind.Legacy));
                 }
             }
         }
@@ -361,9 +361,9 @@ internal class DefaultWindowsRazorProjectHost(
                         !string.IsNullOrWhiteSpace(targetPath))
                     {
                         var filePath = CommonServices.UnconfiguredProject.MakeRooted(key);
-                        var fileKind = RazorFileKinds.GetComponentFileKindFromFilePath(filePath);
+                        var sourceCodeKind = SourceCodeFileKinds.GetComponentFileKindFromFilePath(filePath);
 
-                        documents.Add(new HostDocument(filePath, targetPath, fileKind));
+                        documents.Add(new HostDocument(filePath, targetPath, sourceCodeKind));
                     }
                 }
             }
@@ -380,7 +380,7 @@ internal class DefaultWindowsRazorProjectHost(
                         !string.IsNullOrWhiteSpace(targetPath))
                     {
                         var filePath = CommonServices.UnconfiguredProject.MakeRooted(key);
-                        documents.Add(new HostDocument(filePath, targetPath, RazorFileKind.Legacy));
+                        documents.Add(new HostDocument(filePath, targetPath, RazorSourceCodeKind.Legacy));
                     }
                 }
             }

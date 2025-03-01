@@ -19,7 +19,7 @@ internal sealed class ComponentRenderModeDirective
     {
         ArgHelper.ThrowIfNull(builder);
 
-        builder.AddDirective(Directive, RazorFileKind.Component);
+        builder.AddDirective(Directive, RazorSourceCodeKind.Component);
         builder.Features.Add(new ComponentRenderModeDirectivePass());
     }
 }

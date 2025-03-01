@@ -12,17 +12,17 @@ namespace Microsoft.AspNetCore.Razor.Language;
 public sealed partial class RazorParserOptions
 {
     private static RazorLanguageVersion DefaultLanguageVersion => RazorLanguageVersion.Latest;
-    private static RazorFileKind DefaultFileKind => RazorFileKind.Legacy;
+    private static RazorSourceCodeKind DefaultSourceCodeKind => RazorSourceCodeKind.Legacy;
 
     public static RazorParserOptions Default { get; } = new(
         languageVersion: DefaultLanguageVersion,
-        fileKind: RazorFileKind.Legacy,
+        sourceCodeKind: RazorSourceCodeKind.Legacy,
         directives: [],
         csharpParseOptions: CSharpParseOptions.Default,
-        flags: GetDefaultFlags(DefaultLanguageVersion, DefaultFileKind));
+        flags: GetDefaultFlags(DefaultLanguageVersion, DefaultSourceCodeKind));
 
     public RazorLanguageVersion LanguageVersion { get; }
-    public RazorFileKind FileKind { get; }
+    public RazorSourceCodeKind SourceCodeKind { get; }
 
     public ImmutableArray<DirectiveDescriptor> Directives { get; }
     public CSharpParseOptions CSharpParseOptions { get; }
@@ -31,7 +31,7 @@ public sealed partial class RazorParserOptions
 
     private RazorParserOptions(
         RazorLanguageVersion languageVersion,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<DirectiveDescriptor> directives,
         CSharpParseOptions csharpParseOptions,
         Flags flags)
@@ -42,16 +42,21 @@ public sealed partial class RazorParserOptions
             throw new ArgumentException($"Cannot set {nameof(Flags.ParseLeadingDirectives)} and {nameof(Flags.UseRoslynTokenizer)} to true simultaneously.");
         }
 
+        if (sourceCodeKind == RazorSourceCodeKind.None)
+        {
+            throw new ArgumentException($"None is an invalid source code kind", nameof(sourceCodeKind));
+        }
+
         LanguageVersion = languageVersion ?? DefaultLanguageVersion;
-        FileKind = fileKind;
+        SourceCodeKind = sourceCodeKind;
         Directives = directives;
         CSharpParseOptions = csharpParseOptions;
         _flags = flags;
     }
 
-    public static RazorParserOptions Create(RazorLanguageVersion languageVersion, RazorFileKind fileKind, Action<Builder>? configure = null)
+    public static RazorParserOptions Create(RazorLanguageVersion languageVersion, RazorSourceCodeKind sourceCodeKind, Action<Builder>? configure = null)
     {
-        var builder = new Builder(languageVersion, fileKind);
+        var builder = new Builder(languageVersion, sourceCodeKind);
         configure?.Invoke(builder);
 
         return builder.ToOptions();
@@ -104,12 +109,12 @@ public sealed partial class RazorParserOptions
     public RazorParserOptions WithDirectives(params ImmutableArray<DirectiveDescriptor> value)
         => Directives.SequenceEqual(value)
             ? this
-            : new(LanguageVersion, FileKind, value, CSharpParseOptions, _flags);
+            : new(LanguageVersion, SourceCodeKind, value, CSharpParseOptions, _flags);
 
     public RazorParserOptions WithCSharpParseOptions(CSharpParseOptions value)
         => CSharpParseOptions.Equals(value)
             ? this
-            : new(LanguageVersion, FileKind, Directives, value, _flags);
+            : new(LanguageVersion, SourceCodeKind, Directives, value, _flags);
 
     public RazorParserOptions WithFlags(
         Optional<bool> designTime = default,
@@ -189,6 +194,6 @@ public sealed partial class RazorParserOptions
 
         return flags == _flags
             ? this
-            : new(LanguageVersion, FileKind, Directives, CSharpParseOptions, flags);
+            : new(LanguageVersion, SourceCodeKind, Directives, CSharpParseOptions, flags);
     }
 }

@@ -265,8 +265,8 @@ public class HoverEndpointTest(ITestOutputHelper testOutput) : TagHelperServiceT
             .SetupGet(x => x.FilePath)
             .Returns(path);
         documentSnapshotMock
-            .SetupGet(x => x.FileKind)
-            .Returns(RazorFileKind.Component);
+            .SetupGet(x => x.SourceCodeKind)
+            .Returns(RazorSourceCodeKind.Component);
         documentSnapshotMock
             .SetupGet(x => x.Version)
             .Returns(0);

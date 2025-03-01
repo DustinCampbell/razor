@@ -27,7 +27,7 @@ internal class HostDocumentComparer : IEqualityComparer<HostDocument>
             return false;
         }
 
-        return x.FileKind == y.FileKind &&
+        return x.SourceCodeKind == y.SourceCodeKind &&
                FilePathComparer.Instance.Equals(x.FilePath, y.FilePath) &&
                FilePathComparer.Instance.Equals(x.TargetPath, y.TargetPath);
     }
@@ -37,7 +37,7 @@ internal class HostDocumentComparer : IEqualityComparer<HostDocument>
         var combiner = HashCodeCombiner.Start();
         combiner.Add(hostDocument.FilePath, FilePathComparer.Instance);
         combiner.Add(hostDocument.TargetPath, FilePathComparer.Instance);
-        combiner.Add(hostDocument.FileKind);
+        combiner.Add(hostDocument.SourceCodeKind);
 
         return combiner.CombinedHash;
     }

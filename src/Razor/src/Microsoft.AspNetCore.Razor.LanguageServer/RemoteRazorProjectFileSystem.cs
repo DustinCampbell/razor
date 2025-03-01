@@ -25,7 +25,7 @@ internal sealed class RemoteRazorProjectFileSystem : RazorProjectFileSystem
     public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath)
         => throw new NotSupportedException();
 
-    public override RazorProjectItem GetItem(string path, RazorFileKind fileKind)
+    public override RazorProjectItem GetItem(string path, RazorSourceCodeKind? sourceCodeKind)
     {
         ArgHelper.ThrowIfNull(path);
 
@@ -33,7 +33,7 @@ internal sealed class RemoteRazorProjectFileSystem : RazorProjectFileSystem
         if (FilePathRootedBy(physicalPath, _root))
         {
             var filePath = physicalPath[_root.Length..];
-            return new RemoteProjectItem(filePath, physicalPath, fileKind);
+            return new RemoteProjectItem(filePath, physicalPath, sourceCodeKind);
         }
         else
         {
@@ -41,7 +41,7 @@ internal sealed class RemoteRazorProjectFileSystem : RazorProjectFileSystem
             // In practice this should never happen, the systems above this should have routed the
             // file request to the appropriate file system. Return something reasonable so a higher
             // layer falls over to provide a better error.
-            return new RemoteProjectItem(physicalPath, physicalPath, fileKind);
+            return new RemoteProjectItem(physicalPath, physicalPath, sourceCodeKind);
         }
     }
 

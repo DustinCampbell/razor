@@ -81,7 +81,7 @@ public class RazorIntegrationTestBase
     /// Gets a hardcoded document kind to be added to each code document that's created. This can
     /// be used to generate components.
     /// </summary>
-    internal virtual RazorFileKind FileKind { get; }
+    internal virtual RazorSourceCodeKind SourceCodeKind => RazorSourceCodeKind.Legacy;
 
     internal virtual VirtualRazorProjectFileSystem FileSystem { get; }
 
@@ -145,7 +145,7 @@ public class RazorIntegrationTestBase
     internal RazorProjectItem CreateProjectItem(
         string cshtmlRelativePath,
         string cshtmlContent,
-        RazorFileKind fileKind = RazorFileKind.None,
+        RazorSourceCodeKind? sourceCodeKind = null,
         string? cssScope = null)
     {
         var fullPath = WorkingDirectory + PathSeparator + cshtmlRelativePath;
@@ -167,7 +167,7 @@ public class RazorIntegrationTestBase
             physicalPath: fullPath,
             relativePhysicalPath: cshtmlRelativePath,
             basePath: WorkingDirectory,
-            fileKind: fileKind == RazorFileKind.None ? FileKind : fileKind,
+            sourceCodeKind ?? SourceCodeKind,
             cssScope: cssScope)
         {
             Content = cshtmlContent.TrimStart(),
@@ -207,7 +207,7 @@ public class RazorIntegrationTestBase
     protected CompileToCSharpResult CompileToCSharp(
         string cshtmlRelativePath,
         string cshtmlContent,
-        RazorFileKind fileKind = RazorFileKind.None,
+        RazorSourceCodeKind? sourceCodeKind = null,
         string? cssScope = null,
         bool supportLocalizedComponentNames = false,
         bool nullableEnable = false,
@@ -254,7 +254,7 @@ public class RazorIntegrationTestBase
             }
 
             // Result of generating declarations
-            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, fileKind, cssScope);
+            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, sourceCodeKind, cssScope);
             codeDocument = projectEngine.ProcessDeclarationOnly(projectItem);
             var declaration = new CompileToCSharpResult
             {
@@ -302,7 +302,7 @@ public class RazorIntegrationTestBase
             // This will include the built-in components.
             var projectEngine = CreateProjectEngine(configuration, baseCompilation.References.ToArray(), supportLocalizedComponentNames, csharpParseOptions);
 
-            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, fileKind, cssScope);
+            var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, sourceCodeKind, cssScope);
 
             RazorCodeDocument codeDocument;
             if (DeclarationOnly)

@@ -300,7 +300,7 @@ public class RazorCodeDocumentExtensionsTest
             filePath: "C:\\Hello\\Components\\Test.cshtml",
             relativePath: "\\Components\\Test.cshtml");
 
-        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorFileKind.Component, builder =>
+        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorSourceCodeKind.Component, builder =>
         {
             builder.Directives = [NamespaceDirective.Directive];
         });
@@ -325,7 +325,7 @@ public class RazorCodeDocumentExtensionsTest
             filePath: "C:\\Hello\\Components\\Test.cshtml",
             relativePath: "\\Components\\Test.cshtml");
 
-        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorFileKind.Component, builder =>
+        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorSourceCodeKind.Component, builder =>
         {
             builder.Directives = [NamespaceDirective.Directive];
         });
@@ -358,7 +358,7 @@ public class RazorCodeDocumentExtensionsTest
             filePath: "C:\\Hello\\Components\\Test.cshtml",
             relativePath: "\\Components\\Test.cshtml");
 
-        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorFileKind.Component, builder =>
+        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorSourceCodeKind.Component, builder =>
         {
             builder.Directives = [NamespaceDirective.Directive];
         });
@@ -392,7 +392,7 @@ public class RazorCodeDocumentExtensionsTest
             filePath: "C:\\Hello\\Components\\Test.cshtml",
             relativePath: "\\Components\\Test.cshtml");
 
-        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorFileKind.Component, builder =>
+        var parserOptions = RazorParserOptions.Create(RazorLanguageVersion.Latest, RazorSourceCodeKind.Component, builder =>
         {
             builder.Directives = [NamespaceDirective.Directive];
         });

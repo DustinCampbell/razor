@@ -14,20 +14,15 @@ using Xunit.Abstractions;
 
 namespace Microsoft.AspNetCore.Razor.LanguageServer.AutoInsert;
 
-public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
+public abstract class RazorOnAutoInsertProviderTestBase(ITestOutputHelper testOutput) : LanguageServerTestBase(testOutput)
 {
-    protected RazorOnAutoInsertProviderTestBase(ITestOutputHelper testOutput)
-        : base(testOutput)
-    {
-    }
-
     internal abstract IOnAutoInsertProvider CreateProvider();
 
     protected void RunAutoInsertTest(
         string input,
         string expected,
         bool enableAutoClosingTags = true,
-        RazorFileKind fileKind = RazorFileKind.Component,
+        RazorSourceCodeKind sourceCodeKind = RazorSourceCodeKind.Component,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers = null)
     {
         // Arrange
@@ -38,7 +33,7 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
 
         var path = "file:///path/to/document.razor";
         var uri = new Uri(path);
-        var codeDocument = CreateCodeDocument(source, uri.AbsolutePath, tagHelpers, fileKind: fileKind);
+        var codeDocument = CreateCodeDocument(source, uri.AbsolutePath, tagHelpers, sourceCodeKind);
 
         var provider = CreateProvider();
 
@@ -61,7 +56,7 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
         SourceText text,
         string path,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
-        RazorFileKind fileKind = RazorFileKind.Component)
+        RazorSourceCodeKind sourceCodeKind)
     {
         tagHelpers ??= [];
 
@@ -73,7 +68,7 @@ public abstract class RazorOnAutoInsertProviderTestBase : LanguageServerTestBase
                 builder.UseRoslynTokenizer = true;
             });
         });
-        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, fileKind, importSources: default, tagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(sourceDocument, sourceCodeKind, importSources: default, tagHelpers);
         return codeDocument;
     }
 }

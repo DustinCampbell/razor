@@ -69,15 +69,15 @@ public sealed class RazorProjectEngine
 
     public RazorCodeDocument Process(
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(source);
-        ArgHelper.ThrowIfNull(fileKind);
+        ArgHelper.ThrowIfNull(sourceCodeKind);
 
-        var codeDocument = CreateCodeDocumentCore(source, fileKind, importSources, tagHelpers, cssScope: null, configureParser: null, configureCodeGeneration: null);
+        var codeDocument = CreateCodeDocumentCore(source, sourceCodeKind, importSources, tagHelpers, cssScope: null, configureParser: null, configureCodeGeneration: null);
         ProcessCore(codeDocument, cancellationToken);
         return codeDocument;
     }
@@ -97,15 +97,15 @@ public sealed class RazorProjectEngine
 
     public RazorCodeDocument ProcessDeclarationOnly(
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(source);
-        ArgHelper.ThrowIfNull(fileKind);
+        ArgHelper.ThrowIfNull(sourceCodeKind);
 
-        var codeDocument = CreateCodeDocumentCore(source, fileKind, importSources, tagHelpers, cssScope: null, configureParser: null, configureCodeGeneration: (builder) =>
+        var codeDocument = CreateCodeDocumentCore(source, sourceCodeKind, importSources, tagHelpers, cssScope: null, configureParser: null, configureCodeGeneration: (builder) =>
         {
             builder.SuppressPrimaryMethodBody = true;
         });
@@ -125,15 +125,15 @@ public sealed class RazorProjectEngine
 
     public RazorCodeDocument ProcessDesignTime(
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(source);
-        ArgHelper.ThrowIfNull(fileKind);
+        ArgHelper.ThrowIfNull(sourceCodeKind);
 
-        var codeDocument = CreateCodeDocumentDesignTimeCore(source, fileKind, importSources, tagHelpers, configureParser: null, configureCodeGeneration: null);
+        var codeDocument = CreateCodeDocumentDesignTimeCore(source, sourceCodeKind, importSources, tagHelpers, configureParser: null, configureCodeGeneration: null);
         ProcessCore(codeDocument, cancellationToken);
         return codeDocument;
     }
@@ -149,25 +149,25 @@ public sealed class RazorProjectEngine
 
     internal RazorCodeDocument CreateCodeDocument(
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         string? cssScope)
     {
         ArgHelper.ThrowIfNull(source);
 
-        return CreateCodeDocumentCore(source, fileKind, importSources, tagHelpers, cssScope, configureParser: null, configureCodeGeneration: null);
+        return CreateCodeDocumentCore(source, sourceCodeKind, importSources, tagHelpers, cssScope, configureParser: null, configureCodeGeneration: null);
     }
 
     internal RazorCodeDocument CreateDesignTimeCodeDocument(
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers)
     {
         ArgHelper.ThrowIfNull(source);
 
-        return CreateCodeDocumentDesignTimeCore(source, fileKind, importSources, tagHelpers, configureParser: null, configureCodeGeneration: null);
+        return CreateCodeDocumentDesignTimeCore(source, sourceCodeKind, importSources, tagHelpers, configureParser: null, configureCodeGeneration: null);
     }
 
     private RazorCodeDocument CreateCodeDocumentCore(
@@ -178,19 +178,19 @@ public sealed class RazorProjectEngine
         var source = projectItem.GetSource();
         var importSources = GetImportSources(projectItem, designTime: false);
 
-        return CreateCodeDocumentCore(source, projectItem.FileKind, importSources, tagHelpers: null, cssScope: projectItem.CssScope, configureParser, configureCodeGeneration);
+        return CreateCodeDocumentCore(source, projectItem.SourceCodeKind, importSources, tagHelpers: null, cssScope: projectItem.CssScope, configureParser, configureCodeGeneration);
     }
 
     private RazorCodeDocument CreateCodeDocumentCore(
         RazorSourceDocument source,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         string? cssScope,
         Action<RazorParserOptions.Builder>? configureParser,
         Action<RazorCodeGenerationOptions.Builder>? configureCodeGeneration)
     {
-        var parserOptions = ComputeParserOptions(fileKind, configure: configureParser);
+        var parserOptions = ComputeParserOptions(sourceCodeKind, configure: configureParser);
         var codeGenerationOptions = ComputeCodeGenerationOptions(
             parserOptions.LanguageVersion,
             parserOptions.CSharpParseOptions.LanguageVersion,
@@ -216,12 +216,12 @@ public sealed class RazorProjectEngine
         var source = projectItem.GetSource();
         var importSources = GetImportSources(projectItem, designTime: true);
 
-        return CreateCodeDocumentDesignTimeCore(source, projectItem.FileKind, importSources, tagHelpers: null, configureParser, configureCodeGeneration);
+        return CreateCodeDocumentDesignTimeCore(source, projectItem.SourceCodeKind, importSources, tagHelpers: null, configureParser, configureCodeGeneration);
     }
 
     private RazorCodeDocument CreateCodeDocumentDesignTimeCore(
         RazorSourceDocument sourceDocument,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind sourceCodeKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         Action<RazorParserOptions.Builder>? configureParser,
@@ -229,7 +229,7 @@ public sealed class RazorProjectEngine
     {
         ArgHelper.ThrowIfNull(sourceDocument);
 
-        var parserOptions = ComputeParserOptions(fileKind, builder =>
+        var parserOptions = ComputeParserOptions(sourceCodeKind, builder =>
         {
             builder.DesignTime = true;
 
@@ -255,9 +255,9 @@ public sealed class RazorProjectEngine
         return codeDocument;
     }
 
-    private RazorParserOptions ComputeParserOptions(RazorFileKind fileKind, Action<RazorParserOptions.Builder>? configure)
+    private RazorParserOptions ComputeParserOptions(RazorSourceCodeKind sourceCodeKind, Action<RazorParserOptions.Builder>? configure)
     {
-        var builder = new RazorParserOptions.Builder(Configuration.LanguageVersion, fileKind);
+        var builder = new RazorParserOptions.Builder(Configuration.LanguageVersion, sourceCodeKind);
 
         configure?.Invoke(builder);
 

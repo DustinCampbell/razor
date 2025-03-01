@@ -15,7 +15,7 @@ public class ComponentDeclarationRazorIntegrationTest : RazorIntegrationTestBase
         AdditionalSyntaxTrees.Add(Parse(AdditionalCode));
     }
 
-    internal override RazorFileKind FileKind => RazorFileKind.Component;
+    internal override RazorSourceCodeKind SourceCodeKind => RazorSourceCodeKind.Component;
 
     internal override bool DeclarationOnly => true;
 

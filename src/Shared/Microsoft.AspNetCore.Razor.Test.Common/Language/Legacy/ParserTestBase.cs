@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Roslyn.Test.Utilities;
 using Xunit;
@@ -193,11 +194,11 @@ public abstract class ParserTestBase : IParserTest
         string document,
         bool designTime = false,
         IEnumerable<DirectiveDescriptor> directives = null,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         CSharpParseOptions csharpParseOptions = null,
         Action<RazorParserOptions.Builder> configureParserOptions = null)
     {
-        return ParseDocument(RazorLanguageVersion.Latest, document, directives, designTime, fileKind, csharpParseOptions, configureParserOptions);
+        return ParseDocument(RazorLanguageVersion.Latest, document, directives, designTime, sourceCodeKind, csharpParseOptions, configureParserOptions);
     }
 
     internal virtual RazorSyntaxTree ParseDocument(
@@ -205,14 +206,14 @@ public abstract class ParserTestBase : IParserTest
         string document,
         IEnumerable<DirectiveDescriptor> directives,
         bool designTime = false,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         CSharpParseOptions csharpParseOptions = null,
         Action<RazorParserOptions.Builder> configureParserOptions = null)
     {
         directives ??= [];
 
         var source = TestRazorSourceDocument.Create(document, filePath: null, relativePath: null, normalizeNewLines: true);
-        var parseOptions = CreateParserOptions(version, fileKind, designTime, directives, csharpParseOptions, configureParserOptions);
+        var parseOptions = CreateParserOptions(version, sourceCodeKind, designTime, directives, csharpParseOptions, configureParserOptions);
         var codeDocument = RazorCodeDocument.Create(source, parseOptions);
 
         using var context = new ParserContext(source, parseOptions);
@@ -240,9 +241,9 @@ public abstract class ParserTestBase : IParserTest
         ParseDocumentTest(document, directives: null, designTime: false);
     }
 
-    internal virtual void ParseDocumentTest(string document, RazorFileKind fileKind)
+    internal virtual void ParseDocumentTest(string document, RazorSourceCodeKind sourceCodeKind)
     {
-        ParseDocumentTest(document, directives: null, designTime: false, fileKind);
+        ParseDocumentTest(document, directives: null, designTime: false, sourceCodeKind);
     }
 
     internal virtual void ParseDocumentTest(string document, IEnumerable<DirectiveDescriptor> directives)
@@ -264,10 +265,10 @@ public abstract class ParserTestBase : IParserTest
         string document,
         IEnumerable<DirectiveDescriptor> directives,
         bool designTime,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         CSharpParseOptions csharpParseOptions = null)
     {
-        ParseDocumentTest(RazorLanguageVersion.Latest, document, directives, designTime, fileKind, csharpParseOptions);
+        ParseDocumentTest(RazorLanguageVersion.Latest, document, directives, designTime, sourceCodeKind, csharpParseOptions);
     }
 
     internal virtual void ParseDocumentTest(
@@ -275,23 +276,23 @@ public abstract class ParserTestBase : IParserTest
         string document,
         IEnumerable<DirectiveDescriptor> directives,
         bool designTime,
-        RazorFileKind fileKind = RazorFileKind.Legacy,
+        RazorSourceCodeKind? sourceCodeKind = null,
         CSharpParseOptions csharpParseOptions = null)
     {
-        var result = ParseDocument(version, document, directives, designTime, fileKind, csharpParseOptions);
+        var result = ParseDocument(version, document, directives, designTime, sourceCodeKind, csharpParseOptions);
 
         BaselineTest(result);
     }
 
     private RazorParserOptions CreateParserOptions(
         RazorLanguageVersion version,
-        RazorFileKind fileKind,
+        RazorSourceCodeKind? sourceCodeKind,
         bool designTime,
         IEnumerable<DirectiveDescriptor> directives,
         CSharpParseOptions csharpParseOptions,
         Action<RazorParserOptions.Builder> configureParserOptions = null)
     {
-        var builder = new RazorParserOptions.Builder(version, fileKind)
+        var builder = new RazorParserOptions.Builder(version, sourceCodeKind ?? RazorSourceCodeKind.Legacy)
         {
             DesignTime = designTime,
             Directives = [.. directives],

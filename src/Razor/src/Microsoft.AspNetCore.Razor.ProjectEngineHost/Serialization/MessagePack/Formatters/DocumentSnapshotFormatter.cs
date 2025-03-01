@@ -20,9 +20,9 @@ internal sealed class DocumentSnapshotHandleFormatter : ValueFormatter<DocumentS
 
         var filePath = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var targetPath = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
-        var fileKind = (RazorFileKind)reader.ReadInt32();
+        var sourceCodeKind = (RazorSourceCodeKind)reader.ReadInt32();
 
-        return new DocumentSnapshotHandle(filePath, targetPath, fileKind);
+        return new DocumentSnapshotHandle(filePath, targetPath, sourceCodeKind);
     }
 
     public override void Serialize(ref MessagePackWriter writer, DocumentSnapshotHandle value, SerializerCachingOptions options)
@@ -31,6 +31,6 @@ internal sealed class DocumentSnapshotHandleFormatter : ValueFormatter<DocumentS
 
         CachedStringFormatter.Instance.Serialize(ref writer, value.FilePath, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.TargetPath, options);
-        writer.Write((int)value.FileKind);
+        writer.Write((int)value.SourceCodeKind);
     }
 }

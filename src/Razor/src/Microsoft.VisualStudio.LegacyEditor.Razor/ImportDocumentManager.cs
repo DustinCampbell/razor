@@ -98,12 +98,14 @@ internal sealed class ImportDocumentManager(IFileChangeTrackerFactory fileChange
     {
         var documentSnapshot = projectSnapshot.GetDocument(filePath);
 
-        var fileKind = documentSnapshot is { FileKind: var documentFileKind }
-            ? documentFileKind
-            : RazorFileKinds.GetFileKindFromFilePath(filePath);
+        if (documentSnapshot is not { SourceCodeKind: var sourceCodeKind } &&
+            !SourceCodeFileKinds.TryGetSourceCodeKind(filePath, out sourceCodeKind))
+        {
+            sourceCodeKind = RazorSourceCodeKind.Legacy;
+        }
 
         var projectEngine = projectSnapshot.GetProjectEngine();
-        var projectItem = projectEngine.FileSystem.GetItem(filePath, fileKind);
+        var projectItem = projectEngine.FileSystem.GetItem(filePath, sourceCodeKind);
 
         return projectEngine.GetImports(projectItem, static i => i.PhysicalPath is not null);
     }

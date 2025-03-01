@@ -61,7 +61,7 @@ public class VisualStudioRazorParserIntegrationTest : VisualStudioTestBase
 
             var codeDocument = await manager.InnerParser.GetLatestCodeDocumentAsync(snapshot);
             Assert.NotNull(codeDocument);
-            Assert.Equal(RazorFileKind.Component, codeDocument.FileKind);
+            Assert.Equal(RazorSourceCodeKind.Component, codeDocument.SourceCodeKind);
 
             // @code is only applicable in component files so we're verifying that `@code` was treated as a directive.
             var directiveNodes = manager.CurrentSyntaxTree!.Root.DescendantNodes().Where(child => child.Kind == SyntaxKind.RazorDirective);

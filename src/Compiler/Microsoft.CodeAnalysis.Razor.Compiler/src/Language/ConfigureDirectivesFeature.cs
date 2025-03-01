@@ -8,31 +8,31 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 internal sealed class ConfigureDirectivesFeature : RazorEngineFeatureBase, IConfigureRazorParserOptionsFeature
 {
-    private const int MaxIndex = (int)RazorFileKinds.MaxValue - 1;
+    private const int MaxIndex = (int)SourceCodeFileKinds.MaxValue - 1;
 
     public int Order => 100;
 
-    private readonly ImmutableArray<DirectiveDescriptor>.Builder?[] _fileKindToDirectivesMap =
+    private readonly ImmutableArray<DirectiveDescriptor>.Builder?[] _sourceCodeKindToDirectivesMap =
         new ImmutableArray<DirectiveDescriptor>.Builder?[MaxIndex + 1];
 
-    public void AddDirective(DirectiveDescriptor directive, params ReadOnlySpan<RazorFileKind> fileKinds)
+    public void AddDirective(DirectiveDescriptor directive, params ReadOnlySpan<RazorSourceCodeKind> sourceCodeKinds)
     {
-        // To maintain backwards compatibility, FileKinds.Legacy is assumed when a file kind is not specified.
-        if (fileKinds.IsEmpty)
+        // To maintain backwards compatibility, RazorSourceCodeKind.Legacy is assumed when a source code kind is not specified.
+        if (sourceCodeKinds.IsEmpty)
         {
-            fileKinds = [RazorFileKind.Legacy];
+            sourceCodeKinds = [RazorSourceCodeKind.Legacy];
         }
 
-        lock (_fileKindToDirectivesMap)
+        lock (_sourceCodeKindToDirectivesMap)
         {
-            foreach (var fileKind in fileKinds)
+            foreach (var sourceCodeKind in sourceCodeKinds)
             {
-                if (!TryGetIndex(fileKind, out var index))
+                if (!TryGetIndex(sourceCodeKind, out var index))
                 {
                     continue;
                 }
 
-                var directives = _fileKindToDirectivesMap.GetOrSet(index, () => ImmutableArray.CreateBuilder<DirectiveDescriptor>());
+                var directives = _sourceCodeKindToDirectivesMap.GetOrSet(index, () => ImmutableArray.CreateBuilder<DirectiveDescriptor>());
                 directives.Add(directive);
             }
         }
@@ -40,27 +40,27 @@ internal sealed class ConfigureDirectivesFeature : RazorEngineFeatureBase, IConf
 
     public ImmutableArray<DirectiveDescriptor> GetDirectives()
     {
-        // To maintain backwards compatibility, FileKinds.Legacy is assumed when a file kind is not specified.
-        return GetDirectives(RazorFileKind.Legacy);
+        // To maintain backwards compatibility, RazorSourceCodeKind.Legacy is assumed when a source code kind is not specified.
+        return GetDirectives(RazorSourceCodeKind.Legacy);
     }
 
-    public ImmutableArray<DirectiveDescriptor> GetDirectives(RazorFileKind fileKind)
+    public ImmutableArray<DirectiveDescriptor> GetDirectives(RazorSourceCodeKind sourceCodeKind)
     {
-        if (!TryGetIndex(fileKind, out var index))
+        if (!TryGetIndex(sourceCodeKind, out var index))
         {
             return [];
         }
 
-        lock (_fileKindToDirectivesMap)
+        lock (_sourceCodeKindToDirectivesMap)
         {
-            return _fileKindToDirectivesMap[index]?.ToImmutable() ?? [];
+            return _sourceCodeKindToDirectivesMap[index]?.ToImmutable() ?? [];
         }
     }
 
-    private static bool TryGetIndex(RazorFileKind fileKind, out int index)
+    private static bool TryGetIndex(RazorSourceCodeKind sourceCodeKind, out int index)
     {
-        // Note: By using fileKind - 1, we filter out RazorFileKind.None because the index be -1.
-        index = (int)fileKind - 1;
+        // Note: By using sourceCodeKind - 1, we filter out RazorSourceCodeKind.None because the index be -1.
+        index = (int)sourceCodeKind - 1;
 
         if (index < 0 || index > MaxIndex)
         {
@@ -73,6 +73,6 @@ internal sealed class ConfigureDirectivesFeature : RazorEngineFeatureBase, IConf
 
     void IConfigureRazorParserOptionsFeature.Configure(RazorParserOptions.Builder builder)
     {
-        builder.Directives = GetDirectives(builder.FileKind);
+        builder.Directives = GetDirectives(builder.SourceCodeKind);
     }
 }

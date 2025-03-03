@@ -169,8 +169,8 @@ internal partial class OpenDocumentGenerator : IRazorStartupService, IDisposable
 
         void EnqueueIfNecessary(DocumentSnapshot document)
         {
-            if (!_projectManager.IsDocumentOpen(document.FilePath) &&
-                !_options.UpdateBuffersForClosedDocuments)
+            if (!_options.UpdateBuffersForClosedDocuments &&
+                !_projectManager.IsDocumentOpen(document.FilePath))
             {
                 return;
             }

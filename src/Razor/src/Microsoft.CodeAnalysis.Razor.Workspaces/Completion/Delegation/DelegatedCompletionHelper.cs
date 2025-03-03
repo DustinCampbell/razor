@@ -162,38 +162,31 @@ internal static class DelegatedCompletionHelper
     /// in order to add the '.' to the generated C# contents.
     /// </remarks>
     public static bool TryGetProvisionalCompletionInfo(
+        this VSInternalCompletionContext context,
+        DocumentPositionInfo positionInfo,
         RazorCodeDocument codeDocument,
-        VSInternalCompletionContext completionContext,
-        DocumentPositionInfo originalPositionInfo,
         IDocumentMappingService documentMappingService,
-        out CompletionPositionInfo completionPositionInfo)
+        out CompletionPositionInfo completionInfo)
     {
-        if (originalPositionInfo.LanguageKind != RazorLanguageKind.Html ||
-            completionContext.TriggerKind != CompletionTriggerKind.TriggerCharacter ||
-            completionContext.TriggerCharacter != ".")
+        if (positionInfo.Position.Character == 0 ||
+            positionInfo.LanguageKind != RazorLanguageKind.Html ||
+            context.TriggerKind != CompletionTriggerKind.TriggerCharacter ||
+            context.TriggerCharacter != ".")
         {
-            // Invalid provisional completion context
-            completionPositionInfo = default;
+            // Invalid position info or completion context
+            completionInfo = default;
             return false;
         }
 
-        if (originalPositionInfo.Position.Character == 0)
+        var previousPositionInfo = documentMappingService.GetPositionInfo(codeDocument, positionInfo.HostDocumentIndex - 1);
+
+        if (previousPositionInfo.LanguageKind != RazorLanguageKind.CSharp)
         {
-            // We're at the start of line. Can't have provisional completions here.
-            completionPositionInfo = default;
+            completionInfo = default;
             return false;
         }
 
-        var previousCharacterPositionInfo = documentMappingService.GetPositionInfo(
-            codeDocument, originalPositionInfo.HostDocumentIndex - 1);
-
-        if (previousCharacterPositionInfo.LanguageKind != RazorLanguageKind.CSharp)
-        {
-            completionPositionInfo = default;
-            return false;
-        }
-
-        var previousPosition = previousCharacterPositionInfo.Position;
+        var previousPosition = previousPositionInfo.Position;
 
         // Edit the CSharp projected document to contain a '.'. This allows C# completion to provide valid
         // completion items for moments when a user has typed a '.' that's typically interpreted as Html.
@@ -204,9 +197,9 @@ internal static class DelegatedCompletionHelper
             VsLspFactory.CreatePosition(
                 previousPosition.Line,
                 previousPosition.Character + 1),
-            previousCharacterPositionInfo.HostDocumentIndex + 1);
+            previousPositionInfo.HostDocumentIndex + 1);
 
-        completionPositionInfo = new CompletionPositionInfo(addProvisionalDot, provisionalPositionInfo, ShouldIncludeDelegationSnippets: false);
+        completionInfo = new CompletionPositionInfo(addProvisionalDot, provisionalPositionInfo, ShouldIncludeDelegationSnippets: false);
         return true;
     }
 

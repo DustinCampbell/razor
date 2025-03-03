@@ -66,7 +66,7 @@ internal class DelegatedCompletionListProvider
 
         TextEdit? provisionalTextEdit = null;
 
-        if (DelegatedCompletionHelper.TryGetProvisionalCompletionInfo(codeDocument, completionContext, positionInfo, _documentMappingService, out var provisionalCompletion))
+        if (completionContext.TryGetProvisionalCompletionInfo(positionInfo, codeDocument, _documentMappingService, out var provisionalCompletion))
         {
             provisionalTextEdit = provisionalCompletion.ProvisionalTextEdit;
             positionInfo = provisionalCompletion.DocumentPositionInfo;

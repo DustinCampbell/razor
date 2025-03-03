@@ -36,8 +36,9 @@ internal partial class OpenDocumentGenerator
         public int GetHashCode(IDocumentSnapshot obj)
         {
             var hash = HashCodeCombiner.Start();
-            hash.Add(obj.Project.Key.Id, FilePathComparer.Instance);
-            hash.Add(obj.FileKind, FilePathComparer.Instance);
+            hash.Add(obj.Project.Key);
+            hash.Add(obj.FilePath, FilePathComparer.Instance);
+
             return hash.CombinedHash;
         }
     }

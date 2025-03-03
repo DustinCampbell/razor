@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.CodeAnalysis.Razor.Completion;
 using Microsoft.CodeAnalysis.Razor.DocumentMapping;
 using Microsoft.CodeAnalysis.Razor.Protocol;
 using Microsoft.CodeAnalysis.Razor.Protocol.Completion;
@@ -18,9 +19,9 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 using LspRange = Microsoft.VisualStudio.LanguageServer.Protocol.Range;
 
-namespace Microsoft.CodeAnalysis.Razor.Completion.Delegation;
+namespace Microsoft.CodeAnalysis.Razor.Workspaces.Completion;
 
-using SyntaxNode = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxNode;
+using SyntaxNode = AspNetCore.Razor.Language.Syntax.SyntaxNode;
 
 /// <summary>
 /// Helper methods for C# and HTML completion ("delegated" completion) that are used both in LSP and cohosting
@@ -156,7 +157,7 @@ internal static class DelegatedCompletionHelper
                         foundItemToRemove = true;
                     }
                     // Filter out Razor design-time helpers and potentially all items starting with "__".
-                    else if (s_designTimeHelpers.Contains(item.Label) || (!startsWithDoubleUnderscore && item.Label.StartsWith("__")))
+                    else if (s_designTimeHelpers.Contains(item.Label) || !startsWithDoubleUnderscore && item.Label.StartsWith("__"))
                     {
                         toRemove[i] = true;
                         foundItemToRemove = true;

@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor.Cohost;
 using Microsoft.CodeAnalysis.Razor.Completion;
-using Microsoft.CodeAnalysis.Razor.Completion.Delegation;
 using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.CodeAnalysis.Razor.Protocol;
 using Microsoft.CodeAnalysis.Razor.Protocol.Completion;
@@ -25,6 +24,7 @@ using RoslynCompletionParams = Roslyn.LanguageServer.Protocol.CompletionParams;
 using RoslynLspExtensions = Roslyn.LanguageServer.Protocol.RoslynLspExtensions;
 using RoslynPosition = Roslyn.LanguageServer.Protocol.Position;
 using RoslynCompletionContext = Roslyn.LanguageServer.Protocol.CompletionContext;
+using Microsoft.CodeAnalysis.Razor.Workspaces.Completion;
 
 namespace Microsoft.VisualStudio.Razor.LanguageClient.Cohost;
 

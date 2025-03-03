@@ -54,9 +54,9 @@ internal class DelegatedCompletionListProvider
         Guid correlationId,
         CancellationToken cancellationToken)
     {
-        var positionInfo = await _documentMappingService
-            .GetPositionInfoAsync(documentContext, absoluteIndex, cancellationToken)
-            .ConfigureAwait(false);
+        var codeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
+
+        var positionInfo = _documentMappingService.GetPositionInfo(codeDocument, absoluteIndex);
 
         if (positionInfo.LanguageKind == RazorLanguageKind.Razor)
         {
@@ -64,17 +64,12 @@ internal class DelegatedCompletionListProvider
             return null;
         }
 
-        var provisionalCompletion = await DelegatedCompletionHelper.TryGetProvisionalCompletionInfoAsync(
-            documentContext,
-            completionContext,
-            positionInfo,
-            _documentMappingService,
-            cancellationToken).ConfigureAwait(false);
         TextEdit? provisionalTextEdit = null;
-        if (provisionalCompletion is { } provisionalCompletionValue)
+
+        if (DelegatedCompletionHelper.TryGetProvisionalCompletionInfo(codeDocument, completionContext, positionInfo, _documentMappingService, out var provisionalCompletion))
         {
-            provisionalTextEdit = provisionalCompletionValue.ProvisionalTextEdit;
-            positionInfo = provisionalCompletionValue.DocumentPositionInfo;
+            provisionalTextEdit = provisionalCompletion.ProvisionalTextEdit;
+            positionInfo = provisionalCompletion.DocumentPositionInfo;
         }
 
         if (DelegatedCompletionHelper.RewriteContext(completionContext, positionInfo.LanguageKind, _completionTriggerAndCommitCharacters) is not { } rewrittenContext)
@@ -84,12 +79,11 @@ internal class DelegatedCompletionListProvider
 
         completionContext = rewrittenContext;
 
-        var razorCodeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
         // It's a bit confusing, but we have two different "add snippets" options - one is a part of
         // RazorCompletionOptions and becomes a part of RazorCompletionContext and is used by
         // RazorCompletionFactsService, and the second one below that's used for delegated completion
         // Their values are not related in any way.
-        var shouldIncludeDelegationSnippets = DelegatedCompletionHelper.ShouldIncludeSnippets(razorCodeDocument, absoluteIndex);
+        var shouldIncludeDelegationSnippets = DelegatedCompletionHelper.ShouldIncludeSnippets(codeDocument, absoluteIndex);
 
         var delegatedParams = new DelegatedCompletionParams(
             documentContext.GetTextDocumentIdentifierAndVersion(),

@@ -161,34 +161,36 @@ internal static class DelegatedCompletionHelper
     /// to C# and will return a temporary edit that should be made to the generated document
     /// in order to add the '.' to the generated C# contents.
     /// </remarks>
-    public static async Task<CompletionPositionInfo?> TryGetProvisionalCompletionInfoAsync(
-        DocumentContext documentContext,
+    public static bool TryGetProvisionalCompletionInfo(
+        RazorCodeDocument codeDocument,
         VSInternalCompletionContext completionContext,
         DocumentPositionInfo originalPositionInfo,
         IDocumentMappingService documentMappingService,
-        CancellationToken cancellationToken)
+        out CompletionPositionInfo completionPositionInfo)
     {
         if (originalPositionInfo.LanguageKind != RazorLanguageKind.Html ||
             completionContext.TriggerKind != CompletionTriggerKind.TriggerCharacter ||
             completionContext.TriggerCharacter != ".")
         {
             // Invalid provisional completion context
-            return null;
+            completionPositionInfo = default;
+            return false;
         }
 
         if (originalPositionInfo.Position.Character == 0)
         {
             // We're at the start of line. Can't have provisional completions here.
-            return null;
+            completionPositionInfo = default;
+            return false;
         }
 
-        var previousCharacterPositionInfo = await documentMappingService
-            .GetPositionInfoAsync(documentContext, originalPositionInfo.HostDocumentIndex - 1, cancellationToken)
-            .ConfigureAwait(false);
+        var previousCharacterPositionInfo = documentMappingService.GetPositionInfo(
+            codeDocument, originalPositionInfo.HostDocumentIndex - 1);
 
         if (previousCharacterPositionInfo.LanguageKind != RazorLanguageKind.CSharp)
         {
-            return null;
+            completionPositionInfo = default;
+            return false;
         }
 
         var previousPosition = previousCharacterPositionInfo.Position;
@@ -204,7 +206,8 @@ internal static class DelegatedCompletionHelper
                 previousPosition.Character + 1),
             previousCharacterPositionInfo.HostDocumentIndex + 1);
 
-        return new CompletionPositionInfo(addProvisionalDot, provisionalPositionInfo, ShouldIncludeDelegationSnippets: false);
+        completionPositionInfo = new CompletionPositionInfo(addProvisionalDot, provisionalPositionInfo, ShouldIncludeDelegationSnippets: false);
+        return true;
     }
 
     public static bool ShouldIncludeSnippets(RazorCodeDocument razorCodeDocument, int absoluteIndex)

@@ -61,19 +61,15 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
 
         var positionInfo = GetPositionInfo(codeDocument, index);
 
-        if (positionInfo.LanguageKind != RazorLanguageKind.Razor
-           && await DelegatedCompletionHelper.TryGetProvisionalCompletionInfoAsync(
-                remoteDocumentContext,
-                completionContext,
-                positionInfo,
-                DocumentMappingService,
-                cancellationToken)
-                .ConfigureAwait(false) is { } provisionalCompletionInfo)
+        if (positionInfo.LanguageKind != RazorLanguageKind.Razor)
         {
-            return new CompletionPositionInfo(
-                provisionalCompletionInfo.ProvisionalTextEdit,
-                provisionalCompletionInfo.DocumentPositionInfo,
-                ShouldIncludeDelegationSnippets: false);
+            if (DelegatedCompletionHelper.TryGetProvisionalCompletionInfo(codeDocument, completionContext, positionInfo, DocumentMappingService, out var provisionalCompletionInfo))
+            {
+                return new CompletionPositionInfo(
+                    provisionalCompletionInfo.ProvisionalTextEdit,
+                    provisionalCompletionInfo.DocumentPositionInfo,
+                    ShouldIncludeDelegationSnippets: false);
+            }
         }
 
         var shouldIncludeSnippets = positionInfo.LanguageKind == RazorLanguageKind.Html

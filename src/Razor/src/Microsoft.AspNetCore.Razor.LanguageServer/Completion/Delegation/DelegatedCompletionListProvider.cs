@@ -72,12 +72,12 @@ internal class DelegatedCompletionListProvider
             positionInfo = provisionalCompletion.DocumentPositionInfo;
         }
 
-        if (DelegatedCompletionHelper.RewriteContext(completionContext, positionInfo.LanguageKind, _completionTriggerAndCommitCharacters) is not { } rewrittenContext)
+        if (!completionContext.ValidateOrGetUpdatedContext(positionInfo.LanguageKind, _completionTriggerAndCommitCharacters, out var updatedContext))
         {
             return null;
         }
 
-        completionContext = rewrittenContext;
+        completionContext = updatedContext;
 
         // It's a bit confusing, but we have two different "add snippets" options - one is a part of
         // RazorCompletionOptions and becomes a part of RazorCompletionContext and is used by

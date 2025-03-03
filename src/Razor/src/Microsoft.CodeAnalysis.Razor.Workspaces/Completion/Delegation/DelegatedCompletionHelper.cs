@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
@@ -38,30 +39,37 @@ internal static class DelegatedCompletionHelper
     /// <param name="context">Original completion context passed to the completion handler</param>
     /// <param name="languageKind">Language of the completion position</param>
     /// <param name="completionTriggerAndCommitCharacters">Per-client set of trigger and commit characters</param>
-    /// <returns>Possibly modified completion context</returns>
+    /// <param name="updatedContext">Possibly modified completion context</param>.
+    /// <returns>
+    ///  <see langword="true"/> if the given <see cref="VSInternalCompletionContext"/> is valid or was
+    ///  written; otherwise, <see langword="false"/>.
+    /// </returns>
     /// <remarks>For example, if we invoke C# completion in Razor via @ character, we will not
     /// want C# to see @ as the trigger character and instead will transform completion context
     /// into "invoked" and "explicit" rather than "typing", without a trigger character</remarks>
-    public static VSInternalCompletionContext? RewriteContext(
-        VSInternalCompletionContext context,
+    public static bool ValidateOrGetUpdatedContext(
+        this VSInternalCompletionContext context,
         RazorLanguageKind languageKind,
-        CompletionTriggerAndCommitCharacters completionTriggerAndCommitCharacters)
+        CompletionTriggerAndCommitCharacters completionTriggerAndCommitCharacters,
+        [NotNullWhen(true)] out VSInternalCompletionContext? updatedContext)
     {
         Debug.Assert(languageKind != RazorLanguageKind.Razor,
-            $"{nameof(RewriteContext)} should be called for delegated completion only");
+            $"{nameof(ValidateOrGetUpdatedContext)} should be called for delegated completion only");
 
         if (context.TriggerKind != CompletionTriggerKind.TriggerCharacter
             || context.TriggerCharacter is not { } triggerCharacter)
         {
             // Non-triggered based completion, the existing context is valid.
-            return context;
+            updatedContext = context;
+            return true;
         }
 
         if (languageKind == RazorLanguageKind.CSharp
             && CompletionTriggerAndCommitCharacters.CSharpTriggerCharacters.Contains(triggerCharacter))
         {
             // C# trigger character for C# content
-            return context;
+            updatedContext = context;
+            return true;
         }
 
         if (languageKind == RazorLanguageKind.Html)
@@ -69,11 +77,12 @@ internal static class DelegatedCompletionHelper
             // For HTML we don't want to delegate to HTML language server is completion is due to a trigger characters that is not
             // HTML trigger character. Doing so causes bad side effects in VSCode HTML client as we will end up with non-matching
             // completion entries
-            return completionTriggerAndCommitCharacters.HtmlTriggerCharacters.Contains(triggerCharacter) ? context : null;
+            updatedContext = completionTriggerAndCommitCharacters.HtmlTriggerCharacters.Contains(triggerCharacter) ? context : null;
+            return updatedContext is not null;
         }
 
         // Trigger character not associated with the current language. Transform the context into an invoked context.
-        var rewrittenContext = new VSInternalCompletionContext()
+        updatedContext = new VSInternalCompletionContext()
         {
             InvokeKind = context.InvokeKind,
             TriggerKind = CompletionTriggerKind.Invoked,
@@ -84,10 +93,10 @@ internal static class DelegatedCompletionHelper
         {
             // The C# language server will not return any completions for the '@' character unless we
             // send the completion request explicitly.
-            rewrittenContext.InvokeKind = VSInternalCompletionInvokeKind.Explicit;
+            updatedContext.InvokeKind = VSInternalCompletionInvokeKind.Explicit;
         }
 
-        return rewrittenContext;
+        return true;
     }
 
     /// <summary>

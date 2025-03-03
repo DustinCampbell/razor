@@ -6,7 +6,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Razor.Completion;
-using Microsoft.CodeAnalysis.Razor.Completion.Delegation;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 using Xunit;
@@ -118,7 +117,6 @@ public class HtmlCommitCharacterResponseRewriterTest(ITestOutputHelper testOutpu
             SnippetsSupported: true,
             AutoInsertAttributeQuotes: true,
             CommitElementsWithSpace: false);
-        var rewriter = new HtmlCommitCharacterResponseRewriter();
 
         // Act
         var rewrittenCompletionList = await GetRewrittenCompletionListAsync(

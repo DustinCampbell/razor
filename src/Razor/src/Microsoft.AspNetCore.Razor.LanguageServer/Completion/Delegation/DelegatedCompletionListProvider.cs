@@ -99,22 +99,30 @@ internal class DelegatedCompletionListProvider
             delegatedParams,
             cancellationToken).ConfigureAwait(false);
 
-        var rewrittenResponse = delegatedParams.ProjectedKind == RazorLanguageKind.CSharp
-             ? await DelegatedCompletionHelper.RewriteCSharpResponseAsync(
-                delegatedResponse,
-                absoluteIndex,
-                documentContext,
-                delegatedParams.ProjectedPosition,
-                razorCompletionOptions,
-                cancellationToken)
-                .ConfigureAwait(false)
-            : DelegatedCompletionHelper.RewriteHtmlResponse(delegatedResponse, razorCompletionOptions);
+        var result = delegatedResponse;
+
+        if (result?.Items is null)
+        {
+            // If we don't get a response from the delegated server, we have to make sure to return an incomplete completion
+            // list. When a user is typing quickly, the delegated request from the first keystroke will fail to synchronize,
+            // so if we return a "complete" list then the query won't re-query us for completion once the typing stops/slows
+            // so we'd only ever return Razor completion items.
+            result = new VSInternalCompletionList() { IsIncomplete = true, Items = [] };
+        }
+        else if (delegatedParams.ProjectedKind == RazorLanguageKind.CSharp)
+        {
+            DelegatedCompletionHelper.UpdateCSharpCompletionList(result, codeDocument, absoluteIndex, delegatedParams.ProjectedPosition);
+        }
+        else
+        {
+            DelegatedCompletionHelper.UpdateHtmlCompletionList(result, razorCompletionOptions);
+        }
 
         var completionCapability = clientCapabilities?.TextDocument?.Completion as VSInternalCompletionSetting;
-        var resolutionContext = new DelegatedCompletionResolutionContext(delegatedParams, rewrittenResponse.Data);
-        var resultId = _completionListCache.Add(rewrittenResponse, resolutionContext);
-        rewrittenResponse.SetResultId(resultId, completionCapability);
+        var resolutionContext = new DelegatedCompletionResolutionContext(delegatedParams, result.Data);
+        var resultId = _completionListCache.Add(result, resolutionContext);
+        result.SetResultId(resultId, completionCapability);
 
-        return rewrittenResponse;
+        return result;
     }
 }

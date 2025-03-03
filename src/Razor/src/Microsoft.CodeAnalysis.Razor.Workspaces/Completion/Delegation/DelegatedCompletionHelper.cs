@@ -1,17 +1,22 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-using System.Collections.Immutable;
+using System;
+using System.Buffers;
+using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.AspNetCore.Razor.Language.Syntax;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.Razor.DocumentMapping;
-using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Razor.Protocol;
 using Microsoft.CodeAnalysis.Razor.Protocol.Completion;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
+using LspRange = Microsoft.VisualStudio.LanguageServer.Protocol.Range;
 
 namespace Microsoft.CodeAnalysis.Razor.Completion.Delegation;
 
@@ -23,15 +28,17 @@ using SyntaxNode = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxNode;
 /// </summary>
 internal static class DelegatedCompletionHelper
 {
-    // Ordering should be:
-    // 1. Changes items
-    // 2. Adds items
-    // 3. Filters items
-    private static readonly ImmutableArray<IDelegatedCSharpCompletionResponseRewriter> s_delegatedCSharpCompletionResponseRewriters =
-        [new SnippetResponseRewriter(), new TextEditResponseRewriter(), new DesignTimeHelperResponseRewriter()];
-
-    // Currently we only have one HTML response re-writer. Should we ever need more, we can create a common base and a collection
-    private static readonly HtmlCommitCharacterResponseRewriter s_delegatedHtmlCompletionResponseRewriter = new();
+    private static readonly FrozenSet<string> s_designTimeHelpers = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "__builder",
+        "__o",
+        "__RazorDirectiveTokenHelpers__",
+        "__tagHelperExecutionContext",
+        "__tagHelperRunner",
+        "__typeHelper",
+        "_Imports",
+        "BuildRenderTree"
+    }.ToFrozenSet();
 
     /// <summary>
     /// Modifies completion context if needed so that it's acceptable to the delegated language.
@@ -100,62 +107,229 @@ internal static class DelegatedCompletionHelper
     }
 
     /// <summary>
-    /// Modifies C# completion response to be usable by Razor.
+    /// Modifies a C# completion list to be usable by Razor.
     /// </summary>
-    /// <returns>
-    /// Possibly modified completion response.
-    /// </returns>
-    public static async ValueTask<VSInternalCompletionList> RewriteCSharpResponseAsync(
-        VSInternalCompletionList? delegatedResponse,
-        int absoluteIndex,
-        DocumentContext documentContext,
-        Position projectedPosition,
-        RazorCompletionOptions completionOptions,
-        CancellationToken cancellationToken)
+    public static void UpdateCSharpCompletionList(
+        VSInternalCompletionList completionList,
+        RazorCodeDocument codeDocument,
+        int hostDocumentIndex,
+        Position projectedPosition)
     {
-        if (delegatedResponse?.Items is null)
+        // First, filter items from the completion list.
+        FilterItems(completionList, codeDocument, hostDocumentIndex);
+
+        // Then, update the completion item text edits.
+        var hostDocumentPosition = codeDocument.Source.Text.GetPosition(hostDocumentIndex);
+        UpdateTextEdits(completionList, hostDocumentPosition, projectedPosition);
+
+        static void FilterItems(VSInternalCompletionList completionList, RazorCodeDocument codeDocument, int hostDocumentIndex)
         {
-            // If we don't get a response from the delegated server, we have to make sure to return an incomplete completion
-            // list. When a user is typing quickly, the delegated request from the first keystroke will fail to synchronize,
-            // so if we return a "complete" list then the query won't re-query us for completion once the typing stops/slows
-            // so we'd only ever return Razor completion items.
-            return new VSInternalCompletionList() { IsIncomplete = true, Items = [] };
+            var items = completionList.Items;
+
+            // First, filter items from the completion list.
+            using var _ = ArrayPool<bool>.Shared.GetPooledArraySpan(items.Length, out var toRemove);
+            {
+                toRemove.Clear();
+
+                // If the current identifier doesn't start with "__", we remove common design-time helpers *and*
+                // any item starting with "__" from the completion list. Otherwise, we only remove just the common
+                // design-time helpers.
+                var syntaxTree = codeDocument.GetSyntaxTree().AssumeNotNull();
+                var sourceText = codeDocument.Source.Text;
+
+                var startsWithDoubleUnderscore =
+                    syntaxTree.Root.FindInnermostNode(hostDocumentIndex) is { Span: { Length: >= 2, Start: var start } } &&
+                    sourceText[start] == '_' &&
+                    sourceText[start + 1] == '_';
+
+                var foundItemToRemove = false;
+
+                // Now, test each completion item and note whether it should be removed or not.
+                for (var i = 0; i < items.Length; i++)
+                {
+                    var item = items[i];
+
+                    // Filter out the C# "using" snippet because we have our own.
+                    if (item is { Kind: CompletionItemKind.Snippet, Label: "using" })
+                    {
+                        toRemove[i] = true;
+                        foundItemToRemove = true;
+                    }
+                    // Filter out Razor design-time helpers and potentially all items starting with "__".
+                    else if (s_designTimeHelpers.Contains(item.Label) || (!startsWithDoubleUnderscore && item.Label.StartsWith("__")))
+                    {
+                        toRemove[i] = true;
+                        foundItemToRemove = true;
+                    }
+                }
+
+                if (foundItemToRemove)
+                {
+                    using var filteredItems = new PooledArrayBuilder<CompletionItem>(items.Length);
+
+                    for (var i = 0; i < items.Length; i++)
+                    {
+                        if (!toRemove[i])
+                        {
+                            filteredItems.Add(items[i]);
+                        }
+                    }
+
+                    completionList.Items = filteredItems.ToArray();
+                }
+            }
         }
 
-        var rewrittenResponse = delegatedResponse;
-
-        foreach (var rewriter in s_delegatedCSharpCompletionResponseRewriters)
+        static void UpdateTextEdits(VSInternalCompletionList completionList, Position hostDocumentPosition, Position projectedPosition)
         {
-            rewrittenResponse = await rewriter.RewriteAsync(
-                rewrittenResponse,
-                absoluteIndex,
-                documentContext,
-                projectedPosition,
-                completionOptions,
-                cancellationToken).ConfigureAwait(false);
-        }
+            foreach (var item in completionList.Items)
+            {
+                if (item.TextEdit is { } edit)
+                {
+                    if (edit.TryGetFirst(out var textEdit))
+                    {
+                        textEdit.Range = TranslateRange(textEdit.Range, hostDocumentPosition, projectedPosition);
+                    }
+                    else if (edit.TryGetSecond(out var insertReplaceEdit))
+                    {
+                        insertReplaceEdit.Insert = TranslateRange(insertReplaceEdit.Insert, hostDocumentPosition, projectedPosition);
+                        insertReplaceEdit.Replace = TranslateRange(insertReplaceEdit.Replace, hostDocumentPosition, projectedPosition);
+                    }
+                }
+                else if (item.AdditionalTextEdits is not null)
+                {
+                    // Additional text edits should typically only be provided at resolve time. We don't support them in the normal completion flow.
+                    item.AdditionalTextEdits = null;
+                }
+            }
 
-        return rewrittenResponse;
+            // Ensure that we update the item defaults as well.
+            if (completionList.ItemDefaults?.EditRange is { } editRange)
+            {
+                if (editRange.TryGetFirst(out var range))
+                {
+                    completionList.ItemDefaults.EditRange = TranslateRange(range, hostDocumentPosition, projectedPosition);
+                }
+                else if (editRange.TryGetSecond(out var insertReplaceRange))
+                {
+                    insertReplaceRange.Insert = TranslateRange(insertReplaceRange.Insert, hostDocumentPosition, projectedPosition);
+                    insertReplaceRange.Replace = TranslateRange(insertReplaceRange.Replace, hostDocumentPosition, projectedPosition);
+                }
+            }
+
+            static LspRange TranslateRange(LspRange textEditRange, Position hostDocumentPosition, Position projectedPosition)
+            {
+                var offset = projectedPosition.Character - hostDocumentPosition.Character;
+
+                var translatedStartPosition = TranslatePosition(offset, hostDocumentPosition, textEditRange.Start);
+                var translatedEndPosition = TranslatePosition(offset, hostDocumentPosition, textEditRange.End);
+
+                return VsLspFactory.CreateRange(translatedStartPosition, translatedEndPosition);
+
+                static Position TranslatePosition(int offset, Position hostDocumentPosition, Position editPosition)
+                {
+                    var translatedCharacter = editPosition.Character - offset;
+
+                    // Note: If this completion handler ever expands to deal with multi-line TextEdits, this logic will likely need to change since
+                    // it assumes we're only dealing with single-line TextEdits.
+                    return VsLspFactory.CreatePosition(hostDocumentPosition.Line, translatedCharacter);
+                }
+            }
+        }
     }
 
-    public static VSInternalCompletionList RewriteHtmlResponse(
-        VSInternalCompletionList? delegatedResponse,
-        RazorCompletionOptions completionOptions)
+    /// <summary>
+    /// Modifies an HTML completion list to be usable by Razor.
+    /// </summary>
+    public static void UpdateHtmlCompletionList(VSInternalCompletionList completionList, RazorCompletionOptions completionOptions)
     {
-        if (delegatedResponse?.Items is null)
+        if (completionOptions.CommitElementsWithSpace)
         {
-            // If we don't get a response from the delegated server, we have to make sure to return an incomplete completion
-            // list. When a user is typing quickly, the delegated request from the first keystroke will fail to synchronize,
-            // so if we return a "complete" list then the query won't re-query us for completion once the typing stops/slows
-            // so we'd only ever return Razor completion items.
-            return new VSInternalCompletionList() { IsIncomplete = true, Items = [] };
+            return;
         }
 
-        var rewrittenResponse = s_delegatedHtmlCompletionResponseRewriter.Rewrite(
-            delegatedResponse,
-            completionOptions);
+        // Filter default commit characters.
+        string[]? defaultCommitChars = null;
 
-        return rewrittenResponse;
+        if (completionList.CommitCharacters is { } commitCharacters)
+        {
+            if (commitCharacters.TryGetFirst(out var commitChars))
+            {
+                defaultCommitChars = FilterCommitChars(commitChars);
+            }
+            else if (commitCharacters.TryGetSecond(out var vsCommitChars))
+            {
+                defaultCommitChars = FilterVSCommitChars(vsCommitChars);
+            }
+        }
+
+        using var itemCommitChars = new PooledArrayBuilder<string>();
+
+        foreach (var item in completionList.Items)
+        {
+            if (item.Kind == CompletionItemKind.Element)
+            {
+                if (item.CommitCharacters is null)
+                {
+                    if (defaultCommitChars is not null)
+                    {
+                        // This item wants to use the default commit characters, so change it to our updated version of them, without the space
+                        item.CommitCharacters = defaultCommitChars;
+                    }
+                }
+                else
+                {
+                    // This item has its own commit characters, so just remove spaces
+                    itemCommitChars.Clear();
+
+                    foreach (var commitChar in item.CommitCharacters)
+                    {
+                        if (commitChar != " ")
+                        {
+                            itemCommitChars.Add(commitChar);
+                        }
+                    }
+
+                    item.CommitCharacters = itemCommitChars.ToArray();
+                }
+            }
+        }
+
+        static string[]? FilterCommitChars(string[] commitChars)
+        {
+            using var builder = new PooledArrayBuilder<string>(commitChars.Length);
+
+            foreach (var commitChar in commitChars)
+            {
+                if (commitChar != " ")
+                {
+                    builder.Add(commitChar);
+                }
+            }
+
+            // If the default commit characters didn't include " " already, then we set our list to null to avoid over-specifying commit characters
+            return builder.Count != commitChars.Length
+                ? builder.ToArray()
+                : null;
+        }
+
+        static string[]? FilterVSCommitChars(VSInternalCommitCharacter[] vsCommitChars)
+        {
+            using var builder = new PooledArrayBuilder<string>(vsCommitChars.Length);
+
+            foreach (var vsCommitChar in vsCommitChars)
+            {
+                if (vsCommitChar.Character != " ")
+                {
+                    builder.Add(vsCommitChar.Character);
+                }
+            }
+
+            // If the default commit characters didn't include " " already, then we set our list to null to avoid over-specifying commit characters
+            return builder.Count != vsCommitChars.Length
+                ? builder.ToArray()
+                : null;
+        }
     }
 
     /// <summary>
@@ -212,9 +386,9 @@ internal static class DelegatedCompletionHelper
         return true;
     }
 
-    public static bool ShouldIncludeSnippets(RazorCodeDocument razorCodeDocument, int absoluteIndex)
+    public static bool ShouldIncludeSnippets(RazorCodeDocument codeDocument, int absoluteIndex)
     {
-        var tree = razorCodeDocument.GetSyntaxTree();
+        var tree = codeDocument.GetSyntaxTree().AssumeNotNull();
 
         var token = tree.Root.FindToken(absoluteIndex, includeWhitespace: false);
         if (token.Kind == SyntaxKind.EndOfFile &&

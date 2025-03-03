@@ -116,7 +116,6 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
                 mappedPosition,
                 positionInfo.ProvisionalTextEdit,
                 completionContext,
-                razorCompletionOptions,
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -155,7 +154,6 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
         Position mappedPosition,
         TextEdit? provisionalTextEdit,
         CompletionContext completionContext,
-        RazorCompletionOptions razorCompletionOptions,
         CancellationToken cancellationToken)
     {
         var generatedDocument = await remoteDocumentContext.Snapshot
@@ -194,28 +192,33 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
 
         if (roslynCompletionList is null)
         {
-            // If we don't get a response from the delegated server, we have to make sure to return an incomplete completion
-            // list. When a user is typing quickly, the delegated request from the first keystroke will fail to synchronize,
-            // so if we return a "complete" list then the query won't re-query us for completion once the typing stops/slows
-            // so we'd only ever return Razor completion items.
-            return new VSInternalCompletionList()
-            {
-                Items = [],
-                IsIncomplete = true
-            };
+            return IncompleteList();
         }
 
-        var vsPlatformCompletionList = JsonHelpers.ToVsLSP<VSInternalCompletionList, RoslynCompletionList>(roslynCompletionList);
+        var completionList = JsonHelpers.ToVsLSP<VSInternalCompletionList, RoslynCompletionList>(roslynCompletionList);
 
-        var rewrittenResponse = await DelegatedCompletionHelper.RewriteCSharpResponseAsync(
-            vsPlatformCompletionList,
-            documentIndex,
-            remoteDocumentContext,
-            mappedPosition,
-            razorCompletionOptions,
-            cancellationToken)
-            .ConfigureAwait(false);
+        if (completionList?.Items is null)
+        {
+            return IncompleteList();
+        }
 
-        return rewrittenResponse;
+        var codeDocument = await remoteDocumentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
+
+        DelegatedCompletionHelper.UpdateCSharpCompletionList(completionList, codeDocument, documentIndex, mappedPosition);
+
+        return completionList;
     }
+
+    /// <remarks>
+    /// If we don't get a response from the delegated server, we have to make sure to return an incomplete completion
+    /// list. When a user is typing quickly, the delegated request from the first keystroke will fail to synchronize,
+    /// so if we return a "complete" list then the query won't re-query us for completion once the typing stops/slows
+    /// so we'd only ever return Razor completion items.
+    /// </remarks>
+    private static VSInternalCompletionList IncompleteList() => new()
+    {
+        IsIncomplete = true,
+        Items = []
+    };
+
 }

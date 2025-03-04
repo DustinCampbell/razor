@@ -7,8 +7,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.LanguageServer.EndpointContracts;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.CodeAnalysis.Razor.Completion;
+using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.CodeAnalysis.Razor.Workspaces;
 using Microsoft.CodeAnalysis.Razor.Workspaces.Telemetry;
 using Microsoft.CodeAnalysis.Text;
@@ -20,14 +22,16 @@ namespace Microsoft.AspNetCore.Razor.LanguageServer.Completion;
 internal class RazorCompletionEndpoint(
     CompletionListProvider completionListProvider,
     CompletionTriggerAndCommitCharacters completionTriggerAndCommitCharacters,
-    ITelemetryReporter? telemetryReporter,
-    RazorLSPOptionsMonitor optionsMonitor)
+    ITelemetryReporter telemetryReporter,
+    RazorLSPOptionsMonitor optionsMonitor,
+    ILoggerFactory loggerFactory)
     : IRazorRequestHandler<CompletionParams, VSInternalCompletionList?>, ICapabilitiesProvider
 {
     private readonly CompletionListProvider _completionListProvider = completionListProvider;
     private readonly CompletionTriggerAndCommitCharacters _completionTriggerAndCommitCharacters = completionTriggerAndCommitCharacters;
-    private readonly ITelemetryReporter? _telemetryReporter = telemetryReporter;
+    private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
     private readonly RazorLSPOptionsMonitor _optionsMonitor = optionsMonitor;
+    private readonly ILogger _logger = loggerFactory.GetOrCreateLogger<RazorCompletionEndpoint>();
 
     private VSInternalClientCapabilities? _clientCapabilities;
 
@@ -52,38 +56,47 @@ internal class RazorCompletionEndpoint(
 
     public async Task<VSInternalCompletionList?> HandleRequestAsync(CompletionParams request, RazorRequestContext requestContext, CancellationToken cancellationToken)
     {
-        var documentContext = requestContext.DocumentContext;
-
-        if (request.Context is null || documentContext is null)
-        {
-            return null;
-        }
-
-        var sourceText = await documentContext.GetSourceTextAsync(cancellationToken).ConfigureAwait(false);
-        if (!sourceText.TryGetAbsoluteIndex(request.Position, out var hostDocumentIndex))
-        {
-            return null;
-        }
-
         if (request.Context is not VSInternalCompletionContext completionContext)
         {
             Debug.Fail("Completion context should never be null in practice");
             return null;
         }
 
-        var autoShownCompletion = completionContext.InvokeKind != VSInternalCompletionInvokeKind.Explicit;
-        if (autoShownCompletion && !_optionsMonitor.CurrentValue.AutoShowCompletion)
+        var documentContext = requestContext.DocumentContext;
+        if (documentContext is null)
         {
             return null;
         }
 
+        using var pooledWatch = StopwatchPool.GetPooledObject(out var watch);
+        _logger.LogDebug($"{documentContext.FilePath}: Handling Razor completion request...");
+
+        var autoShownCompletion = completionContext.InvokeKind != VSInternalCompletionInvokeKind.Explicit;
+        var options = _optionsMonitor.CurrentValue;
+        if (autoShownCompletion && !options.AutoShowCompletion)
+        {
+            _logger.LogDebug($"");
+            return null;
+        }
+
+        var sourceText = await documentContext.GetSourceTextAsync(cancellationToken).ConfigureAwait(false);
+        if (!sourceText.TryGetAbsoluteIndex(request.Position, out var hostDocumentIndex))
+        {
+            _logger.LogDebug($"{documentContext.FilePath}: Could not absolute index of ({request.Position.Line},{request.Position.Character})");
+            return null;
+        }
+
         var correlationId = Guid.NewGuid();
-        using var _ = _telemetryReporter?.TrackLspRequest(Methods.TextDocumentCompletionName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.CompletionRazorTelemetryThreshold, correlationId);
+        using var _ = _telemetryReporter.TrackLspRequest(
+            Methods.TextDocumentCompletionName,
+            LanguageServerConstants.RazorLanguageServerName,
+            TelemetryThresholds.CompletionRazorTelemetryThreshold,
+            correlationId);
 
         var razorCompletionOptions = new RazorCompletionOptions(
             SnippetsSupported: true,
-            AutoInsertAttributeQuotes: _optionsMonitor.CurrentValue.AutoInsertAttributeQuotes,
-            CommitElementsWithSpace: _optionsMonitor.CurrentValue.CommitElementsWithSpace);
+            AutoInsertAttributeQuotes: options.AutoInsertAttributeQuotes,
+            CommitElementsWithSpace: options.CommitElementsWithSpace);
         var completionList = await _completionListProvider.GetCompletionListAsync(
             hostDocumentIndex,
             completionContext,
@@ -92,6 +105,9 @@ internal class RazorCompletionEndpoint(
             razorCompletionOptions,
             correlationId,
             cancellationToken).ConfigureAwait(false);
+
+        _logger.LogDebug($"{documentContext.FilePath}: Razor completion request finished in {watch}.");
+
         return completionList;
     }
 }

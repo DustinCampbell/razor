@@ -6,6 +6,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 using Xunit;
@@ -21,7 +22,14 @@ public class RazorCompletionEndpointTest(ITestOutputHelper testOutput) : Languag
         // Arrange
         var documentPath = "C:/path/to/document.cshtml";
         var optionsMonitor = GetOptionsMonitor();
-        var completionEndpoint = new RazorCompletionEndpoint(completionListProvider: null, completionTriggerAndCommitCharacters: null, telemetryReporter: null, optionsMonitor);
+
+        var completionEndpoint = new RazorCompletionEndpoint(
+            completionListProvider: null,
+            completionTriggerAndCommitCharacters: null,
+            telemetryReporter: NoOpTelemetryReporter.Instance,
+            optionsMonitor,
+            LoggerFactory);
+
         var request = new CompletionParams()
         {
             TextDocument = new TextDocumentIdentifier()
@@ -49,7 +57,13 @@ public class RazorCompletionEndpointTest(ITestOutputHelper testOutput) : Languag
         var uri = new Uri(documentPath);
         var documentContext = CreateDocumentContext(uri, codeDocument);
         var optionsMonitor = GetOptionsMonitor(autoShowCompletion: false);
-        var completionEndpoint = new RazorCompletionEndpoint(completionListProvider: null, completionTriggerAndCommitCharacters: null, telemetryReporter: null, optionsMonitor);
+        var completionEndpoint = new RazorCompletionEndpoint(
+            completionListProvider: null,
+            completionTriggerAndCommitCharacters: null,
+            telemetryReporter: NoOpTelemetryReporter.Instance,
+            optionsMonitor,
+            LoggerFactory);
+
         var request = new CompletionParams()
         {
             TextDocument = new TextDocumentIdentifier()
@@ -59,6 +73,7 @@ public class RazorCompletionEndpointTest(ITestOutputHelper testOutput) : Languag
             Position = VsLspFactory.CreatePosition(0, 1),
             Context = new VSInternalCompletionContext() { InvokeKind = VSInternalCompletionInvokeKind.Typing },
         };
+
         var requestContext = CreateRazorRequestContext(documentContext);
 
         // Act

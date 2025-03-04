@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Razor.LanguageServer.Completion.Delegation;
 using Microsoft.AspNetCore.Razor.LanguageServer.EndpointContracts;
 using Microsoft.AspNetCore.Razor.LanguageServer.Hosting;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
+using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.CodeAnalysis.Razor.Completion;
 using Microsoft.CodeAnalysis.Razor.DocumentMapping;
 using Microsoft.CodeAnalysis.Razor.Logging;
@@ -48,7 +49,12 @@ public class RazorCompletionBenchmark : RazorLanguageServerBenchmarkBase
         var completionListProvider = new CompletionListProvider(razorCompletionListProvider, delegatedCompletionListProvider);
         var configurationService = new DefaultRazorConfigurationService(clientConnection, loggerFactory);
         var optionsMonitor = new RazorLSPOptionsMonitor(configurationService, RazorLSPOptions.Default);
-        CompletionEndpoint = new RazorCompletionEndpoint(completionListProvider, completionTriggerAndCommitCharacters, telemetryReporter: null, optionsMonitor);
+        CompletionEndpoint = new RazorCompletionEndpoint(
+            completionListProvider,
+            completionTriggerAndCommitCharacters,
+            telemetryReporter: NoOpTelemetryReporter.Instance,
+            optionsMonitor,
+            loggerFactory);
 
         var clientCapabilities = new VSInternalClientCapabilities
         {

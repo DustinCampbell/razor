@@ -22,27 +22,20 @@ using Microsoft.VisualStudio.LanguageServer.Protocol;
 
 namespace Microsoft.AspNetCore.Razor.LanguageServer.Completion.Delegation;
 
-internal class DelegatedCompletionListProvider
+internal class DelegatedCompletionListProvider(
+    IDocumentMappingService documentMappingService,
+    IClientConnection clientConnection,
+    CompletionListCache completionListCache,
+    CompletionTriggerAndCommitCharacters triggerAndCommitCharacters)
 {
-    private readonly IDocumentMappingService _documentMappingService;
-    private readonly IClientConnection _clientConnection;
-    private readonly CompletionListCache _completionListCache;
-    private readonly CompletionTriggerAndCommitCharacters _completionTriggerAndCommitCharacters;
-
-    public DelegatedCompletionListProvider(
-        IDocumentMappingService documentMappingService,
-        IClientConnection clientConnection,
-        CompletionListCache completionListCache,
-        CompletionTriggerAndCommitCharacters completionTriggerAndCommitCharacters)
-    {
-        _documentMappingService = documentMappingService;
-        _clientConnection = clientConnection;
-        _completionListCache = completionListCache;
-        _completionTriggerAndCommitCharacters = completionTriggerAndCommitCharacters;
-    }
+    private readonly IDocumentMappingService _documentMappingService = documentMappingService;
+    private readonly IClientConnection _clientConnection = clientConnection;
+    private readonly CompletionListCache _completionListCache = completionListCache;
+    private readonly CompletionTriggerAndCommitCharacters _triggerAndCommitCharacters = triggerAndCommitCharacters;
 
     // virtual for tests
-    public virtual FrozenSet<string> TriggerCharacters => _completionTriggerAndCommitCharacters.AllDelegationTriggerCharacters;
+    public virtual bool IsValidTrigger(CompletionContext context)
+        => _triggerAndCommitCharacters.IsValidDelegationTrigger(context);
 
     // virtual for tests
     public virtual async Task<VSInternalCompletionList?> GetCompletionListAsync(
@@ -72,7 +65,7 @@ internal class DelegatedCompletionListProvider
             positionInfo = provisionalCompletion.DocumentPositionInfo;
         }
 
-        if (!completionContext.ValidateOrGetUpdatedContext(positionInfo.LanguageKind, _completionTriggerAndCommitCharacters, out var updatedContext))
+        if (!completionContext.ValidateOrGetUpdatedContext(positionInfo.LanguageKind, _triggerAndCommitCharacters, out var updatedContext))
         {
             return null;
         }

@@ -11,8 +11,9 @@ namespace Microsoft.CodeAnalysis.Remote.Razor.Completion;
 [method: ImportingConstructor]
 internal sealed class OOPRazorCompletionListProvider(
     IRazorCompletionFactsService completionFactsService,
+    CompletionTriggerAndCommitCharacters triggerAndCommitCharacters,
     CompletionListCache completionListCache,
     ILoggerFactory loggerFactory)
-    : RazorCompletionListProvider(completionFactsService, completionListCache, loggerFactory)
+    : RazorCompletionListProvider(completionFactsService, triggerAndCommitCharacters, completionListCache, loggerFactory)
 {
 }

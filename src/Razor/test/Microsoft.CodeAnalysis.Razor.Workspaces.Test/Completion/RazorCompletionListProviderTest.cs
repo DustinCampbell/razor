@@ -26,6 +26,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
     private readonly VSInternalClientCapabilities _clientCapabilities;
     private readonly VSInternalCompletionContext _defaultCompletionContext;
     private readonly RazorCompletionOptions _razorCompletionOptions;
+    private readonly CompletionTriggerAndCommitCharacters _triggerAndCommitCharacters;
 
     public RazorCompletionListProviderTest(ITestOutputHelper testOutput)
         : base(testOutput)
@@ -53,6 +54,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
 
         _defaultCompletionContext = new VSInternalCompletionContext();
         _razorCompletionOptions = new RazorCompletionOptions(SnippetsSupported: true, AutoInsertAttributeQuotes: true, CommitElementsWithSpace: true);
+        _triggerAndCommitCharacters = new CompletionTriggerAndCommitCharacters(TestLanguageServerFeatureOptions.Instance);
     }
 
     private static IEnumerable<IRazorCompletionItemProvider> GetCompletionProviders()
@@ -385,7 +387,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         TestFileMarkupParser.GetPosition(documentText, out documentText, out var cursorPosition);
         var codeDocument = CreateCodeDocument(documentText);
         var documentContext = TestDocumentContext.Create(documentPath, codeDocument);
-        var provider = new RazorCompletionListProvider(_completionFactsService, _completionListCache, LoggerFactory);
+        var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
         var completionList = await provider.GetCompletionListAsync(
@@ -413,7 +415,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
             TriggerKind = CompletionTriggerKind.TriggerForIncompleteCompletions,
             InvokeKind = VSInternalCompletionInvokeKind.Deletion,
         };
-        var provider = new RazorCompletionListProvider(_completionFactsService, _completionListCache, LoggerFactory);
+
+        var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
         var completionList = await provider.GetCompletionListAsync(
@@ -442,7 +445,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var codeDocument = CreateCodeDocument("@in");
         codeDocument.SetTagHelperContext(tagHelperContext);
         var documentContext = TestDocumentContext.Create(documentPath, codeDocument);
-        var provider = new RazorCompletionListProvider(_completionFactsService, _completionListCache, LoggerFactory);
+        var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
         var completionContext = new VSInternalCompletionContext()
         {
             TriggerKind = CompletionTriggerKind.TriggerForIncompleteCompletions,
@@ -473,7 +476,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var codeDocument = CreateCodeDocument("@inje");
         codeDocument.SetTagHelperContext(tagHelperContext);
         var documentContext = TestDocumentContext.Create(documentPath, codeDocument);
-        var provider = new RazorCompletionListProvider(_completionFactsService, _completionListCache, LoggerFactory);
+        var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
         var completionContext = new VSInternalCompletionContext()
         {
             TriggerKind = CompletionTriggerKind.TriggerCharacter,
@@ -502,7 +505,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var codeDocument = CreateCodeDocument("@inje");
         codeDocument.SetTagHelperContext(tagHelperContext);
         var documentContext = TestDocumentContext.Create(documentPath, codeDocument);
-        var provider = new RazorCompletionListProvider(_completionFactsService, _completionListCache, LoggerFactory);
+        var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
         var completionContext = new VSInternalCompletionContext()
         {
             TriggerKind = CompletionTriggerKind.TriggerForIncompleteCompletions,
@@ -534,7 +537,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var codeDocument = CreateCodeDocument("<");
         codeDocument.SetTagHelperContext(tagHelperContext);
         var documentContext = TestDocumentContext.Create(documentPath, codeDocument);
-        var provider = new RazorCompletionListProvider(_completionFactsService, _completionListCache, LoggerFactory);
+        var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
         var completionList = await provider.GetCompletionListAsync(
@@ -565,7 +568,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var codeDocument = CreateCodeDocument("<test  ");
         codeDocument.SetTagHelperContext(tagHelperContext);
         var documentContext = TestDocumentContext.Create(documentPath, codeDocument);
-        var provider = new RazorCompletionListProvider(_completionFactsService, _completionListCache, LoggerFactory);
+        var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
         var completionList = await provider.GetCompletionListAsync(
@@ -600,7 +603,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var razorCompletionOptions = new RazorCompletionOptions(SnippetsSupported: true, AutoInsertAttributeQuotes: false, CommitElementsWithSpace: true);
 
         var completionFactsService = new LspRazorCompletionFactsService(GetCompletionProviders());
-        var provider = new RazorCompletionListProvider(completionFactsService, _completionListCache, LoggerFactory);
+        var provider = new RazorCompletionListProvider(completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
         var completionList = await provider.GetCompletionListAsync(

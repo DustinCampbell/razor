@@ -13,16 +13,12 @@ using Microsoft.VisualStudio.LanguageServer.Protocol;
 
 namespace Microsoft.AspNetCore.Razor.LanguageServer.Completion;
 
-internal class CompletionListProvider
+internal sealed class CompletionListProvider(
+    RazorCompletionListProvider razorCompletionListProvider,
+    DelegatedCompletionListProvider delegatedCompletionListProvider)
 {
-    private readonly RazorCompletionListProvider _razorCompletionListProvider;
-    private readonly DelegatedCompletionListProvider _delegatedCompletionListProvider;
-
-    public CompletionListProvider(RazorCompletionListProvider razorCompletionListProvider, DelegatedCompletionListProvider delegatedCompletionListProvider)
-    {
-        _razorCompletionListProvider = razorCompletionListProvider;
-        _delegatedCompletionListProvider = delegatedCompletionListProvider;
-    }
+    private readonly RazorCompletionListProvider _razorCompletionListProvider = razorCompletionListProvider;
+    private readonly DelegatedCompletionListProvider _delegatedCompletionListProvider = delegatedCompletionListProvider;
 
     public async Task<VSInternalCompletionList?> GetCompletionListAsync(
         int absoluteIndex,
@@ -34,7 +30,7 @@ internal class CompletionListProvider
         CancellationToken cancellationToken)
     {
         // First we delegate to get completion items from the individual language server
-        var delegatedCompletionList = CompletionTriggerAndCommitCharacters.IsValidTrigger(_delegatedCompletionListProvider.TriggerCharacters, completionContext)
+        var delegatedCompletionList = _delegatedCompletionListProvider.IsValidTrigger(completionContext)
             ? await _delegatedCompletionListProvider.GetCompletionListAsync(
                 absoluteIndex,
                 completionContext,
@@ -51,7 +47,7 @@ internal class CompletionListProvider
             : null;
 
         // Now we get the Razor completion list, using information from the actual language server if necessary
-        var razorCompletionList = CompletionTriggerAndCommitCharacters.IsValidTrigger(_razorCompletionListProvider.TriggerCharacters, completionContext)
+        var razorCompletionList = _razorCompletionListProvider.IsValidTrigger(completionContext)
             ? await _razorCompletionListProvider.GetCompletionListAsync(
                 absoluteIndex,
                 completionContext,

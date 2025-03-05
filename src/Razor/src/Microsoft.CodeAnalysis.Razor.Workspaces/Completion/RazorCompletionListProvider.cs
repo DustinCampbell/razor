@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -20,12 +19,15 @@ namespace Microsoft.CodeAnalysis.Razor.Completion;
 
 internal class RazorCompletionListProvider(
     IRazorCompletionFactsService completionFactsService,
+    CompletionTriggerAndCommitCharacters triggerAndCommitCharacters,
     CompletionListCache completionListCache,
     ILoggerFactory loggerFactory)
 {
     private readonly IRazorCompletionFactsService _completionFactsService = completionFactsService;
+    private readonly CompletionTriggerAndCommitCharacters _triggerAndCommitCharacters = triggerAndCommitCharacters;
     private readonly CompletionListCache _completionListCache = completionListCache;
     private readonly ILogger _logger = loggerFactory.GetOrCreateLogger<RazorCompletionListProvider>();
+
     private static readonly Command s_retriggerCompletionCommand = new()
     {
         CommandIdentifier = "editor.action.triggerSuggest",
@@ -33,7 +35,8 @@ internal class RazorCompletionListProvider(
     };
 
     // virtual for tests
-    public virtual FrozenSet<string> TriggerCharacters => CompletionTriggerAndCommitCharacters.RazorTriggerCharacters;
+    public virtual bool IsValidTrigger(CompletionContext context)
+        => _triggerAndCommitCharacters.IsValidRazorTrigger(context);
 
     // virtual for tests
     public virtual async Task<VSInternalCompletionList?> GetCompletionListAsync(

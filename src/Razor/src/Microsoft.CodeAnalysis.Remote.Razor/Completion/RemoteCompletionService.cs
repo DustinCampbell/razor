@@ -30,6 +30,7 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
             => new RemoteCompletionService(in args);
     }
 
+    private readonly CompletionTriggerAndCommitCharacters _triggerAndCommitCharacters = args.ExportProvider.GetExportedValue<CompletionTriggerAndCommitCharacters>();
     private readonly RazorCompletionListProvider _razorCompletionListProvider = args.ExportProvider.GetExportedValue<RazorCompletionListProvider>();
     private readonly IClientCapabilitiesService _clientCapabilitiesService = args.ExportProvider.GetExportedValue<IClientCapabilitiesService>();
 
@@ -107,7 +108,7 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
         VSInternalCompletionList? csharpCompletionList = null;
         var documentPositionInfo = positionInfo.DocumentPositionInfo;
         if (documentPositionInfo.LanguageKind == RazorLanguageKind.CSharp &&
-            CompletionTriggerAndCommitCharacters.IsValidTrigger(CompletionTriggerAndCommitCharacters.CSharpTriggerCharacters, completionContext))
+            _triggerAndCommitCharacters.IsValidCSharpTrigger(completionContext))
         {
             var mappedPosition = documentPositionInfo.Position;
             csharpCompletionList = await GetCSharpCompletionAsync(
@@ -126,7 +127,7 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
             }
         }
 
-        var razorCompletionList = CompletionTriggerAndCommitCharacters.IsValidTrigger(CompletionTriggerAndCommitCharacters.RazorTriggerCharacters, completionContext)
+        var razorCompletionList = _triggerAndCommitCharacters.IsValidRazorTrigger(completionContext)
             ? await _razorCompletionListProvider.GetCompletionListAsync(
                 documentPositionInfo.HostDocumentIndex,
                 completionContext,

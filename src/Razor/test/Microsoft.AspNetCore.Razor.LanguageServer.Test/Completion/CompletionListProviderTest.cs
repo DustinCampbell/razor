@@ -1,15 +1,14 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-#nullable disable
-
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.LanguageServer.Completion.Delegation;
 using Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
+using Microsoft.AspNetCore.Razor.Threading;
 using Microsoft.CodeAnalysis.Razor.Completion;
 using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
@@ -37,8 +36,8 @@ public class CompletionListProviderTest : LanguageServerTestBase
     {
         _completionList1 = new VSInternalCompletionList() { Items = [] };
         _completionList2 = new VSInternalCompletionList() { Items = [] };
-        _razorCompletionProvider = new TestRazorCompletionListProvider(_completionList1, new[] { SharedTriggerCharacter, }, LoggerFactory);
-        _delegatedCompletionProvider = new TestDelegatedCompletionListProvider(_completionList2, new[] { SharedTriggerCharacter, CompletionList2OnlyTriggerCharacter });
+        _razorCompletionProvider = new TestRazorCompletionListProvider(_completionList1, [SharedTriggerCharacter,], LoggerFactory);
+        _delegatedCompletionProvider = new TestDelegatedCompletionListProvider(_completionList2, [SharedTriggerCharacter, CompletionList2OnlyTriggerCharacter]);
         _completionContext = new VSInternalCompletionContext();
         _documentContext = TestDocumentContext.Create("C:/path/to/file.cshtml");
         _clientCapabilities = new VSInternalClientCapabilities();
@@ -76,20 +75,19 @@ public class CompletionListProviderTest : LanguageServerTestBase
         Assert.Same(_completionList2, completionList);
     }
 
-    private class TestDelegatedCompletionListProvider : DelegatedCompletionListProvider
+    private class TestDelegatedCompletionListProvider(
+        VSInternalCompletionList completionList,
+        IEnumerable<string> triggerCharacters)
+        : DelegatedCompletionListProvider(null!, null!, null!, null!)
     {
-        private readonly VSInternalCompletionList _completionList;
+        private readonly VSInternalCompletionList _completionList = completionList;
 
-        public TestDelegatedCompletionListProvider(VSInternalCompletionList completionList, IEnumerable<string> triggerCharacters)
-            : base(null, null, null, null)
-        {
-            _completionList = completionList;
-            TriggerCharacters = triggerCharacters.ToFrozenSet();
-        }
+        public override bool IsValidTrigger(CompletionContext context)
+            => context.TriggerKind != CompletionTriggerKind.TriggerCharacter ||
+               context.TriggerCharacter is null ||
+               triggerCharacters.Contains(context.TriggerCharacter);
 
-        public override FrozenSet<string> TriggerCharacters { get; }
-
-        public override Task<VSInternalCompletionList> GetCompletionListAsync(
+        public override Task<VSInternalCompletionList?> GetCompletionListAsync(
             int absoluteIndex,
             VSInternalCompletionContext completionContext,
             DocumentContext documentContext,
@@ -98,36 +96,31 @@ public class CompletionListProviderTest : LanguageServerTestBase
             Guid correlationId,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(_completionList);
+            return Task.FromResult(_completionList).AsNullable();
         }
     }
 
-    private class TestRazorCompletionListProvider : RazorCompletionListProvider
+    private class TestRazorCompletionListProvider(
+        VSInternalCompletionList completionList,
+        IEnumerable<string> triggerCharacters,
+        ILoggerFactory loggerFactory)
+        : RazorCompletionListProvider(completionFactsService: null!, triggerAndCommitCharacters: null!, completionListCache: null!, loggerFactory)
     {
-        private readonly VSInternalCompletionList _completionList;
+        public override bool IsValidTrigger(CompletionContext context)
+            => context.TriggerKind != CompletionTriggerKind.TriggerCharacter ||
+               context.TriggerCharacter is null ||
+               triggerCharacters.Contains(context.TriggerCharacter);
 
-        public TestRazorCompletionListProvider(
-            VSInternalCompletionList completionList,
-            IEnumerable<string> triggerCharacters,
-            ILoggerFactory loggerFactory)
-            : base(completionFactsService: null, completionListCache: null, loggerFactory)
-        {
-            _completionList = completionList;
-            TriggerCharacters = triggerCharacters.ToFrozenSet();
-        }
-
-        public override FrozenSet<string> TriggerCharacters { get; }
-
-        public override Task<VSInternalCompletionList> GetCompletionListAsync(
+        public override Task<VSInternalCompletionList?> GetCompletionListAsync(
             int absoluteIndex,
             VSInternalCompletionContext completionContext,
             DocumentContext documentContext,
             VSInternalClientCapabilities clientCapabilities,
-            HashSet<string> existingCompletions,
+            HashSet<string>? existingCompletions,
             RazorCompletionOptions razorCompletionOptions,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(_completionList);
+            return Task.FromResult(completionList).AsNullable();
         }
     }
 }

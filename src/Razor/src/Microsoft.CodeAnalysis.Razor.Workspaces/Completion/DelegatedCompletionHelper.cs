@@ -46,7 +46,7 @@ internal static class DelegatedCompletionHelper
     /// </summary>
     /// <param name="context">Original completion context passed to the completion handler</param>
     /// <param name="languageKind">Language of the completion position</param>
-    /// <param name="completionTriggerAndCommitCharacters">Per-client set of trigger and commit characters</param>
+    /// <param name="triggerAndCommitCharacters">Per-client set of trigger and commit characters</param>
     /// <param name="updatedContext">Possibly modified completion context</param>.
     /// <returns>
     ///  <see langword="true"/> if the given <see cref="VSInternalCompletionContext"/> is valid or was
@@ -58,7 +58,7 @@ internal static class DelegatedCompletionHelper
     public static bool ValidateOrGetUpdatedContext(
         this VSInternalCompletionContext context,
         RazorLanguageKind languageKind,
-        CompletionTriggerAndCommitCharacters completionTriggerAndCommitCharacters,
+        CompletionTriggerAndCommitCharacters triggerAndCommitCharacters,
         [NotNullWhen(true)] out VSInternalCompletionContext? updatedContext)
     {
         Debug.Assert(languageKind != RazorLanguageKind.Razor,
@@ -72,8 +72,7 @@ internal static class DelegatedCompletionHelper
             return true;
         }
 
-        if (languageKind == RazorLanguageKind.CSharp
-            && CompletionTriggerAndCommitCharacters.CSharpTriggerCharacters.Contains(triggerCharacter))
+        if (languageKind == RazorLanguageKind.CSharp && triggerAndCommitCharacters.IsCSharpTriggerCharacter(triggerCharacter))
         {
             // C# trigger character for C# content
             updatedContext = context;
@@ -85,7 +84,7 @@ internal static class DelegatedCompletionHelper
             // For HTML we don't want to delegate to HTML language server is completion is due to a trigger characters that is not
             // HTML trigger character. Doing so causes bad side effects in VSCode HTML client as we will end up with non-matching
             // completion entries
-            updatedContext = completionTriggerAndCommitCharacters.HtmlTriggerCharacters.Contains(triggerCharacter) ? context : null;
+            updatedContext = triggerAndCommitCharacters.IsHtmlTriggerCharacter(triggerCharacter) ? context : null;
             return updatedContext is not null;
         }
 
@@ -96,8 +95,7 @@ internal static class DelegatedCompletionHelper
             TriggerKind = CompletionTriggerKind.Invoked,
         };
 
-        if (languageKind == RazorLanguageKind.CSharp
-            && CompletionTriggerAndCommitCharacters.RazorDelegationTriggerCharacters.Contains(triggerCharacter))
+        if (languageKind == RazorLanguageKind.CSharp && triggerAndCommitCharacters.IsRazorDelegationTriggerCharacter(triggerCharacter))
         {
             // The C# language server will not return any completions for the '@' character unless we
             // send the completion request explicitly.

@@ -25,7 +25,7 @@ public class RazorCompletionEndpointTest(ITestOutputHelper testOutput) : Languag
 
         var completionEndpoint = new RazorCompletionEndpoint(
             completionListProvider: null,
-            completionTriggerAndCommitCharacters: null,
+            triggerAndCommitCharacters: null,
             telemetryReporter: NoOpTelemetryReporter.Instance,
             optionsMonitor,
             LoggerFactory);
@@ -59,7 +59,7 @@ public class RazorCompletionEndpointTest(ITestOutputHelper testOutput) : Languag
         var optionsMonitor = GetOptionsMonitor(autoShowCompletion: false);
         var completionEndpoint = new RazorCompletionEndpoint(
             completionListProvider: null,
-            completionTriggerAndCommitCharacters: null,
+            triggerAndCommitCharacters: null,
             telemetryReporter: NoOpTelemetryReporter.Instance,
             optionsMonitor,
             LoggerFactory);

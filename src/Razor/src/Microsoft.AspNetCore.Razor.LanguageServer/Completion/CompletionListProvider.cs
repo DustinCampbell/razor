@@ -29,17 +29,20 @@ internal sealed class CompletionListProvider(
         Guid correlationId,
         CancellationToken cancellationToken)
     {
+        var codeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
+
         // First we delegate to get completion items from the individual language server
-        var delegatedCompletionList = _delegatedCompletionListProvider.IsValidTrigger(completionContext)
-            ? await _delegatedCompletionListProvider.GetCompletionListAsync(
+        var delegatedCompletionList = await _delegatedCompletionListProvider
+            .GetCompletionListAsync(
                 absoluteIndex,
                 completionContext,
+                codeDocument,
                 documentContext,
                 clientCapabilities,
                 razorCompletionOptions,
                 correlationId,
-                cancellationToken).ConfigureAwait(false)
-            : null;
+                cancellationToken)
+            .ConfigureAwait(false);
 
         // Extract the items we got back from the delegated server, to inform tag helper completion
         var existingItems = delegatedCompletionList?.Items != null
@@ -47,16 +50,15 @@ internal sealed class CompletionListProvider(
             : null;
 
         // Now we get the Razor completion list, using information from the actual language server if necessary
-        var razorCompletionList = _razorCompletionListProvider.IsValidTrigger(completionContext)
-            ? await _razorCompletionListProvider.GetCompletionListAsync(
-                absoluteIndex,
-                completionContext,
-                documentContext,
-                clientCapabilities,
-                existingItems,
-                razorCompletionOptions,
-                cancellationToken).ConfigureAwait(false)
-            : null;
+        var razorCompletionList = _razorCompletionListProvider.GetCompletionList(
+            absoluteIndex,
+            completionContext,
+            codeDocument,
+            documentContext,
+            clientCapabilities,
+            existingItems,
+            razorCompletionOptions,
+            cancellationToken);
 
         var finalCompletionList = CompletionListMerger.Merge(razorCompletionList, delegatedCompletionList);
 

@@ -8,7 +8,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.Razor.Logging;
@@ -35,20 +36,21 @@ internal class RazorCompletionListProvider(
     };
 
     // virtual for tests
-    public virtual bool IsValidTrigger(CompletionContext context)
+    protected virtual bool IsValidTrigger(CompletionContext context)
         => _triggerAndCommitCharacters.IsValidRazorTrigger(context);
 
     // virtual for tests
-    public virtual async Task<VSInternalCompletionList?> GetCompletionListAsync(
+    public virtual VSInternalCompletionList? GetCompletionList(
         int absoluteIndex,
         VSInternalCompletionContext completionContext,
+        RazorCodeDocument codeDocument,
         DocumentContext documentContext,
         VSInternalClientCapabilities clientCapabilities,
         HashSet<string>? existingCompletions,
         RazorCompletionOptions completionOptions,
         CancellationToken cancellationToken)
     {
-        if (!IsApplicableTriggerContext(completionContext))
+        if (!IsApplicableTriggerContext(completionContext) || !IsValidTrigger(completionContext))
         {
             return null;
         }
@@ -61,8 +63,8 @@ internal class RazorCompletionListProvider(
             _ => CompletionReason.Typing,
         };
 
-        var syntaxTree = await documentContext.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-        var tagHelperContext = await documentContext.GetTagHelperContextAsync(cancellationToken).ConfigureAwait(false);
+        var syntaxTree = codeDocument.GetSyntaxTree().AssumeNotNull();
+        var tagHelperContext = codeDocument.GetTagHelperContext().AssumeNotNull();
         var owner = syntaxTree.Root.FindInnermostNode(absoluteIndex, includeWhitespace: true, walkMarkersBack: true);
         owner = AbstractRazorCompletionFactsService.AdjustSyntaxNodeForWordBoundary(owner, absoluteIndex);
 

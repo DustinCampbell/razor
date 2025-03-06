@@ -47,6 +47,7 @@ public abstract class ResponseRewriterTestBase : LanguageServerTestBase
         var completionList = await provider.GetCompletionListAsync(
             absoluteIndex,
             completionContext,
+            codeDocument,
             documentContext,
             clientCapabilities,
             razorCompletionOptions,

@@ -34,20 +34,24 @@ internal class DelegatedCompletionListProvider(
     private readonly CompletionTriggerAndCommitCharacters _triggerAndCommitCharacters = triggerAndCommitCharacters;
 
     // virtual for tests
-    public virtual bool IsValidTrigger(CompletionContext context)
+    protected virtual bool IsValidTrigger(CompletionContext context)
         => _triggerAndCommitCharacters.IsValidDelegationTrigger(context);
 
     // virtual for tests
     public virtual async Task<VSInternalCompletionList?> GetCompletionListAsync(
         int absoluteIndex,
         VSInternalCompletionContext completionContext,
+        RazorCodeDocument codeDocument,
         DocumentContext documentContext,
         VSInternalClientCapabilities clientCapabilities,
         RazorCompletionOptions razorCompletionOptions,
         Guid correlationId,
         CancellationToken cancellationToken)
     {
-        var codeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
+        if (!IsValidTrigger(completionContext))
+        {
+            return null;
+        }
 
         var positionInfo = _documentMappingService.GetPositionInfo(codeDocument, absoluteIndex);
 

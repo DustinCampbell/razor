@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.LanguageServer.Completion.Delegation;
 using Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
 using Microsoft.AspNetCore.Razor.Threading;
@@ -82,7 +83,7 @@ public class CompletionListProviderTest : LanguageServerTestBase
     {
         private readonly VSInternalCompletionList _completionList = completionList;
 
-        public override bool IsValidTrigger(CompletionContext context)
+        protected override bool IsValidTrigger(CompletionContext context)
             => context.TriggerKind != CompletionTriggerKind.TriggerCharacter ||
                context.TriggerCharacter is null ||
                triggerCharacters.Contains(context.TriggerCharacter);
@@ -90,12 +91,18 @@ public class CompletionListProviderTest : LanguageServerTestBase
         public override Task<VSInternalCompletionList?> GetCompletionListAsync(
             int absoluteIndex,
             VSInternalCompletionContext completionContext,
+            RazorCodeDocument codeDOcument,
             DocumentContext documentContext,
             VSInternalClientCapabilities clientCapabilities,
             RazorCompletionOptions completionOptions,
             Guid correlationId,
             CancellationToken cancellationToken)
         {
+            if (!IsValidTrigger(completionContext))
+            {
+                return SpecializedTasks.Null<VSInternalCompletionList>();
+            }
+
             return Task.FromResult(_completionList).AsNullable();
         }
     }
@@ -106,21 +113,24 @@ public class CompletionListProviderTest : LanguageServerTestBase
         ILoggerFactory loggerFactory)
         : RazorCompletionListProvider(completionFactsService: null!, triggerAndCommitCharacters: null!, completionListCache: null!, loggerFactory)
     {
-        public override bool IsValidTrigger(CompletionContext context)
+        protected override bool IsValidTrigger(CompletionContext context)
             => context.TriggerKind != CompletionTriggerKind.TriggerCharacter ||
                context.TriggerCharacter is null ||
                triggerCharacters.Contains(context.TriggerCharacter);
 
-        public override Task<VSInternalCompletionList?> GetCompletionListAsync(
+        public override VSInternalCompletionList? GetCompletionList(
             int absoluteIndex,
             VSInternalCompletionContext completionContext,
+            RazorCodeDocument codeDocument,
             DocumentContext documentContext,
             VSInternalClientCapabilities clientCapabilities,
             HashSet<string>? existingCompletions,
             RazorCompletionOptions razorCompletionOptions,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(completionList).AsNullable();
+            return IsValidTrigger(completionContext)
+                ? completionList
+                : null;
         }
     }
 }

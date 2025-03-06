@@ -380,7 +380,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
     [InlineData("@page\r\n<div></div>\r\n@f$$\r\n")]
     [WorkItem("https://github.com/dotnet/razor-tooling/issues/4547")]
     [WorkItem("https://github.com/dotnet/razor/issues/9955")]
-    public async Task GetCompletionListAsync_ProvidesDirectiveCompletionItems(string documentText)
+    public void GetCompletionList_ProvidesDirectiveCompletionItems(string documentText)
     {
         // Arrange
         var documentPath = "C:/path/to/document.cshtml";
@@ -390,8 +390,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: cursorPosition, _defaultCompletionContext, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: cursorPosition, _defaultCompletionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
 
         // Assert
 
@@ -404,7 +404,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
     }
 
     [Fact]
-    public async Task GetCompletionListAsync_ProvidesDirectiveCompletions_IncompleteTriggerOnDeletion()
+    public void GetCompletionList_ProvidesDirectiveCompletions_IncompleteTriggerOnDeletion()
     {
         // Arrange
         var documentPath = "C:/path/to/document.cshtml";
@@ -419,8 +419,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: 1, completionContext, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: 1, completionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
 
         // Assert
         Assert.NotNull(completionList);
@@ -433,7 +433,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
 
     [Fact]
     [WorkItem("https://github.com/dotnet/razor-tooling/issues/4547")]
-    public async Task GetCompletionListAsync_ProvidesInjectOnIncomplete_KeywordIn()
+    public void GetCompletionList_ProvidesInjectOnIncomplete_KeywordIn()
     {
         // Arrange
         var documentPath = "C:/path/to/document.razor";
@@ -452,8 +452,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         };
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: 1, completionContext, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: 1, completionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
 
         // Assert
         Assert.NotNull(completionList);
@@ -464,7 +464,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
     }
 
     [Fact]
-    public async Task GetCompletionListAsync_DoesNotProvideInjectOnInvoked()
+    public void GetCompletionList_DoesNotProvideInjectOnInvoked()
     {
         // Arrange
         var documentPath = "C:/path/to/document.razor";
@@ -483,8 +483,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         };
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: 1, completionContext, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: 1, completionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
 
         // Assert
         Assert.NotNull(completionList);
@@ -493,7 +493,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
 
     [Fact]
     [WorkItem("https://github.com/dotnet/razor-tooling/issues/4547")]
-    public async Task GetCompletionListAsync_ProvidesInjectOnIncomplete()
+    public void GetCompletionList_ProvidesInjectOnIncomplete()
     {
         // Arrange
         var documentPath = "C:/path/to/document.razor";
@@ -512,8 +512,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         };
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: 1, completionContext, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: 1, completionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
 
         // Assert
         Assert.NotNull(completionList);
@@ -525,7 +525,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
 
     // This is more of an integration test to validate that all the pieces work together
     [Fact]
-    public async Task GetCompletionListAsync_ProvidesTagHelperElementCompletionItems()
+    public void GetCompletionList_ProvidesTagHelperElementCompletionItems()
     {
         // Arrange
         var documentPath = "C:/path/to/document.cshtml";
@@ -540,8 +540,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: 1, _defaultCompletionContext, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: 1, _defaultCompletionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
 
         // Assert
         Assert.NotNull(completionList);
@@ -550,7 +550,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
 
     // This is more of an integration test to validate that all the pieces work together
     [Fact]
-    public async Task GetCompletionListAsync_ProvidesTagHelperAttributeItems()
+    public void GetCompletionList_ProvidesTagHelperAttributeItems()
     {
         // Arrange
         var documentPath = "C:/path/to/document.cshtml";
@@ -571,8 +571,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var provider = new RazorCompletionListProvider(_completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: 6, _defaultCompletionContext, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: 6, _defaultCompletionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, _razorCompletionOptions, DisposalToken);
 
         // Assert
         Assert.NotNull(completionList);
@@ -580,7 +580,7 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
     }
 
     [Fact]
-    public async Task GetCompletionListAsync_ProvidesTagHelperAttributeItems_AttributeQuotesOff()
+    public void GetCompletionList_ProvidesTagHelperAttributeItems_AttributeQuotesOff()
     {
         // Arrange
         var documentPath = "C:/path/to/document.cshtml";
@@ -606,8 +606,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         var provider = new RazorCompletionListProvider(completionFactsService, _triggerAndCommitCharacters, _completionListCache, LoggerFactory);
 
         // Act
-        var completionList = await provider.GetCompletionListAsync(
-            absoluteIndex: 6, _defaultCompletionContext, documentContext, _clientCapabilities, existingCompletions: null, razorCompletionOptions, DisposalToken);
+        var completionList = provider.GetCompletionList(
+            absoluteIndex: 6, _defaultCompletionContext, codeDocument, documentContext, _clientCapabilities, existingCompletions: null, razorCompletionOptions, DisposalToken);
 
         // Assert
         Assert.NotNull(completionList);

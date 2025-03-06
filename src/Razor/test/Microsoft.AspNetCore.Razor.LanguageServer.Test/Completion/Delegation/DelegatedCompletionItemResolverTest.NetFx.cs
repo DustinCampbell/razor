@@ -291,6 +291,7 @@ public class DelegatedCompletionItemResolverTest : LanguageServerTestBase
         var completionList = await provider.GetCompletionListAsync(
             cursorPosition,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,

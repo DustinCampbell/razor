@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.LanguageServer;
 using Microsoft.AspNetCore.Razor.LanguageServer.Completion;
 using Microsoft.AspNetCore.Razor.LanguageServer.Completion.Delegation;
@@ -159,6 +160,7 @@ public class RazorCompletionBenchmark : RazorLanguageServerBenchmarkBase
         public override Task<VSInternalCompletionList?> GetCompletionListAsync(
             int absoluteIndex,
             VSInternalCompletionContext completionContext,
+            RazorCodeDocument codeDocument,
             DocumentContext documentContext,
             VSInternalClientCapabilities clientCapabilities,
             RazorCompletionOptions completionOptions,

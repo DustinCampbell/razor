@@ -52,6 +52,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         await _provider.GetCompletionListAsync(
             absoluteIndex: 1,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -85,6 +86,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         await _provider.GetCompletionListAsync(
             absoluteIndex: 1,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -119,6 +121,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         await _provider.GetCompletionListAsync(
             absoluteIndex: 1,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -148,6 +151,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         var delegatedCompletionList = await provider.GetCompletionListAsync(
             absoluteIndex: 1,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -201,6 +205,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         var completionList = await _provider.GetCompletionListAsync(
             absoluteIndex: 11,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -230,6 +235,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         await _provider.GetCompletionListAsync(
             absoluteIndex: 10,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -266,6 +272,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         await _provider.GetCompletionListAsync(
             absoluteIndex: 10,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -339,6 +346,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         await completionProvider.GetCompletionListAsync(
             cursorPosition,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,
@@ -382,6 +390,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
         var completionList = await provider.GetCompletionListAsync(
             absoluteIndex: cursorPosition,
             completionContext,
+            codeDocument,
             documentContext,
             _clientCapabilities,
             _defaultRazorCompletionOptions,

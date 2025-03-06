@@ -127,17 +127,17 @@ internal sealed class RemoteCompletionService(in ServiceArgs args) : RazorDocume
             }
         }
 
-        var razorCompletionList = _triggerAndCommitCharacters.IsValidRazorTrigger(completionContext)
-            ? await _razorCompletionListProvider.GetCompletionListAsync(
-                documentPositionInfo.HostDocumentIndex,
-                completionContext,
-                remoteDocumentContext,
-                _clientCapabilitiesService.ClientCapabilities,
-                existingCompletions: existingDelegatedCompletions,
-                razorCompletionOptions,
-                cancellationToken)
-                .ConfigureAwait(false)
-            : null;
+        var codeDocument = await remoteDocumentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
+
+        var razorCompletionList = _razorCompletionListProvider.GetCompletionList(
+            documentPositionInfo.HostDocumentIndex,
+            completionContext,
+            codeDocument,
+            remoteDocumentContext,
+            _clientCapabilitiesService.ClientCapabilities,
+            existingCompletions: existingDelegatedCompletions,
+            razorCompletionOptions,
+            cancellationToken);
 
         // Merge won't return anything only if both completion lists passed in are null,
         // in which case client should just proceed with HTML completion.

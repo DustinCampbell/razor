@@ -18,6 +18,7 @@ public sealed class RazorCodeDocument
 
     private TagHelperDocumentContext? _tagHelperContext;
     private TagHelpersHolder? _tagHelpers;
+    private ISet<TagHelperDescriptor>? _referencedTagHelpers;
 
     private RazorCodeDocument(
         RazorSourceDocument source,
@@ -77,5 +78,15 @@ public sealed class RazorCodeDocument
     private sealed class TagHelpersHolder(IReadOnlyList<TagHelperDescriptor>? tagHelpers)
     {
         public IReadOnlyList<TagHelperDescriptor>? TagHelpers { get; } = tagHelpers;
+    }
+
+    internal ISet<TagHelperDescriptor>? GetReferencedTagHelpers()
+        => _referencedTagHelpers;
+
+    internal void SetReferencedTagHelpers(ISet<TagHelperDescriptor> tagHelpers)
+    {
+        ArgHelper.ThrowIfNull(tagHelpers);
+
+        _referencedTagHelpers = tagHelpers;
     }
 }

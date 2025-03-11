@@ -191,11 +191,13 @@ internal partial class SyntaxVisualizerControl : UserControl, IVsRunningDocTable
         var codeDocument = GetCodeDocument().AssumeNotNull();
         var tagHelpers = displayKind switch
         {
-            TagHelperDisplayMode.All => codeDocument.GetTagHelpers().AssumeNotNull(),
-            TagHelperDisplayMode.InScope => codeDocument.GetTagHelperContext().AssumeNotNull().TagHelpers,
-            TagHelperDisplayMode.Referenced => (IEnumerable<TagHelperDescriptor>)codeDocument.GetReferencedTagHelpers(),
+            TagHelperDisplayMode.All => codeDocument.GetTagHelpers(),
+            TagHelperDisplayMode.InScope => codeDocument.GetTagHelperContext()?.TagHelpers,
+            TagHelperDisplayMode.Referenced => (IEnumerable<TagHelperDescriptor>?)codeDocument.GetReferencedTagHelpers(),
             _ => []
         };
+
+        Assumed.NotNull(tagHelpers);
 
         var tempFileName = GetTempFileName(displayKind.ToString() + "TagHelpers.json");
 

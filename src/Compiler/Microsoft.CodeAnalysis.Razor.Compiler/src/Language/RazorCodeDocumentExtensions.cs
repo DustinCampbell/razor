@@ -27,26 +27,6 @@ public static class RazorCodeDocumentExtensions
     internal static SyntaxNode GetRequiredSyntaxRoot(this RazorCodeDocument codeDocument)
         => codeDocument.GetRequiredSyntaxTree().Root;
 
-    public static DocumentIntermediateNode GetDocumentIntermediateNode(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return document.Items[typeof(DocumentIntermediateNode)] as DocumentIntermediateNode;
-    }
-
-    public static void SetDocumentIntermediateNode(this RazorCodeDocument document, DocumentIntermediateNode documentNode)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[typeof(DocumentIntermediateNode)] = documentNode;
-    }
-
     internal static RazorHtmlDocument GetHtmlDocument(this RazorCodeDocument codeDocument)
     {
         ArgHelper.ThrowIfNull(codeDocument);

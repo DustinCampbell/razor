@@ -98,7 +98,6 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
 
         // Assert
         var syntaxTree = codeDocument.GetSyntaxTree();
-        var irTree = codeDocument.GetDocumentIntermediateNode();
         AssertDocumentNodeMatchesBaseline(codeDocument.GetDocumentIntermediateNode());
     }
 

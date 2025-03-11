@@ -365,6 +365,11 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
                 codeDocument.SetImportSyntaxTrees(importSyntaxTrees);
             }
 
+            if (codeDocument.GetDocumentIntermediateNode() is { } documentIntermediateNode)
+            {
+                codeDocument.SetDocumentIntermediateNode(documentIntermediateNode);
+            }
+
             foreach (var item in currentCodeDocument.Items)
             {
                 codeDocument.Items[item.Key] = item.Value;

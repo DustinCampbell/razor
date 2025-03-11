@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -23,6 +24,7 @@ public sealed class RazorCodeDocument
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
     private RazorSyntaxTree? _syntaxTree;
     private ImportSyntaxTreesHolder? _importSyntaxTrees;
+    private DocumentIntermediateNode? _documentIntermediateNode;
 
     private RazorCodeDocument(
         RazorSourceDocument source,
@@ -124,4 +126,14 @@ public sealed class RazorCodeDocument
     }
 
     private record class ImportSyntaxTreesHolder(ImmutableArray<RazorSyntaxTree> SyntaxTrees);
+
+    public DocumentIntermediateNode? GetDocumentIntermediateNode()
+    {
+        return _documentIntermediateNode;
+    }
+
+    public void SetDocumentIntermediateNode(DocumentIntermediateNode documentNode)
+    {
+        _documentIntermediateNode = documentNode;
+    }
 }

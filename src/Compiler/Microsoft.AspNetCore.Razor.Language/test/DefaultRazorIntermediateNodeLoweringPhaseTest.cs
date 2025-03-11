@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -158,6 +157,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
 
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
+        Assert.NotNull(documentNode);
         var directives = documentNode.Children.OfType<DirectiveIntermediateNode>();
         Assert.Empty(directives);
     }
@@ -189,6 +189,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
 
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
+        Assert.NotNull(documentNode);
         var directives = documentNode.Children.OfType<DirectiveIntermediateNode>();
         Assert.Empty(directives);
         var diagnostic = Assert.Single(documentNode.GetAllDiagnostics());
@@ -222,6 +223,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
 
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
+        Assert.NotNull(documentNode);
         var directives = documentNode.Children.OfType<DirectiveIntermediateNode>();
         Assert.Empty(directives);
         var diagnostic = Assert.Single(documentNode.GetAllDiagnostics());
@@ -271,6 +273,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
 
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
+        Assert.NotNull(documentNode);
         var diagnostic = Assert.Single(documentNode.Diagnostics);
         Assert.Equal(@"The explicit expression block is missing a closing "")"" character.  Make sure you have a matching "")"" character for all the ""("" characters within this block, and that none of the "")"" characters are being interpreted as markup.",
             diagnostic.GetMessage(CultureInfo.CurrentCulture));
@@ -302,6 +305,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
 
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
+        Assert.NotNull(documentNode);
         Assert.Collection(documentNode.Diagnostics,
             diagnostic =>
             {

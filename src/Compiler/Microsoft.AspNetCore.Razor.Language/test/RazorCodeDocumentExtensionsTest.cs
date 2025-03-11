@@ -3,44 +3,12 @@
 
 using System.IO;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
 public class RazorCodeDocumentExtensionsTest
 {
-    [Fact]
-    public void GetRazorSyntaxTree_ReturnsSyntaxTree()
-    {
-        // Arrange
-        var codeDocument = TestRazorCodeDocument.CreateEmpty();
-
-        var expected = RazorSyntaxTree.Parse(codeDocument.Source);
-        codeDocument.Items[typeof(RazorSyntaxTree)] = expected;
-
-        // Act
-        var actual = codeDocument.GetSyntaxTree();
-
-        // Assert
-        Assert.Same(expected, actual);
-    }
-
-    [Fact]
-    public void SetRazorSyntaxTree_SetsSyntaxTree()
-    {
-        // Arrange
-        var codeDocument = TestRazorCodeDocument.CreateEmpty();
-
-        var expected = RazorSyntaxTree.Parse(codeDocument.Source);
-
-        // Act
-        codeDocument.SetSyntaxTree(expected);
-
-        // Assert
-        Assert.Same(expected, codeDocument.Items[typeof(RazorSyntaxTree)]);
-    }
-
     [Fact]
     public void GetAndSetImportSyntaxTrees_ReturnsSyntaxTrees()
     {
@@ -72,37 +40,6 @@ public class RazorCodeDocumentExtensionsTest
 
         // Assert
         Assert.Same(expected, actual);
-    }
-
-    [Fact]
-    public void GetIRDocument_ReturnsIRDocument()
-    {
-        // Arrange
-        var codeDocument = TestRazorCodeDocument.CreateEmpty();
-
-        var expected = new DocumentIntermediateNode();
-        codeDocument.Items[typeof(DocumentIntermediateNode)] = expected;
-
-        // Act
-        var actual = codeDocument.GetDocumentIntermediateNode();
-
-        // Assert
-        Assert.Same(expected, actual);
-    }
-
-    [Fact]
-    public void SetIRDocument_SetsIRDocument()
-    {
-        // Arrange
-        var codeDocument = TestRazorCodeDocument.CreateEmpty();
-
-        var expected = new DocumentIntermediateNode();
-
-        // Act
-        codeDocument.SetDocumentIntermediateNode(expected);
-
-        // Assert
-        Assert.Same(expected, codeDocument.Items[typeof(DocumentIntermediateNode)]);
     }
 
     [Fact]

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
@@ -26,21 +25,6 @@ public static class RazorCodeDocumentExtensions
 
     internal static SyntaxNode GetRequiredSyntaxRoot(this RazorCodeDocument codeDocument)
         => codeDocument.GetRequiredSyntaxTree().Root;
-
-    internal static RazorHtmlDocument GetHtmlDocument(this RazorCodeDocument codeDocument)
-    {
-        ArgHelper.ThrowIfNull(codeDocument);
-
-        var razorHtmlObj = codeDocument.Items[typeof(RazorHtmlDocument)];
-        if (razorHtmlObj == null)
-        {
-            var razorHtmlDocument = RazorHtmlWriter.GetHtmlDocument(codeDocument);
-            codeDocument.Items[typeof(RazorHtmlDocument)] = razorHtmlDocument;
-            return razorHtmlDocument;
-        }
-
-        return (RazorHtmlDocument)razorHtmlObj;
-    }
 
     public static RazorCSharpDocument GetCSharpDocument(this RazorCodeDocument document)
     {

@@ -25,6 +25,7 @@ public sealed class RazorCodeDocument
     private RazorSyntaxTree? _syntaxTree;
     private ImportSyntaxTreesHolder? _importSyntaxTrees;
     private DocumentIntermediateNode? _documentIntermediateNode;
+    private RazorHtmlDocument? _htmlDocument;
 
     private RazorCodeDocument(
         RazorSourceDocument source,
@@ -61,7 +62,6 @@ public sealed class RazorCodeDocument
 
         return new RazorCodeDocument(source, imports, parserOptions, codeGenerationOptions);
     }
-
 
     internal TagHelperDocumentContext? GetTagHelperContext()
         => _tagHelperContext;
@@ -135,5 +135,18 @@ public sealed class RazorCodeDocument
     public void SetDocumentIntermediateNode(DocumentIntermediateNode documentNode)
     {
         _documentIntermediateNode = documentNode;
+    }
+
+    internal RazorHtmlDocument GetHtmlDocument()
+    {
+        if (_htmlDocument == null)
+        {
+            var htmlDocument = RazorHtmlWriter.GetHtmlDocument(this);
+            _htmlDocument = htmlDocument;
+
+            return htmlDocument;
+        }
+
+        return _htmlDocument;
     }
 }

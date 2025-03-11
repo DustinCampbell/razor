@@ -22,6 +22,7 @@ public sealed class RazorCodeDocument
     private ISet<TagHelperDescriptor>? _referencedTagHelpers;
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
     private RazorSyntaxTree? _syntaxTree;
+    private ImportSyntaxTreesHolder? _importSyntaxTrees;
 
     private RazorCodeDocument(
         RazorSourceDocument source,
@@ -108,4 +109,19 @@ public sealed class RazorCodeDocument
     {
         _syntaxTree = syntaxTree;
     }
+
+    public ImmutableArray<RazorSyntaxTree> GetImportSyntaxTrees()
+        => _importSyntaxTrees?.SyntaxTrees ?? default;
+
+    public void SetImportSyntaxTrees(ImmutableArray<RazorSyntaxTree> syntaxTrees)
+    {
+        if (syntaxTrees.IsDefault)
+        {
+            throw new ArgumentNullException(nameof(syntaxTrees));
+        }
+
+        _importSyntaxTrees = new ImportSyntaxTreesHolder(syntaxTrees);
+    }
+
+    private record class ImportSyntaxTreesHolder(ImmutableArray<RazorSyntaxTree> SyntaxTrees);
 }

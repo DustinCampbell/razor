@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
@@ -27,31 +26,6 @@ public static class RazorCodeDocumentExtensions
 
     internal static SyntaxNode GetRequiredSyntaxRoot(this RazorCodeDocument codeDocument)
         => codeDocument.GetRequiredSyntaxTree().Root;
-
-    public static ImmutableArray<RazorSyntaxTree> GetImportSyntaxTrees(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return (document.Items[typeof(ImportSyntaxTreesHolder)] as ImportSyntaxTreesHolder)?.SyntaxTrees ?? default;
-    }
-
-    public static void SetImportSyntaxTrees(this RazorCodeDocument document, ImmutableArray<RazorSyntaxTree> syntaxTrees)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        if (syntaxTrees.IsDefault)
-        {
-            throw new ArgumentException("", nameof(syntaxTrees));
-        }
-
-        document.Items[typeof(ImportSyntaxTreesHolder)] = new ImportSyntaxTreesHolder(syntaxTrees);
-    }
 
     public static DocumentIntermediateNode GetDocumentIntermediateNode(this RazorCodeDocument document)
     {
@@ -362,8 +336,6 @@ public static class RazorCodeDocumentExtensions
             return span[..(lastSeparator + 1)];
         }
     }
-
-    private record class ImportSyntaxTreesHolder(ImmutableArray<RazorSyntaxTree> SyntaxTrees);
 
     private class IncludeSyntaxTreesHolder
     {

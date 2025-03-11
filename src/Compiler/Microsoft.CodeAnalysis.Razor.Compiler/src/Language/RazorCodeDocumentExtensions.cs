@@ -22,26 +22,6 @@ public static class RazorCodeDocumentExtensions
     private static readonly object CssScopeKey = new();
     private static readonly object NamespaceKey = new();
 
-    public static RazorSyntaxTree GetPreTagHelperSyntaxTree(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return document.Items[nameof(GetPreTagHelperSyntaxTree)] as RazorSyntaxTree;
-    }
-
-    public static void SetPreTagHelperSyntaxTree(this RazorCodeDocument document, RazorSyntaxTree syntaxTree)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[nameof(GetPreTagHelperSyntaxTree)] = syntaxTree;
-    }
-
     public static RazorSyntaxTree GetSyntaxTree(this RazorCodeDocument document)
     {
         if (document == null)

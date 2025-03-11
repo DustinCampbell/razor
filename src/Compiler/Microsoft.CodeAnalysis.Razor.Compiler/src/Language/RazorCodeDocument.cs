@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
@@ -19,6 +20,7 @@ public sealed class RazorCodeDocument
     private TagHelperDocumentContext? _tagHelperContext;
     private TagHelpersHolder? _tagHelpers;
     private ISet<TagHelperDescriptor>? _referencedTagHelpers;
+    private RazorSyntaxTree? _preTagHelperSyntaxTree;
 
     private RazorCodeDocument(
         RazorSourceDocument source,
@@ -88,5 +90,13 @@ public sealed class RazorCodeDocument
         ArgHelper.ThrowIfNull(tagHelpers);
 
         _referencedTagHelpers = tagHelpers;
+    }
+
+    public RazorSyntaxTree? GetPreTagHelperSyntaxTree()
+        => _preTagHelperSyntaxTree;
+
+    public void SetPreTagHelperSyntaxTree(RazorSyntaxTree syntaxTree)
+    {
+        _preTagHelperSyntaxTree = syntaxTree;
     }
 }

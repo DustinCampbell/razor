@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.IntegrationTests;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
@@ -32,7 +33,7 @@ public class DirectiveAttributeCompletionItemProviderTest : RazorToolingIntegrat
             "@using Microsoft.AspNetCore.Components.Web"));
 
         var codeDocument = GetCodeDocument(string.Empty);
-        _defaultTagHelperDocumentContext = codeDocument.GetTagHelperContext();
+        _defaultTagHelperDocumentContext = codeDocument.GetTagHelperContext().AssumeNotNull();
     }
 
     private RazorCodeDocument GetCodeDocument(string content)
@@ -282,7 +283,7 @@ public class DirectiveAttributeCompletionItemProviderTest : RazorToolingIntegrat
     {
         var codeDocument = GetCodeDocument(documentContent);
         var syntaxTree = codeDocument.GetSyntaxTree();
-        var tagHelperDocumentContext = codeDocument.GetTagHelperContext();
+        var tagHelperDocumentContext = codeDocument.GetTagHelperContext().AssumeNotNull();
 
         var owner = syntaxTree.Root.FindInnermostNode(absoluteIndex, includeWhitespace: true, walkMarkersBack: true);
         owner = AbstractRazorCompletionFactsService.AdjustSyntaxNodeForWordBoundary(owner, absoluteIndex);

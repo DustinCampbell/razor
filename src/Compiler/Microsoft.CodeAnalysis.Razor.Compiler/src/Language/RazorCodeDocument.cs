@@ -15,6 +15,8 @@ public sealed class RazorCodeDocument
     public RazorParserOptions ParserOptions { get; }
     public RazorCodeGenerationOptions CodeGenerationOptions { get; }
 
+    private TagHelperDocumentContext? _tagHelperContext;
+
     private RazorCodeDocument(
         RazorSourceDocument source,
         ImmutableArray<RazorSourceDocument> imports,
@@ -49,5 +51,16 @@ public sealed class RazorCodeDocument
         ArgHelper.ThrowIfNull(source);
 
         return new RazorCodeDocument(source, imports, parserOptions, codeGenerationOptions);
+    }
+
+
+    internal TagHelperDocumentContext? GetTagHelperContext()
+        => _tagHelperContext;
+
+    internal void SetTagHelperContext(TagHelperDocumentContext context)
+    {
+        ArgHelper.ThrowIfNull(context);
+
+        _tagHelperContext = context;
     }
 }

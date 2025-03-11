@@ -335,6 +335,11 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
                 currentCodeDocument.ParserOptions,
                 currentCodeDocument.CodeGenerationOptions);
 
+            if (codeDocument.GetTagHelperContext() is { } tagHelperContext)
+            {
+                codeDocument.SetTagHelperContext(tagHelperContext);
+            }
+
             foreach (var item in currentCodeDocument.Items)
             {
                 codeDocument.Items[item.Key] = item.Value;

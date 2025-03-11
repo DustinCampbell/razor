@@ -540,6 +540,6 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
 
         var generated = CompileToCSharp("Test.razor", string.Empty, throwOnFailure: false, fileKind: FileKinds.Component);
 
-        return generated.CodeDocument.GetTagHelperContext().TagHelpers.ToImmutableArray();
+        return generated.CodeDocument.GetTagHelperContext().TagHelpers;
     }
 }

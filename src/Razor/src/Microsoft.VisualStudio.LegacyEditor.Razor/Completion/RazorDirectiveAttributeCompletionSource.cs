@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -72,7 +73,7 @@ internal class RazorDirectiveAttributeCompletionSource : IAsyncCompletionSource
             }
 
             var syntaxTree = codeDocument.GetSyntaxTree();
-            var tagHelperDocumentContext = codeDocument.GetTagHelperContext();
+            var tagHelperDocumentContext = codeDocument.GetTagHelperContext().AssumeNotNull();
             var absoluteIndex = triggerLocation.Position;
             var queryableChange = new SourceChange(absoluteIndex, length: 0, newText: string.Empty);
 #pragma warning disable CS0618 // Type or member is obsolete, will be removed in an upcoming change

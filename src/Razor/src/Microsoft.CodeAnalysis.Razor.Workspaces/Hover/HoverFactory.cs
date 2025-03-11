@@ -73,7 +73,7 @@ internal static class HoverFactory
             var (parentTag, parentIsTagHelper) = TagHelperFacts.GetNearestAncestorTagInfo(ancestors);
             var stringifiedAttributes = TagHelperFacts.StringifyAttributes(attributes);
             var binding = TagHelperFacts.GetTagHelperBinding(
-                tagHelperDocumentContext,
+                tagHelperDocumentContext.AssumeNotNull(),
                 containingTagNameToken.Content,
                 stringifiedAttributes,
                 parentTag: parentTag,
@@ -111,7 +111,7 @@ internal static class HoverFactory
             var stringifiedAttributes = TagHelperFacts.StringifyAttributes(attributes);
 
             var binding = TagHelperFacts.GetTagHelperBinding(
-                tagHelperDocumentContext,
+                tagHelperDocumentContext.AssumeNotNull(),
                 containingTagNameToken.Content,
                 stringifiedAttributes,
                 parentTag: parentTag,

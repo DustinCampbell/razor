@@ -21,6 +21,7 @@ public sealed class RazorCodeDocument
     private TagHelpersHolder? _tagHelpers;
     private ISet<TagHelperDescriptor>? _referencedTagHelpers;
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
+    private RazorSyntaxTree? _syntaxTree;
 
     private RazorCodeDocument(
         RazorSourceDocument source,
@@ -98,5 +99,13 @@ public sealed class RazorCodeDocument
     public void SetPreTagHelperSyntaxTree(RazorSyntaxTree syntaxTree)
     {
         _preTagHelperSyntaxTree = syntaxTree;
+    }
+
+    public RazorSyntaxTree? GetSyntaxTree()
+        => _syntaxTree;
+
+    public void SetSyntaxTree(RazorSyntaxTree? syntaxTree)
+    {
+        _syntaxTree = syntaxTree;
     }
 }

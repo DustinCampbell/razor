@@ -64,7 +64,7 @@ internal class ExtractToComponentCodeActionResolver(
 
         using var _ = StringBuilderPool.GetPooledObject(out var builder);
 
-        var syntaxTree = componentDocument.GetSyntaxTree();
+        var syntaxTree = componentDocument.GetRequiredSyntaxTree();
 
         // Right now this includes all the usings in the original document.
         // https://github.com/dotnet/razor/issues/11025 tracks reducing to only the required set.

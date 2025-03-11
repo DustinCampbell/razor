@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -65,8 +66,10 @@ internal class CSharpCodeActionProvider(LanguageServerFeatureOptions languageSer
             return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
         }
 
-        var tree = context.CodeDocument.GetSyntaxTree();
-        var node = tree.Root.FindInnermostNode(context.StartAbsoluteIndex);
+        var node = context.CodeDocument
+            .GetRequiredSyntaxRoot()
+            .FindInnermostNode(context.StartAbsoluteIndex);
+
         var isInImplicitExpression = node?.AncestorsAndSelf().Any(n => n is CSharpImplicitExpressionSyntax) ?? false;
 
         var allowList = isInImplicitExpression

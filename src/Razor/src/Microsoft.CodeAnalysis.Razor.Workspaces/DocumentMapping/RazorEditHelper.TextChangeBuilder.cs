@@ -49,7 +49,7 @@ internal static partial class RazorEditHelper
         /// </summary>
         public void AddDirectlyMappedEdits(ImmutableArray<RazorTextChange> csharpEdits, RazorCodeDocument codeDocument, CancellationToken cancellationToken)
         {
-            var root = codeDocument.GetSyntaxTree().Root;
+            var root = codeDocument.GetRequiredSyntaxRoot();
             var razorText = codeDocument.Source.Text;
             var csharpDocument = codeDocument.GetCSharpDocument();
             var csharpText = csharpDocument.GetGeneratedSourceText();
@@ -161,7 +161,7 @@ internal static partial class RazorEditHelper
 
             static TextSpan FindFirstTopLevelSpotForUsing(RazorCodeDocument codeDocument)
             {
-                var root = codeDocument.GetSyntaxTree().Root;
+                var root = codeDocument.GetRequiredSyntaxRoot();
                 var nodeToInsertAfter = root
                     .DescendantNodes()
                     .LastOrDefault(t => t is RazorDirectiveSyntax { DirectiveDescriptor: var descriptor }
@@ -388,12 +388,12 @@ internal static partial class RazorEditHelper
             // All usings that are in a continuous block are bulk replaced with the set containing them and the new using directives.
             // All usings outside of the continuous block are checked to see if they need to be removed
 
-            var syntaxTreeRoot = codeDocument.GetSyntaxTree().Root;
+            var syntaxRoot = codeDocument.GetRequiredSyntaxRoot();
             using var firstBlockOfUsingsBuilder = new PooledArrayBuilder<RazorDirectiveSyntax>();
             using var remainingUsingsBuilder = new PooledArrayBuilder<RazorDirectiveSyntax>();
             var allUsingsInSameBlock = true;
 
-            foreach (var node in syntaxTreeRoot.DescendantNodes())
+            foreach (var node in syntaxRoot.DescendantNodes())
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
@@ -169,7 +170,7 @@ internal abstract partial class CSharpFormattingPassBase(IDocumentMappingService
 
         // Build source mapping indentation scopes.
         var sourceMappingIndentations = new SortedDictionary<int, IndentationData>();
-        var syntaxTreeRoot = context.CodeDocument.GetSyntaxTree().Root;
+        var syntaxTreeRoot = context.CodeDocument.GetRequiredSyntaxRoot();
         foreach (var originalLocation in sourceMappingMap.Keys)
         {
             var significantLocation = sourceMappingMap[originalLocation];
@@ -363,8 +364,10 @@ internal abstract partial class CSharpFormattingPassBase(IDocumentMappingService
             return true;
         }
 
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
-        var owner = syntaxTree.Root.FindInnermostNode(mappingSpan.Start, includeWhitespace: true);
+        var owner = context.CodeDocument
+            .GetRequiredSyntaxRoot()
+            .FindInnermostNode(mappingSpan.Start, includeWhitespace: true);
+
         if (owner is null)
         {
             // Can't determine owner of this position. Optimistically allow formatting.

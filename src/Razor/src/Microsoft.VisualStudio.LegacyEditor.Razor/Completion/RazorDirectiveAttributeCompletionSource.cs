@@ -72,7 +72,7 @@ internal class RazorDirectiveAttributeCompletionSource : IAsyncCompletionSource
                 return CompletionContext.Empty;
             }
 
-            var syntaxTree = codeDocument.GetSyntaxTree();
+            var syntaxTree = codeDocument.GetRequiredSyntaxTree();
             var tagHelperDocumentContext = codeDocument.GetTagHelperContext().AssumeNotNull();
             var absoluteIndex = triggerLocation.Position;
             var queryableChange = new SourceChange(absoluteIndex, length: 0, newText: string.Empty);

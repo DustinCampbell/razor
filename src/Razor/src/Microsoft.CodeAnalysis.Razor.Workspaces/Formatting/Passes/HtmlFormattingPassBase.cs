@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -52,14 +53,14 @@ internal abstract class HtmlFormattingPassBase(ILogger logger) : IFormattingPass
 
     private static ImmutableArray<TextChange> FilterIncomingChanges(FormattingContext context, ImmutableArray<TextChange> changes)
     {
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
+        var syntaxRoot = context.CodeDocument.GetRequiredSyntaxRoot();
 
         using var changesToKeep = new PooledArrayBuilder<TextChange>(capacity: changes.Length);
 
         foreach (var change in changes)
         {
             // Don't keep changes that start inside of a razor comment block.
-            var comment = syntaxTree.Root.FindInnermostNode(change.Span.Start)?.FirstAncestorOrSelf<RazorCommentBlockSyntax>();
+            var comment = syntaxRoot.FindInnermostNode(change.Span.Start)?.FirstAncestorOrSelf<RazorCommentBlockSyntax>();
             if (comment is not null)
             {
                 continue;
@@ -190,8 +191,10 @@ internal abstract class HtmlFormattingPassBase(ILogger logger) : IFormattingPass
 
     private static bool IsPartOfHtmlTag(FormattingContext context, int position)
     {
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
-        var owner = syntaxTree.Root.FindInnermostNode(position, includeWhitespace: true);
+        var owner = context.CodeDocument
+            .GetRequiredSyntaxRoot()
+            .FindInnermostNode(position, includeWhitespace: true);
+
         if (owner is null)
         {
             // Can't determine owner of this position.

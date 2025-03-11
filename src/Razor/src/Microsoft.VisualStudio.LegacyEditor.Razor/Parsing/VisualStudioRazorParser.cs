@@ -355,6 +355,11 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
                 codeDocument.SetPreTagHelperSyntaxTree(preTagHelperSyntaxTree);
             }
 
+            if (codeDocument.GetSyntaxTree() is { } syntaxTree)
+            {
+                codeDocument.SetSyntaxTree(syntaxTree);
+            }
+
             foreach (var item in currentCodeDocument.Items)
             {
                 codeDocument.Items[item.Key] = item.Value;
@@ -551,7 +556,7 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
 
             _codeDocument = codeDocument;
             _snapshot = snapshot;
-            _partialParser = new RazorSyntaxTreePartialParser(_codeDocument.GetSyntaxTree());
+            _partialParser = new RazorSyntaxTreePartialParser(_codeDocument.GetRequiredSyntaxTree());
             TryUpdateLatestParsedSyntaxTreeSnapshot(_codeDocument, _snapshot);
         }
     }

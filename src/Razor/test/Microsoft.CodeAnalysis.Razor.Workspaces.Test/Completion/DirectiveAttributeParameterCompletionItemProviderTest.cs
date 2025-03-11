@@ -174,7 +174,7 @@ public class DirectiveAttributeParameterCompletionItemProviderTest : RazorToolin
     private RazorCompletionContext CreateRazorCompletionContext(int absoluteIndex, string documentContent)
     {
         var codeDocument = GetCodeDocument(documentContent);
-        var syntaxTree = codeDocument.GetSyntaxTree();
+        var syntaxTree = codeDocument.GetRequiredSyntaxTree();
         var tagHelperDocumentContext = codeDocument.GetTagHelperContext().AssumeNotNull();
 
         var owner = syntaxTree.Root.FindInnermostNode(absoluteIndex);

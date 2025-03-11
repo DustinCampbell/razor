@@ -78,7 +78,7 @@ internal sealed class RemoteInlayHintService(in ServiceArgs args) : RazorDocumen
         using var inlayHintsBuilder = new PooledArrayBuilder<InlayHint>();
         var razorSourceText = codeDocument.Source.Text;
         var csharpSourceText = codeDocument.GetCSharpSourceText();
-        var syntaxTree = codeDocument.GetSyntaxTree();
+        var syntaxTree = codeDocument.GetRequiredSyntaxTree();
         foreach (var hint in hints)
         {
             if (csharpSourceText.TryGetAbsoluteIndex(hint.Position.ToLinePosition(), out var absoluteIndex) &&

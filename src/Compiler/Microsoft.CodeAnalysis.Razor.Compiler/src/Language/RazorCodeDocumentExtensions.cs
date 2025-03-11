@@ -22,25 +22,11 @@ public static class RazorCodeDocumentExtensions
     private static readonly object CssScopeKey = new();
     private static readonly object NamespaceKey = new();
 
-    public static RazorSyntaxTree GetSyntaxTree(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
+    public static RazorSyntaxTree GetRequiredSyntaxTree(this RazorCodeDocument codeDocument)
+        => codeDocument.GetSyntaxTree().AssumeNotNull();
 
-        return document.Items[typeof(RazorSyntaxTree)] as RazorSyntaxTree;
-    }
-
-    public static void SetSyntaxTree(this RazorCodeDocument document, RazorSyntaxTree syntaxTree)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[typeof(RazorSyntaxTree)] = syntaxTree;
-    }
+    internal static SyntaxNode GetRequiredSyntaxRoot(this RazorCodeDocument codeDocument)
+        => codeDocument.GetRequiredSyntaxTree().Root;
 
     public static ImmutableArray<RazorSyntaxTree> GetImportSyntaxTrees(this RazorCodeDocument document)
     {

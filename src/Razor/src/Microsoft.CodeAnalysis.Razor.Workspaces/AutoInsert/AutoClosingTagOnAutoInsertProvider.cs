@@ -89,8 +89,9 @@ internal class AutoClosingTagOnAutoInsertProvider : IOnAutoInsertProvider
 
     private static TagNameWithClosingBehavior? TryResolveAutoClosingBehavior(RazorCodeDocument codeDocument, int afterCloseAngleIndex)
     {
-        var syntaxTree = codeDocument.GetSyntaxTree();
-        var closeAngle = syntaxTree.Root.FindToken(afterCloseAngleIndex - 1);
+        var closeAngle = codeDocument
+            .GetRequiredSyntaxRoot()
+            .FindToken(afterCloseAngleIndex - 1);
 
         if (closeAngle.Parent is MarkupStartTagSyntax
             {

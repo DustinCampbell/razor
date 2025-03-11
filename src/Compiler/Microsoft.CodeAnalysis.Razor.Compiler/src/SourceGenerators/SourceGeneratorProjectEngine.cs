@@ -61,7 +61,7 @@ internal sealed class SourceGeneratorProjectEngine
         ExecutePhases(Phases[.._discoveryPhaseIndex], codeDocument);
 
         // record the syntax tree, before the tag helper re-writing occurs
-        codeDocument.SetPreTagHelperSyntaxTree(codeDocument.GetSyntaxTree());
+        codeDocument.SetPreTagHelperSyntaxTree(codeDocument.GetRequiredSyntaxTree());
         return new SourceGeneratorRazorCodeDocument(codeDocument);
     }
 

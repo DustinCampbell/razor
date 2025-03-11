@@ -156,7 +156,7 @@ internal static class RazorCodeDocumentExtensions
         // different, so we don't need to worry about invalidating the cache.
         if (!document.Items.TryGetValue(typeof(ClassifiedSpanInternal), out ImmutableArray<ClassifiedSpanInternal> classifiedSpans))
         {
-            var syntaxTree = document.GetSyntaxTree();
+            var syntaxTree = document.GetRequiredSyntaxTree();
             classifiedSpans = syntaxTree.GetClassifiedSpans();
 
             document.Items[typeof(ClassifiedSpanInternal)] = classifiedSpans;
@@ -172,7 +172,7 @@ internal static class RazorCodeDocumentExtensions
         // different, so we don't need to worry about invalidating the cache.
         if (!document.Items.TryGetValue(typeof(TagHelperSpanInternal), out ImmutableArray<TagHelperSpanInternal> tagHelperSpans))
         {
-            var syntaxTree = document.GetSyntaxTree();
+            var syntaxTree = document.GetRequiredSyntaxTree();
             tagHelperSpans = syntaxTree.GetTagHelperSpans();
 
             document.Items[typeof(TagHelperSpanInternal)] = tagHelperSpans;

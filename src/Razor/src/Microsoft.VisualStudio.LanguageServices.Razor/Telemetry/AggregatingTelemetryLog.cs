@@ -21,9 +21,9 @@ internal sealed class AggregatingTelemetryLog
     private const string MeterVersion = "0.40";
 
     private readonly IMeter _meter;
-    private readonly TelemetryReporter _telemetryReporter;
+    private readonly TelemetryReporter _reporter;
     private readonly HistogramConfiguration? _histogramConfiguration;
-    private readonly string _eventName;
+    private readonly string _name;
     private readonly object _flushLock;
 
     private ImmutableDictionary<string, (IHistogram<long> Histogram, TelemetryEvent TelemetryEvent, object Lock)> _histograms = ImmutableDictionary<string, (IHistogram<long>, TelemetryEvent, object)>.Empty;
@@ -39,9 +39,9 @@ internal sealed class AggregatingTelemetryLog
     {
         var meterProvider = new VSTelemetryMeterProvider();
 
-        _telemetryReporter = reporter;
-        _meter = meterProvider.CreateMeter(TelemetryReporter.GetPropertyName("meter"), version: MeterVersion);
-        _eventName = TelemetryReporter.GetEventName(name);
+        _reporter = reporter;
+        _meter = meterProvider.CreateMeter(TelemetryUtils.GetPropertyName("meter"), version: MeterVersion);
+        _name = name;
         _flushLock = new();
 
         if (bucketBoundaries != null)
@@ -64,9 +64,7 @@ internal sealed class AggregatingTelemetryLog
 
         (var histogram, _, var histogramLock) = ImmutableInterlocked.GetOrAdd(ref _histograms, histogramKey, histogramKey =>
         {
-            var telemetryEvent = new TelemetryEvent(_eventName);
-
-            TelemetryReporter.AddToProperties(telemetryEvent.Properties, new Property("method", method));
+            var telemetryEvent = TelemetryUtils.CreateTelemetryEvent(_name, new Property("method", method));
 
             var histogram = _meter.CreateHistogram<long>(histogramKey, _histogramConfiguration);
             var histogramLock = new object();
@@ -80,7 +78,7 @@ internal sealed class AggregatingTelemetryLog
         }
     }
 
-    private bool IsEnabled => _telemetryReporter.IsEnabled;
+    private bool IsEnabled => _reporter.IsEnabled;
 
     public void Flush()
     {
@@ -98,7 +96,7 @@ internal sealed class AggregatingTelemetryLog
                 {
                     var histogramEvent = new TelemetryHistogramEvent<long>(telemetryEvent, histogram);
 
-                    _telemetryReporter.ReportMetric(histogramEvent);
+                    _reporter.ReportMetric(histogramEvent);
                 }
             }
 

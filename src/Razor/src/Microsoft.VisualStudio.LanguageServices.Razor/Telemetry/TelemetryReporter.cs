@@ -47,9 +47,6 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
         _manager?.Dispose();
     }
 
-    internal static string GetEventName(string name) => "dotnet/razor/" + name;
-    internal static string GetPropertyName(string name) => "dotnet.razor." + name;
-
 #if DEBUG
     public virtual bool IsEnabled => true;
 #else
@@ -58,34 +55,12 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
 
     public void ReportEvent(string name, Severity severity, params ReadOnlySpan<Property> properties)
     {
-        var telemetryEvent = new TelemetryEvent(GetEventName(name), ConvertSeverity(severity));
-
-        foreach (var property in properties)
-        {
-            AddToProperties(telemetryEvent.Properties, property);
-        }
+        var telemetryEvent = TelemetryUtils.CreateTelemetryEvent(name, severity, properties);
 
         Report(telemetryEvent);
     }
 
-    internal static void AddToProperties(IDictionary<string, object?> properties, Property property)
-    {
-        if (IsComplexValue(property.Value))
-        {
-            properties.Add(GetPropertyName(property.Name), new TelemetryComplexProperty(property.Value));
-        }
-        else
-        {
-            properties.Add(GetPropertyName(property.Name), property.Value);
-        }
-
-        static bool IsComplexValue(object? o)
-        {
-            return o?.GetType() is Type type && Type.GetTypeCode(type) == TypeCode.Object;
-        }
-    }
-
-    public void ReportFault(Exception exception, string? message, params object?[] @params)
+    public void ReportFault(Exception exception, string? message, params object?[] args)
     {
         try
         {
@@ -94,7 +69,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                 // We don't want to report operation canceled, but don't want to miss out if there is something useful inside it
                 if (oce.InnerException is not null)
                 {
-                    ReportFault(oce.InnerException, message, @params);
+                    ReportFault(oce.InnerException, message, args);
                 }
 
                 return;
@@ -105,13 +80,13 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                 // We (potentially) have multiple exceptions; let's just report each of them
                 foreach (var innerException in aggregateException.Flatten().InnerExceptions)
                 {
-                    ReportFault(innerException, message, @params);
+                    ReportFault(innerException, message, args);
                 }
 
                 return;
             }
 
-            if (HandleException(exception, message, @params))
+            if (HandleException(exception, message, args))
             {
                 return;
             }
@@ -119,7 +94,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
             var currentProcess = Process.GetCurrentProcess();
 
             var faultEvent = new FaultEvent(
-                eventName: GetEventName("fault"),
+                eventName: TelemetryUtils.GetEventName("fault"),
                 description: (message is null ? string.Empty : message + ": ") + GetExceptionDetails(exception),
                 FaultSeverity.General,
                 exceptionObject: exception,
@@ -130,7 +105,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                         faultUtility.AddErrorInformation(message);
                     }
 
-                    foreach (var data in @params)
+                    foreach (var data in args)
                     {
                         if (data is null)
                         {
@@ -372,15 +347,6 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
 
     private static bool TryGetDeclaringTypeName(MethodBase method, [NotNullWhen(true)] out string? declaringTypeName)
         => (declaringTypeName = method.DeclaringType?.FullName) is not null;
-
-    private static TelemetrySeverity ConvertSeverity(Severity severity)
-        => severity switch
-        {
-            Severity.Normal => TelemetrySeverity.Normal,
-            Severity.Low => TelemetrySeverity.Low,
-            Severity.High => TelemetrySeverity.High,
-            _ => throw new InvalidOperationException($"Unknown severity: {severity}")
-        };
 
     private static bool IsInOwnedNamespace(MethodBase method)
         => TryGetDeclaringTypeName(method, out var declaringTypeName) &&

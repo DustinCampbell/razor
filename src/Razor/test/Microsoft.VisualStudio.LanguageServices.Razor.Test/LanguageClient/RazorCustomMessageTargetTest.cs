@@ -530,14 +530,7 @@ public class RazorCustomMessageTargetTest : ToolingTestBase
                 It.IsAny<Uri>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new DefaultLSPDocumentSynchronizer.SynchronizedResult<CSharpVirtualDocumentSnapshot>(true, csharpVirtualDocument));
-        var telemetryReporter = new Mock<ITelemetryReporter>(MockBehavior.Strict);
-        telemetryReporter.Setup(r => r.BeginBlock(It.IsAny<string>(), It.IsAny<Severity>(), It.IsAny<TimeSpan>(), It.IsAny<Property>()))
-            .Callback<string, Severity, TimeSpan, Property>((s1, s2, ts, g) => Assert.NotEqual(TimeSpan.Zero, ts))
-            .Returns(TelemetryScope.Null);
 
-        telemetryReporter.Setup(r => r.TrackLspRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<Guid>()))
-            .Callback<string, string, TimeSpan, Guid>((s1, s2, ts, g) => Assert.NotEqual(TimeSpan.Zero, ts))
-            .Returns(TelemetryScope.Null);
         var csharpVirtualDocumentAddListener = new CSharpVirtualDocumentAddListener(LoggerFactory);
 
         var target = new RazorCustomMessageTarget(
@@ -548,7 +541,7 @@ public class RazorCustomMessageTargetTest : ToolingTestBase
             _editorSettingsManager,
             documentSynchronizer.Object,
             csharpVirtualDocumentAddListener,
-            telemetryReporter.Object,
+            NoOpTelemetryReporter.Instance,
             TestLanguageServerFeatureOptions.Instance,
             CreateProjectSnapshotManager(),
             new SnippetCompletionItemProvider(new SnippetCache()),
@@ -613,14 +606,7 @@ public class RazorCustomMessageTargetTest : ToolingTestBase
                 It.IsAny<Uri>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new DefaultLSPDocumentSynchronizer.SynchronizedResult<CSharpVirtualDocumentSnapshot>(true, csharpVirtualDocument));
-        var telemetryReporter = new Mock<ITelemetryReporter>(MockBehavior.Strict);
-        telemetryReporter.Setup(r => r.BeginBlock(It.IsAny<string>(), It.IsAny<Severity>(), It.IsAny<TimeSpan>(), It.IsAny<Property>()))
-            .Callback<string, Severity, TimeSpan, Property>((s, sev, ts, p) => Assert.NotEqual(TimeSpan.Zero, ts))
-            .Returns(TelemetryScope.Null);
 
-        telemetryReporter.Setup(r => r.TrackLspRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<Guid>()))
-            .Callback<string, string, TimeSpan, Guid>((s1, s2, ts, g) => Assert.NotEqual(TimeSpan.Zero, ts))
-            .Returns(TelemetryScope.Null);
         var csharpVirtualDocumentAddListener = new CSharpVirtualDocumentAddListener(LoggerFactory);
 
         var target = new RazorCustomMessageTarget(
@@ -631,7 +617,7 @@ public class RazorCustomMessageTargetTest : ToolingTestBase
             _editorSettingsManager,
             documentSynchronizer.Object,
             csharpVirtualDocumentAddListener,
-            telemetryReporter.Object,
+            NoOpTelemetryReporter.Instance,
             TestLanguageServerFeatureOptions.Instance,
             CreateProjectSnapshotManager(),
             new SnippetCompletionItemProvider(new SnippetCache()),

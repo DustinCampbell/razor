@@ -74,41 +74,12 @@ internal sealed class TelemetryScope : IDisposable
         StopwatchPool.Default.Return(_stopwatch);
     }
 
-    public static TelemetryScope Create(ITelemetryReporter reporter, string name, Severity severity, TimeSpan minTimeToReport)
-    {
-        var array = new Property[1];
-
-        return new(reporter, name, minTimeToReport, severity, array);
-    }
-
-    public static TelemetryScope Create(ITelemetryReporter reporter, string name, Severity severity, TimeSpan minTimeToReport, Property property)
-    {
-        var array = new Property[2];
-        array[0] = property;
-
-        return new(reporter, name, minTimeToReport, severity, array);
-    }
-
-    public static TelemetryScope Create(ITelemetryReporter reporter, string name, Severity severity, TimeSpan minTimeToReport, Property property1, Property property2)
-    {
-        var array = new Property[3];
-        array[0] = property1;
-        array[1] = property2;
-
-        return new(reporter, name, minTimeToReport, severity, array);
-    }
-
-    public static TelemetryScope Create(ITelemetryReporter reporter, string name, Severity severity, TimeSpan minTimeToReport, Property property1, Property property2, Property property3)
-    {
-        var array = new Property[4];
-        array[0] = property1;
-        array[1] = property2;
-        array[2] = property3;
-
-        return new(reporter, name, minTimeToReport, severity, array);
-    }
-
-    public static TelemetryScope Create(ITelemetryReporter reporter, string name, Severity severity, TimeSpan minTimeToReport, ReadOnlySpan<Property> properties)
+    public static TelemetryScope Create(
+        ITelemetryReporter reporter,
+        string name,
+        Severity severity,
+        TimeSpan minTimeToReport,
+        ReadOnlySpan<Property> properties)
     {
         var array = new Property[properties.Length + 1];
         properties.CopyTo(array);

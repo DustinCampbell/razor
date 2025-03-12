@@ -7,18 +7,10 @@ namespace Microsoft.AspNetCore.Razor.Telemetry;
 
 internal interface ITelemetryReporter
 {
-    TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport);
-    TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, Property property);
-    TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, Property property1, Property property2);
-    TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, Property property1, Property property2, Property property3);
     TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties);
 
     TelemetryScope TrackLspRequest(string lspMethodName, string lspServerName, TimeSpan minTimeToReport, Guid correlationId);
 
-    void ReportEvent(string name, Severity severity);
-    void ReportEvent(string name, Severity severity, Property property);
-    void ReportEvent(string name, Severity severity, Property property1, Property property2);
-    void ReportEvent(string name, Severity severity, Property property1, Property property2, Property property3);
     void ReportEvent(string name, Severity severity, params ReadOnlySpan<Property> properties);
 
     void ReportFault(Exception exception, string? message, params object?[] @params);

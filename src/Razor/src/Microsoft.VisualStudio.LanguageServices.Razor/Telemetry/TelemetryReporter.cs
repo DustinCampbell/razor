@@ -56,40 +56,6 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
     public virtual bool IsEnabled => _manager?.Session.IsOptedIn ?? false;
 #endif
 
-    public void ReportEvent(string name, Severity severity)
-    {
-        var telemetryEvent = new TelemetryEvent(GetEventName(name), ConvertSeverity(severity));
-
-        Report(telemetryEvent);
-    }
-
-    public void ReportEvent(string name, Severity severity, Property property)
-    {
-        var telemetryEvent = new TelemetryEvent(GetEventName(name), ConvertSeverity(severity));
-
-        AddToProperties(telemetryEvent.Properties, property);
-        Report(telemetryEvent);
-    }
-
-    public void ReportEvent(string name, Severity severity, Property property1, Property property2)
-    {
-        var telemetryEvent = new TelemetryEvent(GetEventName(name), ConvertSeverity(severity));
-
-        AddToProperties(telemetryEvent.Properties, property1);
-        AddToProperties(telemetryEvent.Properties, property2);
-        Report(telemetryEvent);
-    }
-
-    public void ReportEvent(string name, Severity severity, Property property1, Property property2, Property property3)
-    {
-        var telemetryEvent = new TelemetryEvent(GetEventName(name), ConvertSeverity(severity));
-
-        AddToProperties(telemetryEvent.Properties, property1);
-        AddToProperties(telemetryEvent.Properties, property2);
-        AddToProperties(telemetryEvent.Properties, property3);
-        Report(telemetryEvent);
-    }
-
     public void ReportEvent(string name, Severity severity, params ReadOnlySpan<Property> properties)
     {
         var telemetryEvent = new TelemetryEvent(GetEventName(name), ConvertSeverity(severity));
@@ -247,18 +213,6 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
     protected virtual void LogError(Exception exception, string message)
     {
     }
-
-    public TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport)
-        => TelemetryScope.Create(this, name, severity, minTimeToReport);
-
-    public TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, Property property)
-        => TelemetryScope.Create(this, name, severity, minTimeToReport, property);
-
-    public TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, Property property1, Property property2)
-        => TelemetryScope.Create(this, name, severity, minTimeToReport, property1, property2);
-
-    public TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, Property property1, Property property2, Property property3)
-        => TelemetryScope.Create(this, name, severity, minTimeToReport, property1, property2, property3);
 
     public TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties)
         => TelemetryScope.Create(this, name, severity, minTimeToReport, properties);

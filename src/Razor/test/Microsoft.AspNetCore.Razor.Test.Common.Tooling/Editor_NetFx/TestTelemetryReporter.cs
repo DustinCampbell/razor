@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.VisualStudio.Razor.Telemetry;
 using Microsoft.VisualStudio.Telemetry;
 using Xunit;
-using static Microsoft.VisualStudio.Razor.Telemetry.AggregatingTelemetryLog;
 
 namespace Microsoft.VisualStudio.Editor.Razor.Test.Shared;
 
@@ -30,7 +29,7 @@ internal class TestTelemetryReporter(ILoggerFactory loggerFactory) : VSTelemetry
 
     /// <summary>
     /// This exists because both the remote and workspace projects are referenced by the test project,
-    /// so using <see cref="TelemetryInstrumentEvent"/> directly is impossibly ambiguous. I'm sure there's a
+    /// so using <see cref="TelemetryReporter.TelemetryInstrumentEvent"/> directly is impossibly ambiguous. I'm sure there's a
     /// clever way to fix this that isn't writing this method and I'm very happy if you, the reader, come along
     /// and make it so. However, I unfortunately do not have that insight nor the drive to do so. This works fine for
     /// asserting types without changing the project dependencies to accommodate testing.

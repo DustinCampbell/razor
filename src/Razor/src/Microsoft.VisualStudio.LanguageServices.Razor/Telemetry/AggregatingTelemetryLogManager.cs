@@ -8,20 +8,17 @@ namespace Microsoft.VisualStudio.Razor.Telemetry;
 /// <summary>
 /// Manages creation and obtaining aggregated telemetry logs.
 /// </summary>
-internal sealed class AggregatingTelemetryLogManager
+internal sealed class AggregatingTelemetryLogManager(TelemetryReporter session)
 {
-    private readonly TelemetryReporter _telemetryReporter;
+    private readonly TelemetryReporter _telemetryReporter = session;
     private ImmutableDictionary<string, AggregatingTelemetryLog> _aggregatingLogs = ImmutableDictionary<string, AggregatingTelemetryLog>.Empty;
-
-    public AggregatingTelemetryLogManager(TelemetryReporter session)
-    {
-        _telemetryReporter = session;
-    }
 
     public AggregatingTelemetryLog? GetLog(string name, double[]? bucketBoundaries = null)
     {
         if (!_telemetryReporter.IsEnabled)
+        {
             return null;
+        }
 
         return ImmutableInterlocked.GetOrAdd(
             ref _aggregatingLogs,

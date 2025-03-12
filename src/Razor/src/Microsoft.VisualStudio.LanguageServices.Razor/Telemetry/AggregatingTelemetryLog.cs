@@ -5,7 +5,6 @@ using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.VisualStudio.Telemetry;
 using Microsoft.VisualStudio.Telemetry.Metrics;
-using Microsoft.VisualStudio.Telemetry.Metrics.Events;
 
 namespace Microsoft.VisualStudio.Razor.Telemetry;
 
@@ -54,10 +53,7 @@ internal sealed class AggregatingTelemetryLog
     /// Adds aggregated information for the <paramref name="histogramKey"/> and <paramref name="value"/>. Method name is tacked onto
     /// to the first <paramref name="histogramKey"/> used for convenience.
     /// </summary>
-    public void Log(
-        string histogramKey,
-        int value,
-        string method)
+    public void Log(string histogramKey, int value, string method)
     {
         if (!IsEnabled)
             return;
@@ -94,7 +90,7 @@ internal sealed class AggregatingTelemetryLog
                 //  call that operates on it.
                 lock (histogramLock)
                 {
-                    var histogramEvent = new TelemetryHistogramEvent<long>(telemetryEvent, histogram);
+                    var histogramEvent = new TelemetryReporter.TelemetryHistogramEvent<long>(telemetryEvent, histogram);
 
                     _reporter.ReportMetric(histogramEvent);
                 }
@@ -102,16 +98,5 @@ internal sealed class AggregatingTelemetryLog
 
             _histograms = ImmutableDictionary<string, (IHistogram<long>, TelemetryEvent, object)>.Empty;
         }
-    }
-
-    public class TelemetryInstrumentEvent(TelemetryEvent telemetryEvent, IInstrument instrument) : TelemetryMetricEvent(telemetryEvent, instrument)
-    {
-        public TelemetryEvent Event { get; } = telemetryEvent;
-        public IInstrument Instrument { get; } = instrument;
-    }
-
-    public class TelemetryHistogramEvent<T>(TelemetryEvent telemetryEvent, IHistogram<T> histogram) : TelemetryInstrumentEvent(telemetryEvent, histogram)
-        where T : struct
-    {
     }
 }

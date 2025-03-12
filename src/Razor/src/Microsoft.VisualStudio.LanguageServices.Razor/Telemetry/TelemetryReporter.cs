@@ -13,7 +13,8 @@ using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.VisualStudio.Telemetry;
-using static Microsoft.VisualStudio.Razor.Telemetry.AggregatingTelemetryLog;
+using Microsoft.VisualStudio.Telemetry.Metrics;
+using Microsoft.VisualStudio.Telemetry.Metrics.Events;
 using TelemetryResult = Microsoft.AspNetCore.Razor.Telemetry.TelemetryResult;
 
 namespace Microsoft.VisualStudio.Razor.Telemetry;
@@ -155,7 +156,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
     protected void SetSession(TelemetrySession session)
     {
         _manager?.Dispose();
-        _manager = TelemetrySessionManager.Create(this, session);
+        _manager = new(this, session);
     }
 
     protected virtual void Report(TelemetryEvent telemetryEvent)
@@ -189,12 +190,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
 
     public void ReportRequestTiming(string name, string? language, TimeSpan queuedDuration, TimeSpan requestDuration, TelemetryResult result)
     {
-        _manager?.LogRequestTelemetry(
-            name,
-            language,
-            queuedDuration,
-            requestDuration,
-            result);
+        _manager?.LogRequestTelemetry(name, language, queuedDuration, requestDuration, result);
     }
 
 #if DEBUG
@@ -342,22 +338,15 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
         => TryGetDeclaringTypeName(method, out var declaringTypeName) &&
            s_faultIgnoredTypeNames.Contains(declaringTypeName);
 
-    private sealed class TelemetrySessionManager : IDisposable
+    private sealed class TelemetrySessionManager(TelemetryReporter reporter, TelemetrySession session) : IDisposable
     {
         /// <summary>
         /// Store request counters in a concurrent dictionary as non-mutating LSP requests can
         /// run alongside other non-mutating requests.
         /// </summary>
         private readonly ConcurrentDictionary<(string Method, string? Language), Counter> _requestCounters = new();
-        private readonly ITelemetryReporter _telemetryReporter;
-        private readonly AggregatingTelemetryLogManager _aggregatingManager;
-
-        private TelemetrySessionManager(ITelemetryReporter telemetryReporter, TelemetrySession session, AggregatingTelemetryLogManager aggregatingManager)
-        {
-            _telemetryReporter = telemetryReporter;
-            _aggregatingManager = aggregatingManager;
-            Session = session;
-        }
+        private readonly TelemetryReporter _reporter = reporter;
+        private readonly AggregatingTelemetryLogManager _aggregatingManager = new(reporter);
 
         public void Dispose()
         {
@@ -365,13 +354,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
             Session.Dispose();
         }
 
-        public static TelemetrySessionManager Create(TelemetryReporter telemetryReporter, TelemetrySession session)
-            => new(
-                telemetryReporter,
-                session,
-                new AggregatingTelemetryLogManager(telemetryReporter));
-
-        public TelemetrySession Session { get; }
+        public TelemetrySession Session { get; } = session;
 
         private void Flush()
         {
@@ -391,31 +374,27 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                 (int)requestDuration.TotalMilliseconds,
                 name);
 
-            _requestCounters.GetOrAdd((name, language), (_) => new Counter()).IncrementCount(result);
+            _requestCounters.GetOrAdd((name, language), _ => new Counter()).IncrementCount(result);
         }
 
         private void LogRequestCounters()
         {
-            foreach (var kvp in _requestCounters)
+            foreach (var (key, value) in _requestCounters)
             {
-                _telemetryReporter.ReportEvent("LSP_RequestCounter",
+                _reporter.ReportEvent("LSP_RequestCounter",
                     Severity.Low,
-                    new Property("method", kvp.Key.Method),
-                    new Property("successful", kvp.Value.SucceededCount),
-                    new Property("failed", kvp.Value.FailedCount),
-                    new Property("cancelled", kvp.Value.CancelledCount));
+                    new("method", key.Method),
+                    new("successful", value.SucceededCount),
+                    new("failed", value.FailedCount),
+                    new("cancelled", value.CancelledCount));
             }
 
             _requestCounters.Clear();
         }
 
-        private void LogAggregated(
-            string managerKey,
-            string histogramKey,
-            int value,
-            string method)
+        private void LogAggregated(string managerKey, string histogramKey, int value, string method)
         {
-            var aggregatingLog = _aggregatingManager?.GetLog(managerKey);
+            var aggregatingLog = _aggregatingManager.GetLog(managerKey);
             aggregatingLog?.Log(histogramKey, value, method);
         }
 
@@ -445,5 +424,18 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                 }
             }
         }
+    }
+
+    public class TelemetryInstrumentEvent(TelemetryEvent telemetryEvent, IInstrument instrument)
+        : TelemetryMetricEvent(telemetryEvent, instrument)
+    {
+        public TelemetryEvent Event { get; } = telemetryEvent;
+        public IInstrument Instrument { get; } = instrument;
+    }
+
+    public class TelemetryHistogramEvent<T>(TelemetryEvent telemetryEvent, IHistogram<T> histogram)
+        : TelemetryInstrumentEvent(telemetryEvent, histogram)
+        where T : struct
+    {
     }
 }

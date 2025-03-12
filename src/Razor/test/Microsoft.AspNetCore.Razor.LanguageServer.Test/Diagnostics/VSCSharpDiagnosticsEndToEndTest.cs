@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.LanguageServer.EndpointContracts;
+using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.CodeAnalysis.Razor.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
@@ -86,7 +87,8 @@ public class VSCSharpDiagnosticsEndToEndTest(ITestOutputHelper testOutput) : Sin
 
         var translateDiagnosticsService = new RazorTranslateDiagnosticsService(DocumentMappingService, LoggerFactory);
         var optionsMonitor = TestRazorLSPOptionsMonitor.Create();
-        var diagnosticsEndPoint = new VSDocumentDiagnosticsEndpoint(LanguageServerFeatureOptions, translateDiagnosticsService, optionsMonitor, languageServer, telemetryReporter: null);
+        var diagnosticsEndPoint = new VSDocumentDiagnosticsEndpoint(
+            LanguageServerFeatureOptions, translateDiagnosticsService, optionsMonitor, languageServer, NoOpTelemetryReporter.Instance);
 
         var diagnosticsRequest = new VSInternalDocumentDiagnosticsParams
         {

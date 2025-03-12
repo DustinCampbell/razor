@@ -57,28 +57,32 @@ internal partial class RazorCustomMessageTarget
 
         var textBuffer = virtualDocumentSnapshot.Snapshot.TextBuffer;
         var lspMethodName = Methods.TextDocumentCodeActionName;
-        using var _ = _telemetryReporter.TrackLspRequest(lspMethodName, languageServerName, TelemetryThresholds.CodeActionSubLSPTelemetryThreshold, codeActionParams.CorrelationId);
-        var requests = _requestInvoker.ReinvokeRequestOnMultipleServersAsync<VSCodeActionParams, IReadOnlyList<VSInternalCodeAction>>(
-            textBuffer,
-            lspMethodName,
-            codeActionParams.CodeActionParams,
-            cancellationToken).ConfigureAwait(false);
-
-        var codeActions = new List<VSInternalCodeAction>();
-        await foreach (var response in requests.WithCancellation(cancellationToken).ConfigureAwait(false))
+        using (_telemetryReporter.TrackLspRequest(lspMethodName, languageServerName, TelemetryThresholds.CodeActionSubLSPTelemetryThreshold, codeActionParams.CorrelationId))
         {
-            if (cancellationToken.IsCancellationRequested)
+            var requests = _requestInvoker
+                .ReinvokeRequestOnMultipleServersAsync<VSCodeActionParams, IReadOnlyList<VSInternalCodeAction>>(
+                    textBuffer,
+                    lspMethodName,
+                    codeActionParams.CodeActionParams,
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            var codeActions = new List<VSInternalCodeAction>();
+            await foreach (var response in requests.WithCancellation(cancellationToken).ConfigureAwait(false))
             {
-                break;
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                if (response.Response != null)
+                {
+                    codeActions.AddRange(response.Response);
+                }
             }
 
-            if (response.Response != null)
-            {
-                codeActions.AddRange(response.Response);
-            }
+            return codeActions;
         }
-
-        return codeActions;
     }
 
     // Called by the Razor Language Server to resolve code actions from the platform.

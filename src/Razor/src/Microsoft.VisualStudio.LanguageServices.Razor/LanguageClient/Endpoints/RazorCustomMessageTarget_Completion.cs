@@ -123,12 +123,14 @@ internal partial class RazorCustomMessageTarget
             ReinvocationResponse<VSInternalCompletionList?>? response;
             using (_telemetryReporter.TrackLspRequest(lspMethodName, languageServerName, TelemetryThresholds.CompletionSubLSPTelemetryThreshold, request.CorrelationId))
             {
-                response = await _requestInvoker.ReinvokeRequestOnServerAsync<CompletionParams, VSInternalCompletionList?>(
-                    textBuffer,
-                    lspMethodName,
-                    languageServerName,
-                    completionParams,
-                    cancellationToken).ConfigureAwait(continueOnCapturedContext);
+                response = await _requestInvoker
+                    .ReinvokeRequestOnServerAsync<CompletionParams, VSInternalCompletionList?>(
+                        textBuffer,
+                        lspMethodName,
+                        languageServerName,
+                        completionParams,
+                        cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext);
             }
 
             var completionList = response?.Response;

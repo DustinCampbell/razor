@@ -11,20 +11,13 @@ namespace Microsoft.AspNetCore.Razor.LanguageServer.Hosting;
 /// <summary>
 /// Providers a bridge from CLaSP, which uses ILspLogger, to our logging infrastructure, which uses ILogger
 /// </summary>
-internal class ClaspLoggingBridge : ILspLogger
+internal sealed class ClaspLoggingBridge(ILoggerFactory loggerFactory, ITelemetryReporter telemetryReporter) : ILspLogger
 {
     public const string LogStartContextMarker = "[StartContext]";
     public const string LogEndContextMarker = "[EndContext]";
 
-    private readonly ILogger _logger;
-    private readonly ITelemetryReporter? _telemetryReporter;
-
-    public ClaspLoggingBridge(ILoggerFactory loggerFactory, ITelemetryReporter? telemetryReporter = null)
-    {
-        // We're creating this on behalf of CLaSP, because it doesn't know how to use our ILoggerFactory, so using that as the category name.
-        _logger = loggerFactory.GetOrCreateLogger("CLaSP");
-        _telemetryReporter = telemetryReporter;
-    }
+    private readonly ILogger _logger = loggerFactory.GetOrCreateLogger("CLaSP");
+    private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
 
     public void LogStartContext(string message, params object[] @params)
     {
@@ -42,19 +35,16 @@ internal class ClaspLoggingBridge : ILspLogger
     {
         _logger.LogError($"{message}: {string.Join(",", @params)}");
 
-        if (_telemetryReporter is not null)
+        var properties = new Property[@params.Length + 1];
+
+        for (var i = 0; i < @params.Length; i++)
         {
-            var properties = new Property[@params.Length + 1];
-
-            for (var i = 0; i < @params.Length; i++)
-            {
-                properties[i] = new("param" + i, @params[i]);
-            }
-
-            properties[^1] = new("message", message);
-
-            _telemetryReporter.ReportEvent("lsperror", Severity.High, properties);
+            properties[i] = new("param" + i, @params[i]);
         }
+
+        properties[^1] = new("message", message);
+
+        _telemetryReporter.ReportEvent("lsperror", Severity.High, properties);
     }
 
     public void LogException(Exception exception, string? message = null, params object[] @params)

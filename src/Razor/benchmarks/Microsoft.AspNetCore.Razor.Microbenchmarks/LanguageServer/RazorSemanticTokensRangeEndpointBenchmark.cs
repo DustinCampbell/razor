@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.LanguageServer;
 using Microsoft.AspNetCore.Razor.LanguageServer.EndpointContracts;
 using Microsoft.AspNetCore.Razor.LanguageServer.Semantic;
+using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.CodeAnalysis.Razor.DocumentMapping;
 using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
@@ -71,7 +72,8 @@ public class RazorSemanticTokensRangeEndpointBenchmark : RazorLanguageServerBenc
         var razorOptionsMonitor = RazorLanguageServerHost.GetRequiredService<RazorLSPOptionsMonitor>();
         var clientCapabilitiesService = new BenchmarkClientCapabilitiesService(new VSInternalClientCapabilities() { SupportsVisualStudioExtensions = true });
         var razorSemanticTokensLegendService = new RazorSemanticTokensLegendService(clientCapabilitiesService);
-        SemanticTokensRangeEndpoint = new SemanticTokensRangeEndpoint(RazorSemanticTokenService, razorSemanticTokensLegendService, razorOptionsMonitor, telemetryReporter: null);
+        SemanticTokensRangeEndpoint = new SemanticTokensRangeEndpoint(
+            RazorSemanticTokenService, razorSemanticTokensLegendService, razorOptionsMonitor, NoOpTelemetryReporter.Instance);
 
         var text = await DocumentContext.GetSourceTextAsync(CancellationToken.None).ConfigureAwait(false);
         Range = VsLspFactory.CreateRange(

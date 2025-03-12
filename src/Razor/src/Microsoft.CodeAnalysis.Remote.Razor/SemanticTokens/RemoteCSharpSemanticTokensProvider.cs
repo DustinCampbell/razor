@@ -27,26 +27,27 @@ internal class RemoteCSharpSemanticTokensProvider(IFilePathService filePathServi
 
     public async Task<int[]?> GetCSharpSemanticTokensResponseAsync(DocumentContext documentContext, ImmutableArray<LinePositionSpan> csharpRanges, Guid correlationId, CancellationToken cancellationToken)
     {
-        using var _ = _telemetryReporter.TrackLspRequest(nameof(SemanticTokensRange.GetSemanticTokensAsync),
+        using (_telemetryReporter.TrackLspRequest(nameof(SemanticTokensRange.GetSemanticTokensAsync),
             Constants.ExternalAccessServerName,
             TelemetryThresholds.SemanticTokensRazorTelemetryThreshold,
-            correlationId);
+            correlationId))
+        {
+            // We have a razor document, lets find the generated C# document
+            Debug.Assert(documentContext is RemoteDocumentContext, "This method only works on document snapshots created in the OOP process");
+            var snapshot = (RemoteDocumentSnapshot)documentContext.Snapshot;
+            var generatedDocument = await snapshot
+                .GetGeneratedDocumentAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-        // We have a razor document, lets find the generated C# document
-        Debug.Assert(documentContext is RemoteDocumentContext, "This method only works on document snapshots created in the OOP process");
-        var snapshot = (RemoteDocumentSnapshot)documentContext.Snapshot;
-        var generatedDocument = await snapshot
-            .GetGeneratedDocumentAsync(cancellationToken)
-            .ConfigureAwait(false);
+            var data = await SemanticTokensRange
+                .GetSemanticTokensAsync(
+                    generatedDocument,
+                    csharpRanges,
+                    supportsVisualStudioExtensions: true,
+                    cancellationToken)
+                .ConfigureAwait(false);
 
-        var data = await SemanticTokensRange
-            .GetSemanticTokensAsync(
-                generatedDocument,
-                csharpRanges,
-                supportsVisualStudioExtensions: true,
-                cancellationToken)
-            .ConfigureAwait(false);
-
-        return data;
+            return data;
+        }
     }
 }

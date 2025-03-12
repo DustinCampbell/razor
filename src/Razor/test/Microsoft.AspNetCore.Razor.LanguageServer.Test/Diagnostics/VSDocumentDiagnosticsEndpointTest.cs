@@ -3,6 +3,7 @@
 
 using Microsoft.AspNetCore.Razor.LanguageServer.Diagnostics;
 using Microsoft.AspNetCore.Razor.LanguageServer.Hosting;
+using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
 using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis.Razor.Diagnostics;
@@ -30,7 +31,7 @@ public sealed class VSDocumentDiagnosticsEndpointTest(ITestOutputHelper testOutp
             razorTranslate.Object,
             optionsMonitor,
             clientConnection.Object,
-            telemetryReporter: null);
+            NoOpTelemetryReporter.Instance);
 
         // Act
         VSInternalServerCapabilities serverCapabilities = new();

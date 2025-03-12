@@ -31,13 +31,13 @@ internal class VSDocumentDiagnosticsEndpoint(
     RazorTranslateDiagnosticsService translateDiagnosticsService,
     RazorLSPOptionsMonitor razorLSPOptionsMonitor,
     IClientConnection clientConnection,
-    ITelemetryReporter? telemetryReporter) : IRazorRequestHandler<VSInternalDocumentDiagnosticsParams, IEnumerable<VSInternalDiagnosticReport>?>, ICapabilitiesProvider
+    ITelemetryReporter telemetryReporter) : IRazorRequestHandler<VSInternalDocumentDiagnosticsParams, IEnumerable<VSInternalDiagnosticReport>?>, ICapabilitiesProvider
 {
     private readonly LanguageServerFeatureOptions _languageServerFeatureOptions = languageServerFeatureOptions;
     private readonly IClientConnection _clientConnection = clientConnection;
     private readonly RazorTranslateDiagnosticsService _translateDiagnosticsService = translateDiagnosticsService;
     private readonly RazorLSPOptionsMonitor _razorLSPOptionsMonitor = razorLSPOptionsMonitor;
-    private readonly ITelemetryReporter? _telemetryReporter = telemetryReporter;
+    private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
     private readonly MissingTagHelperTelemetryReporter? _missingTagHelperTelemetryReporter = telemetryReporter is null ? null : new(telemetryReporter);
 
     public bool MutatesSolutionState => false;
@@ -88,69 +88,70 @@ internal class VSDocumentDiagnosticsEndpoint(
         }
 
         var correlationId = Guid.NewGuid();
-        using var __ = _telemetryReporter?.TrackLspRequest(VSInternalMethods.DocumentPullDiagnosticName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.DiagnosticsRazorTelemetryThreshold, correlationId);
-
-        var documentSnapshot = documentContext.Snapshot;
-        var razorDiagnostics = await RazorDiagnosticHelper.GetRazorDiagnosticsAsync(documentSnapshot, cancellationToken).ConfigureAwait(false);
-
-        if (_missingTagHelperTelemetryReporter is not null && razorDiagnostics is not null)
+        using (_telemetryReporter.TrackLspRequest(VSInternalMethods.DocumentPullDiagnosticName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.DiagnosticsRazorTelemetryThreshold, correlationId))
         {
-            await _missingTagHelperTelemetryReporter.ReportRZ10012TelemetryAsync(documentContext, razorDiagnostics, cancellationToken).ConfigureAwait(false);
-        }
+            var documentSnapshot = documentContext.Snapshot;
+            var razorDiagnostics = await RazorDiagnosticHelper.GetRazorDiagnosticsAsync(documentSnapshot, cancellationToken).ConfigureAwait(false);
 
-        var (csharpDiagnostics, htmlDiagnostics) = await GetHtmlCSharpDiagnosticsAsync(documentContext, correlationId, cancellationToken).ConfigureAwait(false);
-
-        var diagnosticCount =
-            (razorDiagnostics?.Length ?? 0) +
-            (csharpDiagnostics?.Length ?? 0) +
-            (htmlDiagnostics?.Length ?? 0);
-
-        using var _ = ListPool<VSInternalDiagnosticReport>.GetPooledObject(out var allDiagnostics);
-        allDiagnostics.SetCapacityIfLarger(diagnosticCount);
-
-        if (razorDiagnostics is not null)
-        {
-            // No extra work to do for Razor diagnostics
-            allDiagnostics.Add(new VSInternalDiagnosticReport()
+            if (_missingTagHelperTelemetryReporter is not null && razorDiagnostics is not null)
             {
-                Diagnostics = razorDiagnostics,
-                ResultId = Guid.NewGuid().ToString()
-            });
-        }
-
-        if (csharpDiagnostics is not null)
-        {
-            foreach (var report in csharpDiagnostics)
-            {
-                if (report.Diagnostics is not null)
-                {
-                    var mappedDiagnostics = await _translateDiagnosticsService
-                        .TranslateAsync(RazorLanguageKind.CSharp, report.Diagnostics, documentSnapshot, cancellationToken)
-                        .ConfigureAwait(false);
-                    report.Diagnostics = mappedDiagnostics;
-                }
-
-                allDiagnostics.Add(report);
+                await _missingTagHelperTelemetryReporter.ReportRZ10012TelemetryAsync(documentContext, razorDiagnostics, cancellationToken).ConfigureAwait(false);
             }
-        }
 
-        if (htmlDiagnostics is not null)
-        {
-            foreach (var report in htmlDiagnostics)
+            var (csharpDiagnostics, htmlDiagnostics) = await GetHtmlCSharpDiagnosticsAsync(documentContext, correlationId, cancellationToken).ConfigureAwait(false);
+
+            var diagnosticCount =
+                (razorDiagnostics?.Length ?? 0) +
+                (csharpDiagnostics?.Length ?? 0) +
+                (htmlDiagnostics?.Length ?? 0);
+
+            using var _ = ListPool<VSInternalDiagnosticReport>.GetPooledObject(out var allDiagnostics);
+            allDiagnostics.SetCapacityIfLarger(diagnosticCount);
+
+            if (razorDiagnostics is not null)
             {
-                if (report.Diagnostics is not null)
+                // No extra work to do for Razor diagnostics
+                allDiagnostics.Add(new VSInternalDiagnosticReport()
                 {
-                    var mappedDiagnostics = await _translateDiagnosticsService
-                        .TranslateAsync(RazorLanguageKind.Html, report.Diagnostics, documentSnapshot, cancellationToken)
-                        .ConfigureAwait(false);
-                    report.Diagnostics = mappedDiagnostics;
-                }
-
-                allDiagnostics.Add(report);
+                    Diagnostics = razorDiagnostics,
+                    ResultId = Guid.NewGuid().ToString()
+                });
             }
-        }
 
-        return allDiagnostics.ToArray();
+            if (csharpDiagnostics is not null)
+            {
+                foreach (var report in csharpDiagnostics)
+                {
+                    if (report.Diagnostics is not null)
+                    {
+                        var mappedDiagnostics = await _translateDiagnosticsService
+                            .TranslateAsync(RazorLanguageKind.CSharp, report.Diagnostics, documentSnapshot, cancellationToken)
+                            .ConfigureAwait(false);
+                        report.Diagnostics = mappedDiagnostics;
+                    }
+
+                    allDiagnostics.Add(report);
+                }
+            }
+
+            if (htmlDiagnostics is not null)
+            {
+                foreach (var report in htmlDiagnostics)
+                {
+                    if (report.Diagnostics is not null)
+                    {
+                        var mappedDiagnostics = await _translateDiagnosticsService
+                            .TranslateAsync(RazorLanguageKind.Html, report.Diagnostics, documentSnapshot, cancellationToken)
+                            .ConfigureAwait(false);
+                        report.Diagnostics = mappedDiagnostics;
+                    }
+
+                    allDiagnostics.Add(report);
+                }
+            }
+
+            return allDiagnostics.ToArray();
+        }
     }
 
     private async Task<(VSInternalDiagnosticReport[]? CSharpDiagnostics, VSInternalDiagnosticReport[]? HtmlDiagnostics)> GetHtmlCSharpDiagnosticsAsync(DocumentContext documentContext, Guid correlationId, CancellationToken cancellationToken)

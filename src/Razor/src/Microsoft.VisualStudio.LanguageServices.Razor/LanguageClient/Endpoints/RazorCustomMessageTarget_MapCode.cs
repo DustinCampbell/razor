@@ -40,16 +40,19 @@ internal partial class RazorCustomMessageTarget
         var textBuffer = delegationDetails.Value.TextBuffer;
         var lspMethodName = VSInternalMethods.WorkspaceMapCodeName;
         var languageServerName = delegationDetails.Value.LanguageServerName;
-        using var _ = _telemetryReporter.TrackLspRequest(lspMethodName, languageServerName, TelemetryThresholds.MapCodeSubLSPTelemetryThreshold, request.MapCodeCorrelationId);
+        using (_telemetryReporter.TrackLspRequest(lspMethodName, languageServerName, TelemetryThresholds.MapCodeSubLSPTelemetryThreshold, request.MapCodeCorrelationId))
+        {
+            var response = await _requestInvoker
+                .ReinvokeRequestOnServerAsync<VSInternalMapCodeParams, WorkspaceEdit?>(
+                    textBuffer,
+                    lspMethodName,
+                    languageServerName,
+                    mapCodeParams,
+                    cancellationToken)
+                .ConfigureAwait(false);
 
-        var response = await _requestInvoker.ReinvokeRequestOnServerAsync<VSInternalMapCodeParams, WorkspaceEdit?>(
-            textBuffer,
-            lspMethodName,
-            languageServerName,
-            mapCodeParams,
-            cancellationToken).ConfigureAwait(false);
-
-        return response?.Response;
+            return response?.Response;
+        }
     }
 
     private void ConvertCSharpFocusLocationUris(Location[][] focusLocations)

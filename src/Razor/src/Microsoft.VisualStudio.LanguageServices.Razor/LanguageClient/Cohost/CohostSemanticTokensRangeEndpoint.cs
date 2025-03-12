@@ -78,22 +78,27 @@ internal sealed class CohostSemanticTokensRangeEndpoint(
         var colorBackground = _clientSettingsManager.GetClientSettings().AdvancedSettings.ColorBackground;
 
         var correlationId = Guid.NewGuid();
-        using var _ = _telemetryReporter.TrackLspRequest(Methods.TextDocumentSemanticTokensRangeName, RazorLSPConstants.CohostLanguageServerName, TelemetryThresholds.SemanticTokensRazorTelemetryThreshold, correlationId);
-
-        var tokens = await _remoteServiceInvoker.TryInvokeAsync<IRemoteSemanticTokensService, int[]?>(
-            razorDocument.Project.Solution,
-            (service, solutionInfo, cancellationToken) => service.GetSemanticTokensDataAsync(solutionInfo, razorDocument.Id, span, colorBackground, correlationId, cancellationToken),
-            cancellationToken).ConfigureAwait(false);
-
-        if (tokens is not null)
+        using (_telemetryReporter.TrackLspRequest(Methods.TextDocumentSemanticTokensRangeName, RazorLSPConstants.CohostLanguageServerName, TelemetryThresholds.SemanticTokensRazorTelemetryThreshold, correlationId))
         {
-            return new SemanticTokens
-            {
-                Data = tokens
-            };
-        }
 
-        return null;
+            var tokens = await _remoteServiceInvoker
+                .TryInvokeAsync<IRemoteSemanticTokensService, int[]?>(
+                    razorDocument.Project.Solution,
+                    (service, solutionInfo, cancellationToken) =>
+                        service.GetSemanticTokensDataAsync(solutionInfo, razorDocument.Id, span, colorBackground, correlationId, cancellationToken),
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            if (tokens is not null)
+            {
+                return new SemanticTokens
+                {
+                    Data = tokens
+                };
+            }
+
+            return null;
+        }
     }
 
     internal TestAccessor GetTestAccessor() => new(this);

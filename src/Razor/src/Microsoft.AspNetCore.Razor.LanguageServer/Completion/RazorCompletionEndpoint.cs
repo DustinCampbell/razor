@@ -20,13 +20,13 @@ namespace Microsoft.AspNetCore.Razor.LanguageServer.Completion;
 internal class RazorCompletionEndpoint(
     CompletionListProvider completionListProvider,
     CompletionTriggerAndCommitCharacters completionTriggerAndCommitCharacters,
-    ITelemetryReporter? telemetryReporter,
+    ITelemetryReporter telemetryReporter,
     RazorLSPOptionsMonitor optionsMonitor)
     : IRazorRequestHandler<CompletionParams, VSInternalCompletionList?>, ICapabilitiesProvider
 {
     private readonly CompletionListProvider _completionListProvider = completionListProvider;
     private readonly CompletionTriggerAndCommitCharacters _triggerAndCommitCharacters = completionTriggerAndCommitCharacters;
-    private readonly ITelemetryReporter? _telemetryReporter = telemetryReporter;
+    private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
     private readonly RazorLSPOptionsMonitor _optionsMonitor = optionsMonitor;
 
     private VSInternalClientCapabilities? _clientCapabilities;
@@ -78,20 +78,21 @@ internal class RazorCompletionEndpoint(
         }
 
         var correlationId = Guid.NewGuid();
-        using var _ = _telemetryReporter?.TrackLspRequest(Methods.TextDocumentCompletionName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.CompletionRazorTelemetryThreshold, correlationId);
+        using (_telemetryReporter.TrackLspRequest(Methods.TextDocumentCompletionName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.CompletionRazorTelemetryThreshold, correlationId))
+        {
+            var razorCompletionOptions = new RazorCompletionOptions(
+                SnippetsSupported: true,
+                AutoInsertAttributeQuotes: _optionsMonitor.CurrentValue.AutoInsertAttributeQuotes,
+                CommitElementsWithSpace: _optionsMonitor.CurrentValue.CommitElementsWithSpace);
 
-        var razorCompletionOptions = new RazorCompletionOptions(
-            SnippetsSupported: true,
-            AutoInsertAttributeQuotes: _optionsMonitor.CurrentValue.AutoInsertAttributeQuotes,
-            CommitElementsWithSpace: _optionsMonitor.CurrentValue.CommitElementsWithSpace);
-        var completionList = await _completionListProvider.GetCompletionListAsync(
-            hostDocumentIndex,
-            completionContext,
-            documentContext,
-            _clientCapabilities!,
-            razorCompletionOptions,
-            correlationId,
-            cancellationToken).ConfigureAwait(false);
-        return completionList;
+            return await _completionListProvider.GetCompletionListAsync(
+                hostDocumentIndex,
+                completionContext,
+                documentContext,
+                _clientCapabilities!,
+                razorCompletionOptions,
+                correlationId,
+                cancellationToken).ConfigureAwait(false);
+        }
     }
 }

@@ -71,31 +71,35 @@ internal sealed class CohostCodeActionsEndpoint(
     private async Task<SumType<Command, CodeAction>[]?> HandleRequestAsync(TextDocument razorDocument, VSCodeActionParams request, CancellationToken cancellationToken)
     {
         var correlationId = Guid.NewGuid();
-        using var _ = _telemetryReporter.TrackLspRequest(Methods.TextDocumentCodeActionName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.CodeActionRazorTelemetryThreshold, correlationId);
-
-        CodeActionsService.AdjustRequestRangeIfNecessary(request);
-
-        var requestInfo = await _remoteServiceInvoker.TryInvokeAsync<IRemoteCodeActionsService, CodeActionRequestInfo>(
-            razorDocument.Project.Solution,
-            (service, solutionInfo, cancellationToken) => service.GetCodeActionRequestInfoAsync(solutionInfo, razorDocument.Id, request, cancellationToken),
-            cancellationToken).ConfigureAwait(false);
-
-        if (requestInfo is null or { LanguageKind: RazorLanguageKind.CSharp, CSharpRequest: null })
+        using (_telemetryReporter.TrackLspRequest(Methods.TextDocumentCodeActionName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.CodeActionRazorTelemetryThreshold, correlationId))
         {
-            return null;
+            CodeActionsService.AdjustRequestRangeIfNecessary(request);
+
+            var requestInfo = await _remoteServiceInvoker.TryInvokeAsync<IRemoteCodeActionsService, CodeActionRequestInfo>(
+                razorDocument.Project.Solution,
+                (service, solutionInfo, cancellationToken) => service.GetCodeActionRequestInfoAsync(solutionInfo, razorDocument.Id, request, cancellationToken),
+                cancellationToken).ConfigureAwait(false);
+
+            if (requestInfo is null or { LanguageKind: RazorLanguageKind.CSharp, CSharpRequest: null })
+            {
+                return null;
+            }
+
+            var delegatedCodeActions = requestInfo.LanguageKind switch
+            {
+                RazorLanguageKind.Html => await GetHtmlCodeActionsAsync(razorDocument, request, correlationId, cancellationToken).ConfigureAwait(false),
+                RazorLanguageKind.CSharp => await GetCSharpCodeActionsAsync(razorDocument, requestInfo.CSharpRequest.AssumeNotNull(), correlationId, cancellationToken).ConfigureAwait(false),
+                _ => []
+            };
+
+            return await _remoteServiceInvoker
+                .TryInvokeAsync<IRemoteCodeActionsService, SumType<Command, CodeAction>[]?>(
+                    razorDocument.Project.Solution,
+                    (service, solutionInfo, cancellationToken) =>
+                        service.GetCodeActionsAsync(solutionInfo, razorDocument.Id, request, delegatedCodeActions, cancellationToken),
+                    cancellationToken)
+                .ConfigureAwait(false);
         }
-
-        var delegatedCodeActions = requestInfo.LanguageKind switch
-        {
-            RazorLanguageKind.Html => await GetHtmlCodeActionsAsync(razorDocument, request, correlationId, cancellationToken).ConfigureAwait(false),
-            RazorLanguageKind.CSharp => await GetCSharpCodeActionsAsync(razorDocument, requestInfo.CSharpRequest.AssumeNotNull(), correlationId, cancellationToken).ConfigureAwait(false),
-            _ => []
-        };
-
-        return await _remoteServiceInvoker.TryInvokeAsync<IRemoteCodeActionsService, SumType<Command, CodeAction>[]?>(
-            razorDocument.Project.Solution,
-            (service, solutionInfo, cancellationToken) => service.GetCodeActionsAsync(solutionInfo, razorDocument.Id, request, delegatedCodeActions, cancellationToken),
-            cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<RazorVSInternalCodeAction[]> GetCSharpCodeActionsAsync(TextDocument razorDocument, VSCodeActionParams request, Guid correlationId, CancellationToken cancellationToken)
@@ -107,10 +111,14 @@ internal sealed class CohostCodeActionsEndpoint(
 
         var csharpRequest = JsonHelpers.ToRoslynLSP<Roslyn.LanguageServer.Protocol.CodeActionParams, VSCodeActionParams>(request).AssumeNotNull();
 
-        using var _ = _telemetryReporter.TrackLspRequest(Methods.TextDocumentCodeActionName, "Razor.ExternalAccess", TelemetryThresholds.CodeActionSubLSPTelemetryThreshold, correlationId);
-        var csharpCodeActions = await CodeActions.GetCodeActionsAsync(generatedDocument, csharpRequest, _clientCapabilitiesService.ClientCapabilities.SupportsVisualStudioExtensions, cancellationToken).ConfigureAwait(false);
+        using (_telemetryReporter.TrackLspRequest(Methods.TextDocumentCodeActionName, "Razor.ExternalAccess", TelemetryThresholds.CodeActionSubLSPTelemetryThreshold, correlationId))
+        {
+            var csharpCodeActions = await CodeActions
+                .GetCodeActionsAsync(generatedDocument, csharpRequest, _clientCapabilitiesService.ClientCapabilities.SupportsVisualStudioExtensions, cancellationToken)
+                .ConfigureAwait(false);
 
-        return JsonHelpers.ToVsLSP<RazorVSInternalCodeAction[], Roslyn.LanguageServer.Protocol.CodeAction[]>(csharpCodeActions).AssumeNotNull();
+            return JsonHelpers.ToVsLSP<RazorVSInternalCodeAction[], Roslyn.LanguageServer.Protocol.CodeAction[]>(csharpCodeActions).AssumeNotNull();
+        }
     }
 
     private async Task<RazorVSInternalCodeAction[]> GetHtmlCodeActionsAsync(TextDocument razorDocument, VSCodeActionParams request, Guid correlationId, CancellationToken cancellationToken)
@@ -128,15 +136,19 @@ internal sealed class CohostCodeActionsEndpoint(
         {
             request.TextDocument = new VSTextDocumentIdentifier { Uri = htmlDocument.Uri };
 
-            using var _ = _telemetryReporter.TrackLspRequest(Methods.TextDocumentCodeActionName, RazorLSPConstants.HtmlLanguageServerName, TelemetryThresholds.CodeActionSubLSPTelemetryThreshold, correlationId);
-            var result = await _requestInvoker.ReinvokeRequestOnServerAsync<VSCodeActionParams, RazorVSInternalCodeAction[]?>(
-                htmlDocument.Buffer,
-                Methods.TextDocumentCodeActionName,
-                RazorLSPConstants.HtmlLanguageServerName,
-                request,
-                cancellationToken).ConfigureAwait(false);
+            using (_telemetryReporter.TrackLspRequest(Methods.TextDocumentCodeActionName, RazorLSPConstants.HtmlLanguageServerName, TelemetryThresholds.CodeActionSubLSPTelemetryThreshold, correlationId))
+            {
+                var result = await _requestInvoker
+                    .ReinvokeRequestOnServerAsync<VSCodeActionParams, RazorVSInternalCodeAction[]?>(
+                        htmlDocument.Buffer,
+                        Methods.TextDocumentCodeActionName,
+                        RazorLSPConstants.HtmlLanguageServerName,
+                        request,
+                        cancellationToken)
+                    .ConfigureAwait(false);
 
-            return result?.Response ?? [];
+                return result?.Response ?? [];
+            }
         }
         finally
         {

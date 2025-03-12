@@ -58,32 +58,34 @@ internal sealed class CodeActionEndpoint(
         CodeActionsService.AdjustRequestRangeIfNecessary(request);
 
         var correlationId = Guid.NewGuid();
-        using var __ = _telemetryReporter.TrackLspRequest(LspEndpointName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.CodeActionRazorTelemetryThreshold, correlationId);
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var codeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
-        if (!codeDocument.Source.Text.TryGetAbsoluteIndex(request.Range.Start, out var absoluteIndex))
+        using (_telemetryReporter.TrackLspRequest(LspEndpointName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.CodeActionRazorTelemetryThreshold, correlationId))
         {
-            return null;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var codeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
+            if (!codeDocument.Source.Text.TryGetAbsoluteIndex(request.Range.Start, out var absoluteIndex))
+            {
+                return null;
+            }
+
+            var languageKind = codeDocument.GetLanguageKind(absoluteIndex, rightAssociative: false);
+            var documentSnapshot = documentContext.Snapshot;
+
+            var delegatedCodeActions = languageKind switch
+            {
+                RazorLanguageKind.Html => await GetHtmlCodeActionsAsync(documentSnapshot, request, correlationId, cancellationToken).ConfigureAwait(false),
+                RazorLanguageKind.CSharp => await GetCSharpCodeActionsAsync(documentSnapshot, request, correlationId, cancellationToken).ConfigureAwait(false),
+                _ => []
+            };
+
+            return await _codeActionsService.GetCodeActionsAsync(
+                request,
+                documentSnapshot,
+                delegatedCodeActions,
+                delegatedDocumentUri: null, // We don't use delegatedDocumentUri in the LSP server, as we can trivially recalculate it
+                _supportsCodeActionResolve,
+                cancellationToken).ConfigureAwait(false);
         }
-
-        var languageKind = codeDocument.GetLanguageKind(absoluteIndex, rightAssociative: false);
-        var documentSnapshot = documentContext.Snapshot;
-
-        var delegatedCodeActions = languageKind switch
-        {
-            RazorLanguageKind.Html => await GetHtmlCodeActionsAsync(documentSnapshot, request, correlationId, cancellationToken).ConfigureAwait(false),
-            RazorLanguageKind.CSharp => await GetCSharpCodeActionsAsync(documentSnapshot, request, correlationId, cancellationToken).ConfigureAwait(false),
-            _ => []
-        };
-
-        return await _codeActionsService.GetCodeActionsAsync(
-            request,
-            documentSnapshot,
-            delegatedCodeActions,
-            delegatedDocumentUri: null, // We don't use delegatedDocumentUri in the LSP server, as we can trivially recalculate it
-            _supportsCodeActionResolve,
-            cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<RazorVSInternalCodeAction[]> GetHtmlCodeActionsAsync(IDocumentSnapshot documentSnapshot, VSCodeActionParams request, Guid correlationId, CancellationToken cancellationToken)

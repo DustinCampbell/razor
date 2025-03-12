@@ -43,10 +43,10 @@ internal sealed class MapCodeEndpoint(
     IClientConnection clientConnection,
     ITelemetryReporter telemetryReporter) : IRazorDocumentlessRequestHandler<VSInternalMapCodeParams, WorkspaceEdit?>, ICapabilitiesProvider
 {
-    private readonly IDocumentMappingService _documentMappingService = documentMappingService ?? throw new ArgumentNullException(nameof(documentMappingService));
-    private readonly IDocumentContextFactory _documentContextFactory = documentContextFactory ?? throw new ArgumentNullException(nameof(documentContextFactory));
-    private readonly IClientConnection _clientConnection = clientConnection ?? throw new ArgumentNullException(nameof(clientConnection));
-    private readonly ITelemetryReporter _telemetryReporter = telemetryReporter ?? throw new ArgumentNullException(nameof(telemetryReporter));
+    private readonly IDocumentMappingService _documentMappingService = documentMappingService;
+    private readonly IDocumentContextFactory _documentContextFactory = documentContextFactory;
+    private readonly IClientConnection _clientConnection = clientConnection;
+    private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
 
     public bool MutatesSolutionState => false;
 
@@ -71,9 +71,10 @@ internal sealed class MapCodeEndpoint(
         }
 
         var mapCodeCorrelationId = mapperParams.MapCodeCorrelationId ?? Guid.NewGuid();
-        using var ts = _telemetryReporter.TrackLspRequest(VSInternalMethods.WorkspaceMapCodeName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.MapCodeRazorTelemetryThreshold, mapCodeCorrelationId);
-
-        return await HandleMappingsAsync(mapperParams.Mappings, mapCodeCorrelationId, cancellationToken).ConfigureAwait(false);
+        using (_telemetryReporter.TrackLspRequest(VSInternalMethods.WorkspaceMapCodeName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.MapCodeRazorTelemetryThreshold, mapCodeCorrelationId))
+        {
+            return await HandleMappingsAsync(mapperParams.Mappings, mapCodeCorrelationId, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     private async Task<WorkspaceEdit?> HandleMappingsAsync(VSInternalMapCodeMapping[] mappings, Guid mapCodeCorrelationId, CancellationToken cancellationToken)

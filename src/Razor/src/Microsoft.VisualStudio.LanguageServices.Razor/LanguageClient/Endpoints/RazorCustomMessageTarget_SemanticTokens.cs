@@ -85,16 +85,18 @@ internal partial class RazorCustomMessageTarget
         var languageServerName = RazorLSPConstants.RazorCSharpLanguageServerName;
 
         SemanticTokens? response;
-        using (var disposable = _telemetryReporter.TrackLspRequest(lspMethodName, languageServerName, TelemetryThresholds.SemanticTokensSubLSPTelemetryThreshold, semanticTokensParams.CorrelationId))
+        using (_telemetryReporter.TrackLspRequest(lspMethodName, languageServerName, TelemetryThresholds.SemanticTokensSubLSPTelemetryThreshold, semanticTokensParams.CorrelationId))
         {
             try
             {
-                var result = await _requestInvoker.ReinvokeRequestOnServerAsync<SemanticTokensParams, SemanticTokens?>(
-                    textBuffer,
-                    lspMethodName,
-                    languageServerName,
-                    requestParams,
-                    cancellationToken).ConfigureAwait(false);
+                var result = await _requestInvoker
+                    .ReinvokeRequestOnServerAsync<SemanticTokensParams, SemanticTokens?>(
+                        textBuffer,
+                        lspMethodName,
+                        languageServerName,
+                        requestParams,
+                        cancellationToken)
+                    .ConfigureAwait(false);
 
                 response = result?.Response;
             }

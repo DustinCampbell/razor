@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.LanguageServer.EndpointContracts;
 using Microsoft.AspNetCore.Razor.LanguageServer.Hosting.Diagnostics;
+using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.CodeAnalysis.Razor.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
@@ -87,7 +88,7 @@ public sealed class DiagnosticsEndToEndTest(ITestOutputHelper testOutput) : Sing
 
         var translateDiagnosticsService = new RazorTranslateDiagnosticsService(DocumentMappingService, LoggerFactory);
         var optionsMonitor = TestRazorLSPOptionsMonitor.Create();
-        var diagnosticsEndPoint = new DocumentDiagnosticsEndpoint(translateDiagnosticsService, languageServer, telemetryReporter: null);
+        var diagnosticsEndPoint = new DocumentDiagnosticsEndpoint(translateDiagnosticsService, languageServer, NoOpTelemetryReporter.Instance);
 
         var diagnosticsRequest = new DocumentDiagnosticParams
         {

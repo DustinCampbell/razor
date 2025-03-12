@@ -19,13 +19,13 @@ internal sealed class SemanticTokensRangeEndpoint(
     IRazorSemanticTokensInfoService semanticTokensInfoService,
     ISemanticTokensLegendService semanticTokensLegendService,
     RazorLSPOptionsMonitor razorLSPOptionsMonitor,
-    ITelemetryReporter? telemetryReporter)
+    ITelemetryReporter telemetryReporter)
     : IRazorRequestHandler<SemanticTokensRangeParams, SemanticTokens?>, ICapabilitiesProvider
 {
     private readonly IRazorSemanticTokensInfoService _semanticTokensInfoService = semanticTokensInfoService;
     private readonly ISemanticTokensLegendService _semanticTokensLegendService = semanticTokensLegendService;
     private readonly RazorLSPOptionsMonitor _razorLSPOptionsMonitor = razorLSPOptionsMonitor;
-    private readonly ITelemetryReporter? _telemetryReporter = telemetryReporter;
+    private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
 
     public bool MutatesSolutionState { get; } = false;
 
@@ -50,18 +50,21 @@ internal sealed class SemanticTokensRangeEndpoint(
         var colorBackground = _razorLSPOptionsMonitor.CurrentValue.ColorBackground;
 
         var correlationId = Guid.NewGuid();
-        using var _ = _telemetryReporter?.TrackLspRequest(Methods.TextDocumentSemanticTokensRangeName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.SemanticTokensRazorTelemetryThreshold, correlationId);
-
-        var data = await _semanticTokensInfoService.GetSemanticTokensAsync(documentContext, request.Range.ToLinePositionSpan(), colorBackground, correlationId, cancellationToken).ConfigureAwait(false);
-
-        if (data is null)
+        using (_telemetryReporter.TrackLspRequest(Methods.TextDocumentSemanticTokensRangeName, LanguageServerConstants.RazorLanguageServerName, TelemetryThresholds.SemanticTokensRazorTelemetryThreshold, correlationId))
         {
-            return null;
+            var data = await _semanticTokensInfoService
+                .GetSemanticTokensAsync(documentContext, request.Range.ToLinePositionSpan(), colorBackground, correlationId, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (data is null)
+            {
+                return null;
+            }
+
+            return new SemanticTokens
+            {
+                Data = data,
+            };
         }
-
-        return new SemanticTokens
-        {
-            Data = data,
-        };
     }
 }

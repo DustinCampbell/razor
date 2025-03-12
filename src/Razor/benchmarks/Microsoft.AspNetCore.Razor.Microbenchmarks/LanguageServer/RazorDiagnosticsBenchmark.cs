@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Razor.LanguageServer.Diagnostics;
 using Microsoft.AspNetCore.Razor.LanguageServer.EndpointContracts;
 using Microsoft.AspNetCore.Razor.LanguageServer.Hosting;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
+using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.CodeAnalysis.Razor.Diagnostics;
 using Microsoft.CodeAnalysis.Razor.DocumentMapping;
 using Microsoft.CodeAnalysis.Razor.Logging;
@@ -94,7 +95,8 @@ public class RazorDiagnosticsBenchmark : RazorLanguageServerBenchmarkBase
 
         var optionsMonitor = Mock.Of<RazorLSPOptionsMonitor>(MockBehavior.Strict);
         var translateDiagnosticsService = new RazorTranslateDiagnosticsService(documentMappingService, loggerFactory);
-        DocumentPullDiagnosticsEndpoint = new VSDocumentDiagnosticsEndpoint(languageServerFeatureOptions, translateDiagnosticsService, optionsMonitor, languageServer, telemetryReporter: null);
+        DocumentPullDiagnosticsEndpoint = new VSDocumentDiagnosticsEndpoint(
+            languageServerFeatureOptions, translateDiagnosticsService, optionsMonitor, languageServer, NoOpTelemetryReporter.Instance);
     }
 
     private object BuildDiagnostics()

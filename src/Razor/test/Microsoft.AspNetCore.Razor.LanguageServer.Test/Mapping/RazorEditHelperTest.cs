@@ -779,9 +779,9 @@ public class RazorEditHelperTest : LanguageServerTestBase
         {
         }
 
-        public void ReportFault(Exception exception, string? message, params object?[] @params)
+        public void ReportFault(Exception exception, string? message, params ReadOnlySpan<object?> args)
         {
-            Assert.Fail($"Did not expect to report a fault. :: {message} :: {string.Join(",", @params ?? [])}");
+            Assert.Fail($"Did not expect to report a fault. :: {message} :: {string.Join(",", args.ToArray())}");
         }
 
         public TelemetryScope TrackLspRequest(string lspMethodName, string lspServerName, TimeSpan minTimeToReport, Guid correlationId)

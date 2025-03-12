@@ -20,7 +20,7 @@ internal sealed class NoOpTelemetryReporter : ITelemetryReporter
     {
     }
 
-    public void ReportFault(Exception exception, string? message, params object?[] @params)
+    public void ReportFault(Exception exception, string? message, params ReadOnlySpan<object?> args)
     {
     }
 

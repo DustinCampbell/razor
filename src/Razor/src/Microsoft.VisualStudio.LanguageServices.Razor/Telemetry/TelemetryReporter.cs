@@ -60,7 +60,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
         Report(telemetryEvent);
     }
 
-    public void ReportFault(Exception exception, string? message, params object?[] args)
+    public void ReportFault(Exception exception, string? message, params ReadOnlySpan<object?> @params)
     {
         try
         {
@@ -69,7 +69,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                 // We don't want to report operation canceled, but don't want to miss out if there is something useful inside it
                 if (oce.InnerException is not null)
                 {
-                    ReportFault(oce.InnerException, message, args);
+                    ReportFault(oce.InnerException, message, @params);
                 }
 
                 return;
@@ -80,18 +80,18 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                 // We (potentially) have multiple exceptions; let's just report each of them
                 foreach (var innerException in aggregateException.Flatten().InnerExceptions)
                 {
-                    ReportFault(innerException, message, args);
+                    ReportFault(innerException, message, @params);
                 }
 
                 return;
             }
 
-            if (HandleException(exception, message, args))
+            if (HandleException(exception, message, @params))
             {
                 return;
             }
 
-            var currentProcess = Process.GetCurrentProcess();
+            var paramsArray = @params.ToArray();
 
             var faultEvent = new FaultEvent(
                 eventName: TelemetryUtils.GetEventName("fault"),
@@ -105,14 +105,12 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
                         faultUtility.AddErrorInformation(message);
                     }
 
-                    foreach (var data in args)
+                    foreach (var data in paramsArray)
                     {
-                        if (data is null)
+                        if (data is not null)
                         {
-                            continue;
+                            faultUtility.AddErrorInformation(data.ToString());
                         }
-
-                        faultUtility.AddErrorInformation(data.ToString());
                     }
 
                     // Returning "0" signals that, if sampled, we should send data to Watson.

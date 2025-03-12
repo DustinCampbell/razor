@@ -13,7 +13,7 @@ internal interface ITelemetryReporter
 
     void ReportEvent(string name, Severity severity, params ReadOnlySpan<Property> properties);
 
-    void ReportFault(Exception exception, string? message, params object?[] @params);
+    void ReportFault(Exception exception, string? message, params ReadOnlySpan<object?> @params);
 
     /// <summary>
     /// Reports timing data for an lsp request

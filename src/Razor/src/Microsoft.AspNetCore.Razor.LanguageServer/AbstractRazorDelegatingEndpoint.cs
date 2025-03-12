@@ -162,7 +162,9 @@ internal abstract class AbstractRazorDelegatingEndpoint<TRequest, TResponse>(
         catch (RemoteInvocationException e)
         {
             Logger.LogError(e, $"Error calling delegate server for {CustomMessageTarget}");
-            requestContext.GetRequiredService<ITelemetryReporter>().ReportFault(e, "Error calling delegate server for {method}", CustomMessageTarget);
+            requestContext
+                .GetRequiredService<ITelemetryReporter>()
+                .ReportFault(e, "Error calling delegate server for {method}", CustomMessageTarget);
             throw;
         }
 

@@ -188,4 +188,6 @@
 
   <Import Project="..\..\..\Shared\Microsoft.AspNetCore.Razor.Serialization.Json\Microsoft.AspNetCore.Razor.Serialization.Json.projitems" Label="Shared" />
 
+  <Import Project="..\Microsoft.VisualStudio.Razor.Telemetry\Microsoft.VisualStudio.Razor.Telemetry.projitems" Label="Shared" />
+
 </Project>

@@ -12,13 +12,6 @@
     <NoWarn>$(NoWarn);NU5100</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\Microsoft.VisualStudio.LanguageServices.Razor\Telemetry\AggregatingTelemetryLog.cs" Link="Telemetry\AggregatingTelemetryLog.cs" />
-    <Compile Include="..\Microsoft.VisualStudio.LanguageServices.Razor\Telemetry\AggregatingTelemetryLogManager.cs" Link="Telemetry\AggregatingTelemetryLogManager.cs" />
-    <Compile Include="..\Microsoft.VisualStudio.LanguageServices.Razor\Telemetry\TelemetryReporter.cs" Link="Telemetry\TelemetryReporter.cs" />
-    <Compile Include="..\Microsoft.VisualStudio.LanguageServices.Razor\Telemetry\TelemetryUtils.cs" Link="Telemetry\TelemetryUtils.cs" />
-  </ItemGroup>
-
   <!--
     Additional runtime dependencies that we must include in the NuGet package as they are not a part of the main language server package.
     Do not remove GeneratePathProperty="True" as it is required below to add the package to the package we generate.
@@ -41,4 +34,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.AspNetCore.Razor.ProjectEngineHost\Microsoft.AspNetCore.Razor.ProjectEngineHost.csproj" PrivateAssets="all" />
   </ItemGroup>
+
+  <Import Project="..\Microsoft.VisualStudio.Razor.Telemetry\Microsoft.VisualStudio.Razor.Telemetry.projitems" Label="Shared" />
 </Project>

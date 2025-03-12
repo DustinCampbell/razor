@@ -8,14 +8,14 @@ namespace Microsoft.VisualStudio.Razor.Telemetry;
 /// <summary>
 /// Manages creation and obtaining aggregated telemetry logs.
 /// </summary>
-internal sealed class AggregatingTelemetryLogManager(TelemetryReporter session)
+internal sealed class AggregatingTelemetryLogManager(TelemetryReporter reporter)
 {
-    private readonly TelemetryReporter _telemetryReporter = session;
+    private readonly TelemetryReporter _reporter = reporter;
     private ImmutableDictionary<string, AggregatingTelemetryLog> _aggregatingLogs = ImmutableDictionary<string, AggregatingTelemetryLog>.Empty;
 
     public AggregatingTelemetryLog? GetLog(string name, double[]? bucketBoundaries = null)
     {
-        if (!_telemetryReporter.IsEnabled)
+        if (!_reporter.IsEnabled)
         {
             return null;
         }
@@ -23,13 +23,13 @@ internal sealed class AggregatingTelemetryLogManager(TelemetryReporter session)
         return ImmutableInterlocked.GetOrAdd(
             ref _aggregatingLogs,
             name,
-            static (functionId, arg) => new AggregatingTelemetryLog(arg._telemetryReporter, functionId, arg.bucketBoundaries),
-            factoryArgument: (_telemetryReporter, bucketBoundaries));
+            static (functionId, arg) => new AggregatingTelemetryLog(arg._reporter, functionId, arg.bucketBoundaries),
+            factoryArgument: (_reporter, bucketBoundaries));
     }
 
     public void Flush()
     {
-        if (!_telemetryReporter.IsEnabled)
+        if (!_reporter.IsEnabled)
             return;
 
         foreach (var log in _aggregatingLogs.Values)

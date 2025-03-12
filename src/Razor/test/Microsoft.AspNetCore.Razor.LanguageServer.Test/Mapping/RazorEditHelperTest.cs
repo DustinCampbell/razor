@@ -773,7 +773,7 @@ public class RazorEditHelperTest : LanguageServerTestBase
         }
 
         public TelemetryScope CreateScope(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties)
-            => TelemetryScope.Null;
+            => default;
 
         public void ReportEvent(string name, Severity severity, params ReadOnlySpan<Property> properties)
         {
@@ -785,7 +785,7 @@ public class RazorEditHelperTest : LanguageServerTestBase
         }
 
         public TelemetryScope TrackLspRequest(string lspMethodName, string lspServerName, TimeSpan minTimeToReport, Guid correlationId)
-            => TelemetryScope.Null;
+            => default;
 
         public void ReportRequestTiming(string name, string? language, TimeSpan queuedDuration, TimeSpan requestDuration, TelemetryResult result)
         {

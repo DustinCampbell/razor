@@ -2,88 +2,76 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
+using System.Buffers;
 using System.Diagnostics;
+using System.Threading;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Telemetry;
 
-internal sealed class TelemetryScope : IDisposable
+[NonCopyable]
+internal struct TelemetryScope : IDisposable
 {
-    public static readonly TelemetryScope Null = new();
-
-    private readonly ITelemetryReporter? _reporter;
+    private ITelemetryReporter? _reporter;
     private readonly string _name;
     private readonly Severity _severity;
     private readonly Property[] _properties;
+    private readonly int _propertyCount;
     private readonly Stopwatch _stopwatch;
     private readonly TimeSpan _minTimeToReport;
-    private bool _disposed;
 
-    private TelemetryScope()
-    {
-        // This constructor is only called to initialize the Null instance
-        // above. Rather than make _name, _properties, and _stopwatch
-        // nullable, we use a ! to initialize them to null for this case only.
-        _reporter = null;
-        _name = null!;
-        _properties = null!;
-        _stopwatch = null!;
-    }
+    private readonly Span<Property> GetPropertiesSpan()
+        => _properties.AsSpan()[.._propertyCount];
 
-    private TelemetryScope(
+    public TelemetryScope(
         ITelemetryReporter reporter,
         string name,
-        TimeSpan minTimeToReport,
         Severity severity,
-        Property[] properties)
+        TimeSpan minTimeToReport,
+        scoped ReadOnlySpan<Property> properties)
     {
+        Debug.Assert(reporter is not null);
+
         _reporter = reporter;
         _name = name;
         _severity = severity;
 
-        // Note: The builder that is passed in always has its capacity set to at least
-        // 1 larger than the number of properties to allow the final "ellapsedms"
-        // property to be added in Dispose below.
-        _properties = properties;
+        // Note: We create an array that is 1 larger than the number of properties
+        // to allow the final "ellapsedms" property to be added in Dispose below.
+        _propertyCount = properties.Length + 1;
+        _properties = ArrayPool<Property>.Shared.Rent(_propertyCount);
+        properties.CopyTo(_properties);
+
+        _minTimeToReport = minTimeToReport;
 
         _stopwatch = StopwatchPool.Default.Get();
-        _minTimeToReport = minTimeToReport;
         _stopwatch.Restart();
     }
 
     public void Dispose()
     {
-        if (_reporter is null || _disposed)
+        var reporter = Interlocked.Exchange(ref _reporter, null);
+        if (reporter is null)
         {
             return;
         }
-
-        _disposed = true;
 
         _stopwatch.Stop();
 
         var elapsed = _stopwatch.Elapsed;
         if (elapsed >= _minTimeToReport)
         {
-            // We know that we were created with an array of at least length one.
-            _properties[^1] = new("eventscope.ellapsedms", _stopwatch.ElapsedMilliseconds);
+            // We always have at least one slot for the elapsed milliseconds.
+            var properties = GetPropertiesSpan();
+            properties[^1] = new("eventscope.ellapsedms", elapsed.Milliseconds);
 
-            _reporter.ReportEvent(_name, _severity, _properties);
+            reporter.ReportEvent(_name, _severity, properties);
         }
 
+        // Clear array since it might contain PII.
+        ArrayPool<Property>.Shared.Return(_properties, clearArray: true);
+
         StopwatchPool.Default.Return(_stopwatch);
-    }
-
-    public static TelemetryScope Create(
-        ITelemetryReporter reporter,
-        string name,
-        Severity severity,
-        TimeSpan minTimeToReport,
-        ReadOnlySpan<Property> properties)
-    {
-        var array = new Property[properties.Length + 1];
-        properties.CopyTo(array);
-
-        return new(reporter, name, minTimeToReport, severity, array);
     }
 }

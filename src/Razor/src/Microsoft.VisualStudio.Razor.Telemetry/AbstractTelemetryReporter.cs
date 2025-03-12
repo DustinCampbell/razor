@@ -2,24 +2,20 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.VisualStudio.Telemetry;
-using Microsoft.VisualStudio.Telemetry.Metrics;
-using Microsoft.VisualStudio.Telemetry.Metrics.Events;
 using TelemetryResult = Microsoft.AspNetCore.Razor.Telemetry.TelemetryResult;
 
 namespace Microsoft.VisualStudio.Razor.Telemetry;
 
-internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposable
+internal abstract partial class AbstractTelemetryReporter : ITelemetryReporter, IDisposable
 {
     private const string CodeAnalysisNamespace = $"{nameof(Microsoft)}.{nameof(CodeAnalysis)}.";
     private const string AspNetCoreNamespace = $"{nameof(Microsoft)}.{nameof(AspNetCore)}.";
@@ -33,9 +29,9 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
         typeof(ThrowHelper).FullName.AssumeNotNull()
     }.ToFrozenSet();
 
-    private TelemetrySessionManager? _manager;
+    private SessionManager? _manager;
 
-    protected TelemetryReporter(TelemetrySession? telemetrySession = null)
+    protected AbstractTelemetryReporter(TelemetrySession? telemetrySession = null)
     {
         if (telemetrySession is not null)
         {
@@ -133,7 +129,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
         }
     }
 
-    public virtual void ReportMetric(TelemetryInstrumentEvent metricEvent)
+    protected virtual void ReportMetric(TelemetryInstrumentEvent metricEvent)
     {
         try
         {
@@ -337,105 +333,4 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
     private static bool SkipIfDeclaringTypeIsIgnored(MethodBase method)
         => TryGetDeclaringTypeName(method, out var declaringTypeName) &&
            s_faultIgnoredTypeNames.Contains(declaringTypeName);
-
-    private sealed class TelemetrySessionManager(TelemetryReporter reporter, TelemetrySession session) : IDisposable
-    {
-        /// <summary>
-        /// Store request counters in a concurrent dictionary as non-mutating LSP requests can
-        /// run alongside other non-mutating requests.
-        /// </summary>
-        private readonly ConcurrentDictionary<(string Method, string? Language), Counter> _requestCounters = new();
-        private readonly TelemetryReporter _reporter = reporter;
-        private readonly AggregatingTelemetryLogManager _aggregatingManager = new(reporter);
-
-        public void Dispose()
-        {
-            Flush();
-            Session.Dispose();
-        }
-
-        public TelemetrySession Session { get; } = session;
-
-        private void Flush()
-        {
-            _aggregatingManager.Flush();
-            LogRequestCounters();
-        }
-
-        public void LogRequestTelemetry(string name, string? language, TimeSpan queuedDuration, TimeSpan requestDuration, TelemetryResult result)
-        {
-            LogAggregated("LSP_TimeInQueue",
-                "TimeInQueue",  // All time in queue events use the same histogram, no need for separate keys
-                (int)queuedDuration.TotalMilliseconds,
-                name);
-
-            LogAggregated("LSP_RequestDuration",
-                name, // RequestDuration requests are histogrammed by their unique name
-                (int)requestDuration.TotalMilliseconds,
-                name);
-
-            _requestCounters.GetOrAdd((name, language), _ => new Counter()).IncrementCount(result);
-        }
-
-        private void LogRequestCounters()
-        {
-            foreach (var (key, value) in _requestCounters)
-            {
-                _reporter.ReportEvent("LSP_RequestCounter",
-                    Severity.Low,
-                    new("method", key.Method),
-                    new("successful", value.SucceededCount),
-                    new("failed", value.FailedCount),
-                    new("cancelled", value.CancelledCount));
-            }
-
-            _requestCounters.Clear();
-        }
-
-        private void LogAggregated(string managerKey, string histogramKey, int value, string method)
-        {
-            var aggregatingLog = _aggregatingManager.GetLog(managerKey);
-            aggregatingLog?.Log(histogramKey, value, method);
-        }
-
-        private sealed class Counter
-        {
-            private int _succeededCount;
-            private int _failedCount;
-            private int _cancelledCount;
-
-            public int SucceededCount => _succeededCount;
-            public int FailedCount => _failedCount;
-            public int CancelledCount => _cancelledCount;
-
-            public void IncrementCount(TelemetryResult result)
-            {
-                switch (result)
-                {
-                    case TelemetryResult.Succeeded:
-                        Interlocked.Increment(ref _succeededCount);
-                        break;
-                    case TelemetryResult.Failed:
-                        Interlocked.Increment(ref _failedCount);
-                        break;
-                    case TelemetryResult.Cancelled:
-                        Interlocked.Increment(ref _cancelledCount);
-                        break;
-                }
-            }
-        }
-    }
-
-    public class TelemetryInstrumentEvent(TelemetryEvent telemetryEvent, IInstrument instrument)
-        : TelemetryMetricEvent(telemetryEvent, instrument)
-    {
-        public TelemetryEvent Event { get; } = telemetryEvent;
-        public IInstrument Instrument { get; } = instrument;
-    }
-
-    public class TelemetryHistogramEvent<T>(TelemetryEvent telemetryEvent, IHistogram<T> histogram)
-        : TelemetryInstrumentEvent(telemetryEvent, histogram)
-        where T : struct
-    {
-    }
 }

@@ -9,9 +9,13 @@
     <Import_RootNamespace>Microsoft.AspNetCore.Razor.Telemetry</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AggregatingTelemetryLog.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AggregatingTelemetryLogManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TelemetryReporter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractTelemetryReporter.AggregatingTelemetryLog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractTelemetryReporter.AggregatingTelemetryLogManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TelemetryHistogramEvent`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TelemetryInstrumentEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractTelemetryReporter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractTelemetryReporter.SessionManager.Counter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractTelemetryReporter.SessionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TelemetryUtils.cs" />
   </ItemGroup>
 </Project>

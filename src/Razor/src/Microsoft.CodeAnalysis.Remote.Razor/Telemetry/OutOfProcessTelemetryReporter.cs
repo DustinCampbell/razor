@@ -9,6 +9,6 @@ using Microsoft.VisualStudio.Telemetry;
 namespace Microsoft.CodeAnalysis.Remote.Razor.Telemetry;
 
 [Export(typeof(ITelemetryReporter)), Shared]
-internal class OutOfProcessTelemetryReporter() : TelemetryReporter(TelemetryService.DefaultSession)
+internal class OutOfProcessTelemetryReporter() : AbstractTelemetryReporter(TelemetryService.DefaultSession)
 {
 }

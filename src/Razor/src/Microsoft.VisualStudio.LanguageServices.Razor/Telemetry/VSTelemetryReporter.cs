@@ -12,7 +12,7 @@ namespace Microsoft.VisualStudio.Razor.Telemetry;
 
 [Export(typeof(ITelemetryReporter))]
 [method: ImportingConstructor]
-internal class VSTelemetryReporter(ILoggerFactory loggerFactory) : TelemetryReporter(TelemetryService.DefaultSession)
+internal class VSTelemetryReporter(ILoggerFactory loggerFactory) : AbstractTelemetryReporter(TelemetryService.DefaultSession)
 {
     private readonly ILogger _logger = loggerFactory.GetOrCreateLogger<VSTelemetryReporter>();
 

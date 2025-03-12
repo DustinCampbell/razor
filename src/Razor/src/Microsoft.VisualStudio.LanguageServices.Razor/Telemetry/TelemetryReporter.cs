@@ -187,7 +187,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
     {
     }
 
-    public TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties)
+    public TelemetryScope CreateScope(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties)
         => TelemetryScope.Create(this, name, severity, minTimeToReport, properties);
 
     public TelemetryScope TrackLspRequest(string lspMethodName, string languageServerName, TimeSpan minTimeToReport, Guid correlationId)
@@ -197,7 +197,7 @@ internal abstract partial class TelemetryReporter : ITelemetryReporter, IDisposa
             return TelemetryScope.Null;
         }
 
-        return BeginBlock("TrackLspRequest", Severity.Normal,
+        return CreateScope("TrackLspRequest", Severity.Normal,
             minTimeToReport,
             new("eventscope.method", lspMethodName),
             new("eventscope.languageservername", languageServerName),

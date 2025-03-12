@@ -117,7 +117,7 @@ public class TelemetryReporterTests(ITestOutputHelper testOutput) : ToolingTestB
     public void Block_NoArguments()
     {
         using var reporter = new TestTelemetryReporter(LoggerFactory);
-        using (var scope = reporter.BeginBlock("EventName", Severity.Normal))
+        using (var scope = reporter.CreateScope("EventName", Severity.Normal))
         {
         }
 
@@ -133,7 +133,7 @@ public class TelemetryReporterTests(ITestOutputHelper testOutput) : ToolingTestB
     public void Block_OneArgument()
     {
         using var reporter = new TestTelemetryReporter(LoggerFactory);
-        using (reporter.BeginBlock("EventName", Severity.Normal, new Property("P1", false)))
+        using (reporter.CreateScope("EventName", Severity.Normal, new Property("P1", false)))
         {
         }
 
@@ -150,7 +150,7 @@ public class TelemetryReporterTests(ITestOutputHelper testOutput) : ToolingTestB
     public void Block_TwoArguments()
     {
         using var reporter = new TestTelemetryReporter(LoggerFactory);
-        using (reporter.BeginBlock("EventName", Severity.Normal, TimeSpan.Zero, new("P1", false), new("P2", "test")))
+        using (reporter.CreateScope("EventName", Severity.Normal, TimeSpan.Zero, new("P1", false), new("P2", "test")))
         {
         }
 
@@ -169,7 +169,7 @@ public class TelemetryReporterTests(ITestOutputHelper testOutput) : ToolingTestB
     {
         using var reporter = new TestTelemetryReporter(LoggerFactory);
         var p3Value = Guid.NewGuid();
-        using (reporter.BeginBlock("EventName",
+        using (reporter.CreateScope("EventName",
             Severity.Normal,
             TimeSpan.Zero,
             new("P1", false),
@@ -197,7 +197,7 @@ public class TelemetryReporterTests(ITestOutputHelper testOutput) : ToolingTestB
     {
         using var reporter = new TestTelemetryReporter(LoggerFactory);
         var p3Value = Guid.NewGuid();
-        using (reporter.BeginBlock("EventName",
+        using (reporter.CreateScope("EventName",
             Severity.Normal,
             TimeSpan.Zero,
             new("P1", false),

@@ -13,7 +13,7 @@ internal sealed class NoOpTelemetryReporter : ITelemetryReporter
     {
     }
 
-    public TelemetryScope BeginBlock(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties)
+    public TelemetryScope CreateScope(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties)
         => TelemetryScope.Null;
 
     public void ReportEvent(string name, Severity severity, params ReadOnlySpan<Property> properties)

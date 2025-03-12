@@ -13,9 +13,6 @@ internal sealed class NoOpTelemetryReporter : ITelemetryReporter
     {
     }
 
-    public TelemetryScope CreateScope(string name, Severity severity, TimeSpan minTimeToReport, params ReadOnlySpan<Property> properties)
-        => default;
-
     public void ReportEvent(string name, Severity severity, params ReadOnlySpan<Property> properties)
     {
     }
@@ -23,9 +20,6 @@ internal sealed class NoOpTelemetryReporter : ITelemetryReporter
     public void ReportFault(Exception exception, string? message, params ReadOnlySpan<object?> args)
     {
     }
-
-    public TelemetryScope TrackLspRequest(string lspMethodName, string lspServerName, TimeSpan minTimeToReport, Guid correlationId)
-        => default;
 
     public void ReportRequestTiming(string name, string? language, TimeSpan queuedDuration, TimeSpan requestDuration, TelemetryResult result)
     {

@@ -13,18 +13,13 @@ internal sealed class CLaSPTelemetryService(ITelemetryReporter telemetryReporter
     public override AbstractRequestScope CreateRequestScope(string lspMethodName)
         => new RequestTelemetryScope(lspMethodName, telemetryReporter);
 
-    private sealed class RequestTelemetryScope : AbstractRequestScope
+    private sealed class RequestTelemetryScope(string lspMethodName, ITelemetryReporter telemetryReporter)
+        : AbstractRequestScope(lspMethodName)
     {
-        private readonly Stopwatch _stopWatch;
-        private readonly ITelemetryReporter _telemetryReporter;
+        private readonly Stopwatch _stopWatch = Stopwatch.StartNew();
+        private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
         private TelemetryResult _result = TelemetryResult.Succeeded;
         private TimeSpan _queuedDuration;
-
-        public RequestTelemetryScope(string lspMethodName, ITelemetryReporter telemetryReporter) : base(lspMethodName)
-        {
-            _stopWatch = Stopwatch.StartNew();
-            _telemetryReporter = telemetryReporter;
-        }
 
         public override void Dispose()
         {
@@ -37,7 +32,7 @@ internal sealed class CLaSPTelemetryService(ITelemetryReporter telemetryReporter
             _result = TelemetryResult.Cancelled;
         }
 
-        public override void RecordException(Exception _)
+        public override void RecordException(Exception exception)
         {
             _result = TelemetryResult.Failed;
         }

@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
@@ -32,7 +34,7 @@ internal partial class OpenDocumentGenerator : IRazorStartupService, IDisposable
     private readonly LanguageServerFeatureOptions _options;
     private readonly ILogger _logger;
 
-    private readonly AsyncBatchingWorkQueue<DocumentSnapshot> _workQueue;
+    private readonly AsyncBatchingWorkQueue<DocumentKey> _workQueue;
     private readonly CancellationTokenSource _disposeTokenSource;
 
     public OpenDocumentGenerator(
@@ -46,7 +48,7 @@ internal partial class OpenDocumentGenerator : IRazorStartupService, IDisposable
         _options = options;
 
         _disposeTokenSource = new();
-        _workQueue = new AsyncBatchingWorkQueue<DocumentSnapshot>(
+        _workQueue = new AsyncBatchingWorkQueue<DocumentKey>(
             s_delay,
             ProcessBatchAsync,
             _disposeTokenSource.Token);
@@ -66,14 +68,22 @@ internal partial class OpenDocumentGenerator : IRazorStartupService, IDisposable
         _disposeTokenSource.Dispose();
     }
 
-    private async ValueTask ProcessBatchAsync(ImmutableArray<DocumentSnapshot> items, CancellationToken token)
+    private async ValueTask ProcessBatchAsync(ImmutableArray<DocumentKey> items, CancellationToken token)
     {
-        foreach (var document in items.GetMostRecentUniqueItems(Comparer.Instance))
+        foreach (var documentKey in items.GetMostRecentUniqueItems())
         {
             if (token.IsCancellationRequested)
             {
                 return;
             }
+
+            if (!ShouldProcessDocument(documentKey.FilePath) ||
+                !_projectManager.TryGetDocument(documentKey, out var document))
+            {
+                continue;
+            }
+
+            _logger.LogDebug($"Generating code document for {documentKey} at version {document.Version}");
 
             var codeDocument = await document.GetGeneratedOutputAsync(token).ConfigureAwait(false);
 
@@ -88,6 +98,9 @@ internal partial class OpenDocumentGenerator : IRazorStartupService, IDisposable
             }
         }
     }
+
+    private bool ShouldProcessDocument(string filePath)
+        => _options.UpdateBuffersForClosedDocuments || _projectManager.IsDocumentOpen(filePath);
 
     private void ProjectManager_Changed(object? sender, ProjectChangeEventArgs args)
     {
@@ -169,15 +182,16 @@ internal partial class OpenDocumentGenerator : IRazorStartupService, IDisposable
 
         void EnqueueIfNecessary(DocumentSnapshot document)
         {
-            if (!_projectManager.IsDocumentOpen(document.FilePath) &&
-                !_options.UpdateBuffersForClosedDocuments)
+            if (!ShouldProcessDocument(document.FilePath))
             {
                 return;
             }
 
-            _logger.LogDebug($"Enqueuing generation of {document.FilePath} in {document.Project.Key.Id} at version {document.Version}");
+            var documentKey = new DocumentKey(document.Project.Key, document.FilePath);
 
-            _workQueue.AddWork(document);
+            _logger.LogDebug($"Enqueuing generation of {documentKey} at version {document.Version}");
+
+            _workQueue.AddWork(documentKey);
         }
     }
 }

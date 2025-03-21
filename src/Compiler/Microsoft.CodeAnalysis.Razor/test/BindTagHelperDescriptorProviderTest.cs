@@ -583,7 +583,7 @@ namespace Test
                 parameter.Documentation);
 
             Assert.Equal("format", parameter.Name);
-            Assert.Equal("Format_myprop", parameter.GetPropertyName());
+            Assert.Equal("Format_myprop", parameter.PropertyName);
             Assert.Equal(":format", parameter.DisplayName);
 
             // Defined from the property type
@@ -603,7 +603,7 @@ namespace Test
                 parameter.Documentation);
 
             Assert.Equal("culture", parameter.Name);
-            Assert.Equal("Culture", parameter.GetPropertyName());
+            Assert.Equal("Culture", parameter.PropertyName);
             Assert.Equal(":culture", parameter.DisplayName);
 
             // Defined from the property type
@@ -623,7 +623,7 @@ namespace Test
                 parameter.Documentation);
 
             Assert.Equal("get", parameter.Name);
-            Assert.Equal("Get", parameter.GetPropertyName());
+            Assert.Equal("Get", parameter.PropertyName);
             Assert.Equal(":get", parameter.DisplayName);
 
             // Defined from the property type
@@ -643,7 +643,7 @@ namespace Test
                 parameter.Documentation);
 
             Assert.Equal("set", parameter.Name);
-            Assert.Equal("Set", parameter.GetPropertyName());
+            Assert.Equal("Set", parameter.PropertyName);
             Assert.Equal(":set", parameter.DisplayName);
 
             // Defined from the property type
@@ -663,7 +663,7 @@ namespace Test
                 parameter.Documentation);
 
             Assert.Equal("after", parameter.Name);
-            Assert.Equal("After", parameter.GetPropertyName());
+            Assert.Equal("After", parameter.PropertyName);
             Assert.Equal(":after", parameter.DisplayName);
 
             // Defined from the property type
@@ -827,7 +827,7 @@ namespace Test
 
         var parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("format"));
         Assert.Equal("format", parameter.Name);
-        Assert.Equal("Format_myprop", parameter.GetPropertyName());
+        Assert.Equal("Format_myprop", parameter.PropertyName);
         Assert.Equal(":format", parameter.DisplayName);
     }
 
@@ -922,7 +922,7 @@ namespace Test
 
         var parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("format"));
         Assert.Equal("format", parameter.Name);
-        Assert.Equal("Format_myprop", parameter.GetPropertyName());
+        Assert.Equal("Format_myprop", parameter.PropertyName);
         Assert.Equal(":format", parameter.DisplayName);
     }
 
@@ -1019,7 +1019,7 @@ namespace Test
 
         var parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("format"));
         Assert.Equal("format", parameter.Name);
-        Assert.Equal("Format_somevalue", parameter.GetPropertyName());
+        Assert.Equal("Format_somevalue", parameter.PropertyName);
         Assert.Equal(":format", parameter.DisplayName);
     }
 
@@ -1169,7 +1169,7 @@ namespace Test
             parameter.Documentation);
 
         Assert.Equal("format", parameter.Name);
-        Assert.Equal("Format", parameter.GetPropertyName());
+        Assert.Equal("Format", parameter.PropertyName);
         Assert.Equal(":format", parameter.DisplayName);
 
         // Defined from the property type
@@ -1189,7 +1189,7 @@ namespace Test
             parameter.Documentation);
 
         Assert.Equal("culture", parameter.Name);
-        Assert.Equal("Culture", parameter.GetPropertyName());
+        Assert.Equal("Culture", parameter.PropertyName);
         Assert.Equal(":culture", parameter.DisplayName);
 
         // Defined from the property type

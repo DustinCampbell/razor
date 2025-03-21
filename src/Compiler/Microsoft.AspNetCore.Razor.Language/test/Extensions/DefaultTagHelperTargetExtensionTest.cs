@@ -21,38 +21,35 @@ public class DefaultTagHelperTargetExtensionTest : RazorProjectEngineTestBase
         tagName: "input",
         typeName: "InputTagHelper",
         assemblyName: "TestAssembly",
-        attributes: new Action<BoundAttributeDescriptorBuilder>[]
-        {
+        attributes: [
             builder => builder
                 .Name("bound")
-                .Metadata(PropertyName("StringProp"))
+                .PropertyName("StringProp")
                 .TypeName("System.String"),
-        });
+        ]);
 
     private static readonly TagHelperDescriptor IntPropertyTagHelper = CreateTagHelperDescriptor(
         tagName: "input",
         typeName: "InputTagHelper",
         assemblyName: "TestAssembly",
-        attributes: new Action<BoundAttributeDescriptorBuilder>[]
-        {
+        attributes: [
             builder => builder
                 .Name("bound")
-                .Metadata(PropertyName("IntProp"))
+                .PropertyName("IntProp")
                 .TypeName("System.Int32"),
-        });
+        ]);
 
     private static readonly TagHelperDescriptor IntIndexerTagHelper = CreateTagHelperDescriptor(
         tagName: "input",
         typeName: "InputTagHelper",
         assemblyName: "TestAssembly",
-        attributes: new Action<BoundAttributeDescriptorBuilder>[]
-        {
+        attributes: [
             builder => builder
                 .Name("bound")
-                .Metadata(PropertyName("IntIndexer"))
+                .PropertyName("IntIndexer")
                 .TypeName("System.Collections.Generic.Dictionary<System.String, System.Int32>")
                 .AsDictionary("foo-", "System.Int32"),
-        });
+        ]);
 
     private static readonly SourceSpan Span = new SourceSpan("test.cshtml", 15, 2, 5, 2);
 

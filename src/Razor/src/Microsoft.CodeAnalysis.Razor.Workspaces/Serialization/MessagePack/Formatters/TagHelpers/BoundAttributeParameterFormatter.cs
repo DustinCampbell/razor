@@ -18,9 +18,10 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
 
     public override BoundAttributeParameterDescriptor Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(7);
+        reader.ReadArrayHeaderAndVerify(8);
 
         var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
+        var propertyName = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var typeName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var flags = (BoundAttributeParameterFlags)reader.ReadInt32();
         var displayName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
@@ -30,16 +31,17 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
         var diagnostics = reader.Deserialize<ImmutableArray<RazorDiagnostic>>(options);
 
         return new BoundAttributeParameterDescriptor(
-            name!, typeName, flags,
+            name!, propertyName, typeName, flags,
             documentationObject, displayName,
             metadata, diagnostics);
     }
 
     public override void Serialize(ref MessagePackWriter writer, BoundAttributeParameterDescriptor value, SerializerCachingOptions options)
     {
-        writer.WriteArrayHeader(7);
+        writer.WriteArrayHeader(8);
 
         CachedStringFormatter.Instance.Serialize(ref writer, value.Name, options);
+        CachedStringFormatter.Instance.Serialize(ref writer, value.PropertyName, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.TypeName, options);
         writer.Write((int)value.Flags);
         CachedStringFormatter.Instance.Serialize(ref writer, value.DisplayName, options);
@@ -51,9 +53,10 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
 
     public override void Skim(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(7);
+        reader.ReadArrayHeaderAndVerify(8);
 
         CachedStringFormatter.Instance.Skim(ref reader, options); // Name
+        CachedStringFormatter.Instance.Skim(ref reader, options); // PropertyName
         CachedStringFormatter.Instance.Skim(ref reader, options); // TypeName
         reader.Skip(); // Flags
         CachedStringFormatter.Instance.Skim(ref reader, options); // DisplayName

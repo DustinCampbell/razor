@@ -113,6 +113,7 @@ internal static partial class ObjectWriters
             writer.WriteObject(value, static (writer, value) =>
             {
                 writer.Write(nameof(value.Name), value.Name);
+                writer.WriteIfNotNull(nameof(value.PropertyName), value.PropertyName);
                 writer.Write(nameof(value.TypeName), value.TypeName);
                 writer.WriteIfNotDefault(nameof(value.Flags), (int)value.Flags, (int)BoundAttributeParameterFlags.Default);
                 writer.WriteIfNotNull(nameof(value.DisplayName), value.DisplayName);

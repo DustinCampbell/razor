@@ -124,8 +124,7 @@ internal static class SimpleTagHelpers
             {
                 parameter.Name = "something";
                 parameter.TypeName = typeof(string).FullName;
-
-                parameter.SetMetadata(PropertyName("Something"));
+                parameter.PropertyName = "Something";
             });
         });
         directiveAttribute1.ClassifyAttributesOnly = true;
@@ -163,8 +162,7 @@ internal static class SimpleTagHelpers
             {
                 parameter.Name = "something";
                 parameter.TypeName = typeof(string).FullName;
-
-                parameter.SetMetadata(PropertyName("Something"));
+                parameter.PropertyName = "Something";
             });
         });
         directiveAttribute2.ClassifyAttributesOnly = true;

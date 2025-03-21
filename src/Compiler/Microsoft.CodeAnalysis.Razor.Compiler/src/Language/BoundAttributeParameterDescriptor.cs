@@ -15,6 +15,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
     private BoundAttributeDescriptor? _parent;
 
     public string Name { get; }
+    public string? PropertyName { get; }
     public string TypeName { get; }
     public string DisplayName { get; }
 
@@ -30,6 +31,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
 
     internal BoundAttributeParameterDescriptor(
         string name,
+        string? propertyName,
         string typeName,
         BoundAttributeParameterFlags flags,
         DocumentationObject documentationObject,
@@ -39,6 +41,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         : base(diagnostics)
     {
         Name = name;
+        PropertyName = propertyName;
         TypeName = typeName;
         _flags = flags;
         _documentationObject = documentationObject;
@@ -49,6 +52,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
         builder.AppendData(Name);
+        builder.AppendData(PropertyName);
         builder.AppendData(TypeName);
         builder.AppendData((int)Flags);
         builder.AppendData(DisplayName);

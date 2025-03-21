@@ -1310,10 +1310,9 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .Build(),
         TagHelperDescriptorBuilder.Create("mythTagHelper2", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("myth2"))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound")
-                .Metadata(PropertyName("Bound"))
+                .PropertyName("Bound")
                 .TypeName(typeof(bool).FullName))
             .Build()
     ];
@@ -1917,19 +1916,16 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [
         TagHelperDescriptorBuilder.Create("pTagHelper", "SomeAssembly")
             .SetCaseSensitive()
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound")
-                .Metadata(PropertyName("Bound"))
+                .PropertyName("Bound")
                 .TypeName(typeof(bool).FullName))
-            .TagMatchingRuleDescriptor(rule =>
-                rule
+            .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("p")
                 .RequireAttributeDescriptor(attribute => attribute.Name("class")))
             .Build(),
         TagHelperDescriptorBuilder.Create("catchAllTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
+            .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("*")
                 .RequireAttributeDescriptor(attribute => attribute.Name("catchAll")))
             .Build(),

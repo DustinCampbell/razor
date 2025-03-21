@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Xunit;
-using static Microsoft.AspNetCore.Razor.Language.CommonMetadata;
 
 namespace Microsoft.AspNetCore.Razor.Language.Legacy;
 
@@ -1310,10 +1308,9 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .Build(),
         TagHelperDescriptorBuilder.Create("mythTagHelper2", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("myth2"))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound")
-                .Metadata(PropertyName("Bound"))
+                .PropertyName("Bound")
                 .TypeName(typeof(bool).FullName))
             .Build()
     ];
@@ -1917,19 +1914,16 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [
         TagHelperDescriptorBuilder.Create("pTagHelper", "SomeAssembly")
             .SetCaseSensitive()
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound")
-                .Metadata(PropertyName("Bound"))
+                .PropertyName("Bound")
                 .TypeName(typeof(bool).FullName))
-            .TagMatchingRuleDescriptor(rule =>
-                rule
+            .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("p")
                 .RequireAttributeDescriptor(attribute => attribute.Name("class")))
             .Build(),
         TagHelperDescriptorBuilder.Create("catchAllTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
+            .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("*")
                 .RequireAttributeDescriptor(attribute => attribute.Name("catchAll")))
             .Build(),

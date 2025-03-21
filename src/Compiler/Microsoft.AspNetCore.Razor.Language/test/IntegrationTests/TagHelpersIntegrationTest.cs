@@ -40,18 +40,17 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
         // Arrange
         var descriptors = new[]
         {
-                CreateTagHelperDescriptor(
-                    tagName: "input",
-                    typeName: "InputTagHelper",
-                    assemblyName: "TestAssembly",
-                    attributes: new Action<BoundAttributeDescriptorBuilder>[]
-                    {
-                        builder => builder
-                            .Name("bound")
-                            .Metadata(PropertyName("FooProp"))
-                            .TypeName("System.String"),
-                    })
-            };
+            CreateTagHelperDescriptor(
+                tagName: "input",
+                typeName: "InputTagHelper",
+                assemblyName: "TestAssembly",
+                attributes: [
+                    builder => builder
+                        .Name("bound")
+                        .PropertyName("FooProp")
+                        .TypeName("System.String"),
+                ])
+        };
 
         var projectEngine = CreateProjectEngine(builder => builder.AddTagHelpers(descriptors));
         var projectItem = CreateProjectItemFromFile();
@@ -69,26 +68,25 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
         // Arrange
         var descriptors = new[]
         {
-                CreateTagHelperDescriptor(
-                    tagName: "p",
-                    typeName: "PTagHelper",
-                    assemblyName: "TestAssembly"),
-                CreateTagHelperDescriptor(
-                    tagName: "form",
-                    typeName: "FormTagHelper",
-                    assemblyName: "TestAssembly"),
-                CreateTagHelperDescriptor(
-                    tagName: "input",
-                    typeName: "InputTagHelper",
-                    assemblyName: "TestAssembly",
-                    attributes: new Action<BoundAttributeDescriptorBuilder>[]
-                    {
-                        builder => builder
-                            .Name("value")
-                            .Metadata(PropertyName("FooProp"))
-                            .TypeName("System.String"),
-                    })
-            };
+            CreateTagHelperDescriptor(
+                tagName: "p",
+                typeName: "PTagHelper",
+                assemblyName: "TestAssembly"),
+            CreateTagHelperDescriptor(
+                tagName: "form",
+                typeName: "FormTagHelper",
+                assemblyName: "TestAssembly"),
+            CreateTagHelperDescriptor(
+                tagName: "input",
+                typeName: "InputTagHelper",
+                assemblyName: "TestAssembly",
+                attributes: [
+                    builder => builder
+                        .Name("value")
+                        .PropertyName("FooProp")
+                        .TypeName("System.String"),
+                ])
+        };
 
         var projectEngine = CreateProjectEngine(builder => builder.AddTagHelpers(descriptors));
         var projectItem = CreateProjectItemFromFile();

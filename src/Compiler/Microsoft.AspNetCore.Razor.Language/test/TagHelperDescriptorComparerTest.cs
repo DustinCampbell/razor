@@ -20,24 +20,22 @@ public class TagHelperDescriptorComparerTest
             tagName: "input",
             typeName: "InputTagHelper",
             assemblyName: "TestAssembly",
-            attributes: new Action<BoundAttributeDescriptorBuilder>[]
-            {
+            attributes: [
                 builder => builder
                     .Name("value")
-                    .Metadata(PropertyName("FooProp"))
+                    .PropertyName("FooProp")
                     .TypeName("System.String"),
-            });
+            ]);
         var descriptor2 = CreateTagHelperDescriptor(
             tagName: "input",
             typeName: "InputTagHelper",
             assemblyName: "TestAssembly",
-            attributes: new Action<BoundAttributeDescriptorBuilder>[]
-            {
+            attributes: [
                 builder => builder
                     .Name("value")
-                    .Metadata(PropertyName("FooProp"))
+                    .PropertyName("FooProp")
                     .TypeName("System.String"),
-            });
+            ]);
 
         // Act
         var hashCode1 = descriptor1.GetHashCode();
@@ -56,26 +54,24 @@ public class TagHelperDescriptorComparerTest
             typeName: "CounterTagHelper",
             assemblyName: "Components.Component",
             tagMatchingRuleName: "Input",
-            attributes: new Action<BoundAttributeDescriptorBuilder>[]
-            {
+            attributes: [
                 builder => builder
                     .Name("IncrementBy")
-                    .Metadata(PropertyName("IncrementBy"))
+                    .PropertyName("IncrementBy")
                     .TypeName("System.Int32"),
-            });
+            ]);
 
         var inputTagHelper = CreateTagHelperDescriptor(
             tagName: "input",
             typeName: "InputTagHelper",
             assemblyName: "TestAssembly",
             tagMatchingRuleName: "Microsoft.AspNetCore.Components.Forms.Input",
-            attributes: new Action<BoundAttributeDescriptorBuilder>[]
-            {
+            attributes: [
                 builder => builder
                     .Name("value")
-                    .Metadata(PropertyName("FooProp"))
+                    .PropertyName("FooProp")
                     .TypeName("System.String"),
-            });
+            ]);
 
         // Act
         var hashCodeCounter = counterTagHelper.GetHashCode();

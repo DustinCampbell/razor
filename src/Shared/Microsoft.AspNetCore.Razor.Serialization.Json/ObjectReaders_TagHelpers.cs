@@ -149,6 +149,7 @@ internal static partial class ObjectReaders
             static BoundAttributeDescriptor ReadFromProperties(JsonDataReader reader)
             {
                 var name = reader.ReadString(nameof(BoundAttributeDescriptor.Name));
+                var propertyName = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.PropertyName));
                 var typeName = reader.ReadNonNullString(nameof(BoundAttributeDescriptor.TypeName));
                 var flags = (BoundAttributeFlags)reader.ReadInt32OrDefault(nameof(BoundAttributeDescriptor.Flags), (int)BoundAttributeFlags.Default);
                 var indexerNamePrefix = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.IndexerNamePrefix));
@@ -162,7 +163,7 @@ internal static partial class ObjectReaders
                 var diagnostics = reader.ReadImmutableArrayOrEmpty(nameof(BoundAttributeDescriptor.Diagnostics), ReadDiagnostic);
 
                 return new BoundAttributeDescriptor(
-                    Cached(name)!, Cached(typeName), flags,
+                    Cached(name)!, Cached(propertyName), Cached(typeName), flags,
                     Cached(indexerNamePrefix), Cached(indexerTypeName),
                     documentationObject, Cached(displayName), Cached(containingType),
                     parameters, metadata, diagnostics);

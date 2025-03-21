@@ -152,11 +152,9 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
 
             var attributeName = "@bind-...";
             attribute.Name = attributeName;
+            attribute.PropertyName = "Bind";
             attribute.AsDictionary("@bind-", typeof(object).FullName);
             attribute.IsDirectiveAttribute = true;
-
-            attribute.SetMetadata(
-                PropertyName("Bind"));
 
             attribute.TypeName = "System.Collections.Generic.Dictionary<string, object>";
 
@@ -460,11 +458,9 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
                         changeAttribute));
 
                 a.Name = attributeName;
+                a.PropertyName = name;
                 a.TypeName = typeof(object).FullName;
                 a.IsDirectiveAttribute = true;
-
-                a.SetMetadata(
-                    PropertyName(name));
 
                 a.BindAttributeParameter(parameter =>
                 {
@@ -531,13 +527,12 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
             builder.BindAttribute(attribute =>
             {
                 attribute.Name = formatAttributeName;
+                attribute.PropertyName = formatName;
                 attribute.TypeName = "System.String";
                 attribute.SetDocumentation(
                     DocumentationDescriptor.From(
                         DocumentationId.BindTagHelper_Element_Format,
                         attributeName));
-
-                attribute.SetMetadata(PropertyName(formatName));
             });
 
             return builder.Build();
@@ -663,13 +658,11 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
                             changeAttribute.Name));
 
                     attribute.Name = "@bind-" + valueAttribute.Name;
+                    attribute.PropertyName = valueAttribute.PropertyName;
                     attribute.TypeName = changeAttribute.TypeName;
                     attribute.IsEnum = valueAttribute.IsEnum;
                     attribute.ContainingType = valueAttribute.ContainingType;
                     attribute.IsDirectiveAttribute = true;
-
-                    attribute.SetMetadata(
-                        PropertyName(valueAttribute.GetPropertyName()));
 
                     attribute.BindAttributeParameter(parameter =>
                     {

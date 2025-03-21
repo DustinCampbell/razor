@@ -46,17 +46,16 @@ public class InstrumentationPassIntegrationTest : IntegrationTestBase
                     tagName: "input",
                     typeName: "InputTagHelper",
                     assemblyName: "TestAssembly",
-                    attributes: new Action<BoundAttributeDescriptorBuilder>[]
-                    {
+                    attributes: [
                         builder => builder
                             .Name("value")
-                            .Metadata(PropertyName("FooProp"))
+                            .PropertyName("FooProp")
                             .TypeName("System.String"),      // Gets preallocated
                         builder => builder
                             .Name("date")
-                            .Metadata(PropertyName("BarProp"))
+                            .PropertyName("BarProp")
                             .TypeName("System.DateTime"),    // Doesn't get preallocated
-                    })
+                    ])
             };
 
         var engine = CreateProjectEngine(b =>

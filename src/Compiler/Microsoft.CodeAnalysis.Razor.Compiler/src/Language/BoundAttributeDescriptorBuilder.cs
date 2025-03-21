@@ -49,6 +49,7 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
     [AllowNull]
     public string Name { get; set; }
+    public string? PropertyName { get; set; }
     public string? TypeName { get; set; }
     public bool IsEnum { get; set; }
     public bool IsDictionary { get; set; }
@@ -119,6 +120,7 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
     {
         return new BoundAttributeDescriptor(
             Name ?? string.Empty,
+            PropertyName,
             TypeName ?? string.Empty,
             ComputeFlags(),
             IndexerAttributeNamePrefix,
@@ -195,13 +197,8 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
             parentTypeName = null;
         }
 
-        if (!TryGetMetadataValue(TagHelperMetadata.Common.PropertyName, out var propertyName))
-        {
-            propertyName = null;
-        }
-
         if (TypeName != null &&
-            propertyName != null &&
+            PropertyName != null &&
             parentTypeName != null)
         {
             // This looks like a normal c# property, so lets compute a display name based on that.
@@ -210,7 +207,7 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
                 simpleTypeName = TypeName;
             }
 
-            return $"{simpleTypeName} {parentTypeName}.{propertyName}";
+            return $"{simpleTypeName} {parentTypeName}.{PropertyName}";
         }
 
         return Name ?? string.Empty;

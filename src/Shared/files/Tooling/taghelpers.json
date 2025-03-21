@@ -78764,10 +78764,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2601397904031951182,
-      "Data2": 6875551750081675734,
-      "Data3": 2308206606784591260,
-      "Data4": 8880738965992555551
+      "Data1": -6781671084449908587,
+      "Data2": 2631676180980025961,
+      "Data3": -1074925500653903001,
+      "Data4": 5864097139586402020
     },
     "Kind": 4,
     "Name": "onfocus",
@@ -78819,23 +78819,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfocus'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfocus'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfocus'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfocus'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -78850,10 +78846,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5772923178525273314,
-      "Data2": 5216777263885413879,
-      "Data3": -4151021662560208954,
-      "Data4": -7292487020043678770
+      "Data1": -2671874802959338586,
+      "Data2": 8086840301121035494,
+      "Data3": -4830717047065734850,
+      "Data4": 3554248286112917044
     },
     "Kind": 4,
     "Name": "onblur",
@@ -78905,23 +78901,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onblur'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onblur'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onblur'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onblur'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -78936,10 +78928,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4991758200250461886,
-      "Data2": -721834351343226458,
-      "Data3": 1027932721982988376,
-      "Data4": -3592324145900221710
+      "Data1": 8356915430115013200,
+      "Data2": 8052671321258204930,
+      "Data3": 2847423298994549496,
+      "Data4": 5870011591728999490
     },
     "Kind": 4,
     "Name": "onfocusin",
@@ -78991,23 +78983,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfocusin'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfocusin'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfocusin'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfocusin'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79022,10 +79010,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8641404520021445160,
-      "Data2": 5496236416023189957,
-      "Data3": -6660808248761186303,
-      "Data4": -4754332783236188140
+      "Data1": 1762024425095494412,
+      "Data2": -1444867611061548243,
+      "Data3": -292486816263981805,
+      "Data4": -522429141861644910
     },
     "Kind": 4,
     "Name": "onfocusout",
@@ -79077,23 +79065,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfocusout'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfocusout'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfocusout'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfocusout'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79108,10 +79092,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8170717084900732598,
-      "Data2": -7081369908230047926,
-      "Data3": -4382223287234513262,
-      "Data4": 2693934001943622440
+      "Data1": 6711109079461162754,
+      "Data2": -1231194284542412733,
+      "Data3": 3306003505140153583,
+      "Data4": 9114446226212816665
     },
     "Kind": 4,
     "Name": "onmouseover",
@@ -79163,23 +79147,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmouseover'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmouseover'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmouseover'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmouseover'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79194,10 +79174,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5846142145521218701,
-      "Data2": 8536240044069511132,
-      "Data3": 8640188878667317577,
-      "Data4": 5633246686115675585
+      "Data1": -5294502536629083898,
+      "Data2": -2841518228159852742,
+      "Data3": -5629488219805163123,
+      "Data4": 8429151579768713921
     },
     "Kind": 4,
     "Name": "onmouseout",
@@ -79249,23 +79229,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmouseout'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmouseout'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmouseout'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmouseout'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79280,10 +79256,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 9095701952746993166,
-      "Data2": -2044870326795033542,
-      "Data3": -5353483655596714132,
-      "Data4": 2909259932107720665
+      "Data1": 5009151309140822372,
+      "Data2": 8835718465328381391,
+      "Data3": -7984016076892125546,
+      "Data4": 5203706662030462789
     },
     "Kind": 4,
     "Name": "onmousemove",
@@ -79335,23 +79311,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmousemove'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmousemove'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmousemove'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmousemove'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79366,10 +79338,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7441105922196031113,
-      "Data2": 6778897781949178352,
-      "Data3": 619717397223119756,
-      "Data4": 7883564849888565757
+      "Data1": -4421704945138764768,
+      "Data2": -8594234732658283071,
+      "Data3": 1203131000442813886,
+      "Data4": -5106225806497729729
     },
     "Kind": 4,
     "Name": "onmousedown",
@@ -79421,23 +79393,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmousedown'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmousedown'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmousedown'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmousedown'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79452,10 +79420,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2877926352436280780,
-      "Data2": -1196963225024353628,
-      "Data3": -1579166672608216234,
-      "Data4": -3093023726303637693
+      "Data1": 5930131896897813932,
+      "Data2": -457278016025193456,
+      "Data3": 6909559019927521526,
+      "Data4": -242254258447074649
     },
     "Kind": 4,
     "Name": "onmouseup",
@@ -79507,23 +79475,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmouseup'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmouseup'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmouseup'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmouseup'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79538,10 +79502,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8801053766559753432,
-      "Data2": 166889251129055281,
-      "Data3": -1772463729148987081,
-      "Data4": -6289576751218149713
+      "Data1": 6593329696547366378,
+      "Data2": 6116263786230515057,
+      "Data3": 9080907201653875514,
+      "Data4": 5035779367163571763
     },
     "Kind": 4,
     "Name": "onclick",
@@ -79593,23 +79557,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onclick'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onclick'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onclick'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onclick'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79624,10 +79584,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3132230868495209416,
-      "Data2": -4659810220561732402,
-      "Data3": 5435468618992515189,
-      "Data4": 5651914220649080630
+      "Data1": -1571982478021445354,
+      "Data2": 6976588742130471631,
+      "Data3": 4814022132291580328,
+      "Data4": 6521932308269383781
     },
     "Kind": 4,
     "Name": "ondblclick",
@@ -79679,23 +79639,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondblclick'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondblclick'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondblclick'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondblclick'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79710,10 +79666,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8136997239238728109,
-      "Data2": -1752650645147664187,
-      "Data3": -4445207286490237384,
-      "Data4": -2319424871350306095
+      "Data1": -7682106939957687772,
+      "Data2": 5136156996517273478,
+      "Data3": 8543517309812299578,
+      "Data4": -7601818974492148020
     },
     "Kind": 4,
     "Name": "onwheel",
@@ -79765,23 +79721,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onwheel'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onwheel'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onwheel'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onwheel'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79796,10 +79748,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8600642652095573743,
-      "Data2": -6849934135104006497,
-      "Data3": 2759093846787393185,
-      "Data4": 1992477029691330412
+      "Data1": 630882439398343349,
+      "Data2": 8999013950771033058,
+      "Data3": 123781949944370416,
+      "Data4": 7271138224130482801
     },
     "Kind": 4,
     "Name": "onmousewheel",
@@ -79851,23 +79803,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmousewheel'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onmousewheel'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmousewheel'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onmousewheel'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79882,10 +79830,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5327222411584110430,
-      "Data2": -1623025362876971630,
-      "Data3": 7158741957635306721,
-      "Data4": 4040407138080279727
+      "Data1": 8358667841818841898,
+      "Data2": 7421783745253073743,
+      "Data3": 7979884629624023067,
+      "Data4": 7568397532586818798
     },
     "Kind": 4,
     "Name": "oncontextmenu",
@@ -79937,23 +79885,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncontextmenu'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncontextmenu'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncontextmenu'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncontextmenu'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -79968,10 +79912,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6991790002582486738,
-      "Data2": -4930211854795234318,
-      "Data3": -3582488290463455507,
-      "Data4": -7388532222561930333
+      "Data1": -3328971927388573334,
+      "Data2": 5268941870290496928,
+      "Data3": -3930908755316962079,
+      "Data4": 3232004213765854408
     },
     "Kind": 4,
     "Name": "ondrag",
@@ -80023,23 +79967,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondrag'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondrag'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondrag'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondrag'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80054,10 +79994,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5776885060677508465,
-      "Data2": 4093753884249949716,
-      "Data3": -8238401092749818271,
-      "Data4": -649988514042313352
+      "Data1": 6584667864513699674,
+      "Data2": -8664066288138229567,
+      "Data3": 4983737913316015875,
+      "Data4": 1992557858320063264
     },
     "Kind": 4,
     "Name": "ondragend",
@@ -80109,23 +80049,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragend'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragend'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragend'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragend'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80140,10 +80076,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1372322829375197611,
-      "Data2": 531931458169572658,
-      "Data3": -7557229388562875941,
-      "Data4": 2801399268121115906
+      "Data1": -3083899211427065094,
+      "Data2": 2348696668682579101,
+      "Data3": -2096361053118467897,
+      "Data4": -5239651238697505553
     },
     "Kind": 4,
     "Name": "ondragenter",
@@ -80195,23 +80131,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragenter'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragenter'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragenter'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragenter'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80226,10 +80158,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5976300819594035370,
-      "Data2": 73923677443713162,
-      "Data3": -8168137220891557590,
-      "Data4": 146163467059646469
+      "Data1": -9123951252696211280,
+      "Data2": -2138326018015634494,
+      "Data3": 3650559507327809925,
+      "Data4": -1740665538349820167
     },
     "Kind": 4,
     "Name": "ondragleave",
@@ -80281,23 +80213,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragleave'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragleave'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragleave'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragleave'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80312,10 +80240,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6936550096378008863,
-      "Data2": 8029853761469925263,
-      "Data3": 2488802630117704357,
-      "Data4": 516700400848556130
+      "Data1": -57716678401004824,
+      "Data2": -296734941087847349,
+      "Data3": 6997311198216000522,
+      "Data4": -8149480190385005146
     },
     "Kind": 4,
     "Name": "ondragover",
@@ -80367,23 +80295,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragover'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragover'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragover'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragover'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80398,10 +80322,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -614559291112602646,
-      "Data2": -8420314942503178365,
-      "Data3": -4313837035192065929,
-      "Data4": 3733500017604293242
+      "Data1": -5741713507077316059,
+      "Data2": 2092185554307571997,
+      "Data3": -5792523044283692537,
+      "Data4": 1121472509950945133
     },
     "Kind": 4,
     "Name": "ondragstart",
@@ -80453,23 +80377,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragstart'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondragstart'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragstart'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondragstart'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80484,10 +80404,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6891793097259231462,
-      "Data2": -5768579935418970151,
-      "Data3": -4050137731141878291,
-      "Data4": 4849800232691435604
+      "Data1": -4940014943209369648,
+      "Data2": -6658001916314547476,
+      "Data3": -7240301937250980768,
+      "Data4": -720512091495696592
     },
     "Kind": 4,
     "Name": "ondrop",
@@ -80539,23 +80459,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondrop'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondrop'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondrop'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondrop'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80570,10 +80486,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1277095110632886647,
-      "Data2": -4757969762336450714,
-      "Data3": -7925440313730024355,
-      "Data4": -3377102687977125839
+      "Data1": -1915299655612427796,
+      "Data2": 7623435641911782801,
+      "Data3": -336808734023609902,
+      "Data4": 5470279558631353661
     },
     "Kind": 4,
     "Name": "onkeydown",
@@ -80625,23 +80541,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onkeydown'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onkeydown'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onkeydown'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onkeydown'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80656,10 +80568,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1603234697915658562,
-      "Data2": 8377798018380877637,
-      "Data3": 4612911027502719356,
-      "Data4": 5533050605158249469
+      "Data1": 1541857506501144644,
+      "Data2": 5863131541833082825,
+      "Data3": -200558218493994283,
+      "Data4": 1707844807873165462
     },
     "Kind": 4,
     "Name": "onkeyup",
@@ -80711,23 +80623,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onkeyup'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onkeyup'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onkeyup'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onkeyup'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80742,10 +80650,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4826117759260838801,
-      "Data2": -6309240244781213692,
-      "Data3": -2477533747420280586,
-      "Data4": -6528091556382573940
+      "Data1": 3324249422374255253,
+      "Data2": 3490680030520364620,
+      "Data3": 6470856138714736739,
+      "Data4": 4551983090120672115
     },
     "Kind": 4,
     "Name": "onkeypress",
@@ -80797,23 +80705,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onkeypress'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onkeypress'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onkeypress'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onkeypress'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80828,10 +80732,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -240764186307793554,
-      "Data2": -297795229736137014,
-      "Data3": -8103607350491948419,
-      "Data4": 7617493997993329345
+      "Data1": -1055736012495421412,
+      "Data2": 6903571500566050453,
+      "Data3": -9087474138381557272,
+      "Data4": 953777474888139336
     },
     "Kind": 4,
     "Name": "onchange",
@@ -80883,23 +80787,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onchange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onchange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onchange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onchange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -80914,10 +80814,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7779593334352274321,
-      "Data2": -4650152014200855576,
-      "Data3": 4476734987227679490,
-      "Data4": 4956854784777383740
+      "Data1": -3056040467056228746,
+      "Data2": -1958544676177867091,
+      "Data3": 4301578341495367947,
+      "Data4": 5504123917012927390
     },
     "Kind": 4,
     "Name": "oninput",
@@ -80969,23 +80869,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oninput'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oninput'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oninput'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oninput'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81000,10 +80896,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4049202939154742972,
-      "Data2": -2398762742530868205,
-      "Data3": 3494118540028675097,
-      "Data4": 3958120294349096230
+      "Data1": -3560449951606196482,
+      "Data2": -5047468187389864510,
+      "Data3": -8916844332423762245,
+      "Data4": 6896387149557869491
     },
     "Kind": 4,
     "Name": "oninvalid",
@@ -81055,23 +80951,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oninvalid'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oninvalid'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oninvalid'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oninvalid'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81086,10 +80978,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5896487383377207237,
-      "Data2": 2049636777065751320,
-      "Data3": -2970160444133902692,
-      "Data4": 6078430892210754667
+      "Data1": 4332466407207701841,
+      "Data2": 4967633142851840693,
+      "Data3": 4717555040904609579,
+      "Data4": -6438617258088522775
     },
     "Kind": 4,
     "Name": "onreset",
@@ -81141,23 +81033,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onreset'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onreset'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onreset'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onreset'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81172,10 +81060,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6771013426266833409,
-      "Data2": 7036665398649906943,
-      "Data3": 7375513227353825750,
-      "Data4": -6827716451816570630
+      "Data1": -1794420469095807507,
+      "Data2": -6881500927616155678,
+      "Data3": 6754422833020112983,
+      "Data4": 184110571920244187
     },
     "Kind": 4,
     "Name": "onselect",
@@ -81227,23 +81115,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onselect'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onselect'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onselect'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onselect'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81258,10 +81142,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1907349547016548274,
-      "Data2": -7709231021956986773,
-      "Data3": -2301000856935789360,
-      "Data4": -5734207499130037418
+      "Data1": -3898153611259313624,
+      "Data2": -7289396306592079215,
+      "Data3": -7116801913154626488,
+      "Data4": -1733913531234321565
     },
     "Kind": 4,
     "Name": "onselectstart",
@@ -81313,23 +81197,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onselectstart'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onselectstart'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onselectstart'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onselectstart'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81344,10 +81224,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2159741032905937289,
-      "Data2": 9071372748566474879,
-      "Data3": -3538211011572978171,
-      "Data4": -6395135879564875765
+      "Data1": 2617580744147092721,
+      "Data2": 4605235531435732148,
+      "Data3": -6200893832121183330,
+      "Data4": 1697285879960642060
     },
     "Kind": 4,
     "Name": "onselectionchange",
@@ -81399,23 +81279,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onselectionchange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onselectionchange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onselectionchange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onselectionchange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81430,10 +81306,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4866181627297713068,
-      "Data2": 1666089655876158120,
-      "Data3": -4260972747257883803,
-      "Data4": -7405015465967233529
+      "Data1": 5319116120690088271,
+      "Data2": -5247889243193685588,
+      "Data3": 1660799365767153037,
+      "Data4": -2933577831017676279
     },
     "Kind": 4,
     "Name": "onsubmit",
@@ -81485,23 +81361,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onsubmit'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onsubmit'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onsubmit'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onsubmit'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81516,10 +81388,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2565993790510343365,
-      "Data2": 5002018021057637811,
-      "Data3": -583061450785973232,
-      "Data4": 296882583291502687
+      "Data1": -7164722695803948489,
+      "Data2": 2298172453775349649,
+      "Data3": 1826487535683579924,
+      "Data4": 1654750698463080922
     },
     "Kind": 4,
     "Name": "onbeforecopy",
@@ -81571,23 +81443,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforecopy'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforecopy'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforecopy'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforecopy'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81602,10 +81470,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2540701095272863769,
-      "Data2": 1404828607819674296,
-      "Data3": 9186872945274012720,
-      "Data4": 6716376919365808578
+      "Data1": 5795154394326812235,
+      "Data2": -8426726211876277144,
+      "Data3": 6230625469142409626,
+      "Data4": 8766084209187244511
     },
     "Kind": 4,
     "Name": "onbeforecut",
@@ -81657,23 +81525,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforecut'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforecut'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforecut'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforecut'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81688,10 +81552,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3368344977978857459,
-      "Data2": -2845407062094550072,
-      "Data3": 6160175424296345862,
-      "Data4": -6069914434197323621
+      "Data1": -1515523858479444010,
+      "Data2": -8005312812739875652,
+      "Data3": 8433306704659136281,
+      "Data4": 8954530854614432409
     },
     "Kind": 4,
     "Name": "onbeforepaste",
@@ -81743,23 +81607,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforepaste'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforepaste'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforepaste'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforepaste'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81774,10 +81634,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2893701432246367954,
-      "Data2": -711695434975758972,
-      "Data3": 4239819754459268339,
-      "Data4": -2034526469234477918
+      "Data1": -926478078126600119,
+      "Data2": 287058393483903195,
+      "Data3": 4692297772578406293,
+      "Data4": 6140297677132498139
     },
     "Kind": 4,
     "Name": "oncopy",
@@ -81829,23 +81689,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncopy'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncopy'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncopy'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncopy'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81860,10 +81716,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6618861425489352713,
-      "Data2": 4046797115235475762,
-      "Data3": 4664868922606958873,
-      "Data4": 494583549639097173
+      "Data1": -7984997874307556325,
+      "Data2": -7212428258005986573,
+      "Data3": -6010518284715038715,
+      "Data4": 8496067199384287710
     },
     "Kind": 4,
     "Name": "oncut",
@@ -81915,23 +81771,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncut'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncut'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncut'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncut'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -81946,10 +81798,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6233513565173484418,
-      "Data2": -2295794062603890025,
-      "Data3": -3282003986063652900,
-      "Data4": 8293025269095801410
+      "Data1": 8782865798238019473,
+      "Data2": -7005915653717071967,
+      "Data3": 8553388352559631499,
+      "Data4": 4794854883526318339
     },
     "Kind": 4,
     "Name": "onpaste",
@@ -82001,23 +81853,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpaste'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpaste'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpaste'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpaste'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82032,10 +81880,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2445329352322802645,
-      "Data2": -3254563164718116872,
-      "Data3": 1633406421933282406,
-      "Data4": 685633236236632540
+      "Data1": -7652893275518466613,
+      "Data2": 6801196152884429096,
+      "Data3": -7439062042866014089,
+      "Data4": 2785070070887556838
     },
     "Kind": 4,
     "Name": "ontouchcancel",
@@ -82087,23 +81935,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchcancel'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchcancel'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchcancel'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchcancel'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82118,10 +81962,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4143130349287821761,
-      "Data2": 8695673903200527472,
-      "Data3": -3618632128668811871,
-      "Data4": -1428139359565481197
+      "Data1": 3914335602040126215,
+      "Data2": -771856929965693136,
+      "Data3": 6112151316851945476,
+      "Data4": -7095459001419332229
     },
     "Kind": 4,
     "Name": "ontouchend",
@@ -82173,23 +82017,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchend'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchend'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchend'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchend'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82204,10 +82044,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4446678416731184692,
-      "Data2": -4303106641989671139,
-      "Data3": -8252488387805439047,
-      "Data4": 8982819734961832433
+      "Data1": -4051240052738161248,
+      "Data2": 1611412520981081063,
+      "Data3": -6754230630820209438,
+      "Data4": 5765474710356282454
     },
     "Kind": 4,
     "Name": "ontouchmove",
@@ -82259,23 +82099,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchmove'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchmove'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchmove'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchmove'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82290,10 +82126,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1581573125535158769,
-      "Data2": -6764763005541759575,
-      "Data3": -7192693166205794634,
-      "Data4": 4324128806135413753
+      "Data1": 2823193137103142798,
+      "Data2": 1520290796858313169,
+      "Data3": 1948239808114714040,
+      "Data4": -7991886615205395463
     },
     "Kind": 4,
     "Name": "ontouchstart",
@@ -82345,23 +82181,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchstart'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchstart'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchstart'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchstart'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82376,10 +82208,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 9079814385771418489,
-      "Data2": 8210768037410754516,
-      "Data3": 5452467093871891211,
-      "Data4": -2475831973560226571
+      "Data1": 8901121371861069928,
+      "Data2": -3865004075372707363,
+      "Data3": -310611747546671627,
+      "Data4": 6745199885308171359
     },
     "Kind": 4,
     "Name": "ontouchenter",
@@ -82431,23 +82263,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchenter'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchenter'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchenter'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchenter'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82462,10 +82290,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8980044730246396026,
-      "Data2": 3709515445868076928,
-      "Data3": -5133521438730275917,
-      "Data4": -3628737673912006894
+      "Data1": -1425176045202280079,
+      "Data2": -5967029102976844297,
+      "Data3": -6261852751029412699,
+      "Data4": 1415268806770716883
     },
     "Kind": 4,
     "Name": "ontouchleave",
@@ -82517,23 +82345,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchleave'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontouchleave'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchleave'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontouchleave'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82548,10 +82372,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6385605938371053486,
-      "Data2": -8610260868376853221,
-      "Data3": -4748746899213127191,
-      "Data4": 4159883570232190019
+      "Data1": -4494771329976104601,
+      "Data2": -2735774968144904636,
+      "Data3": 6382992614798196672,
+      "Data4": 3615487796094328105
     },
     "Kind": 4,
     "Name": "ongotpointercapture",
@@ -82603,23 +82427,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ongotpointercapture'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ongotpointercapture'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ongotpointercapture'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ongotpointercapture'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82634,10 +82454,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3924960305042788646,
-      "Data2": 1991697596029937005,
-      "Data3": 6180716411897154019,
-      "Data4": -5391594459801466073
+      "Data1": -3172374197907566481,
+      "Data2": -1182490351280171550,
+      "Data3": 271786221234184958,
+      "Data4": -5848376610594052314
     },
     "Kind": 4,
     "Name": "onlostpointercapture",
@@ -82689,23 +82509,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onlostpointercapture'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onlostpointercapture'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onlostpointercapture'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onlostpointercapture'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82720,10 +82536,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3544304028432665272,
-      "Data2": -2619243522699719829,
-      "Data3": 5216428191935426023,
-      "Data4": 556245839908407887
+      "Data1": 3269990085103239954,
+      "Data2": -756159543006399591,
+      "Data3": 6707055435721988029,
+      "Data4": 7664514784202275011
     },
     "Kind": 4,
     "Name": "onpointercancel",
@@ -82775,23 +82591,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointercancel'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointercancel'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointercancel'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointercancel'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82806,10 +82618,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1294016326429707187,
-      "Data2": 5984246789398051498,
-      "Data3": 2124026013471964707,
-      "Data4": -2257796415613498624
+      "Data1": -4440317954411622093,
+      "Data2": 5805974692973073419,
+      "Data3": -1903661410459607690,
+      "Data4": -5016319997158366244
     },
     "Kind": 4,
     "Name": "onpointerdown",
@@ -82861,23 +82673,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerdown'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerdown'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerdown'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerdown'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82892,10 +82700,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3637575187501417880,
-      "Data2": 4512463122410369945,
-      "Data3": -7688246364111150382,
-      "Data4": 321339073825761187
+      "Data1": -1014843989462907992,
+      "Data2": -150691336415623479,
+      "Data3": 5248914908289709595,
+      "Data4": -4343201489991998453
     },
     "Kind": 4,
     "Name": "onpointerenter",
@@ -82947,23 +82755,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerenter'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerenter'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerenter'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerenter'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -82978,10 +82782,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7351927239413344712,
-      "Data2": -3323240003999877273,
-      "Data3": -4253628723740881201,
-      "Data4": -3775516732545541417
+      "Data1": -8134115544626954251,
+      "Data2": 7321628766554716699,
+      "Data3": -4994633750422174413,
+      "Data4": -784379475609462017
     },
     "Kind": 4,
     "Name": "onpointerleave",
@@ -83033,23 +82837,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerleave'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerleave'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerleave'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerleave'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83064,10 +82864,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8363643483340398690,
-      "Data2": 810634995936446102,
-      "Data3": 8444601907479578800,
-      "Data4": 4035616392836197655
+      "Data1": 5136076117779531816,
+      "Data2": 4866189316290107751,
+      "Data3": 5955502638381701702,
+      "Data4": 5825755461536684012
     },
     "Kind": 4,
     "Name": "onpointermove",
@@ -83119,23 +82919,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointermove'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointermove'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointermove'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointermove'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83150,10 +82946,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3343187581605577639,
-      "Data2": 5162458183095953199,
-      "Data3": 3587907113504971013,
-      "Data4": 1039590270283060957
+      "Data1": 1542302651802804886,
+      "Data2": 7840944277788625479,
+      "Data3": 9204284583217438505,
+      "Data4": -5135886150593505348
     },
     "Kind": 4,
     "Name": "onpointerout",
@@ -83205,23 +83001,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerout'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerout'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerout'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerout'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83236,10 +83028,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1715171373826615467,
-      "Data2": 7664757342238788118,
-      "Data3": 2308739925066919015,
-      "Data4": -6107464793266806375
+      "Data1": -2749612982406118398,
+      "Data2": -4578881350309556806,
+      "Data3": -2831194388222163909,
+      "Data4": -5630054931620597328
     },
     "Kind": 4,
     "Name": "onpointerover",
@@ -83291,23 +83083,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerover'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerover'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerover'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerover'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83322,10 +83110,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4646364249906550407,
-      "Data2": 2344823720360588405,
-      "Data3": 7549503084502935190,
-      "Data4": -4909878224910998652
+      "Data1": 5325544250260481742,
+      "Data2": 1803439909263416787,
+      "Data3": -8610242084124072739,
+      "Data4": -4668361081780123100
     },
     "Kind": 4,
     "Name": "onpointerup",
@@ -83377,23 +83165,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerup'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerup'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerup'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerup'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83408,10 +83192,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1939439203639721471,
-      "Data2": -6671754769418106481,
-      "Data3": 6774103386589432370,
-      "Data4": 1524653605074352569
+      "Data1": 1648255489731921788,
+      "Data2": 6948040991303842955,
+      "Data3": 6467101603176431164,
+      "Data4": 2157360207921351384
     },
     "Kind": 4,
     "Name": "oncanplay",
@@ -83463,23 +83247,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncanplay'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncanplay'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncanplay'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncanplay'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83494,10 +83274,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7462677372477879362,
-      "Data2": 8354108776836057230,
-      "Data3": 5410303324818480453,
-      "Data4": -2888287343085238967
+      "Data1": 546786859940456992,
+      "Data2": 4860240605297114419,
+      "Data3": -2375665908579727549,
+      "Data4": 2883042010413546347
     },
     "Kind": 4,
     "Name": "oncanplaythrough",
@@ -83549,23 +83329,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncanplaythrough'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncanplaythrough'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncanplaythrough'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncanplaythrough'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83580,10 +83356,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2910113413182360592,
-      "Data2": 1289540340289153858,
-      "Data3": 3969111371239535972,
-      "Data4": -3554624885060611041
+      "Data1": 512541297523683809,
+      "Data2": -3895272972264787541,
+      "Data3": -2868333006246435099,
+      "Data4": 6873495734009215684
     },
     "Kind": 4,
     "Name": "oncuechange",
@@ -83635,23 +83411,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncuechange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@oncuechange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncuechange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@oncuechange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83666,10 +83438,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8757761254538484309,
-      "Data2": -8514620340494034807,
-      "Data3": -7891600726921703148,
-      "Data4": -809330944451133157
+      "Data1": 308156850165459352,
+      "Data2": 4404173649154529256,
+      "Data3": 4289808152054460705,
+      "Data4": 654287016843452052
     },
     "Kind": 4,
     "Name": "ondurationchange",
@@ -83721,23 +83493,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondurationchange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondurationchange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondurationchange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondurationchange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83752,10 +83520,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3182155443351054649,
-      "Data2": 2390826691222729807,
-      "Data3": -6296838848152659753,
-      "Data4": 6169189140171698460
+      "Data1": 4334126536846458492,
+      "Data2": 7228287129108705481,
+      "Data3": 3210002682148694880,
+      "Data4": -6038473930460549281
     },
     "Kind": 4,
     "Name": "onemptied",
@@ -83807,23 +83575,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onemptied'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onemptied'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onemptied'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onemptied'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83838,10 +83602,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8799649279438047309,
-      "Data2": 4407295122939817274,
-      "Data3": -2206734661501979710,
-      "Data4": 219506836757240823
+      "Data1": 3711395954815898531,
+      "Data2": -3628118547450035450,
+      "Data3": -8975269794762331127,
+      "Data4": 2663255833361770719
     },
     "Kind": 4,
     "Name": "onpause",
@@ -83893,23 +83657,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpause'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpause'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpause'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpause'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -83924,10 +83684,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8101688441212103613,
-      "Data2": 8561166656004641532,
-      "Data3": -992436899722703126,
-      "Data4": 504937711715994688
+      "Data1": 6693125248952687166,
+      "Data2": 4912976993951667426,
+      "Data3": -152979419539475344,
+      "Data4": -7806811853348006791
     },
     "Kind": 4,
     "Name": "onplay",
@@ -83979,23 +83739,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onplay'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onplay'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onplay'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onplay'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84010,10 +83766,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6299501157765180443,
-      "Data2": 5294268850593573612,
-      "Data3": 5459928130201116365,
-      "Data4": 3967413348505905311
+      "Data1": 894921557462238108,
+      "Data2": -6470122658739250870,
+      "Data3": 2636600421901718168,
+      "Data4": -4500859854372552142
     },
     "Kind": 4,
     "Name": "onplaying",
@@ -84065,23 +83821,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onplaying'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onplaying'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onplaying'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onplaying'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84096,10 +83848,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -9191544753978216191,
-      "Data2": -3289849950885144951,
-      "Data3": -7436394153080723287,
-      "Data4": -6590224345794561964
+      "Data1": -3385524470762750137,
+      "Data2": 7327576731813548864,
+      "Data3": 4280091432820666394,
+      "Data4": -8430717558142018802
     },
     "Kind": 4,
     "Name": "onratechange",
@@ -84151,23 +83903,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onratechange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onratechange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onratechange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onratechange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84182,10 +83930,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5427897709590265197,
-      "Data2": 955076755400211382,
-      "Data3": -5872333108494458925,
-      "Data4": 4344733743857004012
+      "Data1": 2354124534698657246,
+      "Data2": 2191547386816114177,
+      "Data3": -2265864013935932953,
+      "Data4": -3840368504141929272
     },
     "Kind": 4,
     "Name": "onseeked",
@@ -84237,23 +83985,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onseeked'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onseeked'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onseeked'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onseeked'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84268,10 +84012,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4423470831583779783,
-      "Data2": 7686925459733726205,
-      "Data3": 3322984726749298458,
-      "Data4": 3312819552134338801
+      "Data1": -2222880348083522571,
+      "Data2": -4386098524262570753,
+      "Data3": 3193330176566633003,
+      "Data4": -5818203410828572504
     },
     "Kind": 4,
     "Name": "onseeking",
@@ -84323,23 +84067,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onseeking'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onseeking'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onseeking'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onseeking'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84354,10 +84094,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5605039685958558710,
-      "Data2": 5212919551494078648,
-      "Data3": -7296752819809611551,
-      "Data4": -2287873616702233084
+      "Data1": 3464439068676416774,
+      "Data2": -2559926144326075403,
+      "Data3": -1582963122650347911,
+      "Data4": -6192427496827018823
     },
     "Kind": 4,
     "Name": "onstalled",
@@ -84409,23 +84149,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onstalled'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onstalled'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onstalled'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onstalled'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84440,10 +84176,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6303936923510112079,
-      "Data2": -2978419531633354475,
-      "Data3": -8972846632118171727,
-      "Data4": 8736903526720147373
+      "Data1": -5073141339484042468,
+      "Data2": -2444722765567596754,
+      "Data3": 8092247174730755775,
+      "Data4": -105292680273150937
     },
     "Kind": 4,
     "Name": "onstop",
@@ -84495,23 +84231,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onstop'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onstop'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onstop'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onstop'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84526,10 +84258,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5634151048320659820,
-      "Data2": 4608860089186028475,
-      "Data3": 621257103621472892,
-      "Data4": 5475077703572241132
+      "Data1": -2750470936954441827,
+      "Data2": -9076250932897790887,
+      "Data3": 6235866826989282661,
+      "Data4": 9005069941157801950
     },
     "Kind": 4,
     "Name": "onsuspend",
@@ -84581,23 +84313,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onsuspend'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onsuspend'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onsuspend'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onsuspend'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84612,10 +84340,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6471370919807148550,
-      "Data2": -1324429762620849446,
-      "Data3": -9132322131401041523,
-      "Data4": -7718846697321395715
+      "Data1": 7874326966169713844,
+      "Data2": -6245601214357880662,
+      "Data3": -6003075387128257299,
+      "Data4": -2664342570591061046
     },
     "Kind": 4,
     "Name": "ontimeupdate",
@@ -84667,23 +84395,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontimeupdate'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontimeupdate'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontimeupdate'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontimeupdate'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84698,10 +84422,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -690153610254938052,
-      "Data2": -4907786169018255676,
-      "Data3": 4560608379694469533,
-      "Data4": 145136502817705423
+      "Data1": -3200533737783332753,
+      "Data2": -9161070704157008785,
+      "Data3": -149872363420529572,
+      "Data4": 2348555398800375241
     },
     "Kind": 4,
     "Name": "onvolumechange",
@@ -84753,23 +84477,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onvolumechange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onvolumechange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onvolumechange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onvolumechange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84784,10 +84504,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1173157284174182692,
-      "Data2": -7144452207138075309,
-      "Data3": -2055641504313421882,
-      "Data4": -6551327421685984837
+      "Data1": 5206695738525352404,
+      "Data2": 2331579025946786860,
+      "Data3": -5674738254777695052,
+      "Data4": 5156446566546512032
     },
     "Kind": 4,
     "Name": "onwaiting",
@@ -84839,23 +84559,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onwaiting'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onwaiting'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onwaiting'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onwaiting'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84870,10 +84586,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 527279810484705056,
-      "Data2": -4105240260477885609,
-      "Data3": 1467115174955084887,
-      "Data4": 407231516585603344
+      "Data1": 3918194677474841035,
+      "Data2": -8561470436955002598,
+      "Data3": 2177491307011272928,
+      "Data4": 6590877467785456630
     },
     "Kind": 4,
     "Name": "onloadstart",
@@ -84925,23 +84641,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadstart'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadstart'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadstart'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadstart'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -84956,10 +84668,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4432672073407478466,
-      "Data2": 2290932419509632857,
-      "Data3": 1318450793228781829,
-      "Data4": 2602566265340758181
+      "Data1": 1364372688974662328,
+      "Data2": -1542644493686362027,
+      "Data3": 6966611865654873875,
+      "Data4": -8217609109699358371
     },
     "Kind": 4,
     "Name": "ontimeout",
@@ -85011,23 +84723,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontimeout'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ontimeout'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontimeout'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ontimeout'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85042,10 +84750,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4735529643823838842,
-      "Data2": -5192913553961179686,
-      "Data3": -2424908189116339774,
-      "Data4": -1870334479133005793
+      "Data1": 4561124481117857860,
+      "Data2": 1537451824465874838,
+      "Data3": 2845630640025585667,
+      "Data4": 1596934127998780034
     },
     "Kind": 4,
     "Name": "onabort",
@@ -85097,23 +84805,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onabort'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onabort'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onabort'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onabort'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85128,10 +84832,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -471179979514009308,
-      "Data2": -8562722890308203698,
-      "Data3": -8236719592498810910,
-      "Data4": 4054746843818406142
+      "Data1": -1404084680640065314,
+      "Data2": 6136786161963094159,
+      "Data3": 7163776649889222717,
+      "Data4": 3230685145515981465
     },
     "Kind": 4,
     "Name": "onload",
@@ -85183,23 +84887,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onload'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onload'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onload'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onload'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85214,10 +84914,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4420242579018073911,
-      "Data2": -4942294095034277331,
-      "Data3": 1832283510790351579,
-      "Data4": -7341608783637024608
+      "Data1": 7414500852558984444,
+      "Data2": -762301278735428046,
+      "Data3": -8600996939756565440,
+      "Data4": 2419723528690199344
     },
     "Kind": 4,
     "Name": "onloadend",
@@ -85269,23 +84969,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadend'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadend'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadend'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadend'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85300,10 +84996,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -9142095296440156583,
-      "Data2": 3164989459114303757,
-      "Data3": 7940132861921254289,
-      "Data4": 288955599070080510
+      "Data1": -8906227006808842833,
+      "Data2": -4175120821858621263,
+      "Data3": 4623491470230911359,
+      "Data4": -7822099024033775829
     },
     "Kind": 4,
     "Name": "onprogress",
@@ -85355,23 +85051,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onprogress'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onprogress'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onprogress'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onprogress'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85386,10 +85078,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7747398467913647538,
-      "Data2": 979376476651877344,
-      "Data3": 6469643477060362210,
-      "Data4": -4406162636591933879
+      "Data1": 373788942228120089,
+      "Data2": -5392503258234587309,
+      "Data3": 4181420248784607780,
+      "Data4": -2576984263204022022
     },
     "Kind": 4,
     "Name": "onerror",
@@ -85441,23 +85133,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onerror'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onerror'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onerror'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onerror'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85472,10 +85160,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1486551727399207074,
-      "Data2": 6546681018305202070,
-      "Data3": -8910715641551381865,
-      "Data4": -3920992160459762780
+      "Data1": 2348841967018551291,
+      "Data2": -5244643981294433412,
+      "Data3": 1018128868179108186,
+      "Data4": -5754303464299745646
     },
     "Kind": 4,
     "Name": "onactivate",
@@ -85527,23 +85215,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onactivate'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onactivate'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onactivate'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onactivate'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85558,10 +85242,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1714777056552188870,
-      "Data2": -1676058994035149236,
-      "Data3": -6437563917680633454,
-      "Data4": 1136437420618601575
+      "Data1": 7539097255884455756,
+      "Data2": 6596985406895809204,
+      "Data3": 4504500398682027278,
+      "Data4": 1010196662018563236
     },
     "Kind": 4,
     "Name": "onbeforeactivate",
@@ -85613,23 +85297,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforeactivate'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforeactivate'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforeactivate'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforeactivate'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85644,10 +85324,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5477296230543763990,
-      "Data2": 7593840093878257159,
-      "Data3": -3774710383831151749,
-      "Data4": -4301138619242043726
+      "Data1": -6087904320716323993,
+      "Data2": -260402863931357976,
+      "Data3": 6463568685770208286,
+      "Data4": 2292218877530106785
     },
     "Kind": 4,
     "Name": "onbeforedeactivate",
@@ -85699,23 +85379,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforedeactivate'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onbeforedeactivate'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforedeactivate'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onbeforedeactivate'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85730,10 +85406,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1554473124261330660,
-      "Data2": -2906247841825883098,
-      "Data3": -667051033646375858,
-      "Data4": -5984383783795168740
+      "Data1": -1429517708194059039,
+      "Data2": -4799639350842171991,
+      "Data3": -5915058898555043616,
+      "Data4": 5015342300769710107
     },
     "Kind": 4,
     "Name": "ondeactivate",
@@ -85785,23 +85461,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondeactivate'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@ondeactivate'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondeactivate'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@ondeactivate'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85816,10 +85488,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2862953380738401455,
-      "Data2": 1649847083835496069,
-      "Data3": -400882898258881356,
-      "Data4": -4832281901588078467
+      "Data1": -1549379353966192808,
+      "Data2": -7652856025410947640,
+      "Data3": -257334777584658548,
+      "Data4": 1231115420924438943
     },
     "Kind": 4,
     "Name": "onended",
@@ -85871,23 +85543,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onended'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onended'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onended'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onended'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85902,10 +85570,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2458120838365376350,
-      "Data2": -5404458310221860202,
-      "Data3": 8403742052155206114,
-      "Data4": 4136301950748776816
+      "Data1": -185013971526804348,
+      "Data2": -179039748582426096,
+      "Data3": -5914725875318640330,
+      "Data4": 6197031330074507475
     },
     "Kind": 4,
     "Name": "onfullscreenchange",
@@ -85957,23 +85625,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfullscreenchange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfullscreenchange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfullscreenchange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfullscreenchange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -85988,10 +85652,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8863293962546653404,
-      "Data2": 2699737237853276472,
-      "Data3": 4137686793170355166,
-      "Data4": 860527420884260612
+      "Data1": 3758193253755443451,
+      "Data2": -1521592878492811877,
+      "Data3": -3413575308262648134,
+      "Data4": -3848821639740836282
     },
     "Kind": 4,
     "Name": "onfullscreenerror",
@@ -86043,23 +85707,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfullscreenerror'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onfullscreenerror'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfullscreenerror'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onfullscreenerror'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -86074,10 +85734,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5088212039106353232,
-      "Data2": -7073586888400809646,
-      "Data3": 6837815769110228525,
-      "Data4": -5963469467495835754
+      "Data1": 7837203570047232933,
+      "Data2": -3822060379912760874,
+      "Data3": 2207719455111296146,
+      "Data4": 3026617463211257196
     },
     "Kind": 4,
     "Name": "onloadeddata",
@@ -86129,23 +85789,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadeddata'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadeddata'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadeddata'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadeddata'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -86160,10 +85816,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8571649213972536717,
-      "Data2": -4843831851595263813,
-      "Data3": -8593061361047453133,
-      "Data4": 9183189176586892307
+      "Data1": -2612272778237929453,
+      "Data2": 2931327164289374272,
+      "Data3": -5045665530748906145,
+      "Data4": -3970153243293838359
     },
     "Kind": 4,
     "Name": "onloadedmetadata",
@@ -86215,23 +85871,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadedmetadata'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onloadedmetadata'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadedmetadata'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onloadedmetadata'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -86246,10 +85898,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5989852251011047641,
-      "Data2": 8736457670287791591,
-      "Data3": 32125038642347143,
-      "Data4": 5275905187308666082
+      "Data1": 3794386585786464536,
+      "Data2": 477614012538743945,
+      "Data3": 8934470299774611981,
+      "Data4": -8889644485896368655
     },
     "Kind": 4,
     "Name": "onpointerlockchange",
@@ -86301,23 +85953,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerlockchange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerlockchange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerlockchange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerlockchange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -86332,10 +85980,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4763305657223395202,
-      "Data2": -4619642715841876309,
-      "Data3": -5241476859343289570,
-      "Data4": -1036440662147251788
+      "Data1": 7806677180305169444,
+      "Data2": -2615455130352949032,
+      "Data3": -5012161754963649999,
+      "Data4": 4232267011483151573
     },
     "Kind": 4,
     "Name": "onpointerlockerror",
@@ -86387,23 +86035,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerlockerror'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onpointerlockerror'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerlockerror'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onpointerlockerror'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -86418,10 +86062,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -681343544081954993,
-      "Data2": 6651550930268445159,
-      "Data3": 1433621956288202778,
-      "Data4": 7228747460441281164
+      "Data1": 604671802915166083,
+      "Data2": -8611960946719362175,
+      "Data3": 1085276154412929713,
+      "Data4": -6493722481005759142
     },
     "Kind": 4,
     "Name": "onreadystatechange",
@@ -86473,23 +86117,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onreadystatechange'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onreadystatechange'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onreadystatechange'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onreadystatechange'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -86504,10 +86144,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -891384686718610340,
-      "Data2": -7516456328772999939,
-      "Data3": 4293918694696416803,
-      "Data4": -1908407406383132277
+      "Data1": -3308954847472921597,
+      "Data2": 1580953757405357526,
+      "Data3": 1343628404455482408,
+      "Data4": -8050670490871486982
     },
     "Kind": 4,
     "Name": "onscroll",
@@ -86559,23 +86199,19 @@
         "BoundAttributeParameters": [
           {
             "Name": "preventDefault",
+            "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":preventDefault",
-            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onscroll'event.",
-            "Metadata": {
-              "Common.PropertyName": "PreventDefault"
-            }
+            "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onscroll'event."
           },
           {
             "Name": "stopPropagation",
+            "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
             "Flags": 9,
             "DisplayName": ":stopPropagation",
-            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onscroll'eventinthecapturingandbubblingphases.",
-            "Metadata": {
-              "Common.PropertyName": "StopPropagation"
-            }
+            "Documentation": "Specifieswhethertopreventfurtherpropagationofthe'@onscroll'eventinthecapturingandbubblingphases."
           }
         ],
         "Metadata": {
@@ -89132,10 +88768,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5280036594407492818,
-      "Data2": -368843138829391795,
-      "Data3": 2300317211447871185,
-      "Data4": -1637795766544559194
+      "Data1": -8320791821357431466,
+      "Data2": 8665444044612922408,
+      "Data3": 8796069263070798530,
+      "Data4": -5664968981283019416
     },
     "Kind": 1,
     "Name": "Bind",
@@ -89169,32 +88805,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythecorrespondingbindattribute.Forexample:<code>@bind-value:format=\"...\"</code>willapplyaformatstringtothevaluespecifiedin<code>@bind-value=\"...\"</code>.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythecorrespondingbindattribute.Forexample:<code>@bind-value:format=\"...\"</code>willapplyaformatstringtothevaluespecifiedin<code>@bind-value=\"...\"</code>.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-...'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-...'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       }
@@ -89206,10 +88836,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -960819318228101278,
-      "Data2": 4025659797902285675,
-      "Data3": -6397387258551216112,
-      "Data4": 5342314241089962714
+      "Data1": 8491188610173111195,
+      "Data2": -5333468235536122551,
+      "Data3": 2279870158161889342,
+      "Data4": 6158083267210124816
     },
     "Kind": 1,
     "Name": "Bind",
@@ -89241,32 +88871,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89289,10 +88913,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5123919951400348771,
-      "Data2": 6252111951561664978,
-      "Data3": -5823787999825845968,
-      "Data4": -3030707252133705442
+      "Data1": 3778932841351100582,
+      "Data2": -3742742254554491994,
+      "Data3": -1930771084786211927,
+      "Data4": -7366382250687965171
     },
     "Kind": 1,
     "Name": "Bind_value",
@@ -89324,32 +88948,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89372,10 +88990,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1504690731774532209,
-      "Data2": 5510520125326445280,
-      "Data3": 5319989637248801365,
-      "Data4": -2499013613512147805
+      "Data1": -7852734176272392798,
+      "Data2": 2450273728277653049,
+      "Data3": -5741346861933534135,
+      "Data4": 5365942122044849038
     },
     "Kind": 1,
     "Name": "Bind",
@@ -89413,32 +89031,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_checked",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_checked"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_checked",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_checked"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89462,10 +89074,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8165885800403421169,
-      "Data2": 3821120204936637045,
-      "Data3": 7434069956403736914,
-      "Data4": -128793601967533060
+      "Data1": 469454743676140457,
+      "Data2": -1517689112139779512,
+      "Data3": 6832572303248961287,
+      "Data4": -3960842715133152519
     },
     "Kind": 1,
     "Name": "Bind",
@@ -89503,32 +89115,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89552,10 +89158,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6144426300992062963,
-      "Data2": -6744206071698742736,
-      "Data3": -3967670073099166834,
-      "Data4": 5278582830668238548
+      "Data1": -7250665446075589753,
+      "Data2": 4126275263431901032,
+      "Data3": 5398728239493688414,
+      "Data4": 6710792801255832973
     },
     "Kind": 1,
     "Name": "Bind",
@@ -89593,32 +89199,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89642,10 +89242,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2191160173060568097,
-      "Data2": 7752886246183174856,
-      "Data3": -1127920601183901221,
-      "Data4": 7386884906852700073
+      "Data1": 8291163360765763966,
+      "Data2": -3081117624287236374,
+      "Data3": 4001709046172103225,
+      "Data4": 3501658786241136098
     },
     "Kind": 1,
     "Name": "Bind_value",
@@ -89683,32 +89283,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89732,10 +89326,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6472530994460709597,
-      "Data2": 48377072959502444,
-      "Data3": -7286906031584532172,
-      "Data4": -337246804176505395
+      "Data1": 7207922878082394296,
+      "Data2": -1247724806228799463,
+      "Data3": 8190067318804987646,
+      "Data4": -2040516944442529269
     },
     "Kind": 1,
     "Name": "Bind",
@@ -89773,32 +89367,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89822,10 +89410,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4337600614600076450,
-      "Data2": 2066417087252398554,
-      "Data3": 6732477805216102802,
-      "Data4": 4902551840847858476
+      "Data1": 7156444929072663359,
+      "Data2": 7387907326895919842,
+      "Data3": 2182129646651607312,
+      "Data4": 5975210611288162169
     },
     "Kind": 1,
     "Name": "Bind_value",
@@ -89863,32 +89451,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -89912,10 +89494,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7327466992691085377,
-      "Data2": -5104813461128695254,
-      "Data3": -8710894167257723816,
-      "Data4": 3741541957102545734
+      "Data1": 3517319739413075962,
+      "Data2": -6851180625645324582,
+      "Data3": 6246523982155073018,
+      "Data4": 3550350763519226726
     },
     "Kind": 1,
     "Name": "Bind",
@@ -89953,32 +89535,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -90002,10 +89578,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2802604154998178407,
-      "Data2": -7480956968672122987,
-      "Data3": 5074720949719400068,
-      "Data4": -2856016700946932172
+      "Data1": 3664353269441416372,
+      "Data2": -6074417312435409917,
+      "Data3": 1446561040591070923,
+      "Data4": 7163043235916370681
     },
     "Kind": 1,
     "Name": "Bind_value",
@@ -90043,32 +89619,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -90092,10 +89662,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3005272176205001695,
-      "Data2": 3419308525297337275,
-      "Data3": -145635304912515697,
-      "Data4": -1676493740015688304
+      "Data1": 7737121607621393033,
+      "Data2": 8518080394416362038,
+      "Data3": -6404815115386896265,
+      "Data4": 3120015405207640378
     },
     "Kind": 1,
     "Name": "Bind",
@@ -90133,32 +89703,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -90182,10 +89746,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7184234552401612364,
-      "Data2": -2431187427071120374,
-      "Data3": -1729314024312563826,
-      "Data4": 1982314599069856312
+      "Data1": -291242496275406134,
+      "Data2": 3580255888956169416,
+      "Data3": 7460747292258640060,
+      "Data4": -4366975490703682555
     },
     "Kind": 1,
     "Name": "Bind_value",
@@ -90223,32 +89787,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -90272,10 +89830,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2485067454739131464,
-      "Data2": -7636565227002277796,
-      "Data3": 3562033199129787944,
-      "Data4": -1391316604041850491
+      "Data1": 2707603524943227435,
+      "Data2": -3790586860212139817,
+      "Data3": 62455955512450965,
+      "Data4": 3501917759586641140
     },
     "Kind": 1,
     "Name": "Bind",
@@ -90313,32 +89871,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -90362,10 +89914,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1317702000790752377,
-      "Data2": -946660799429901587,
-      "Data3": -537586822207405816,
-      "Data4": 844386147805316340
+      "Data1": 2681516468548918798,
+      "Data2": 4154323089328248470,
+      "Data3": -7287612351900329469,
+      "Data4": 7085288375480634410
     },
     "Kind": 1,
     "Name": "Bind_value",
@@ -90403,32 +89955,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind-value'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind-value'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -90452,10 +89998,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4924282544476165754,
-      "Data2": -799169466883359363,
-      "Data3": -6551596326693672846,
-      "Data4": 6191531871952920517
+      "Data1": 479476216671163883,
+      "Data2": 8577839071511482562,
+      "Data3": 1973068206207733379,
+      "Data4": -6509537481417933850
     },
     "Kind": 1,
     "Name": "Bind",
@@ -90487,32 +90033,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },
@@ -90535,10 +90075,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 332220708893303702,
-      "Data2": 8811315125579126012,
-      "Data3": -5286387812063486349,
-      "Data4": -5857982472592597919
+      "Data1": -5742773355612642638,
+      "Data2": -3013814601025370209,
+      "Data3": 5240647823756965867,
+      "Data4": -3524427940570685114
     },
     "Kind": 1,
     "Name": "Bind",
@@ -90570,32 +90110,26 @@
         "BoundAttributeParameters": [
           {
             "Name": "format",
+            "PropertyName": "Format_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":format",
-            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>.",
-            "Metadata": {
-              "Common.PropertyName": "Format_value"
-            }
+            "Documentation": "Specifiesaformattoconvertthevaluespecifiedbythe'@bind'attribute.Theformatstringcancurrentlyonlybeusedwithexpressionsoftype<code>DateTime</code>."
           },
           {
             "Name": "event",
+            "PropertyName": "Event_value",
             "TypeName": "System.String",
             "Flags": 5,
             "DisplayName": ":event",
-            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute.",
-            "Metadata": {
-              "Common.PropertyName": "Event_value"
-            }
+            "Documentation": "Specifiestheeventhandlernametoattachforchangenotificationsforthevalueprovidedbythe'@bind'attribute."
           },
           {
             "Name": "culture",
+            "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
             "DisplayName": ":culture",
-            "Documentation": "Specifiestheculturetouseforconversions.",
-            "Metadata": {
-              "Common.PropertyName": "Culture"
-            }
+            "Documentation": "Specifiestheculturetouseforconversions."
           }
         ]
       },

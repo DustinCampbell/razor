@@ -41,15 +41,4 @@ public static class BoundAttributeDescriptorExtensions
         var isIndexerNameMatch = TagHelperMatchingConventions.SatisfiesBoundAttributeIndexer(attribute, name.AsSpan());
         return isIndexerNameMatch && attribute.IsIndexerBooleanProperty;
     }
-
-    public static string GetPropertyName(this BoundAttributeParameterDescriptor parameter)
-    {
-        if (parameter == null)
-        {
-            throw new ArgumentNullException(nameof(parameter));
-        }
-
-        parameter.Metadata.TryGetValue(TagHelperMetadata.Common.PropertyName, out var propertyName);
-        return propertyName;
-    }
 }

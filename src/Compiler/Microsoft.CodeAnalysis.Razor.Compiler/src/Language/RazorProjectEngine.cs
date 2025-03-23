@@ -212,14 +212,14 @@ public sealed class RazorProjectEngine
     }
 
     private RazorCodeDocument CreateCodeDocumentDesignTimeCore(
-        RazorSourceDocument sourceDocument,
+        RazorSourceDocument source,
         string fileKind,
         ImmutableArray<RazorSourceDocument> importSources,
         IReadOnlyList<TagHelperDescriptor>? tagHelpers,
         Action<RazorParserOptions.Builder>? configureParser,
         Action<RazorCodeGenerationOptions.Builder>? configureCodeGeneration)
     {
-        ArgHelper.ThrowIfNull(sourceDocument);
+        ArgHelper.ThrowIfNull(source);
 
         var parserOptions = ComputeParserOptions(fileKind, builder =>
         {
@@ -237,7 +237,7 @@ public sealed class RazorProjectEngine
             configureCodeGeneration?.Invoke(builder);
         });
 
-        var codeDocument = RazorCodeDocument.Create(sourceDocument, importSources, parserOptions, codeGenerationOptions);
+        var codeDocument = RazorCodeDocument.Create(source, importSources, parserOptions, codeGenerationOptions);
 
         codeDocument.SetTagHelpers(tagHelpers);
 

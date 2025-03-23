@@ -70,7 +70,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.Process(projectItem);
 
         // Assert
-        var import = Assert.Single(codeDocument.Imports);
+        var import = Assert.Single(codeDocument.ImportSources);
         Assert.Equal("testvalue", import.FilePath);
     }
 
@@ -96,7 +96,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.Process(projectItem);
 
         // Assert
-        Assert.Collection(codeDocument.Imports,
+        Assert.Collection(codeDocument.ImportSources,
             i => Assert.Equal("testvalue1", i.FilePath),
             i => Assert.Equal("testvalue2", i.FilePath));
     }
@@ -137,7 +137,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
         Assert.Same(expectedTagHelpers, tagHelpers);
-        Assert.Equal(expectedImports, codeDocument.Imports);
+        Assert.Equal(expectedImports, codeDocument.ImportSources);
     }
 
     [Fact]
@@ -232,7 +232,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), "test", importSources: default, tagHelpers: null);
 
         // Assert
-        Assert.Empty(codeDocument.Imports);
+        Assert.Empty(codeDocument.ImportSources);
     }
 
     [Fact]
@@ -256,7 +256,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
         Assert.Same(expectedTagHelpers, tagHelpers);
-        Assert.Equal(expectedImports, codeDocument.Imports);
+        Assert.Equal(expectedImports, codeDocument.ImportSources);
     }
 
     [Fact]
@@ -335,6 +335,6 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), "test", importSources: default, tagHelpers: null);
 
         // Assert
-        Assert.Empty(codeDocument.Imports);
+        Assert.Empty(codeDocument.ImportSources);
     }
 }

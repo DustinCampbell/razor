@@ -333,7 +333,7 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
 
             var newCodeDocument = RazorCodeDocument.Create(
                 codeDocument.Source,
-                codeDocument.Imports,
+                codeDocument.ImportSources,
                 codeDocument.ParserOptions,
                 codeDocument.CodeGenerationOptions,
                 codeDocument.CssScope);

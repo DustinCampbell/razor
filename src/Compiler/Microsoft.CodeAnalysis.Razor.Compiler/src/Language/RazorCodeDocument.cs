@@ -12,7 +12,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 public sealed class RazorCodeDocument
 {
     public RazorSourceDocument Source { get; }
-    public ImmutableArray<RazorSourceDocument> Imports { get; }
+    public ImmutableArray<RazorSourceDocument> ImportSources { get; }
     public ItemCollection Items { get; }
 
     public RazorParserOptions ParserOptions { get; }
@@ -33,13 +33,13 @@ public sealed class RazorCodeDocument
 
     private RazorCodeDocument(
         RazorSourceDocument source,
-        ImmutableArray<RazorSourceDocument> imports,
+        ImmutableArray<RazorSourceDocument> importSources,
         RazorParserOptions? parserOptions,
         RazorCodeGenerationOptions? codeGenerationOptions,
         string? cssScope)
     {
         Source = source;
-        Imports = imports.NullToEmpty();
+        ImportSources = importSources.NullToEmpty();
 
         ParserOptions = parserOptions ?? RazorParserOptions.Default;
         CodeGenerationOptions = codeGenerationOptions ?? RazorCodeGenerationOptions.Default;
@@ -56,19 +56,19 @@ public sealed class RazorCodeDocument
     {
         ArgHelper.ThrowIfNull(source);
 
-        return new(source, imports: [], parserOptions, codeGenerationOptions, cssScope);
+        return new(source, importSources: [], parserOptions, codeGenerationOptions, cssScope);
     }
 
     public static RazorCodeDocument Create(
         RazorSourceDocument source,
-        ImmutableArray<RazorSourceDocument> imports,
+        ImmutableArray<RazorSourceDocument> importSources,
         RazorParserOptions? parserOptions = null,
         RazorCodeGenerationOptions? codeGenerationOptions = null,
         string? cssScope = null)
     {
         ArgHelper.ThrowIfNull(source);
 
-        return new(source, imports, parserOptions, codeGenerationOptions, cssScope);
+        return new(source, importSources, parserOptions, codeGenerationOptions, cssScope);
     }
 
     public bool TryGetCSharpDocument([NotNullWhen(true)] out RazorCSharpDocument? csharpDocument)

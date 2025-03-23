@@ -14,9 +14,9 @@ internal class DefaultRazorParsingPhase : RazorEnginePhaseBase, IRazorParsingPha
         var syntaxTree = RazorSyntaxTree.Parse(codeDocument.Source, options);
         codeDocument.SetSyntaxTree(syntaxTree);
 
-        using var importSyntaxTrees = new PooledArrayBuilder<RazorSyntaxTree>(codeDocument.Imports.Length);
+        using var importSyntaxTrees = new PooledArrayBuilder<RazorSyntaxTree>(codeDocument.ImportSources.Length);
 
-        foreach (var import in codeDocument.Imports)
+        foreach (var import in codeDocument.ImportSources)
         {
             importSyntaxTrees.Add(RazorSyntaxTree.Parse(import, options));
         }

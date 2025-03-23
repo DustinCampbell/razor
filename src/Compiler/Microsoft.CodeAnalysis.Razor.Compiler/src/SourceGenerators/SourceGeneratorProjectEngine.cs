@@ -84,7 +84,7 @@ internal sealed class SourceGeneratorProjectEngine
             {
                 // tag helpers have changed, figure out if we need to re-write
                 var previousTagHelpersInScope = codeDocument.GetRequiredTagHelperContext().TagHelpers;
-                var previousUsedTagHelpers = codeDocument.GetReferencedTagHelpers();
+                var previousUsedTagHelpers = codeDocument.GetRequiredReferencedTagHelpers();
 
                 // re-run discovery to figure out which tag helpers are now in scope for this document
                 codeDocument.SetTagHelpers(tagHelpers);
@@ -117,7 +117,7 @@ internal sealed class SourceGeneratorProjectEngine
     public SourceGeneratorRazorCodeDocument ProcessRemaining(SourceGeneratorRazorCodeDocument sgDocument)
     {
         var codeDocument = sgDocument.CodeDocument;
-        Debug.Assert(codeDocument.GetReferencedTagHelpers() is not null);
+        Debug.Assert(codeDocument.TryGetReferencedTagHelpers(out _));
 
         ExecutePhases(Phases[_rewritePhaseIndex..], codeDocument);
 

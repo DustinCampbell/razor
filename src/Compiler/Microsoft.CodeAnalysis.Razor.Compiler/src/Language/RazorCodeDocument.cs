@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
@@ -21,6 +22,7 @@ public sealed class RazorCodeDocument
     private RazorCSharpDocument? _csharpDocument;
     private ImmutableArray<RazorSyntaxTree> _importSyntaxTrees;
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
+    private ISet<TagHelperDescriptor>? _referencedTagHelpers;
     private RazorSyntaxTree? _syntaxTree;
     private TagHelperDocumentContext? _tagHelperContext;
 
@@ -75,6 +77,8 @@ public sealed class RazorCodeDocument
 
     internal void SetCSharpDocument(RazorCSharpDocument csharpDocument)
     {
+        ArgHelper.ThrowIfNull(csharpDocument);
+
         _csharpDocument = csharpDocument;
     }
 
@@ -105,6 +109,19 @@ public sealed class RazorCodeDocument
         ArgHelper.ThrowIfNull(syntaxTree);
 
         _preTagHelperSyntaxTree = syntaxTree;
+    }
+
+    internal bool TryGetReferencedTagHelpers([NotNullWhen(true)] out ISet<TagHelperDescriptor>? referencedTagHelpers)
+    {
+        referencedTagHelpers = _referencedTagHelpers;
+        return referencedTagHelpers != null;
+    }
+
+    internal void SetReferencedTagHelpers(ISet<TagHelperDescriptor> referencedTagHelpers)
+    {
+        ArgHelper.ThrowIfNull(referencedTagHelpers);
+
+        _referencedTagHelpers = referencedTagHelpers;
     }
 
     internal bool TryGetSyntaxTree([NotNullWhen(true)] out RazorSyntaxTree? syntaxTree)

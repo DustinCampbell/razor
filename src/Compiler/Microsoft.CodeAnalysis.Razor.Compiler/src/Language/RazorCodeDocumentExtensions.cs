@@ -74,6 +74,18 @@ public static class RazorCodeDocumentExtensions
         return codeDocument.GetSyntaxTree().AssumeNotNull();
     }
 
+    internal static ISet<TagHelperDescriptor>? GetReferencedTagHelpers(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetReferencedTagHelpers(out var result)
+            ? result
+            : null;
+    }
+
+    internal static ISet<TagHelperDescriptor> GetRequiredReferencedTagHelpers(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.GetReferencedTagHelpers().AssumeNotNull();
+    }
+
     internal static TagHelperDocumentContext? GetTagHelperContext(this RazorCodeDocument codeDocument)
     {
         return codeDocument.TryGetTagHelperContext(out var result)
@@ -106,26 +118,6 @@ public static class RazorCodeDocumentExtensions
         }
 
         document.Items[typeof(TagHelpersHolder)] = new TagHelpersHolder(tagHelpers);
-    }
-
-    internal static ISet<TagHelperDescriptor> GetReferencedTagHelpers(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return document.Items[nameof(GetReferencedTagHelpers)] as ISet<TagHelperDescriptor>;
-    }
-
-    internal static void SetReferencedTagHelpers(this RazorCodeDocument document, ISet<TagHelperDescriptor> tagHelpers)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[nameof(GetReferencedTagHelpers)] = tagHelpers;
     }
 
     public static DocumentIntermediateNode GetDocumentIntermediateNode(this RazorCodeDocument document)

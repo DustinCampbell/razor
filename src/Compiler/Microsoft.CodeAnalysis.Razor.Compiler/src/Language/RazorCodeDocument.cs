@@ -27,6 +27,7 @@ public sealed class RazorCodeDocument
     private ISet<TagHelperDescriptor>? _referencedTagHelpers;
     private RazorSyntaxTree? _syntaxTree;
     private TagHelperDocumentContext? _tagHelperContext;
+    private IReadOnlyList<TagHelperDescriptor>? _tagHelpers;
 
     public RazorLanguageVersion LanguageVersion => ParserOptions.LanguageVersion;
     public string FileKind => ParserOptions.FileKind;
@@ -163,5 +164,16 @@ public sealed class RazorCodeDocument
         ArgHelper.ThrowIfNull(context);
 
         _tagHelperContext = context;
+    }
+
+    internal bool TryGetTagHelpers([NotNullWhen(true)] out IReadOnlyList<TagHelperDescriptor>? tagHelpers)
+    {
+        tagHelpers = _tagHelpers;
+        return tagHelpers != null;
+    }
+
+    internal void SetTagHelpers(IReadOnlyList<TagHelperDescriptor>? tagHelpers)
+    {
+        _tagHelpers = tagHelpers;
     }
 }

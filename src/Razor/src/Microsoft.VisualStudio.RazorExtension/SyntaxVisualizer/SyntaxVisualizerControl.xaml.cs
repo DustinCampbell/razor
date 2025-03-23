@@ -192,7 +192,7 @@ internal partial class SyntaxVisualizerControl : UserControl, IVsRunningDocTable
 
         var tagHelpers = displayKind switch
         {
-            TagHelperDisplayMode.All => codeDocument.GetTagHelpers(),
+            TagHelperDisplayMode.All => codeDocument.GetRequiredTagHelpers(),
             TagHelperDisplayMode.InScope => codeDocument.GetRequiredTagHelperContext().TagHelpers,
             TagHelperDisplayMode.Referenced => (IEnumerable<TagHelperDescriptor>)codeDocument.GetRequiredReferencedTagHelpers(),
             _ => []

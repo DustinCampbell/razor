@@ -110,27 +110,19 @@ public static class RazorCodeDocumentExtensions
         return codeDocument.GetTagHelperContext().AssumeNotNull();
     }
 
+    internal static IReadOnlyList<TagHelperDescriptor>? GetTagHelpers(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetTagHelpers(out var result)
+            ? result
+            : null;
+    }
+
+    internal static IReadOnlyList<TagHelperDescriptor> GetRequiredTagHelpers(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.GetTagHelpers().AssumeNotNull();
+    }
+
 #nullable disable
-
-    internal static IReadOnlyList<TagHelperDescriptor> GetTagHelpers(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return (document.Items[typeof(TagHelpersHolder)] as TagHelpersHolder)?.TagHelpers;
-    }
-
-    internal static void SetTagHelpers(this RazorCodeDocument document, IReadOnlyList<TagHelperDescriptor> tagHelpers)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[typeof(TagHelpersHolder)] = new TagHelpersHolder(tagHelpers);
-    }
 
     internal static RazorHtmlDocument GetHtmlDocument(this RazorCodeDocument codeDocument)
     {
@@ -360,18 +352,6 @@ public static class RazorCodeDocumentExtensions
             // Includes the separator
             return span[..(lastSeparator + 1)];
         }
-    }
-
-    private record class ImportSyntaxTreesHolder(ImmutableArray<RazorSyntaxTree> SyntaxTrees);
-
-    private class TagHelpersHolder
-    {
-        public TagHelpersHolder(IReadOnlyList<TagHelperDescriptor> tagHelpers)
-        {
-            TagHelpers = tagHelpers;
-        }
-
-        public IReadOnlyList<TagHelperDescriptor> TagHelpers { get; }
     }
 
     private class NamespaceVisitor : SyntaxWalker

@@ -398,16 +398,6 @@ public static class RazorCodeDocumentExtensions
 
     private record class ImportSyntaxTreesHolder(ImmutableArray<RazorSyntaxTree> SyntaxTrees);
 
-    private class IncludeSyntaxTreesHolder
-    {
-        public IncludeSyntaxTreesHolder(IReadOnlyList<RazorSyntaxTree> syntaxTrees)
-        {
-            SyntaxTrees = syntaxTrees;
-        }
-
-        public IReadOnlyList<RazorSyntaxTree> SyntaxTrees { get; }
-    }
-
     private class TagHelpersHolder
     {
         public TagHelpersHolder(IReadOnlyList<TagHelperDescriptor> tagHelpers)

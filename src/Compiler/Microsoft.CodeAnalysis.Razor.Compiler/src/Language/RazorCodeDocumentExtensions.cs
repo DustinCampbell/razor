@@ -19,7 +19,6 @@ public static class RazorCodeDocumentExtensions
 {
     private static readonly char[] PathSeparators = ['/', '\\'];
     private static readonly char[] NamespaceSeparators = ['.'];
-    private static readonly object CssScopeKey = new();
     private static readonly object NamespaceKey = new();
 
 #nullable enable
@@ -180,26 +179,6 @@ public static class RazorCodeDocumentExtensions
         }
 
         document.Items[typeof(RazorCSharpDocument)] = csharp;
-    }
-
-    public static string GetCssScope(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return (string)document.Items[CssScopeKey];
-    }
-
-    public static void SetCssScope(this RazorCodeDocument document, string cssScope)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[CssScopeKey] = cssScope;
     }
 
 #nullable enable

@@ -335,7 +335,8 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
                 codeDocument.Source,
                 codeDocument.Imports,
                 codeDocument.ParserOptions,
-                codeDocument.CodeGenerationOptions);
+                codeDocument.CodeGenerationOptions,
+                codeDocument.CssScope);
 
             foreach (var item in codeDocument.Items)
             {

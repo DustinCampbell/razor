@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -21,8 +19,8 @@ internal class ComponentCssScopePass : ComponentIntermediateNodePassBase, IRazor
             return;
         }
 
-        var cssScope = codeDocument.GetCssScope();
-        if (string.IsNullOrEmpty(cssScope))
+        var cssScope = codeDocument.CssScope;
+        if (cssScope.IsNullOrEmpty())
         {
             return;
         }
@@ -34,7 +32,7 @@ internal class ComponentCssScopePass : ComponentIntermediateNodePassBase, IRazor
         }
     }
 
-    private void ProcessElement(MarkupElementIntermediateNode node, string cssScope)
+    private static void ProcessElement(MarkupElementIntermediateNode node, string cssScope)
     {
         // Add a minimized attribute whose name is simply the CSS scope
         node.Children.Add(new HtmlAttributeIntermediateNode

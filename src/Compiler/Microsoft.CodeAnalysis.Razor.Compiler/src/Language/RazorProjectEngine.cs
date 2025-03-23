@@ -193,14 +193,9 @@ public sealed class RazorProjectEngine
         var parserOptions = ComputeParserOptions(fileKind, configureParser);
         var codeGenerationOptions = ComputeCodeGenerationOptions(configureCodeGeneration);
 
-        var codeDocument = RazorCodeDocument.Create(source, importSources, parserOptions, codeGenerationOptions);
+        var codeDocument = RazorCodeDocument.Create(source, importSources, parserOptions, codeGenerationOptions, cssScope);
 
         codeDocument.SetTagHelpers(tagHelpers);
-
-        if (cssScope != null)
-        {
-            codeDocument.SetCssScope(cssScope);
-        }
 
         return codeDocument;
     }

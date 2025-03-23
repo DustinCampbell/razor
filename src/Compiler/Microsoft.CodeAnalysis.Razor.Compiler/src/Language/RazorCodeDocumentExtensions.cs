@@ -35,6 +35,21 @@ public static class RazorCodeDocumentExtensions
         return codeDocument.GetCSharpDocument().AssumeNotNull();
     }
 
+    internal static ImmutableArray<RazorSyntaxTree> GetImportSyntaxTrees(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetImportSyntaxTrees(out var result)
+            ? result
+            : default;
+    }
+
+    internal static ImmutableArray<RazorSyntaxTree> GetRequiredImportSyntaxTrees(this RazorCodeDocument codeDocument)
+    {
+        var result = codeDocument.GetImportSyntaxTrees();
+        Assumed.False(result.IsDefault);
+
+        return result;
+    }
+
     internal static RazorSyntaxTree? GetPreTagHelperSyntaxTree(this RazorCodeDocument codeDocument)
     {
         return codeDocument.TryGetPreTagHelperSyntaxTree(out var result)
@@ -111,31 +126,6 @@ public static class RazorCodeDocumentExtensions
         }
 
         document.Items[nameof(GetReferencedTagHelpers)] = tagHelpers;
-    }
-
-    public static ImmutableArray<RazorSyntaxTree> GetImportSyntaxTrees(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return (document.Items[typeof(ImportSyntaxTreesHolder)] as ImportSyntaxTreesHolder)?.SyntaxTrees ?? default;
-    }
-
-    public static void SetImportSyntaxTrees(this RazorCodeDocument document, ImmutableArray<RazorSyntaxTree> syntaxTrees)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        if (syntaxTrees.IsDefault)
-        {
-            throw new ArgumentException("", nameof(syntaxTrees));
-        }
-
-        document.Items[typeof(ImportSyntaxTreesHolder)] = new ImportSyntaxTreesHolder(syntaxTrees);
     }
 
     public static DocumentIntermediateNode GetDocumentIntermediateNode(this RazorCodeDocument document)
@@ -241,7 +231,7 @@ public static class RazorCodeDocumentExtensions
             var lastNamespaceContent = string.Empty;
             namespaceSpan = null;
 
-            if (codeDocument.GetImportSyntaxTrees() is { IsDefault: false } importSyntaxTrees)
+            if (codeDocument.TryGetImportSyntaxTrees(out var importSyntaxTrees))
             {
                 // ImportSyntaxTrees is usually set. Just being defensive.
                 foreach (var importSyntaxTree in importSyntaxTrees)

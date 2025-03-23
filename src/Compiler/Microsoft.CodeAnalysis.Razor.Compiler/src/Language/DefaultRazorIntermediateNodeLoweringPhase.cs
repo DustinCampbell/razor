@@ -175,7 +175,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
     {
         if (imports.IsDefaultOrEmpty)
         {
-            return Array.Empty<UsingReference>();
+            return [];
         }
 
         var importsVisitor = new ImportsVisitor(document, builder, options);

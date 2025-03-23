@@ -19,6 +19,7 @@ public sealed class RazorCodeDocument
     public string? CssScope { get; }
 
     private RazorCSharpDocument? _csharpDocument;
+    private ImmutableArray<RazorSyntaxTree> _importSyntaxTrees;
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
     private RazorSyntaxTree? _syntaxTree;
     private TagHelperDocumentContext? _tagHelperContext;
@@ -75,6 +76,22 @@ public sealed class RazorCodeDocument
     internal void SetCSharpDocument(RazorCSharpDocument csharpDocument)
     {
         _csharpDocument = csharpDocument;
+    }
+
+    public bool TryGetImportSyntaxTrees(out ImmutableArray<RazorSyntaxTree> importSyntaxTrees)
+    {
+        importSyntaxTrees = _importSyntaxTrees;
+        return !importSyntaxTrees.IsDefault;
+    }
+
+    public void SetImportSyntaxTrees(ImmutableArray<RazorSyntaxTree> importSyntaxTrees)
+    {
+        if (importSyntaxTrees.IsDefault)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(importSyntaxTrees));
+        }
+
+        _importSyntaxTrees = importSyntaxTrees;
     }
 
     internal bool TryGetPreTagHelperSyntaxTree([NotNullWhen(true)] out RazorSyntaxTree? syntaxTree)

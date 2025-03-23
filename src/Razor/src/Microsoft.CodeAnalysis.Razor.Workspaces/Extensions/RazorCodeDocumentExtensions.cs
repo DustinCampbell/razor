@@ -22,9 +22,6 @@ internal static class RazorCodeDocumentExtensions
 {
     private static readonly object s_csharpSyntaxTreeKey = new();
 
-    public static RazorSyntaxTree GetRequiredSyntaxTree(this RazorCodeDocument codeDocument)
-        => codeDocument.GetSyntaxTree().AssumeNotNull();
-
     public static Syntax.SyntaxNode GetRequiredSyntaxRoot(this RazorCodeDocument codeDocument)
         => codeDocument.GetRequiredSyntaxTree().Root;
 
@@ -155,17 +152,17 @@ internal static class RazorCodeDocumentExtensions
         return GetLanguageKindCore(classifiedSpans, tagHelperSpans, hostDocumentIndex, documentLength, rightAssociative);
     }
 
-    private static ImmutableArray<ClassifiedSpanInternal> GetClassifiedSpans(RazorCodeDocument document)
+    private static ImmutableArray<ClassifiedSpanInternal> GetClassifiedSpans(RazorCodeDocument codeDocument)
     {
         // Since this service is called so often, we get a good performance improvement by caching these values
         // for this code document. If the document changes, as the user types, then the document instance will be
         // different, so we don't need to worry about invalidating the cache.
-        if (!document.Items.TryGetValue(typeof(ClassifiedSpanInternal), out ImmutableArray<ClassifiedSpanInternal> classifiedSpans))
+        if (!codeDocument.Items.TryGetValue(typeof(ClassifiedSpanInternal), out ImmutableArray<ClassifiedSpanInternal> classifiedSpans))
         {
-            var syntaxTree = document.GetSyntaxTree();
+            var syntaxTree = codeDocument.GetRequiredSyntaxTree();
             classifiedSpans = syntaxTree.GetClassifiedSpans();
 
-            document.Items[typeof(ClassifiedSpanInternal)] = classifiedSpans;
+            codeDocument.Items[typeof(ClassifiedSpanInternal)] = classifiedSpans;
         }
 
         return classifiedSpans;
@@ -178,7 +175,7 @@ internal static class RazorCodeDocumentExtensions
         // different, so we don't need to worry about invalidating the cache.
         if (!document.Items.TryGetValue(typeof(TagHelperSpanInternal), out ImmutableArray<TagHelperSpanInternal> tagHelperSpans))
         {
-            var syntaxTree = document.GetSyntaxTree();
+            var syntaxTree = document.GetRequiredSyntaxTree();
             tagHelperSpans = syntaxTree.GetTagHelperSpans();
 
             document.Items[typeof(TagHelperSpanInternal)] = tagHelperSpans;

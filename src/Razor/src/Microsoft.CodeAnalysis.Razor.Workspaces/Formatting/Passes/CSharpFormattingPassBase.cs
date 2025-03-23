@@ -169,7 +169,7 @@ internal abstract partial class CSharpFormattingPassBase(IDocumentMappingService
 
         // Build source mapping indentation scopes.
         var sourceMappingIndentations = new SortedDictionary<int, IndentationData>();
-        var syntaxTreeRoot = context.CodeDocument.GetSyntaxTree().Root;
+        var syntaxRoot = context.CodeDocument.GetRequiredSyntaxRoot();
         foreach (var originalLocation in sourceMappingMap.Keys)
         {
             var significantLocation = sourceMappingMap[originalLocation];
@@ -179,12 +179,12 @@ internal abstract partial class CSharpFormattingPassBase(IDocumentMappingService
                 continue;
             }
 
-            if (originalLocation > syntaxTreeRoot.EndPosition)
+            if (originalLocation > syntaxRoot.EndPosition)
             {
                 continue;
             }
 
-            var scopeOwner = syntaxTreeRoot.FindInnermostNode(originalLocation);
+            var scopeOwner = syntaxRoot.FindInnermostNode(originalLocation);
             if (!sourceMappingIndentations.ContainsKey(originalLocation))
             {
                 sourceMappingIndentations[originalLocation] = new IndentationData(indentation);
@@ -363,8 +363,8 @@ internal abstract partial class CSharpFormattingPassBase(IDocumentMappingService
             return true;
         }
 
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
-        var owner = syntaxTree.Root.FindInnermostNode(mappingSpan.Start, includeWhitespace: true);
+        var syntaxRoot = context.CodeDocument.GetRequiredSyntaxRoot();
+        var owner = syntaxRoot.FindInnermostNode(mappingSpan.Start, includeWhitespace: true);
         if (owner is null)
         {
             // Can't determine owner of this position. Optimistically allow formatting.

@@ -40,16 +40,12 @@ internal class ExtractToComponentCodeActionProvider() : IRazorCodeActionProvider
             return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
         }
 
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
-        if (syntaxTree?.Root is null)
-        {
-            return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
-        }
-
         if (!TryGetNamespace(context.CodeDocument, out var @namespace))
         {
             return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
         }
+
+        var syntaxTree = context.CodeDocument.GetRequiredSyntaxTree();
 
         var (startNode, endNode) = GetStartAndEndElements(context, syntaxTree);
         if (startNode is null || endNode is null)

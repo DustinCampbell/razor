@@ -107,6 +107,6 @@ public class DefaultRazorSyntaxTreePhaseTest
         phase.Execute(codeDocument);
 
         // Assert
-        Assert.Same(secondPassSyntaxTree, codeDocument.GetSyntaxTree());
+        Assert.Same(secondPassSyntaxTree, codeDocument.GetRequiredSyntaxTree());
     }
 }

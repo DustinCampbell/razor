@@ -36,6 +36,18 @@ public static class RazorCodeDocumentExtensions
         return codeDocument.GetPreTagHelperSyntaxTree().AssumeNotNull();
     }
 
+    internal static RazorSyntaxTree? GetSyntaxTree(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetSyntaxTree(out var result)
+            ? result
+            : null;
+    }
+
+    internal static RazorSyntaxTree GetRequiredSyntaxTree(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.GetSyntaxTree().AssumeNotNull();
+    }
+
     internal static TagHelperDocumentContext? GetTagHelperContext(this RazorCodeDocument codeDocument)
     {
         return codeDocument.TryGetTagHelperContext(out var result)
@@ -88,26 +100,6 @@ public static class RazorCodeDocumentExtensions
         }
 
         document.Items[nameof(GetReferencedTagHelpers)] = tagHelpers;
-    }
-
-    public static RazorSyntaxTree GetSyntaxTree(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return document.Items[typeof(RazorSyntaxTree)] as RazorSyntaxTree;
-    }
-
-    public static void SetSyntaxTree(this RazorCodeDocument document, RazorSyntaxTree syntaxTree)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[typeof(RazorSyntaxTree)] = syntaxTree;
     }
 
     public static ImmutableArray<RazorSyntaxTree> GetImportSyntaxTrees(this RazorCodeDocument document)
@@ -291,8 +283,8 @@ public static class RazorCodeDocumentExtensions
                 }
             }
 
-            var syntaxTree = codeDocument.GetSyntaxTree();
-            if (syntaxTree != null && NamespaceVisitor.TryGetLastNamespaceDirective(syntaxTree, out var namespaceContent, out var namespaceLocation))
+            if (codeDocument.TryGetSyntaxTree(out var syntaxTree) &&
+                NamespaceVisitor.TryGetLastNamespaceDirective(syntaxTree, out var namespaceContent, out var namespaceLocation))
             {
                 lastNamespaceContent = namespaceContent;
                 namespaceSpan = namespaceLocation;

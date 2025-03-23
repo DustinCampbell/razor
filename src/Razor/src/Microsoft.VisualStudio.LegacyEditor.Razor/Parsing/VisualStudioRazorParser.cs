@@ -329,6 +329,8 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
                 return;
             }
 
+            Assumed.NotNull(partialParseSyntaxTree);
+
             var newCodeDocument = RazorCodeDocument.Create(
                 codeDocument.Source,
                 codeDocument.Imports,
@@ -338,6 +340,11 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
             foreach (var item in codeDocument.Items)
             {
                 newCodeDocument.Items[item.Key] = item.Value;
+            }
+
+            if (codeDocument.TryGetPreTagHelperSyntaxTree(out var preTagHelperSyntaxTree))
+            {
+                newCodeDocument.SetPreTagHelperSyntaxTree(preTagHelperSyntaxTree);
             }
 
             if (codeDocument.TryGetTagHelperContext(out var tagHelperContext))
@@ -536,7 +543,7 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
 
             _codeDocument = codeDocument;
             _snapshot = snapshot;
-            _partialParser = new RazorSyntaxTreePartialParser(_codeDocument.GetSyntaxTree());
+            _partialParser = new RazorSyntaxTreePartialParser(_codeDocument.GetRequiredSyntaxTree());
             TryUpdateLatestParsedSyntaxTreeSnapshot(_codeDocument, _snapshot);
         }
     }

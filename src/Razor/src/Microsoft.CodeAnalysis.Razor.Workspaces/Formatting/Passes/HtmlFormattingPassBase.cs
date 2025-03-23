@@ -30,7 +30,7 @@ internal abstract class HtmlFormattingPassBase(ILogger logger) : IFormattingPass
 
         if (changes.Length > 0)
         {
-            var filteredChanges = FilterIncomingChanges(changedContext, changes);
+            var filteredChanges = FilterIncomingChanges(changedContext.CodeDocument, changes);
 
             changedText = originalText.WithChanges(filteredChanges);
             // Create a new formatting context for the changed razor document.
@@ -50,16 +50,16 @@ internal abstract class HtmlFormattingPassBase(ILogger logger) : IFormattingPass
         return changedText.GetTextChangesArray(originalText);
     }
 
-    private static ImmutableArray<TextChange> FilterIncomingChanges(FormattingContext context, ImmutableArray<TextChange> changes)
+    private static ImmutableArray<TextChange> FilterIncomingChanges(RazorCodeDocument codeDocument, ImmutableArray<TextChange> changes)
     {
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
+        var syntaxRoot = codeDocument.GetRequiredSyntaxRoot();
 
         using var changesToKeep = new PooledArrayBuilder<TextChange>(capacity: changes.Length);
 
         foreach (var change in changes)
         {
             // Don't keep changes that start inside of a razor comment block.
-            var comment = syntaxTree.Root.FindInnermostNode(change.Span.Start)?.FirstAncestorOrSelf<RazorCommentBlockSyntax>();
+            var comment = syntaxRoot.FindInnermostNode(change.Span.Start)?.FirstAncestorOrSelf<RazorCommentBlockSyntax>();
             if (comment is not null)
             {
                 continue;
@@ -144,7 +144,7 @@ internal abstract class HtmlFormattingPassBase(ILogger logger) : IFormattingPass
             }
 
             var htmlDesiredIndentationLevel = indentations[i].HtmlIndentationLevel;
-            if (htmlDesiredIndentationLevel == 0 && !IsPartOfHtmlTag(context, indentations[i].FirstSpan.Span.Start))
+            if (htmlDesiredIndentationLevel == 0 && !IsPartOfHtmlTag(context.CodeDocument, indentations[i].FirstSpan.Span.Start))
             {
                 // This line is under some Razor specific constructs but not under any HTML tag.
                 // E.g,
@@ -188,10 +188,10 @@ internal abstract class HtmlFormattingPassBase(ILogger logger) : IFormattingPass
         return editsToApply.DrainToImmutable();
     }
 
-    private static bool IsPartOfHtmlTag(FormattingContext context, int position)
+    private static bool IsPartOfHtmlTag(RazorCodeDocument codeDocument, int position)
     {
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
-        var owner = syntaxTree.Root.FindInnermostNode(position, includeWhitespace: true);
+        var syntaxRoot = codeDocument.GetRequiredSyntaxRoot();
+        var owner = syntaxRoot.FindInnermostNode(position, includeWhitespace: true);
         if (owner is null)
         {
             // Can't determine owner of this position.

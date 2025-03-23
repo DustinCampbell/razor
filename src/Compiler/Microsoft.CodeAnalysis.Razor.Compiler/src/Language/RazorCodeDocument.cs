@@ -17,6 +17,7 @@ public sealed class RazorCodeDocument
     public RazorCodeGenerationOptions CodeGenerationOptions { get; }
 
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
+    private RazorSyntaxTree? _syntaxTree;
     private TagHelperDocumentContext? _tagHelperContext;
 
     public string FileKind => ParserOptions.FileKind;
@@ -68,6 +69,19 @@ public sealed class RazorCodeDocument
         ArgHelper.ThrowIfNull(syntaxTree);
 
         _preTagHelperSyntaxTree = syntaxTree;
+    }
+
+    internal bool TryGetSyntaxTree([NotNullWhen(true)] out RazorSyntaxTree? syntaxTree)
+    {
+        syntaxTree = _syntaxTree;
+        return syntaxTree != null;
+    }
+
+    internal void SetSyntaxTree(RazorSyntaxTree syntaxTree)
+    {
+        ArgHelper.ThrowIfNull(syntaxTree);
+
+        _syntaxTree = syntaxTree;
     }
 
     internal bool TryGetTagHelperContext([NotNullWhen(true)] out TagHelperDocumentContext? context)

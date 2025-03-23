@@ -135,8 +135,7 @@ internal sealed class MapCodeEndpoint(
         DocumentContext documentContext,
         CancellationToken cancellationToken)
     {
-        var syntaxTree = codeToMap.GetSyntaxTree();
-        if (syntaxTree is null)
+        if (!codeToMap.TryGetSyntaxTree(out var syntaxTree))
         {
             return false;
         }

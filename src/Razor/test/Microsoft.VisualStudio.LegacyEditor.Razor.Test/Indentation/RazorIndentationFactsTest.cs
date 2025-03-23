@@ -362,6 +362,6 @@ public class RazorIndentationFactsTest(ITestOutputHelper testOutput) : ToolingTe
 
         var codeDocument = engine.ProcessDesignTime(sourceProjectItem);
 
-        return codeDocument.GetSyntaxTree();
+        return codeDocument.GetRequiredSyntaxTree();
     }
 }

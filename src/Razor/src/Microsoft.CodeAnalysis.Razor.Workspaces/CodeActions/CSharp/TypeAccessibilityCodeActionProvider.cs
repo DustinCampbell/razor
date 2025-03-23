@@ -213,14 +213,9 @@ internal class TypeAccessibilityCodeActionProvider : ICSharpCodeActionProvider
 
         static bool TryGetOwner(RazorCodeActionContext context, [NotNullWhen(true)] out SyntaxNode? owner)
         {
-            var syntaxTree = context.CodeDocument.GetSyntaxTree();
-            if (syntaxTree?.Root is null)
-            {
-                owner = null;
-                return false;
-            }
+            var syntaxRoot = context.CodeDocument.GetRequiredSyntaxRoot();
 
-            owner = syntaxTree.Root.FindInnermostNode(context.StartAbsoluteIndex);
+            owner = syntaxRoot.FindInnermostNode(context.StartAbsoluteIndex);
             if (owner is null)
             {
                 Debug.Fail("Owner should never be null.");

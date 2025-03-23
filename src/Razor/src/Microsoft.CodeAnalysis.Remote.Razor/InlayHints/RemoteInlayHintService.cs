@@ -78,14 +78,14 @@ internal sealed class RemoteInlayHintService(in ServiceArgs args) : RazorDocumen
         using var inlayHintsBuilder = new PooledArrayBuilder<InlayHint>();
         var razorSourceText = codeDocument.Source.Text;
         var csharpSourceText = codeDocument.GetCSharpSourceText();
-        var syntaxTree = codeDocument.GetSyntaxTree();
+        var syntaxRoot = codeDocument.GetRequiredSyntaxRoot();
         foreach (var hint in hints)
         {
             if (csharpSourceText.TryGetAbsoluteIndex(hint.Position.ToLinePosition(), out var absoluteIndex) &&
                 DocumentMappingService.TryMapToHostDocumentPosition(csharpDocument, absoluteIndex, out var hostDocumentPosition, out var hostDocumentIndex))
             {
                 // We know this C# maps to Razor, but does it map to Razor that we like?
-                var node = syntaxTree.Root.FindInnermostNode(hostDocumentIndex);
+                var node = syntaxRoot.FindInnermostNode(hostDocumentIndex);
                 if (node?.FirstAncestorOrSelf<MarkupTagHelperAttributeValueSyntax>() is not null)
                 {
                     continue;

@@ -42,15 +42,13 @@ internal class CloseTextTagOnAutoInsertProvider : IOnAutoInsertProvider
 
     private static bool IsAtTextTag(RazorCodeDocument codeDocument, Position position)
     {
-        var syntaxTree = codeDocument.GetSyntaxTree();
-
         if (!(codeDocument.Source.Text is { } sourceText
               && sourceText.TryGetAbsoluteIndex(position, out var absoluteIndex)))
         {
             return false;
         }
 
-        var owner = syntaxTree.Root.FindToken(absoluteIndex - 1);
+        var owner = codeDocument.GetRequiredSyntaxRoot().FindToken(absoluteIndex - 1);
         // Make sure the end </text> tag doesn't already exist
         if (owner?.Parent is MarkupStartTagSyntax
             {

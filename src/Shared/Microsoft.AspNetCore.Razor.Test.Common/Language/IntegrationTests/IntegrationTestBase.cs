@@ -457,7 +457,7 @@ public abstract class IntegrationTestBase
 
         Assert.Equal(baseline, actualBaseline);
 
-        var syntaxTree = codeDocument.GetSyntaxTree();
+        var syntaxTree = codeDocument.GetRequiredSyntaxTree();
         var visitor = new CodeSpanVisitor();
         visitor.Visit(syntaxTree.Root);
 
@@ -622,7 +622,7 @@ public abstract class IntegrationTestBase
         }
         else
         {
-            var syntaxTree = codeDocument.GetSyntaxTree();
+            var syntaxTree = codeDocument.GetRequiredSyntaxTree();
             var sourceContent = syntaxTree.Source.Text.ToString();
             var classifiedSpans = syntaxTree.GetClassifiedSpans();
             foreach (var classifiedSpan in classifiedSpans)

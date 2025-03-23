@@ -687,7 +687,7 @@ public class VisualStudioRazorParserIntegrationTest : VisualStudioTestBase
             _parser = parser;
             parser.DocumentStructureChanged += (sender, args) =>
             {
-                CurrentSyntaxTree = args.CodeDocument.GetSyntaxTree();
+                CurrentSyntaxTree = args.CodeDocument.GetRequiredSyntaxTree();
 
                 Interlocked.Increment(ref _parseCount);
 

@@ -88,7 +88,7 @@ internal class DocumentContext(Uri uri, IDocumentSnapshot snapshot, VSProjectCon
 
         static RazorSyntaxTree GetSyntaxTreeCore(RazorCodeDocument codeDocument)
         {
-            return codeDocument.GetSyntaxTree().AssumeNotNull();
+            return codeDocument.GetRequiredSyntaxTree();
         }
 
         async ValueTask<RazorSyntaxTree> GetSyntaxTreeCoreAsync(CancellationToken cancellationToken)
@@ -105,7 +105,9 @@ internal class DocumentContext(Uri uri, IDocumentSnapshot snapshot, VSProjectCon
             : GetTagHelperContextCoreAsync(cancellationToken);
 
         static TagHelperDocumentContext GetTagHelperContextCore(RazorCodeDocument codeDocument)
-            => codeDocument.GetRequiredTagHelperContext();
+        {
+            return codeDocument.GetRequiredTagHelperContext();
+        }
 
         async ValueTask<TagHelperDocumentContext> GetTagHelperContextCoreAsync(CancellationToken cancellationToken)
         {
@@ -158,7 +160,7 @@ internal class DocumentContext(Uri uri, IDocumentSnapshot snapshot, VSProjectCon
 
         static RazorSyntaxNode? GetSyntaxNodeCore(RazorCodeDocument codeDocument, int absoluteIndex)
         {
-            var syntaxTree = codeDocument.GetSyntaxTree().AssumeNotNull();
+            var syntaxTree = codeDocument.GetRequiredSyntaxTree();
 
             return syntaxTree.Root is RazorSyntaxNode root
                 ? root.FindInnermostNode(absoluteIndex)

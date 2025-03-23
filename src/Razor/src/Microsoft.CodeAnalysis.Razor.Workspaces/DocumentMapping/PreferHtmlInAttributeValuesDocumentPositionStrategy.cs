@@ -1,7 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.CodeAnalysis.Razor.Protocol;
@@ -37,7 +36,7 @@ internal sealed class PreferHtmlInAttributeValuesDocumentPositionInfoStrategy : 
         // and more specifically after the EqualsToken of it
         var previousPosition = absolutePosition - 1;
 
-        var syntaxTree = codeDocument.GetSyntaxTree().AssumeNotNull();
+        var syntaxTree = codeDocument.GetRequiredSyntaxTree();
 
         var owner = syntaxTree.Root is RazorSyntaxNode root
             ? root.FindInnermostNode(previousPosition)

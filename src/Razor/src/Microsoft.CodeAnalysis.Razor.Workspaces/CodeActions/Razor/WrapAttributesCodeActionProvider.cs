@@ -24,13 +24,9 @@ internal class WrapAttributesCodeActionProvider : IRazorCodeActionProvider
             return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
         }
 
-        var syntaxTree = context.CodeDocument.GetSyntaxTree();
-        if (syntaxTree?.Root is null)
-        {
-            return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
-        }
+        var syntaxRoot = context.CodeDocument.GetRequiredSyntaxRoot();
 
-        var owner = syntaxTree.Root.FindNode(TextSpan.FromBounds(context.StartAbsoluteIndex, context.EndAbsoluteIndex));
+        var owner = syntaxRoot.FindNode(TextSpan.FromBounds(context.StartAbsoluteIndex, context.EndAbsoluteIndex));
         var attributes = FindAttributes(owner);
         if (attributes.Count == 0)
         {

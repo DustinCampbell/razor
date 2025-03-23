@@ -65,8 +65,8 @@ internal class CSharpCodeActionProvider(LanguageServerFeatureOptions languageSer
             return SpecializedTasks.EmptyImmutableArray<RazorVSInternalCodeAction>();
         }
 
-        var tree = context.CodeDocument.GetSyntaxTree();
-        var node = tree.Root.FindInnermostNode(context.StartAbsoluteIndex);
+        var syntaxRoot = context.CodeDocument.GetRequiredSyntaxRoot();
+        var node = syntaxRoot.FindInnermostNode(context.StartAbsoluteIndex);
         var isInImplicitExpression = node?.AncestorsAndSelf().Any(n => n is CSharpImplicitExpressionSyntax) ?? false;
 
         var allowList = isInImplicitExpression

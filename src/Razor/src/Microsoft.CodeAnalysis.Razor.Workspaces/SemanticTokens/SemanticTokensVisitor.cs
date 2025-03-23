@@ -30,13 +30,13 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         _colorCodeBackground = colorCodeBackground;
     }
 
-    public static ImmutableArray<SemanticRange> GetSemanticRanges(RazorCodeDocument razorCodeDocument, TextSpan textSpan, ISemanticTokensLegendService razorSemanticTokensLegendService, bool colorCodeBackground)
+    public static ImmutableArray<SemanticRange> GetSemanticRanges(RazorCodeDocument codeDocument, TextSpan textSpan, ISemanticTokensLegendService razorSemanticTokensLegendService, bool colorCodeBackground)
     {
         using var _ = ArrayBuilderPool<SemanticRange>.GetPooledObject(out var builder);
 
-        var visitor = new SemanticTokensVisitor(builder, razorCodeDocument, textSpan, razorSemanticTokensLegendService, colorCodeBackground);
+        var visitor = new SemanticTokensVisitor(builder, codeDocument, textSpan, razorSemanticTokensLegendService, colorCodeBackground);
 
-        visitor.Visit(razorCodeDocument.GetSyntaxTree().Root);
+        visitor.Visit(codeDocument.GetRequiredSyntaxRoot());
 
         return builder.DrainToImmutable();
     }

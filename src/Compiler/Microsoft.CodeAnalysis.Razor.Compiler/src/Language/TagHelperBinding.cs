@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -13,23 +13,41 @@ internal sealed class TagHelperBinding
     public string TagName { get; }
     public string? ParentTagName { get; }
     public ImmutableArray<KeyValuePair<string, string>> Attributes { get; }
-    public FrozenDictionary<TagHelperDescriptor, ImmutableArray<TagMatchingRuleDescriptor>> Mappings { get; }
+    public ImmutableArray<BoundRulesInfo> BoundRules { get; }
     public string? TagHelperPrefix { get; }
 
-    public ImmutableArray<TagHelperDescriptor> Descriptors => Mappings.Keys;
+    private ImmutableArray<TagHelperDescriptor> _descriptors;
 
     internal TagHelperBinding(
         string tagName,
         ImmutableArray<KeyValuePair<string, string>> attributes,
         string? parentTagName,
-        FrozenDictionary<TagHelperDescriptor, ImmutableArray<TagMatchingRuleDescriptor>> mappings,
+        ImmutableArray<BoundRulesInfo> boundRules,
         string? tagHelperPrefix)
     {
         TagName = tagName;
         Attributes = attributes;
         ParentTagName = parentTagName;
-        Mappings = mappings;
+        BoundRules = boundRules;
         TagHelperPrefix = tagHelperPrefix;
+    }
+
+    public ImmutableArray<TagHelperDescriptor> Descriptors
+    {
+        get
+        {
+            if (_descriptors.IsDefault)
+            {
+                ImmutableInterlocked.InterlockedInitialize(ref _descriptors, BoundRules.SelectAsArray(static b => b.Descriptor));
+            }
+
+            return _descriptors;
+        }
+    }
+
+    public ImmutableArray<TagMatchingRuleDescriptor> GetBoundRules(TagHelperDescriptor descriptor)
+    {
+        return BoundRules.First(descriptor, static (x, y) => x.Descriptor.Equals(y)).Rules;
     }
 
     /// <summary>
@@ -44,9 +62,10 @@ internal sealed class TagHelperBinding
     {
         get
         {
-            foreach (var descriptor in Mappings.Keys)
+            foreach (var boundRulesInfo in BoundRules)
             {
-                if (!descriptor.Metadata.TryGetValue(TagHelperMetadata.Common.ClassifyAttributesOnly, out var value) ||
+                var tagHelper = boundRulesInfo.Descriptor;
+                if (!tagHelper.Metadata.TryGetValue(TagHelperMetadata.Common.ClassifyAttributesOnly, out var value) ||
                     !string.Equals(value, bool.TrueString, StringComparison.OrdinalIgnoreCase))
                 {
                     return false;

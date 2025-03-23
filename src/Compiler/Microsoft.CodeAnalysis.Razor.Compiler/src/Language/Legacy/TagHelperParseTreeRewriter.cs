@@ -347,10 +347,10 @@ internal static class TagHelperParseTreeRewriter
                     return false;
                 }
 
-                foreach (var descriptor in tagHelperBinding.Descriptors)
+                foreach (var boundRulesInfo in tagHelperBinding.BoundRules)
                 {
-                    var boundRules = tagHelperBinding.Mappings[descriptor];
-                    var invalidRule = boundRules.FirstOrDefault(static rule => rule.TagStructure == TagStructure.WithoutEndTag);
+                    var descriptor = boundRulesInfo.Descriptor;
+                    var invalidRule = boundRulesInfo.Rules.FirstOrDefault(static rule => rule.TagStructure == TagStructure.WithoutEndTag);
 
                     if (invalidRule != null)
                     {
@@ -462,10 +462,9 @@ internal static class TagHelperParseTreeRewriter
             TagHelperDescriptor? baseDescriptor = null;
             TagStructure? baseStructure = null;
 
-            foreach (var descriptor in bindingResult.Descriptors)
+            foreach (var boundRulesInfo in bindingResult.BoundRules)
             {
-                var boundRules = bindingResult.Mappings[descriptor];
-                foreach (var rule in boundRules)
+                foreach (var rule in boundRulesInfo.Rules)
                 {
                     if (rule.TagStructure != TagStructure.Unspecified)
                     {
@@ -476,11 +475,11 @@ internal static class TagHelperParseTreeRewriter
                                 RazorDiagnosticFactory.CreateTagHelper_InconsistentTagStructure(
                                     new SourceSpan(tagBlock.GetSourceLocation(_source), tagBlock.FullWidth),
                                     baseDescriptor!.DisplayName,
-                                    descriptor.DisplayName,
+                                    boundRulesInfo.Descriptor.DisplayName,
                                     tagName));
                         }
 
-                        baseDescriptor = descriptor;
+                        baseDescriptor = boundRulesInfo.Descriptor;
                         baseStructure = rule.TagStructure;
                     }
                 }

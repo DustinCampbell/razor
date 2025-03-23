@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -14,10 +14,14 @@ namespace Microsoft.AspNetCore.Razor.Language;
 /// </summary>
 internal sealed class TagHelperBinder
 {
-    private readonly Dictionary<string, HashSet<TagHelperDescriptor>> _registrations;
+    private static readonly ObjectPool<Dictionary<string, ImmutableArray<TagHelperDescriptor>.Builder>> s_mapPool =
+        DictionaryPool<string, ImmutableArray<TagHelperDescriptor>.Builder>.Create(StringComparer.OrdinalIgnoreCase);
 
     public string? TagHelperPrefix { get; }
     public ImmutableArray<TagHelperDescriptor> TagHelpers { get; }
+
+    private readonly ImmutableArray<TagHelperDescriptor> _catchAllTagHelpers;
+    private readonly Dictionary<string, ImmutableArray<TagHelperDescriptor>>? _tagNameToTagHelpersMap;
 
     /// <summary>
     /// Instantiates a new instance of the <see cref="TagHelperBinder"/>.
@@ -30,14 +34,67 @@ internal sealed class TagHelperBinder
         TagHelperPrefix = tagHelperPrefix;
         TagHelpers = tagHelpers;
 
-        // To reduce the frequency of dictionary resizes we use the incoming number of descriptors as a heuristic
-        _registrations = new Dictionary<string, HashSet<TagHelperDescriptor>>(tagHelpers.Length, StringComparer.OrdinalIgnoreCase);
+        ProcessTagHelpers(tagHelperPrefix, tagHelpers, out _catchAllTagHelpers, out _tagNameToTagHelpersMap);
+    }
 
-        // Populate our registrations
-        foreach (var descriptor in tagHelpers)
+    public static void ProcessTagHelpers(
+        string? prefix,
+        ImmutableArray<TagHelperDescriptor> descriptors,
+        out ImmutableArray<TagHelperDescriptor> catchAllTagHelpers,
+        out Dictionary<string, ImmutableArray<TagHelperDescriptor>>? tagNameToTagHelpersMap)
+    {
+        using var catchAllTagHelpersBuilder = new PooledArrayBuilder<TagHelperDescriptor>();
+        using var pooledDictionary = s_mapPool.GetPooledObject(out var tagNameToTagHelpersMapBuilder);
+        using var pooledSet = HashSetPool<TagHelperDescriptor>.GetPooledObject(out var processedSet);
+
+        foreach (var descriptor in descriptors)
         {
-            Register(descriptor);
+            if (!processedSet.Add(descriptor))
+            {
+                continue;
+            }
+
+            foreach (var rule in descriptor.TagMatchingRules)
+            {
+                if (rule.TagName == TagHelperMatchingConventions.ElementCatchAllName)
+                {
+                    catchAllTagHelpersBuilder.Add(descriptor);
+                }
+                else
+                {
+                    var tagName = !prefix.IsNullOrEmpty()
+                        ? prefix + rule.TagName
+                        : rule.TagName;
+
+                    var builder = tagNameToTagHelpersMapBuilder.GetOrAdd(tagName, _ => ImmutableArray.CreateBuilder<TagHelperDescriptor>());
+                    builder.Add(descriptor);
+                }
+            }
         }
+
+        catchAllTagHelpers = catchAllTagHelpersBuilder.DrainToImmutable();
+        tagNameToTagHelpersMap = null;
+
+        if (tagNameToTagHelpersMapBuilder.Count > 0)
+        {
+            tagNameToTagHelpersMap = new(capacity: tagNameToTagHelpersMapBuilder.Count, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var (key, value) in tagNameToTagHelpersMapBuilder)
+            {
+                tagNameToTagHelpersMap.Add(key, value.DrainToImmutable());
+            }
+        }
+    }
+
+    private bool TryGetMatchingDescriptors(string tagName, out ImmutableArray<TagHelperDescriptor> result)
+    {
+        if (_tagNameToTagHelpersMap is null)
+        {
+            result = default;
+            return false;
+        }
+
+        return _tagNameToTagHelpersMap.TryGetValue(tagName, out result);
     }
 
     /// <summary>
@@ -77,21 +134,19 @@ internal sealed class TagHelperBinder
             }
         }
 
-        using var _ = DictionaryPool<TagHelperDescriptor, ImmutableArray<TagMatchingRuleDescriptor>>.GetPooledObject(out var applicableDescriptors);
+        using var pooledSet = HashSetPool<TagHelperDescriptor>.GetPooledObject(out var distinctSet);
+        using var bindings = new PooledArrayBuilder<BoundRulesInfo>();
 
         // First, try any tag helpers with this tag name.
-        if (_registrations.TryGetValue(tagName, out var matchingDescriptors))
+        if (TryGetMatchingDescriptors(tagName, out var matchingDescriptors))
         {
-            FindApplicableDescriptors(matchingDescriptors, tagNameWithoutPrefix, parentTagNameWithoutPrefix, attributes, applicableDescriptors);
+            FindApplicableDescriptors(matchingDescriptors, tagNameWithoutPrefix, parentTagNameWithoutPrefix, attributes, distinctSet, ref bindings.AsRef());
         }
 
         // Next, try any "catch all" descriptors.
-        if (_registrations.TryGetValue(TagHelperMatchingConventions.ElementCatchAllName, out var catchAllDescriptors))
-        {
-            FindApplicableDescriptors(catchAllDescriptors, tagNameWithoutPrefix, parentTagNameWithoutPrefix, attributes, applicableDescriptors);
-        }
+        FindApplicableDescriptors(_catchAllTagHelpers, tagNameWithoutPrefix, parentTagNameWithoutPrefix, attributes, distinctSet, ref bindings.AsRef());
 
-        if (applicableDescriptors.Count == 0)
+        if (bindings.Count == 0)
         {
             return null;
         }
@@ -100,20 +155,26 @@ internal sealed class TagHelperBinder
             tagName,
             attributes,
             parentTagName,
-            applicableDescriptors.ToFrozenDictionary(),
+            bindings.DrainToImmutable(),
             TagHelperPrefix);
 
         static void FindApplicableDescriptors(
-            HashSet<TagHelperDescriptor> descriptors,
+            ImmutableArray<TagHelperDescriptor> descriptors,
             ReadOnlySpan<char> tagNameWithoutPrefix,
             ReadOnlySpan<char> parentTagNameWithoutPrefix,
             ImmutableArray<KeyValuePair<string, string>> attributes,
-            Dictionary<TagHelperDescriptor, ImmutableArray<TagMatchingRuleDescriptor>> applicableDescriptors)
+            HashSet<TagHelperDescriptor> distinctSet,
+            ref PooledArrayBuilder<BoundRulesInfo> bindings)
         {
             using var applicableRules = new PooledArrayBuilder<TagMatchingRuleDescriptor>();
 
             foreach (var descriptor in descriptors)
             {
+                if (!distinctSet.Add(descriptor))
+                {
+                    continue;
+                }
+
                 foreach (var rule in descriptor.TagMatchingRules)
                 {
                     if (TagHelperMatchingConventions.SatisfiesRule(rule, tagNameWithoutPrefix, parentTagNameWithoutPrefix, attributes))
@@ -122,32 +183,17 @@ internal sealed class TagHelperBinder
                     }
                 }
 
-                if (applicableRules.Count > 0)
+                if (applicableRules.Count == descriptor.TagMatchingRules.Length)
                 {
-                    applicableDescriptors[descriptor] = applicableRules.DrainToImmutable();
+                    bindings.Add(new(descriptor, descriptor.TagMatchingRules));
+                }
+                else if (applicableRules.Count > 0)
+                {
+                    bindings.Add(new(descriptor, applicableRules.DrainToImmutable()));
                 }
 
                 applicableRules.Clear();
             }
-        }
-    }
-
-    private void Register(TagHelperDescriptor descriptor)
-    {
-        foreach (var rule in descriptor.TagMatchingRules)
-        {
-            var registrationKey = rule.TagName == TagHelperMatchingConventions.ElementCatchAllName
-                ? TagHelperMatchingConventions.ElementCatchAllName
-                : TagHelperPrefix + rule.TagName;
-
-            // Ensure there's a HashSet to add the descriptor to.
-            if (!_registrations.TryGetValue(registrationKey, out var descriptorSet))
-            {
-                descriptorSet = [];
-                _registrations[registrationKey] = descriptorSet;
-            }
-
-            descriptorSet.Add(descriptor);
         }
     }
 }

@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Xunit;
 using static Microsoft.AspNetCore.Razor.Language.CommonMetadata;
 
@@ -39,7 +38,7 @@ public class TagHelperBinderTest
         Assert.Equal("body", bindingResult.ParentTagName);
         Assert.Equal<KeyValuePair<string, string>>(expectedAttributes, bindingResult.Attributes);
         Assert.Equal("th:", bindingResult.TagHelperPrefix);
-        Assert.Equal<TagMatchingRuleDescriptor>(divTagHelper.TagMatchingRules, bindingResult.Mappings[divTagHelper]);
+        Assert.Equal<TagMatchingRuleDescriptor>(divTagHelper.TagMatchingRules, bindingResult.GetBoundRules(divTagHelper));
     }
 
     [Fact]
@@ -81,8 +80,8 @@ public class TagHelperBinderTest
                 Assert.Equal<TagHelperDescriptor>(expectedDescriptors, bindingResult.Descriptors);
 
                 Assert.Equal(tagName, bindingResult.TagName);
-                var mapping = Assert.Single(bindingResult.Mappings[multiTagHelper]);
-                Assert.Equal(expectedBindingResult, mapping);
+                var boundRule = Assert.Single(bindingResult.GetBoundRules(multiTagHelper));
+                Assert.Equal(expectedBindingResult, boundRule);
             }
         }
     }
@@ -136,8 +135,8 @@ public class TagHelperBinderTest
 
                 for (int i = 0; i < expectedDescriptors.Length; i++)
                 {
-                    var mapping = Assert.Single(bindingResult.Mappings[expectedDescriptors[i]]);
-                    Assert.Equal(expectedBindingResults[i], mapping);
+                    var boundRule = Assert.Single(bindingResult.GetBoundRules(expectedDescriptors[i]));
+                    Assert.Equal(expectedBindingResults[i], boundRule);
                 }
             }
         }
@@ -540,12 +539,12 @@ public class TagHelperBinderTest
 
         // Assert
         // For divs
-        Assert.Equal(2, divBinding.Descriptors.Count());
+        Assert.Equal(2, divBinding.Descriptors.Length);
         Assert.Contains(divDescriptor, divBinding.Descriptors);
         Assert.Contains(catchAllDescriptor, divBinding.Descriptors);
 
         // For spans
-        Assert.Equal(2, spanBinding.Descriptors.Count());
+        Assert.Equal(2, spanBinding.Descriptors.Length);
         Assert.Contains(spanDescriptor, spanBinding.Descriptors);
         Assert.Contains(catchAllDescriptor, spanBinding.Descriptors);
     }
@@ -598,7 +597,7 @@ public class TagHelperBinderTest
         // Assert
         var boundDescriptor = Assert.Single(binding.Descriptors);
         Assert.Same(multiRuleDescriptor, boundDescriptor);
-        var boundRules = binding.Mappings[boundDescriptor];
+        var boundRules = binding.GetBoundRules(boundDescriptor);
         var boundRule = Assert.Single(boundRules);
         Assert.Equal("div", boundRule.TagName);
     }
@@ -626,7 +625,7 @@ public class TagHelperBinderTest
         // Assert
         var boundDescriptor = Assert.Single(bindingResult.Descriptors);
         Assert.Same(divDescriptor, boundDescriptor);
-        var boundRules = bindingResult.Mappings[boundDescriptor];
+        var boundRules = bindingResult.GetBoundRules(boundDescriptor);
         var boundRule = Assert.Single(boundRules);
         Assert.Equal("div", boundRule.TagName);
         Assert.Equal("p", boundRule.ParentTag);

@@ -440,7 +440,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         projectEngine.ExecutePhase<DefaultRazorTagHelperContextDiscoveryPhase>(codeDocument);
 
         // Assert
-        var context = codeDocument.GetTagHelperContext();
+        Assert.True(codeDocument.TryGetTagHelperContext(out var context));
         Assert.Null(context.Prefix);
         Assert.Empty(context.TagHelpers);
     }

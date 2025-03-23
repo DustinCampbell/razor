@@ -34,11 +34,9 @@ public class RazorDiagnosticsBenchmark : RazorLanguageServerBenchmarkBase
     private VSDocumentDiagnosticsEndpoint? DocumentPullDiagnosticsEndpoint { get; set; }
     private RazorRequestContext RazorRequestContext { get; set; }
     private RazorCodeDocument? RazorCodeDocument { get; set; }
-    private SourceText? SourceText { get; set; }
     private ImmutableArray<SourceMapping> SourceMappings { get; set; }
     private SourceText? GeneratedCode { get; set; }
     private object? Diagnostics { get; set; }
-    private DocumentContext? DocumentContext { get; set; }
     private VSInternalDocumentDiagnosticsParams? Request { get; set; }
     private IEnumerable<VSInternalDiagnosticReport?>? Response { get; set; }
 
@@ -57,24 +55,22 @@ public class RazorDiagnosticsBenchmark : RazorLanguageServerBenchmarkBase
         {
             TextDocument = new TextDocumentIdentifier { Uri = uri }
         };
-        var stringSourceDocument = RazorSourceDocument.Create(GetFileContents(), UTF8Encoding.UTF8, RazorSourceDocumentProperties.Default);
-        var mockRazorCodeDocument = new Mock<RazorCodeDocument>(MockBehavior.Strict);
 
-        var mockRazorCSharpDocument = new RazorCSharpDocument(
-            mockRazorCodeDocument.Object,
+        var sourceDocument = RazorSourceDocument.Create(GetFileContents(), Encoding.UTF8, RazorSourceDocumentProperties.Default);
+        var codeDocument = RazorCodeDocument.Create(sourceDocument);
+
+        var csharpDocument = new RazorCSharpDocument(
+            codeDocument,
             GeneratedCode,
             RazorCodeGenerationOptions.DesignTimeDefault,
             diagnostics: [],
             SourceMappings,
             linePragmas: []);
 
-        var itemCollection = new ItemCollection();
-        itemCollection[typeof(RazorCSharpDocument)] = mockRazorCSharpDocument;
-        mockRazorCodeDocument.Setup(r => r.Source).Returns(stringSourceDocument);
-        mockRazorCodeDocument.Setup(r => r.Items).Returns(itemCollection);
-        RazorCodeDocument = mockRazorCodeDocument.Object;
+        codeDocument.SetCSharpDocument(csharpDocument);
 
-        SourceText = RazorCodeDocument.Source.Text;
+        RazorCodeDocument = codeDocument;
+
         var documentContext = new Mock<DocumentContext>(
             MockBehavior.Strict,
             new object[] { It.IsAny<Uri>(), It.IsAny<IDocumentSnapshot>(), It.IsAny<VSProjectContext>(), It.IsAny<int>() });
@@ -85,7 +81,6 @@ public class RazorDiagnosticsBenchmark : RazorLanguageServerBenchmarkBase
         documentContext.Setup(r => r.Snapshot.Version).Returns(It.IsAny<int>());
         documentContext.Setup(r => r.GetSourceTextAsync(It.IsAny<CancellationToken>())).ReturnsAsync(It.IsAny<SourceText>());
         RazorRequestContext = new RazorRequestContext(documentContext.Object, null!, "lsp/method", uri: null);
-        DocumentContext = documentContext.Object;
 
         var loggerFactory = EmptyLoggerFactory.Instance;
         var languageServerFeatureOptions = BuildFeatureOptions();

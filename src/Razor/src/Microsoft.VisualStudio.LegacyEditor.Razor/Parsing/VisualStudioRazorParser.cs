@@ -321,27 +321,32 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
         }
         else
         {
-            var currentCodeDocument = CodeDocument;
-            if (currentCodeDocument is null)
+            var codeDocument = CodeDocument;
+            if (codeDocument is null)
             {
                 // CodeDocument should have been initialized but was not.
                 Debug.Fail($"{nameof(CodeDocument)} should have been initialized but was not.");
                 return;
             }
 
-            var codeDocument = RazorCodeDocument.Create(
-                currentCodeDocument.Source,
-                currentCodeDocument.Imports,
-                currentCodeDocument.ParserOptions,
-                currentCodeDocument.CodeGenerationOptions);
+            var newCodeDocument = RazorCodeDocument.Create(
+                codeDocument.Source,
+                codeDocument.Imports,
+                codeDocument.ParserOptions,
+                codeDocument.CodeGenerationOptions);
 
-            foreach (var item in currentCodeDocument.Items)
+            foreach (var item in codeDocument.Items)
             {
-                codeDocument.Items[item.Key] = item.Value;
+                newCodeDocument.Items[item.Key] = item.Value;
             }
 
-            codeDocument.SetSyntaxTree(partialParseSyntaxTree);
-            TryUpdateLatestParsedSyntaxTreeSnapshot(codeDocument, snapshot);
+            if (codeDocument.TryGetTagHelperContext(out var tagHelperContext))
+            {
+                newCodeDocument.SetTagHelperContext(tagHelperContext);
+            }
+
+            newCodeDocument.SetSyntaxTree(partialParseSyntaxTree);
+            TryUpdateLatestParsedSyntaxTreeSnapshot(newCodeDocument, snapshot);
         }
 
         if ((result & PartialParseResultInternal.Provisional) == PartialParseResultInternal.Provisional)

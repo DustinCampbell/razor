@@ -105,9 +105,7 @@ internal class DocumentContext(Uri uri, IDocumentSnapshot snapshot, VSProjectCon
             : GetTagHelperContextCoreAsync(cancellationToken);
 
         static TagHelperDocumentContext GetTagHelperContextCore(RazorCodeDocument codeDocument)
-        {
-            return codeDocument.GetTagHelperContext().AssumeNotNull();
-        }
+            => codeDocument.GetRequiredTagHelperContext();
 
         async ValueTask<TagHelperDocumentContext> GetTagHelperContextCoreAsync(CancellationToken cancellationToken)
         {

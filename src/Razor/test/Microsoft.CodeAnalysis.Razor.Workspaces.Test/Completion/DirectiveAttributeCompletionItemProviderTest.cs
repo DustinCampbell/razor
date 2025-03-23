@@ -32,7 +32,7 @@ public class DirectiveAttributeCompletionItemProviderTest : RazorToolingIntegrat
             "@using Microsoft.AspNetCore.Components.Web"));
 
         var codeDocument = GetCodeDocument(string.Empty);
-        _defaultTagHelperDocumentContext = codeDocument.GetTagHelperContext();
+        _defaultTagHelperDocumentContext = codeDocument.GetRequiredTagHelperContext();
     }
 
     private RazorCodeDocument GetCodeDocument(string content)
@@ -282,7 +282,7 @@ public class DirectiveAttributeCompletionItemProviderTest : RazorToolingIntegrat
     {
         var codeDocument = GetCodeDocument(documentContent);
         var syntaxTree = codeDocument.GetSyntaxTree();
-        var tagHelperDocumentContext = codeDocument.GetTagHelperContext();
+        var tagHelperDocumentContext = codeDocument.GetRequiredTagHelperContext();
 
         var owner = syntaxTree.Root.FindInnermostNode(absoluteIndex, includeWhitespace: true, walkMarkersBack: true);
         owner = AbstractRazorCompletionFactsService.AdjustSyntaxNodeForWordBoundary(owner, absoluteIndex);

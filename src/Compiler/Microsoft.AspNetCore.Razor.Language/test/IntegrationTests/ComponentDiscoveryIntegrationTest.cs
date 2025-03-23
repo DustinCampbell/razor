@@ -32,8 +32,8 @@ namespace Test
         var result = CompileToCSharp(string.Empty);
 
         // Assert
-        var bindings = result.CodeDocument.GetTagHelperContext();
-        Assert.Contains(bindings.TagHelpers, t => t.Name == "Test.MyComponent");
+        Assert.True(result.CodeDocument.TryGetTagHelperContext(out var context));
+        Assert.Contains(context.TagHelpers, t => t.Name == "Test.MyComponent");
     }
 
     [Fact]
@@ -55,15 +55,15 @@ namespace Test.AnotherNamespace
         var result = CompileToCSharp(string.Empty);
 
         // Assert
-        var bindings = result.CodeDocument.GetTagHelperContext();
+        Assert.True(result.CodeDocument.TryGetTagHelperContext(out var context));
 
-        Assert.Contains(bindings.TagHelpers, t =>
+        Assert.Contains(context.TagHelpers, t =>
         {
             return t.Name == "Test.AnotherNamespace.MyComponent" &&
                 t.IsComponentFullyQualifiedNameMatch;
         });
 
-        Assert.DoesNotContain(bindings.TagHelpers, t =>
+        Assert.DoesNotContain(context.TagHelpers, t =>
         {
             return t.Name == "Test.AnotherNamespace.MyComponent" &&
                 !t.IsComponentFullyQualifiedNameMatch;
@@ -79,8 +79,8 @@ namespace Test.AnotherNamespace
         var result = CompileToCSharp("UniqueName.cshtml", cshtmlContent: string.Empty);
 
         // Assert
-        var bindings = result.CodeDocument.GetTagHelperContext();
-        Assert.Contains(bindings.TagHelpers, t => t.Name == "Test.UniqueName");
+        Assert.True(result.CodeDocument.TryGetTagHelperContext(out var context));
+        Assert.Contains(context.TagHelpers, t => t.Name == "Test.UniqueName");
     }
 
     [Fact]
@@ -96,8 +96,8 @@ namespace Test.AnotherNamespace
 }");
 
         // Assert
-        var bindings = result.CodeDocument.GetTagHelperContext();
-        Assert.Contains(bindings.TagHelpers, t => t.Name == "Test.UniqueName<TItem>");
+        Assert.True(result.CodeDocument.TryGetTagHelperContext(out var context));
+        Assert.Contains(context.TagHelpers, t => t.Name == "Test.UniqueName<TItem>");
     }
 
     [Fact]
@@ -113,8 +113,8 @@ namespace Test.AnotherNamespace
 }");
 
         // Assert
-        var bindings = result.CodeDocument.GetTagHelperContext();
-        Assert.Contains(bindings.TagHelpers, t => t.Name == "Test.UniqueName<TItem>");
+        Assert.True(result.CodeDocument.TryGetTagHelperContext(out var context));
+        Assert.Contains(context.TagHelpers, t => t.Name == "Test.UniqueName<TItem>");
     }
 
     [Fact]
@@ -132,8 +132,8 @@ namespace Test.AnotherNamespace
 }");
 
         // Assert
-        var bindings = result.CodeDocument.GetTagHelperContext();
-        Assert.Contains(bindings.TagHelpers, t => t.Name == "Test.UniqueName<TItem1, TItem2, TItem3>");
+        Assert.True(result.CodeDocument.TryGetTagHelperContext(out var context));
+        Assert.Contains(context.TagHelpers, t => t.Name == "Test.UniqueName<TItem1, TItem2, TItem3>");
     }
 
     [Fact]
@@ -151,7 +151,7 @@ namespace Test.AnotherNamespace
 }");
 
         // Assert
-        var bindings = result.CodeDocument.GetTagHelperContext();
-        Assert.Contains(bindings.TagHelpers, t => t.Name == "Test.UniqueName<TItem1, TItem2, TItem3>");
+        Assert.True(result.CodeDocument.TryGetTagHelperContext(out var context));
+        Assert.Contains(context.TagHelpers, t => t.Name == "Test.UniqueName<TItem1, TItem2, TItem3>");
     }
 }

@@ -49,7 +49,7 @@ internal static class HoverFactory
             owner = owner.Parent;
         }
 
-        var tagHelperDocumentContext = codeDocument.GetTagHelperContext();
+        var tagHelperDocumentContext = codeDocument.GetRequiredTagHelperContext();
 
         if (HtmlFacts.TryGetElementInfo(owner, out var containingTagNameToken, out var attributes, closingForwardSlashOrCloseAngleToken: out _) &&
             containingTagNameToken.Span.IntersectsWith(absoluteIndex))

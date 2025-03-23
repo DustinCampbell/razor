@@ -11,8 +11,7 @@ internal sealed class DefaultRazorTagHelperRewritePhase : RazorEnginePhaseBase
     protected override void ExecuteCore(RazorCodeDocument codeDocument, CancellationToken cancellationToken)
     {
         var syntaxTree = codeDocument.GetPreTagHelperSyntaxTree();
-        var context = codeDocument.GetTagHelperContext();
-        if (syntaxTree is null || context.TagHelpers.Length == 0)
+        if (syntaxTree is null || codeDocument.GetTagHelperContext() is not { TagHelpers.Length: > 0 } context)
         {
             // No descriptors, no-op.
             return;

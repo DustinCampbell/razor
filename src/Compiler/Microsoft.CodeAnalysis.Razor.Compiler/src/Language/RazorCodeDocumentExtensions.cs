@@ -22,25 +22,21 @@ public static class RazorCodeDocumentExtensions
     private static readonly object CssScopeKey = new();
     private static readonly object NamespaceKey = new();
 
-    internal static TagHelperDocumentContext GetTagHelperContext(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
+#nullable enable
 
-        return (TagHelperDocumentContext)document.Items[typeof(TagHelperDocumentContext)];
+    internal static TagHelperDocumentContext? GetTagHelperContext(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetTagHelperContext(out var result)
+            ? result
+            : null;
     }
 
-    internal static void SetTagHelperContext(this RazorCodeDocument document, TagHelperDocumentContext context)
+    internal static TagHelperDocumentContext GetRequiredTagHelperContext(this RazorCodeDocument codeDocument)
     {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[typeof(TagHelperDocumentContext)] = context;
+        return codeDocument.GetTagHelperContext().AssumeNotNull();
     }
+
+#nullable disable
 
     internal static IReadOnlyList<TagHelperDescriptor> GetTagHelpers(this RazorCodeDocument document)
     {

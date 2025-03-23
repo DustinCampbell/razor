@@ -335,7 +335,7 @@ public sealed class RazorProjectEngine
             NamespaceDirective.Register(builder);
             AttributeDirective.Register(builder);
 
-            AddComponentFeatures(builder, configuration.LanguageVersion);
+            AddComponentFeatures(builder);
         }
 
         configure?.Invoke(builder);
@@ -410,8 +410,10 @@ public sealed class RazorProjectEngine
         });
     }
 
-    private static void AddComponentFeatures(RazorProjectEngineBuilder builder, RazorLanguageVersion razorLanguageVersion)
+    private static void AddComponentFeatures(RazorProjectEngineBuilder builder)
     {
+        var razorLanguageVersion = builder.Configuration.LanguageVersion;
+
         // Project Engine Features
         builder.Features.Add(new ComponentImportProjectFeature());
 
@@ -441,7 +443,7 @@ public sealed class RazorProjectEngine
         }
 
         // Document Classifier
-        builder.Features.Add(new ComponentDocumentClassifierPass(razorLanguageVersion));
+        builder.Features.Add(new ComponentDocumentClassifierPass());
 
         // Directive Classifier
         builder.Features.Add(new ComponentWhitespacePass());
@@ -454,15 +456,15 @@ public sealed class RazorProjectEngine
         builder.Features.Add(new ComponentReferenceCaptureLoweringPass());
         builder.Features.Add(new ComponentSplatLoweringPass());
         builder.Features.Add(new ComponentFormNameLoweringPass());
-        builder.Features.Add(new ComponentBindLoweringPass(razorLanguageVersion >= RazorLanguageVersion.Version_7_0));
+        builder.Features.Add(new ComponentBindLoweringPass());
         builder.Features.Add(new ComponentRenderModeLoweringPass());
         builder.Features.Add(new ComponentCssScopePass());
         builder.Features.Add(new ComponentTemplateDiagnosticPass());
         builder.Features.Add(new ComponentGenericTypePass());
         builder.Features.Add(new ComponentChildContentDiagnosticPass());
         builder.Features.Add(new ComponentMarkupDiagnosticPass());
-        builder.Features.Add(new ComponentMarkupBlockPass(razorLanguageVersion));
-        builder.Features.Add(new ComponentMarkupEncodingPass(razorLanguageVersion));
+        builder.Features.Add(new ComponentMarkupBlockPass());
+        builder.Features.Add(new ComponentMarkupEncodingPass());
     }
 
     internal void CollectImports(RazorProjectItem projectItem, ref PooledArrayBuilder<RazorProjectItem> importItems)

@@ -13,13 +13,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Components;
 
 internal class ComponentMarkupEncodingPass : ComponentIntermediateNodePassBase, IRazorOptimizationPass
 {
-    private readonly RazorLanguageVersion _version;
-
-    public ComponentMarkupEncodingPass(RazorLanguageVersion version)
-    {
-        _version = version;
-    }
-
     // Runs after ComponentMarkupBlockPass
     public override int Order => ComponentMarkupDiagnosticPass.DefaultOrder + 20;
 
@@ -36,7 +29,7 @@ internal class ComponentMarkupEncodingPass : ComponentIntermediateNodePassBase, 
             return;
         }
 
-        var rewriter = new Rewriter(_version);
+        var rewriter = new Rewriter(codeDocument.LanguageVersion);
         rewriter.Visit(documentNode);
     }
 

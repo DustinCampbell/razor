@@ -26,9 +26,10 @@ public class ComponentMarkupBlockPassTest
                     b.Features.Remove(b.Features.OfType<ComponentMarkupBlockPass>().Single());
                 }
             });
+
         Engine = ProjectEngine.Engine;
 
-        Pass = new ComponentMarkupBlockPass(RazorLanguageVersion.Latest)
+        Pass = new ComponentMarkupBlockPass()
         {
             Engine = Engine
         };

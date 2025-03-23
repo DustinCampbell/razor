@@ -13,13 +13,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Components;
 
 internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
 {
-    private readonly RazorLanguageVersion _version;
-
-    public ComponentDocumentClassifierPass(RazorLanguageVersion version)
-    {
-        _version = version;
-    }
-
     public const string ComponentDocumentKind = "component.1.0";
 
     /// <summary>
@@ -52,7 +45,7 @@ internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
 
     protected override CodeTarget CreateTarget(RazorCodeDocument codeDocument, RazorCodeGenerationOptions options)
     {
-        return new ComponentCodeTarget(options, _version, TargetExtensions);
+        return new ComponentCodeTarget(options, codeDocument.LanguageVersion, TargetExtensions);
     }
 
     /// <inheritdoc />
@@ -113,11 +106,12 @@ internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
             @class.BaseType = new BaseTypeWithModel("global::" + ComponentsApi.ComponentBase.FullTypeName);
 
             // Constrained type parameters are only supported in Razor language versions v6.0
-            var razorLanguageVersion = codeDocument.ParserOptions.LanguageVersion;
-            var directiveType = razorLanguageVersion >= RazorLanguageVersion.Version_6_0
+            var directiveType = codeDocument.LanguageVersion >= RazorLanguageVersion.Version_6_0
                 ? ComponentConstrainedTypeParamDirective.Directive
                 : ComponentTypeParamDirective.Directive;
+
             var typeParamReferences = documentNode.FindDirectiveReferences(directiveType);
+
             for (var i = 0; i < typeParamReferences.Count; i++)
             {
                 var typeParamNode = (DirectiveIntermediateNode)typeParamReferences[i].Node;

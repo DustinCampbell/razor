@@ -16,13 +16,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Components;
 
 internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IRazorOptimizationPass
 {
-    private readonly bool _bindGetSetSupported;
-
-    public ComponentBindLoweringPass(bool bindGetSetSupported)
-    {
-        _bindGetSetSupported = bindGetSetSupported;
-    }
-
     // Run after event handler pass
     public override int Order => 100;
 
@@ -32,6 +25,8 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         {
             return;
         }
+
+        var bindGetSetSupported = codeDocument.LanguageVersion >= RazorLanguageVersion.Version_7_0;
 
         var @namespace = documentNode.FindPrimaryNamespace();
         var @class = documentNode.FindPrimaryClass();
@@ -99,7 +94,7 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
 
             if (node.BoundAttributeParameter.Metadata.ContainsKey(ComponentMetadata.Bind.BindAttributeGetSet))
             {
-                if (!_bindGetSetSupported)
+                if (!bindGetSetSupported)
                 {
                     node.Diagnostics.Add(ComponentDiagnosticFactory.CreateBindAttributeParameter_UnsupportedSyntaxBindGetSet(
                         node.Source,

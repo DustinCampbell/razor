@@ -41,8 +41,7 @@ internal class ComponentWhitespacePass : ComponentIntermediateNodePassBase, IRaz
             return;
         }
 
-        var razorLanguageVersion = codeDocument.ParserOptions.LanguageVersion;
-        var useLegacyBehavior = razorLanguageVersion < RazorLanguageVersion.Version_5_0;
+        var useLegacyBehavior = codeDocument.LanguageVersion < RazorLanguageVersion.Version_5_0;
         if (useLegacyBehavior)
         {
             // Prior to 5.0, the whitespace pass only applied to the BuildRenderTree method, and

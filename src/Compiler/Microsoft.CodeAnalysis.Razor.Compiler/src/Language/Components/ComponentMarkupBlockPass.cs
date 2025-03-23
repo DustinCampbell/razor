@@ -18,12 +18,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Components;
 // or quote style.
 internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRazorOptimizationPass
 {
-    private readonly RazorLanguageVersion _version;
-
-    public ComponentMarkupBlockPass(RazorLanguageVersion version)
-    {
-        _version = version;
-    }
 
     // Runs LATE because we want to destroy structure.
     //
@@ -46,7 +40,7 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
             return;
         }
 
-        var findVisitor = new FindHtmlTreeVisitor(_version);
+        var findVisitor = new FindHtmlTreeVisitor(codeDocument.LanguageVersion);
         findVisitor.Visit(documentNode);
 
         var trees = findVisitor.Trees;

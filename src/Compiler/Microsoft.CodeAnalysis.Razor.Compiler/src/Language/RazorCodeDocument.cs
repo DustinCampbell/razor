@@ -20,6 +20,7 @@ public sealed class RazorCodeDocument
     private RazorSyntaxTree? _syntaxTree;
     private TagHelperDocumentContext? _tagHelperContext;
 
+    public RazorLanguageVersion LanguageVersion => ParserOptions.LanguageVersion;
     public string FileKind => ParserOptions.FileKind;
 
     private RazorCodeDocument(

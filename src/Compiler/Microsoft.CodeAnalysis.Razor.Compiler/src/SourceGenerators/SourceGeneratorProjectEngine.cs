@@ -66,7 +66,7 @@ internal sealed class SourceGeneratorProjectEngine
 
     public SourceGeneratorRazorCodeDocument ProcessTagHelpers(SourceGeneratorRazorCodeDocument sgDocument, IReadOnlyList<TagHelperDescriptor> tagHelpers, bool checkForIdempotency)
     {
-        Debug.Assert(sgDocument.CodeDocument.GetPreTagHelperSyntaxTree() is not null);
+        Debug.Assert(sgDocument.CodeDocument.TryGetPreTagHelperSyntaxTree(out _));
 
         int startIndex = _discoveryPhaseIndex;
         var codeDocument = sgDocument.CodeDocument;

@@ -24,6 +24,18 @@ public static class RazorCodeDocumentExtensions
 
 #nullable enable
 
+    internal static RazorSyntaxTree? GetPreTagHelperSyntaxTree(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetPreTagHelperSyntaxTree(out var result)
+            ? result
+            : null;
+    }
+
+    internal static RazorSyntaxTree GetRequiredPreTagHelperSyntaxTree(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.GetPreTagHelperSyntaxTree().AssumeNotNull();
+    }
+
     internal static TagHelperDocumentContext? GetTagHelperContext(this RazorCodeDocument codeDocument)
     {
         return codeDocument.TryGetTagHelperContext(out var result)
@@ -76,26 +88,6 @@ public static class RazorCodeDocumentExtensions
         }
 
         document.Items[nameof(GetReferencedTagHelpers)] = tagHelpers;
-    }
-
-    public static RazorSyntaxTree GetPreTagHelperSyntaxTree(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return document.Items[nameof(GetPreTagHelperSyntaxTree)] as RazorSyntaxTree;
-    }
-
-    public static void SetPreTagHelperSyntaxTree(this RazorCodeDocument document, RazorSyntaxTree syntaxTree)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[nameof(GetPreTagHelperSyntaxTree)] = syntaxTree;
     }
 
     public static RazorSyntaxTree GetSyntaxTree(this RazorCodeDocument document)

@@ -345,7 +345,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
         var codeDocument = projectEngine.ProcessDesignTime(projectItem);
 
         // Assert
-        AssertDocumentNodeMatchesBaseline(codeDocument.GetDocumentIntermediateNode(), testName);
+        AssertDocumentNodeMatchesBaseline(codeDocument.GetRequiredDocumentIntermediateNode(), testName);
         AssertHtmlDocumentMatchesBaseline(codeDocument.GetHtmlDocument(), testName);
         AssertCSharpDocumentMatchesBaseline(codeDocument.GetRequiredCSharpDocument(), testName);
         AssertSourceMappingsMatchBaseline(codeDocument, testName);
@@ -365,7 +365,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
         var codeDocument = projectEngine.Process(projectItem);
 
         // Assert
-        AssertDocumentNodeMatchesBaseline(codeDocument.GetDocumentIntermediateNode(), testName);
+        AssertDocumentNodeMatchesBaseline(codeDocument.GetRequiredDocumentIntermediateNode(), testName);
         AssertCSharpDocumentMatchesBaseline(codeDocument.GetRequiredCSharpDocument(), testName);
         AssertLinePragmas(codeDocument, designTime: false);
         AssertCSharpDiagnosticsMatchBaseline(codeDocument, testName);
@@ -397,7 +397,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
         var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), FileKinds.Legacy, imports, descriptors.ToList());
 
         // Assert
-        AssertDocumentNodeMatchesBaseline(codeDocument.GetDocumentIntermediateNode(), testName);
+        AssertDocumentNodeMatchesBaseline(codeDocument.GetRequiredDocumentIntermediateNode(), testName);
         AssertCSharpDocumentMatchesBaseline(codeDocument.GetRequiredCSharpDocument(), testName);
         AssertCSharpDiagnosticsMatchBaseline(codeDocument, testName);
     }
@@ -416,7 +416,7 @@ public class CodeGenerationIntegrationTest : IntegrationTestBase
         var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), FileKinds.Legacy, imports, descriptors.ToList());
 
         // Assert
-        AssertDocumentNodeMatchesBaseline(codeDocument.GetDocumentIntermediateNode(), testName);
+        AssertDocumentNodeMatchesBaseline(codeDocument.GetRequiredDocumentIntermediateNode(), testName);
         AssertCSharpDocumentMatchesBaseline(codeDocument.GetRequiredCSharpDocument(), testName);
         AssertHtmlDocumentMatchesBaseline(codeDocument.GetHtmlDocument(), testName);
         AssertHtmlSourceMappingsMatchBaseline(codeDocument, testName);

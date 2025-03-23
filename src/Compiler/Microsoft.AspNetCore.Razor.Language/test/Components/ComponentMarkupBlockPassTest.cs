@@ -468,9 +468,10 @@ public class ComponentMarkupBlockPassTest
             phase.Execute(codeDocument);
         }
 
-        var document = codeDocument.GetDocumentIntermediateNode();
-        Engine.GetFeatures<ComponentDocumentClassifierPass>().Single().Execute(codeDocument, document);
-        Engine.GetFeatures<ComponentMarkupDiagnosticPass>().Single().Execute(codeDocument, document);
-        return document;
+        var documentNode = codeDocument.GetRequiredDocumentIntermediateNode();
+        Engine.GetFeatures<ComponentDocumentClassifierPass>().Single().Execute(codeDocument, documentNode);
+        Engine.GetFeatures<ComponentMarkupDiagnosticPass>().Single().Execute(codeDocument, documentNode);
+
+        return documentNode;
     }
 }

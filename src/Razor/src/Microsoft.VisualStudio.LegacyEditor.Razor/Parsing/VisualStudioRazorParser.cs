@@ -348,6 +348,11 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
                 newCodeDocument.SetCSharpDocument(csharpDocument);
             }
 
+            if (codeDocument.TryGetDocumentIntermediateNode(out var documentNode))
+            {
+                newCodeDocument.SetDocumentIntermediateNode(documentNode);
+            }
+
             if (codeDocument.TryGetImportSyntaxTrees(out var importSyntaxTrees))
             {
                 newCodeDocument.SetImportSyntaxTrees(importSyntaxTrees);
@@ -356,6 +361,11 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
             if (codeDocument.TryGetPreTagHelperSyntaxTree(out var preTagHelperSyntaxTree))
             {
                 newCodeDocument.SetPreTagHelperSyntaxTree(preTagHelperSyntaxTree);
+            }
+
+            if (codeDocument.TryGetReferencedTagHelpers(out var referencedTagHelpers))
+            {
+                newCodeDocument.SetReferencedTagHelpers(referencedTagHelpers);
             }
 
             if (codeDocument.TryGetTagHelperContext(out var tagHelperContext))

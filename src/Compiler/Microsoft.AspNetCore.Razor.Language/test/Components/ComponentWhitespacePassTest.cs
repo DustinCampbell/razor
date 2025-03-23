@@ -169,7 +169,7 @@ public class ComponentWhitespacePassTest
             phase.Execute(codeDocument);
         }
 
-        return codeDocument.GetDocumentIntermediateNode();
+        return codeDocument.GetRequiredDocumentIntermediateNode();
     }
 
     private static string GetContent(IntermediateNode node)

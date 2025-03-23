@@ -42,14 +42,14 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
 
     protected void AssertDocumentNodeMatchesBaseline(RazorCodeDocument codeDocument, [CallerMemberName]string testName = "")
     {
-        var document = codeDocument.GetDocumentIntermediateNode();
+        var documentNode = codeDocument.GetRequiredDocumentIntermediateNode();
         var baselineFilePath = GetBaselineFilePath(codeDocument, ".ir.txt", testName);
 
         if (GenerateBaselines.ShouldGenerate)
         {
             var baselineFullPath = Path.Combine(TestProjectRoot, baselineFilePath);
             Directory.CreateDirectory(Path.GetDirectoryName(baselineFullPath));
-            WriteBaseline(IntermediateNodeSerializer.Serialize(document), baselineFullPath);
+            WriteBaseline(IntermediateNodeSerializer.Serialize(documentNode), baselineFullPath);
 
             return;
         }
@@ -63,8 +63,8 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
         // Normalize newlines by splitting into an array.
         var irText = irFile.ReadAllText();
         var baseline = irText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-        AssertEx.AssertEqualToleratingWhitespaceDifferences(irText, IntermediateNodeSerializer.Serialize(document));
-        IntermediateNodeVerifier.Verify(document, baseline);
+        AssertEx.AssertEqualToleratingWhitespaceDifferences(irText, IntermediateNodeSerializer.Serialize(documentNode));
+        IntermediateNodeVerifier.Verify(documentNode, baseline);
     }
 
     protected void AssertCSharpDocumentMatchesBaseline(RazorCodeDocument codeDocument, bool verifyLinePragmas = true, [CallerMemberName] string testName = "")

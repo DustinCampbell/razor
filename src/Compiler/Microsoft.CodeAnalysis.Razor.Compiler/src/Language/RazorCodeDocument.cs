@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -20,6 +21,7 @@ public sealed class RazorCodeDocument
     public string? CssScope { get; }
 
     private RazorCSharpDocument? _csharpDocument;
+    private DocumentIntermediateNode? _documentNode;
     private ImmutableArray<RazorSyntaxTree> _importSyntaxTrees;
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
     private ISet<TagHelperDescriptor>? _referencedTagHelpers;
@@ -80,6 +82,19 @@ public sealed class RazorCodeDocument
         ArgHelper.ThrowIfNull(csharpDocument);
 
         _csharpDocument = csharpDocument;
+    }
+
+    internal bool TryGetDocumentIntermediateNode([NotNullWhen(true)] out DocumentIntermediateNode? documentNode)
+    {
+        documentNode = _documentNode;
+        return documentNode != null;
+    }
+
+    internal void SetDocumentIntermediateNode(DocumentIntermediateNode documentNode)
+    {
+        ArgHelper.ThrowIfNull(documentNode);
+
+        _documentNode = documentNode;
     }
 
     public bool TryGetImportSyntaxTrees(out ImmutableArray<RazorSyntaxTree> importSyntaxTrees)

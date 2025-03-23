@@ -179,8 +179,8 @@ public class ComponentDuplicateAttributeDiagnosticPassTest
             phase.Execute(codeDocument);
         }
 
-        var document = codeDocument.GetDocumentIntermediateNode();
-        Engine.GetFeatures<ComponentDocumentClassifierPass>().Single().Execute(codeDocument, document);
-        return document;
+        var documentNode = codeDocument.GetRequiredDocumentIntermediateNode();
+        Engine.GetFeatures<ComponentDocumentClassifierPass>().Single().Execute(codeDocument, documentNode);
+        return documentNode;
     }
 }

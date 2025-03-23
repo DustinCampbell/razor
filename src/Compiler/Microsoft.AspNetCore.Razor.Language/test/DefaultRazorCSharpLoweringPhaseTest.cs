@@ -45,11 +45,11 @@ public class DefaultRazorCSharpLoweringPhaseTest
 
         codeDocument.SetSyntaxTree(RazorSyntaxTree.Parse(codeDocument.Source));
 
-        var irDocument = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode()
         {
             DocumentKind = "test",
         };
-        codeDocument.SetDocumentIntermediateNode(irDocument);
+        codeDocument.SetDocumentIntermediateNode(documentNode);
 
         // Act & Assert
         var exception = Assert.Throws<InvalidOperationException>(() => phase.Execute(codeDocument));
@@ -67,7 +67,7 @@ public class DefaultRazorCSharpLoweringPhaseTest
         var engine = RazorProjectEngine.CreateEmpty(b => b.Phases.Add(phase));
         var codeDocument = TestRazorCodeDocument.Create("<p class=@(");
         var options = RazorCodeGenerationOptions.Default;
-        var irDocument = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode()
         {
             DocumentKind = "test",
             Target = CodeTarget.CreateDefault(codeDocument, options),
@@ -76,8 +76,8 @@ public class DefaultRazorCSharpLoweringPhaseTest
         var expectedDiagnostic = RazorDiagnostic.Create(
                 new RazorDiagnosticDescriptor("1234", "I am an error.", RazorDiagnosticSeverity.Error),
                 new SourceSpan("SomeFile.cshtml", 11, 0, 11, 1));
-        irDocument.Diagnostics.Add(expectedDiagnostic);
-        codeDocument.SetDocumentIntermediateNode(irDocument);
+        documentNode.Diagnostics.Add(expectedDiagnostic);
+        codeDocument.SetDocumentIntermediateNode(documentNode);
 
         // Act
         phase.Execute(codeDocument);

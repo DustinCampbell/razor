@@ -93,12 +93,12 @@ internal class ExtractToCodeBehindCodeActionResolver(
         };
     }
 
-    private string GenerateCodeBehindClass(string className, string namespaceName, string contents, RazorCodeDocument razorCodeDocument)
+    private static string GenerateCodeBehindClass(string className, string namespaceName, string contents, RazorCodeDocument razorCodeDocument)
     {
         using var _ = StringBuilderPool.GetPooledObject(out var builder);
 
         var usingDirectives = razorCodeDocument
-            .GetDocumentIntermediateNode()
+            .GetRequiredDocumentIntermediateNode()
             .FindDescendantNodes<UsingDirectiveIntermediateNode>();
 
         foreach (var usingDirective in usingDirectives)

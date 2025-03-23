@@ -35,6 +35,18 @@ public static class RazorCodeDocumentExtensions
         return codeDocument.GetCSharpDocument().AssumeNotNull();
     }
 
+    internal static DocumentIntermediateNode? GetDocumentIntermediateNode(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetDocumentIntermediateNode(out var result)
+            ? result
+            : null;
+    }
+
+    internal static DocumentIntermediateNode GetRequiredDocumentIntermediateNode(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.GetDocumentIntermediateNode().AssumeNotNull();
+    }
+
     internal static ImmutableArray<RazorSyntaxTree> GetImportSyntaxTrees(this RazorCodeDocument codeDocument)
     {
         return codeDocument.TryGetImportSyntaxTrees(out var result)
@@ -118,26 +130,6 @@ public static class RazorCodeDocumentExtensions
         }
 
         document.Items[typeof(TagHelpersHolder)] = new TagHelpersHolder(tagHelpers);
-    }
-
-    public static DocumentIntermediateNode GetDocumentIntermediateNode(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return document.Items[typeof(DocumentIntermediateNode)] as DocumentIntermediateNode;
-    }
-
-    public static void SetDocumentIntermediateNode(this RazorCodeDocument document, DocumentIntermediateNode documentNode)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[typeof(DocumentIntermediateNode)] = documentNode;
     }
 
     internal static RazorHtmlDocument GetHtmlDocument(this RazorCodeDocument codeDocument)

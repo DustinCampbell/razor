@@ -32,7 +32,7 @@ public class ExtensibleDirectiveTest : IntegrationTestBase
         var codeDocument = engine.ProcessDesignTime(projectItem);
 
         // Assert
-        AssertDocumentNodeMatchesBaseline(codeDocument.GetDocumentIntermediateNode());
+        AssertDocumentNodeMatchesBaseline(codeDocument.GetRequiredDocumentIntermediateNode());
         AssertCSharpDocumentMatchesBaseline(codeDocument.GetRequiredCSharpDocument());
         AssertLinePragmas(codeDocument, designTime: true);
         AssertSourceMappingsMatchBaseline(codeDocument);

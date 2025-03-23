@@ -46,7 +46,7 @@ internal abstract partial class CSharpFormattingPassBase(IDocumentMappingService
         // 2. The indentation due to Razor and HTML constructs
 
         var text = context.SourceText;
-        var csharpDocument = context.CodeDocument.GetCSharpDocument();
+        var csharpDocument = context.CodeDocument.GetRequiredCSharpDocument();
 
         // To help with figuring out the correct indentation, first we will need the indentation
         // that the C# formatter wants to apply in the following locations,
@@ -629,7 +629,7 @@ internal abstract partial class CSharpFormattingPassBase(IDocumentMappingService
 
     protected static string RenderSourceMappings(RazorCodeDocument codeDocument)
     {
-        var markers = codeDocument.GetCSharpDocument().SourceMappings.SelectMany(mapping =>
+        var markers = codeDocument.GetRequiredCSharpDocument().SourceMappings.SelectMany(mapping =>
             new[]
             {
                 (index: mapping.OriginalSpan.AbsoluteIndex, text: "<#" ),

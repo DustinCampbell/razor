@@ -38,11 +38,11 @@ internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporte
             return ImmutableArray<RazorMappedSpanResult>.Empty;
         }
 
-        var output = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
-        var source = output.Source.Text;
+        var codeDocument = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
+        var source = codeDocument.Source.Text;
 
-        var csharpDocument = output.GetCSharpDocument();
-        var filePath = output.Source.FilePath.AssumeNotNull();
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
+        var filePath = codeDocument.Source.FilePath.AssumeNotNull();
 
         using var results = new PooledArrayBuilder<RazorMappedSpanResult>();
 

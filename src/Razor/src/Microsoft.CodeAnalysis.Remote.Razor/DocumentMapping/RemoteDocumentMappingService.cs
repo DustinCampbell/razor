@@ -54,7 +54,7 @@ internal sealed class RemoteDocumentMappingService(
             return (generatedDocumentUri, generatedDocumentRange);
         }
 
-        if (TryMapToHostDocumentRange(razorCodeDocument.GetCSharpDocument(), generatedDocumentRange, MappingBehavior.Strict, out var mappedRange))
+        if (TryMapToHostDocumentRange(razorCodeDocument.GetRequiredCSharpDocument(), generatedDocumentRange, MappingBehavior.Strict, out var mappedRange))
         {
             var solution = project.Solution;
             var filePath = razorCodeDocument.Source.FilePath;

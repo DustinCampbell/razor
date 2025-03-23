@@ -69,16 +69,16 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
 
     protected void AssertCSharpDocumentMatchesBaseline(RazorCodeDocument codeDocument, bool verifyLinePragmas = true, [CallerMemberName] string testName = "")
     {
-        var document = codeDocument.GetCSharpDocument();
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         // Normalize newlines to match those in the baseline.
-        var actualCode = document.Text.ToString().Replace("\r", "").Replace("\n", "\r\n");
+        var actualCode = csharpDocument.Text.ToString().Replace("\r", "").Replace("\n", "\r\n");
 
         var baselineFilePath = GetBaselineFilePath(codeDocument, ".codegen.cs", testName);
         var baselineDiagnosticsFilePath = GetBaselineFilePath(codeDocument, ".diagnostics.txt", testName);
         var baselineMappingsFilePath = GetBaselineFilePath(codeDocument, ".mappings.txt", testName);
 
-        var serializedMappings = SourceMappingsSerializer.Serialize(document, codeDocument.Source);
+        var serializedMappings = SourceMappingsSerializer.Serialize(csharpDocument, codeDocument.Source);
 
         if (GenerateBaselines.ShouldGenerate)
         {
@@ -87,7 +87,7 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
             WriteBaseline(actualCode, baselineFullPath);
 
             var baselineDiagnosticsFullPath = Path.Combine(TestProjectRoot, baselineDiagnosticsFilePath);
-            var lines = document.Diagnostics.Select(RazorDiagnosticSerializer.Serialize).ToArray();
+            var lines = csharpDocument.Diagnostics.Select(RazorDiagnosticSerializer.Serialize).ToArray();
             if (lines.Any())
             {
                 WriteBaseline(lines, baselineDiagnosticsFullPath);
@@ -98,7 +98,7 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
             }
 
             var baselineMappingsFullPath = Path.Combine(TestProjectRoot, baselineMappingsFilePath);
-            var text = SourceMappingsSerializer.Serialize(document, codeDocument.Source);
+            var text = SourceMappingsSerializer.Serialize(csharpDocument, codeDocument.Source);
             if (!string.IsNullOrEmpty(text))
             {
                 WriteBaseline(text, baselineMappingsFullPath);
@@ -127,7 +127,7 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
             baselineDiagnostics = diagnosticsFile.ReadAllText();
         }
 
-        var actualDiagnostics = string.Concat(document.Diagnostics.Select(d => RazorDiagnosticSerializer.Serialize(d) + "\r\n"));
+        var actualDiagnostics = string.Concat(csharpDocument.Diagnostics.Select(d => RazorDiagnosticSerializer.Serialize(d) + "\r\n"));
         Assert.Equal(baselineDiagnostics, actualDiagnostics);
 
         var baselineMappings = string.Empty;
@@ -137,7 +137,7 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
             baselineMappings = mappingsFile.ReadAllText();
         }
 
-        var actualMappings = SourceMappingsSerializer.Serialize(document, codeDocument.Source);
+        var actualMappings = SourceMappingsSerializer.Serialize(csharpDocument, codeDocument.Source);
         actualMappings = actualMappings.Replace("\r", "").Replace("\n", "\r\n");
         Assert.Equal(baselineMappings, actualMappings);
 
@@ -149,8 +149,7 @@ public abstract class RazorBaselineIntegrationTestBase : RazorIntegrationTestBas
 
     protected void AssertLinePragmas(RazorCodeDocument codeDocument)
     {
-        var csharpDocument = codeDocument.GetCSharpDocument();
-        Assert.NotNull(csharpDocument);
+        Assert.True(codeDocument.TryGetCSharpDocument(out var csharpDocument));
         var linePragmas = csharpDocument.LinePragmas;
         if (DesignTime)
         {

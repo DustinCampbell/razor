@@ -18,6 +18,7 @@ public sealed class RazorCodeDocument
 
     public string? CssScope { get; }
 
+    private RazorCSharpDocument? _csharpDocument;
     private RazorSyntaxTree? _preTagHelperSyntaxTree;
     private RazorSyntaxTree? _syntaxTree;
     private TagHelperDocumentContext? _tagHelperContext;
@@ -63,6 +64,17 @@ public sealed class RazorCodeDocument
         ArgHelper.ThrowIfNull(source);
 
         return new(source, imports, parserOptions, codeGenerationOptions, cssScope);
+    }
+
+    public bool TryGetCSharpDocument([NotNullWhen(true)] out RazorCSharpDocument? csharpDocument)
+    {
+        csharpDocument = _csharpDocument;
+        return csharpDocument != null;
+    }
+
+    internal void SetCSharpDocument(RazorCSharpDocument csharpDocument)
+    {
+        _csharpDocument = csharpDocument;
     }
 
     internal bool TryGetPreTagHelperSyntaxTree([NotNullWhen(true)] out RazorSyntaxTree? syntaxTree)

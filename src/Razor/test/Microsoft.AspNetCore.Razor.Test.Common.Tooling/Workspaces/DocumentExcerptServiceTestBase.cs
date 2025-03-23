@@ -39,7 +39,7 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
     }
 
     // Adds the text to a ProjectSnapshot, generates code, and updates the workspace.
-    private (IDocumentSnapshot primary, Document secondary) InitializeDocument(SourceText sourceText)
+    private (DocumentSnapshot primary, Document secondary) InitializeDocument(SourceText sourceText)
     {
         var state = ProjectState
             .Create(_hostProject, LanguageServerFeatureOptions.ToCompilerOptions(), ProjectEngineFactoryProvider)
@@ -69,11 +69,15 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
 
     // Maps a span in the primary buffer to the secondary buffer. This is only valid for C# code
     // that appears in the primary buffer.
-    private static async Task<TextSpan> GetSecondarySpanAsync(IDocumentSnapshot primary, TextSpan primarySpan, Document secondary, CancellationToken cancellationToken)
+    private static async Task<TextSpan> GetSecondarySpanAsync(
+        DocumentSnapshot primary,
+        TextSpan primarySpan,
+        Document secondary,
+        CancellationToken cancellationToken)
     {
         var output = await primary.GetGeneratedOutputAsync(cancellationToken);
 
-        foreach (var mapping in output.GetCSharpDocument().SourceMappings)
+        foreach (var mapping in output.GetRequiredCSharpDocument().SourceMappings)
         {
             if (mapping.OriginalSpan.AbsoluteIndex <= primarySpan.Start &&
                 (mapping.OriginalSpan.AbsoluteIndex + mapping.OriginalSpan.Length) >= primarySpan.End)

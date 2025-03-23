@@ -141,7 +141,7 @@ internal abstract class AbstractRazorSemanticTokensInfoService(
         Guid correlationId,
         CancellationToken cancellationToken)
     {
-        var generatedDocument = codeDocument.GetCSharpDocument();
+        var generatedDocument = codeDocument.GetRequiredCSharpDocument();
         ImmutableArray<LinePositionSpan> csharpRanges;
 
         // When the feature flag is enabled we try to get a list of precise ranges for the C# code embedded in the Razor document.
@@ -266,10 +266,10 @@ internal abstract class AbstractRazorSemanticTokensInfoService(
         var csharpSourceText = codeDocument.GetCSharpSourceText();
         var sourceText = codeDocument.Source.Text;
         var textSpan = sourceText.GetTextSpan(razorRange);
-        var csharpDoc = codeDocument.GetCSharpDocument();
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         // We want to find the min and max C# source mapping that corresponds with our Razor range.
-        foreach (var mapping in csharpDoc.SourceMappings)
+        foreach (var mapping in csharpDocument.SourceMappings)
         {
             var mappedTextSpan = mapping.OriginalSpan.AsTextSpan();
 

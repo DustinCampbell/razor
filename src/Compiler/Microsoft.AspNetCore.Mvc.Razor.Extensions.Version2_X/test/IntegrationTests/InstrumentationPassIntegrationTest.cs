@@ -76,7 +76,7 @@ public class InstrumentationPassIntegrationTest : IntegrationTestBase
         // Assert
         AssertDocumentNodeMatchesBaseline(document.GetDocumentIntermediateNode());
 
-        var csharpDocument = document.GetCSharpDocument();
+        var csharpDocument = document.GetRequiredCSharpDocument();
         AssertCSharpDocumentMatchesBaseline(csharpDocument);
         Assert.Empty(csharpDocument.Diagnostics);
     }

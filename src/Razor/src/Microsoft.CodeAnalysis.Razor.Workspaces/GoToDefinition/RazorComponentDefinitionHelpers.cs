@@ -172,7 +172,7 @@ internal static class RazorComponentDefinitionHelpers
 
             var csharpText = codeDocument.GetCSharpSourceText();
             var range = csharpText.GetRange(property.Identifier.Span);
-            if (documentMappingService.TryMapToHostDocumentRange(codeDocument.GetCSharpDocument(), range, out var originalRange))
+            if (documentMappingService.TryMapToHostDocumentRange(codeDocument.GetRequiredCSharpDocument(), range, out var originalRange))
             {
                 return originalRange;
             }

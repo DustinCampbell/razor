@@ -62,7 +62,7 @@ internal class UnformattedRemappingCSharpCodeActionResolver(IDocumentMappingServ
             return codeAction;
         }
 
-        if (!_documentMappingService.TryMapToHostDocumentRange(codeDocument.GetCSharpDocument(), textEdit.Range, MappingBehavior.Inclusive, out var originalRange))
+        if (!_documentMappingService.TryMapToHostDocumentRange(codeDocument.GetRequiredCSharpDocument(), textEdit.Range, MappingBehavior.Inclusive, out var originalRange))
         {
             // Text edit failed to map
             return codeAction;

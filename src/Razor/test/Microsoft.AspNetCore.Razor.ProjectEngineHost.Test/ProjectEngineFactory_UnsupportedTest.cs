@@ -1,7 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-using System;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Xunit;
@@ -28,13 +27,13 @@ public class ProjectEngineFactory_UnsupportedTest(ITestOutputHelper testOutput) 
     {
         // Arrange
         var factory = new ProjectEngineFactory_Unsupported();
-        var engine = factory.Create(UnsupportedRazorConfiguration.Instance, RazorProjectFileSystem.Empty, (_) => { });
+        var engine = factory.Create(UnsupportedRazorConfiguration.Instance, RazorProjectFileSystem.Empty, _ => { });
         var sourceDocument = TestRazorSourceDocument.Create("<strong>Hello World!</strong>", RazorSourceDocumentProperties.Default);
 
         // Act
-        var codeDocument = engine.ProcessDesignTime(sourceDocument, "test", importSources: default, Array.Empty<TagHelperDescriptor>());
+        var codeDocument = engine.ProcessDesignTime(sourceDocument, "test", importSources: default, tagHelpers: []);
 
         // Assert
-        Assert.Equal(UnsupportedCSharpLoweringPhase.UnsupportedDisclaimer, codeDocument.GetCSharpDocument().Text.ToString());
+        Assert.Equal(UnsupportedCSharpLoweringPhase.UnsupportedDisclaimer, codeDocument.GetCSharpSourceText().ToString());
     }
 }

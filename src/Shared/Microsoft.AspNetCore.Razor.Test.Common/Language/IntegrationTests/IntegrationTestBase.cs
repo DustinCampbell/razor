@@ -225,7 +225,7 @@ public abstract class IntegrationTestBase
 
     protected CompiledAssembly CompileToAssembly(CompiledCSharpCode code, bool throwOnFailure = true, bool ignoreRazorDiagnostics = false)
     {
-        var csharpDocument = code.CodeDocument.GetCSharpDocument();
+        var csharpDocument = code.CodeDocument.GetRequiredCSharpDocument();
         if (!ignoreRazorDiagnostics && csharpDocument.Diagnostics.Any())
         {
             var diagnosticsLog = string.Join(Environment.NewLine, csharpDocument.Diagnostics.Select(d => d.ToString()).ToArray());
@@ -431,8 +431,7 @@ public abstract class IntegrationTestBase
 
     protected void AssertSourceMappingsMatchBaseline(RazorCodeDocument codeDocument, [CallerMemberName] string testName = "")
     {
-        var csharpDocument = codeDocument.GetCSharpDocument();
-        Assert.NotNull(csharpDocument);
+        Assert.True(codeDocument.TryGetCSharpDocument(out var csharpDocument));
 
         var baselineFileName = Path.ChangeExtension(GetTestFileName(testName), ".mappings.txt");
         var serializedMappings = SourceMappingsSerializer.Serialize(csharpDocument, codeDocument.Source);
@@ -596,8 +595,7 @@ public abstract class IntegrationTestBase
 
     protected void AssertLinePragmas(RazorCodeDocument codeDocument, bool designTime)
     {
-        var csharpDocument = codeDocument.GetCSharpDocument();
-        Assert.NotNull(csharpDocument);
+        Assert.True(codeDocument.TryGetCSharpDocument(out var csharpDocument));
         var linePragmas = csharpDocument.LinePragmas;
         designTime = false;
         if (designTime)

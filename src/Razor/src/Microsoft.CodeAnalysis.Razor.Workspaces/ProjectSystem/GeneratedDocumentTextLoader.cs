@@ -20,7 +20,7 @@ internal class GeneratedDocumentTextLoader(IDocumentSnapshot document, string fi
     {
         var output = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
 
-        var csharpSourceText = output.GetCSharpDocument().Text;
+        var csharpSourceText = output.GetCSharpSourceText();
 
         // If the encoding isn't UTF8, edit-continue won't work.
         Debug.Assert(csharpSourceText.Encoding == Encoding.UTF8);

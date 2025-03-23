@@ -97,7 +97,7 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
         if (node is CSharpCodeBlockSyntax directiveCode &&
             directiveCode.Children is [RazorDirectiveSyntax directive, ..] &&
             directive.DirectiveDescriptor?.Directive == SectionDirective.Directive.Directive &&
-            directive.Body is RazorDirectiveBodySyntax { CSharpCode: { Children: var children } })
+            directive.Body is RazorDirectiveBodySyntax { CSharpCode.Children: var children })
         {
             // This doesn't cause any harm with the new engine, but its a waste of effort.
             if (!_languageServerFeatureOptions.UseNewFormattingEngine)
@@ -107,7 +107,7 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
                 // Fortunately for a Html-only section block, the indentation is entirely handled by the Html formatter, and we
                 // just need to push it out one level, because the Html formatter will have pushed it back to position 0.
                 if (children is [.., MarkupBlockSyntax block, RazorMetaCodeSyntax /* close brace */] &&
-                    !context.CodeDocument.GetCSharpDocument().SourceMappings.Any(m => block.Span.Contains(m.OriginalSpan.AbsoluteIndex)))
+                    !context.CodeDocument.GetRequiredCSharpDocument().SourceMappings.Any(m => block.Span.Contains(m.OriginalSpan.AbsoluteIndex)))
                 {
                     // The Html formatter will have "collapsed" the @section block contents to 0 indent, so we push it back out
                     // again because we're opinionated about section blocks

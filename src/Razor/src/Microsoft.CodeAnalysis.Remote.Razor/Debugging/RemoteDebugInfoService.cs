@@ -34,7 +34,7 @@ internal sealed class RemoteDebugInfoService(in ServiceArgs args) : RazorDocumen
     public async ValueTask<LinePositionSpan?> ValidateBreakableRangeAsync(RemoteDocumentContext context, LinePositionSpan span, CancellationToken cancellationToken)
     {
         var codeDocument = await context.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
-        var csharpDocument = codeDocument.GetCSharpDocument();
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         if (!_documentMappingService.TryMapToGeneratedDocumentRange(csharpDocument, span, out var mappedSpan))
         {
@@ -45,7 +45,7 @@ internal sealed class RemoteDebugInfoService(in ServiceArgs args) : RazorDocumen
 
         var result = await ExternalAccess.Razor.Cohost.Handlers.ValidateBreakableRange.GetBreakableRangeAsync(generatedDocument, mappedSpan, cancellationToken).ConfigureAwait(false);
         if (result is { } csharpSpan &&
-            _documentMappingService.TryMapToHostDocumentRange(codeDocument.GetCSharpDocument(), csharpSpan, MappingBehavior.Inclusive, out var hostSpan))
+            _documentMappingService.TryMapToHostDocumentRange(csharpDocument, csharpSpan, MappingBehavior.Inclusive, out var hostSpan))
         {
             return hostSpan;
         }
@@ -75,11 +75,11 @@ internal sealed class RemoteDebugInfoService(in ServiceArgs args) : RazorDocumen
             return null;
         }
 
-        var csharpText = codeDocument.GetCSharpSourceText();
-        var projectedRange = csharpText.GetLinePositionSpan(csharpBreakpointSpan);
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
+        var projectedRange = csharpDocument.Text.GetLinePositionSpan(csharpBreakpointSpan);
 
         // Inclusive mapping means we are lenient to portions of the breakpoint that might be outside of use code in the Razor file
-        if (!_documentMappingService.TryMapToHostDocumentRange(codeDocument.GetCSharpDocument(), projectedRange, MappingBehavior.Inclusive, out var hostDocumentRange))
+        if (!_documentMappingService.TryMapToHostDocumentRange(csharpDocument, projectedRange, MappingBehavior.Inclusive, out var hostDocumentRange))
         {
             return null;
         }
@@ -119,13 +119,13 @@ internal sealed class RemoteDebugInfoService(in ServiceArgs args) : RazorDocumen
         var languageKind = codeDocument.GetLanguageKind(hostDocumentIndex, rightAssociative: false);
         // For C#, we just map
         if (languageKind == RazorLanguageKind.CSharp &&
-            !_documentMappingService.TryMapToGeneratedDocumentPosition(codeDocument.GetCSharpDocument(), hostDocumentIndex, out _, out projectedIndex))
+            !_documentMappingService.TryMapToGeneratedDocumentPosition(codeDocument.GetRequiredCSharpDocument(), hostDocumentIndex, out _, out projectedIndex))
         {
             return false;
         }
         // Otherwise see if there is more C# on the line to map to. This is for situations like "$$<p>@DateTime.Now</p>"
         else if (languageKind == RazorLanguageKind.Html &&
-            !_documentMappingService.TryMapToGeneratedDocumentOrNextCSharpPosition(codeDocument.GetCSharpDocument(), hostDocumentIndex, out _, out projectedIndex))
+            !_documentMappingService.TryMapToGeneratedDocumentOrNextCSharpPosition(codeDocument.GetRequiredCSharpDocument(), hostDocumentIndex, out _, out projectedIndex))
         {
             return false;
         }

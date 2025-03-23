@@ -39,14 +39,14 @@ internal static class FindAllReferencesHelper
         if (solutionQueryOperations.GetProjectsContainingDocument(filePath).FirstOrDefault() is { } project &&
             project.TryGetDocument(filePath, out var document))
         {
-            var codeDoc = await document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
-            var line = codeDoc.Source.Text.Lines[lineNumber];
-            var csharpDocument = codeDoc.GetCSharpDocument();
+            var codeDocument = await document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
+            var line = codeDocument.Source.Text.Lines[lineNumber];
+            var csharpDocument = codeDocument.GetRequiredCSharpDocument();
             if (!documentMappingService.TryMapToGeneratedDocumentPosition(csharpDocument, line.Start, out _, out _) ||
                 !documentMappingService.TryMapToGeneratedDocumentPosition(csharpDocument, line.End, out _, out _))
             {
                 var start = line.GetFirstNonWhitespacePosition() ?? line.Start;
-                return codeDoc.Source.Text.GetSubTextString(TextSpan.FromBounds(start, line.End));
+                return codeDocument.Source.Text.GetSubTextString(TextSpan.FromBounds(start, line.End));
             }
         }
 

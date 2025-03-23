@@ -3,7 +3,6 @@
 
 #nullable disable
 
-using System;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -520,7 +519,7 @@ public class Tag
         AssertCSharpDocumentMatchesBaseline(generated.CodeDocument);
         CompileToAssembly(generated);
 
-        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetCSharpDocument().Text));
+        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetRequiredCSharpDocument().Text));
         var useGenerated = CompileToCSharp("UseTestComponent.cshtml", cshtmlContent: @"
 @using Test
 <TestComponent Items1=items1 Items2=items2 Items3=items3>
@@ -598,7 +597,7 @@ public class Tag
         AssertCSharpDocumentMatchesBaseline(generated.CodeDocument);
         CompileToAssembly(generated);
 
-        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetCSharpDocument().Text));
+        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetRequiredCSharpDocument().Text));
         var useGenerated = CompileToCSharp("UseTestComponent.cshtml", cshtmlContent: @"
 @using Test
 <TestComponent Item1=item1 Items2=items2>
@@ -741,7 +740,7 @@ public class Tag : ITag
         AssertCSharpDocumentMatchesBaseline(generated.CodeDocument);
         CompileToAssembly(generated);
 
-        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetCSharpDocument().Text));
+        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetRequiredCSharpDocument().Text));
         var useGenerated = CompileToCSharp("UseTestComponent.cshtml", cshtmlContent: @"
 @using Test
 <TestComponent Item1=@item1 Items2=@items Item3=@item1>
@@ -818,7 +817,7 @@ public class Tag : ITag
         AssertCSharpDocumentMatchesBaseline(generated.CodeDocument);
         CompileToAssembly(generated);
 
-        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetCSharpDocument().Text));
+        AdditionalSyntaxTrees.Add(Parse(generated.CodeDocument.GetRequiredCSharpDocument().Text));
         var useGenerated = CompileToCSharp("UseTestComponent.cshtml", cshtmlContent: @"
 @using Test
 <TestComponent Item1=@item1 Items2=@items Item3=@item1>

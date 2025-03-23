@@ -51,7 +51,7 @@ internal static partial class RazorEditHelper
         {
             var root = codeDocument.GetRequiredSyntaxRoot();
             var razorText = codeDocument.Source.Text;
-            var csharpDocument = codeDocument.GetCSharpDocument();
+            var csharpDocument = codeDocument.GetRequiredCSharpDocument();
             var csharpText = csharpDocument.GetGeneratedSourceText();
 
             foreach (var edit in csharpEdits)

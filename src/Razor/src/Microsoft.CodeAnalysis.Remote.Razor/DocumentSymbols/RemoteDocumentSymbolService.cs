@@ -46,7 +46,7 @@ internal sealed partial class RemoteDocumentSymbolService(in ServiceArgs args) :
             cancellationToken).ConfigureAwait(false);
 
         var codeDocument = await context.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
-        var csharpDocument = codeDocument.GetCSharpDocument();
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         // This is, to say the least, not ideal. In future we're going to normalize on to Roslyn LSP types, and this can go.
         var vsCSharpSymbols = JsonHelpers.ToVsLSP<SumType<DocumentSymbol[], SymbolInformation[]>?, RoslynSymbolSumType>(csharpSymbols);

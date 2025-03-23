@@ -243,25 +243,29 @@ public class RazorIntegrationTestBase
             var projectEngine = CreateProjectEngine(configuration, Array.Empty<MetadataReference>(), supportLocalizedComponentNames, csharpParseOptions);
 
             RazorCodeDocument codeDocument;
+            RazorCSharpDocument csharpDocument;
+
             foreach (var item in AdditionalRazorItems)
             {
                 // Result of generating declarations
                 codeDocument = projectEngine.ProcessDeclarationOnly(item);
-                Assert.Empty(codeDocument.GetCSharpDocument().Diagnostics);
+                csharpDocument = codeDocument.GetRequiredCSharpDocument();
+                Assert.Empty(csharpDocument.Diagnostics);
 
-                var syntaxTree = Parse(codeDocument.GetCSharpDocument().Text, csharpParseOptions, path: item.FilePath);
+                var syntaxTree = Parse(csharpDocument.Text, csharpParseOptions, path: item.FilePath);
                 AdditionalSyntaxTrees.Add(syntaxTree);
             }
 
             // Result of generating declarations
             var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, fileKind, cssScope);
             codeDocument = projectEngine.ProcessDeclarationOnly(projectItem);
+            csharpDocument = codeDocument.GetRequiredCSharpDocument();
             var declaration = new CompileToCSharpResult
             {
                 BaseCompilation = baseCompilation.AddSyntaxTrees(AdditionalSyntaxTrees),
                 CodeDocument = codeDocument,
-                Code = codeDocument.GetCSharpDocument().Text.ToString(),
-                RazorDiagnostics = codeDocument.GetCSharpDocument().Diagnostics,
+                Code = csharpDocument.Text.ToString(),
+                RazorDiagnostics = csharpDocument.Diagnostics,
                 ParseOptions = csharpParseOptions,
             };
 
@@ -277,22 +281,24 @@ public class RazorIntegrationTestBase
             {
                 // Result of generating definition
                 codeDocument = DesignTime ? projectEngine.ProcessDesignTime(item) : projectEngine.Process(item);
-                Assert.Empty(codeDocument.GetCSharpDocument().Diagnostics);
+                csharpDocument = codeDocument.GetRequiredCSharpDocument();
+                Assert.Empty(csharpDocument.Diagnostics);
 
                 // Replace the 'declaration' syntax tree
-                var syntaxTree = Parse(codeDocument.GetCSharpDocument().Text, csharpParseOptions, path: item.FilePath);
+                var syntaxTree = Parse(csharpDocument.Text, csharpParseOptions, path: item.FilePath);
                 AdditionalSyntaxTrees.RemoveAll(st => st.FilePath == item.FilePath);
                 AdditionalSyntaxTrees.Add(syntaxTree);
             }
 
             // Result of real code generation for the document under test
             codeDocument = DesignTime ? projectEngine.ProcessDesignTime(projectItem) : projectEngine.Process(projectItem);
+            csharpDocument = codeDocument.GetRequiredCSharpDocument();
             return new CompileToCSharpResult
             {
                 BaseCompilation = baseCompilation.AddSyntaxTrees(AdditionalSyntaxTrees),
                 CodeDocument = codeDocument,
-                Code = codeDocument.GetCSharpDocument().Text.ToString(),
-                RazorDiagnostics = codeDocument.GetCSharpDocument().Diagnostics,
+                Code = csharpDocument.Text.ToString(),
+                RazorDiagnostics = csharpDocument.Diagnostics,
                 ParseOptions = csharpParseOptions,
             };
         }
@@ -304,26 +310,20 @@ public class RazorIntegrationTestBase
 
             var projectItem = CreateProjectItem(cshtmlRelativePath, cshtmlContent, fileKind, cssScope);
 
-            RazorCodeDocument codeDocument;
-            if (DeclarationOnly)
-            {
-                codeDocument = projectEngine.ProcessDeclarationOnly(projectItem);
-            }
-            else if (DesignTime)
-            {
-                codeDocument = projectEngine.ProcessDesignTime(projectItem);
-            }
-            else
-            {
-                codeDocument = projectEngine.Process(projectItem);
-            }
+            var codeDocument = DeclarationOnly
+                ? projectEngine.ProcessDeclarationOnly(projectItem)
+                : DesignTime
+                    ? projectEngine.ProcessDesignTime(projectItem)
+                    : projectEngine.Process(projectItem);
+
+            var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
             return new CompileToCSharpResult
             {
                 BaseCompilation = baseCompilation.AddSyntaxTrees(AdditionalSyntaxTrees),
                 CodeDocument = codeDocument,
-                Code = codeDocument.GetCSharpDocument().Text.ToString(),
-                RazorDiagnostics = codeDocument.GetCSharpDocument().Diagnostics,
+                Code = csharpDocument.Text.ToString(),
+                RazorDiagnostics = csharpDocument.Diagnostics,
                 ParseOptions = csharpParseOptions,
             };
         }

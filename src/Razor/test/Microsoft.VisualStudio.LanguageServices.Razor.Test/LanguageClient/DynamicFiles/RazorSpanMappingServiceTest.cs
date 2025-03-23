@@ -34,16 +34,16 @@ public class RazorSpanMappingServiceTest(ITestOutputHelper testOutput) : Workspa
 
         var document = project.GetRequiredDocument(_hostDocument.FilePath);
 
-        var output = await document.GetGeneratedOutputAsync(DisposalToken);
-        var generated = output.GetCSharpDocument();
+        var codeDocument = await document.GetGeneratedOutputAsync(DisposalToken);
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         var symbol = "SomeProperty";
-        var generatedCode = generated.Text.ToString();
+        var generatedCode = csharpDocument.Text.ToString();
         var span = new TextSpan(generatedCode.IndexOf(symbol, StringComparison.Ordinal), symbol.Length);
 
         // Act
         var text = await document.GetTextAsync(DisposalToken);
-        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, generated, out var mappedLinePositionSpan, out var mappedSpan);
+        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, csharpDocument, out var mappedLinePositionSpan, out var mappedSpan);
 
         // Assert
         Assert.True(result);
@@ -68,17 +68,17 @@ public class RazorSpanMappingServiceTest(ITestOutputHelper testOutput) : Workspa
 
         var document = project.GetRequiredDocument(_hostDocument.FilePath);
 
-        var output = await document.GetGeneratedOutputAsync(DisposalToken);
-        var generated = output.GetCSharpDocument();
+        var codeDocument = await document.GetGeneratedOutputAsync(DisposalToken);
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         var symbol = "SomeProperty";
         // Second occurrence
-        var generatedCode = generated.Text.ToString();
+        var generatedCode = csharpDocument.Text.ToString();
         var span = new TextSpan(generatedCode.IndexOf(symbol, generatedCode.IndexOf(symbol, StringComparison.Ordinal) + symbol.Length, StringComparison.Ordinal), symbol.Length);
 
         // Act
         var text = await document.GetTextAsync(DisposalToken);
-        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, generated, out var mappedLinePositionSpan, out var mappedSpan);
+        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, csharpDocument, out var mappedLinePositionSpan, out var mappedSpan);
 
         // Assert
         Assert.True(result);
@@ -103,16 +103,16 @@ public class RazorSpanMappingServiceTest(ITestOutputHelper testOutput) : Workspa
 
         var document = project.GetRequiredDocument(_hostDocument.FilePath);
 
-        var output = await document.GetGeneratedOutputAsync(DisposalToken);
-        var generated = output.GetCSharpDocument();
+        var codeDocument = await document.GetGeneratedOutputAsync(DisposalToken);
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         var symbol = "SomeProperty";
-        var generatedCode = generated.Text.ToString();
+        var generatedCode = csharpDocument.Text.ToString();
         var span = new TextSpan(generatedCode.IndexOf(symbol, StringComparison.Ordinal), symbol.Length);
 
         // Act
         var text = await document.GetTextAsync(DisposalToken);
-        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, generated, out var mappedLinePositionSpan, out var mappedSpan);
+        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, csharpDocument, out var mappedLinePositionSpan, out var mappedSpan);
 
         // Assert
         Assert.True(result);
@@ -137,16 +137,16 @@ public class RazorSpanMappingServiceTest(ITestOutputHelper testOutput) : Workspa
 
         var document = project.GetRequiredDocument(_hostDocument.FilePath);
 
-        var output = await document.GetGeneratedOutputAsync(DisposalToken);
-        var generated = output.GetCSharpDocument();
+        var codeDocument = await document.GetGeneratedOutputAsync(DisposalToken);
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
 
         var symbol = "ExecuteAsync";
-        var generatedCode = generated.Text.ToString();
+        var generatedCode = csharpDocument.Text.ToString();
         var span = new TextSpan(generatedCode.IndexOf(symbol, StringComparison.Ordinal), symbol.Length);
 
         // Act
         var text = await document.GetTextAsync(DisposalToken);
-        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, generated, out _, out _);
+        var result = RazorSpanMappingService.TryGetMappedSpans(span, text, csharpDocument, out _, out _);
 
         // Assert
         Assert.False(result);

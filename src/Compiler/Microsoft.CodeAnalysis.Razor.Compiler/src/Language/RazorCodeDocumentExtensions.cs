@@ -23,6 +23,18 @@ public static class RazorCodeDocumentExtensions
 
 #nullable enable
 
+    public static RazorCSharpDocument? GetCSharpDocument(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.TryGetCSharpDocument(out var result)
+            ? result
+            : null;
+    }
+
+    public static RazorCSharpDocument GetRequiredCSharpDocument(this RazorCodeDocument codeDocument)
+    {
+        return codeDocument.GetCSharpDocument().AssumeNotNull();
+    }
+
     internal static RazorSyntaxTree? GetPreTagHelperSyntaxTree(this RazorCodeDocument codeDocument)
     {
         return codeDocument.TryGetPreTagHelperSyntaxTree(out var result)
@@ -159,26 +171,6 @@ public static class RazorCodeDocumentExtensions
         }
 
         return (RazorHtmlDocument)razorHtmlObj;
-    }
-
-    public static RazorCSharpDocument GetCSharpDocument(this RazorCodeDocument document)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        return (RazorCSharpDocument)document.Items[typeof(RazorCSharpDocument)];
-    }
-
-    public static void SetCSharpDocument(this RazorCodeDocument document, RazorCSharpDocument csharp)
-    {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        document.Items[typeof(RazorCSharpDocument)] = csharp;
     }
 
 #nullable enable

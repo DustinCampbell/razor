@@ -112,8 +112,7 @@ public class DefaultRazorProjectEngineIntegrationTest
         var codeDocument = projectEngine.Process(projectItem);
 
         // Assert
-        var csharpDocument = codeDocument.GetCSharpDocument();
-        Assert.NotNull(csharpDocument);
+        Assert.True(codeDocument.TryGetCSharpDocument(out var csharpDocument));
         Assert.Empty(csharpDocument.Diagnostics);
     }
 

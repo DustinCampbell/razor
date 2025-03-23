@@ -39,7 +39,7 @@ internal sealed class RemoteSignatureHelpService(in ServiceArgs args) : RazorDoc
             .GetGeneratedDocumentAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        if (DocumentMappingService.TryMapToGeneratedDocumentPosition(codeDocument.GetCSharpDocument(), absoluteIndex, out var mappedPosition, out _))
+        if (DocumentMappingService.TryMapToGeneratedDocumentPosition(codeDocument.GetRequiredCSharpDocument(), absoluteIndex, out var mappedPosition, out _))
         {
             return await ExternalHandlers.SignatureHelp.GetSignatureHelpAsync(generatedDocument, mappedPosition, supportsVisualStudioExtensions: true, cancellationToken).ConfigureAwait(false);
         }

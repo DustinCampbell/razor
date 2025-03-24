@@ -39,19 +39,23 @@ internal static class RazorCodeDocumentExtensions
     ///  ⚠️ In co-hosting scenarios, <c>RemoteDocumentSnapshot.GetCSharpSyntaxTreeAsync</c>
     ///  should be used when possible.
     /// </remarks>
-    public static SyntaxTree GetOrParseCSharpSyntaxTree(this RazorCodeDocument document, CancellationToken cancellationToken)
+    public static SyntaxTree GetOrParseCSharpSyntaxTree(this RazorCodeDocument codeDocument, CancellationToken cancellationToken)
     {
-        if (!document.Items.TryGetValue(s_csharpSyntaxTreeKey, out SyntaxTree? syntaxTree))
+        if (!codeDocument.TryGetCSharpSyntaxTree(out var syntaxTree))
         {
-            var csharpText = document.GetCSharpSourceText();
+            var csharpText = codeDocument.GetCSharpSourceText();
             syntaxTree = CSharpSyntaxTree.ParseText(csharpText, cancellationToken: cancellationToken);
-            document.Items[s_csharpSyntaxTreeKey] = syntaxTree;
-
-            return syntaxTree;
+            codeDocument.SetCSharpSyntaxTree(syntaxTree);
         }
 
-        return syntaxTree.AssumeNotNull();
+        return syntaxTree;
     }
+
+    public static bool TryGetCSharpSyntaxTree(this RazorCodeDocument codeDocument, [NotNullWhen(true)] out SyntaxTree? syntaxTree)
+        => codeDocument.Items.TryGetValue(s_csharpSyntaxTreeKey, out syntaxTree);
+
+    public static void SetCSharpSyntaxTree(this RazorCodeDocument codeDocument, SyntaxTree syntaxTree)
+        => codeDocument.Items[s_csharpSyntaxTreeKey] = syntaxTree;
 
     public static bool TryGetGeneratedDocument(
         this RazorCodeDocument codeDocument,

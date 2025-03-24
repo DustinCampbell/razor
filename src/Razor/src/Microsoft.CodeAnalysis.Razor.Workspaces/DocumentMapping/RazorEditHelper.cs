@@ -35,8 +35,8 @@ internal static partial class RazorEditHelper
     {
         using var textChangeBuilder = new TextChangeBuilder(documentMappingService);
 
+        var csharpSourceText = codeDocument.GetCSharpSourceText();
         var originalSyntaxTree = codeDocument.GetOrParseCSharpSyntaxTree(cancellationToken);
-        var csharpSourceText = await originalSyntaxTree.GetTextAsync(cancellationToken).ConfigureAwait(false);
 
         var newText = csharpSourceText.WithChanges(textChanges.Select(c => c.ToTextChange()));
         var newSyntaxTree = originalSyntaxTree.WithChangedText(newText);

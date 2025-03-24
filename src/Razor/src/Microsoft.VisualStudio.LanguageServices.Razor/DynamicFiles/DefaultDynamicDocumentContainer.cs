@@ -16,17 +16,61 @@ namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 // Given a DocumentSnapshot this class allows the retrieval of a TextLoader for the generated C#
 // and services to help map spans and excerpts to and from the top-level Razor document to behind
 // the scenes C#.
-internal sealed class DefaultDynamicDocumentContainer(
-    DocumentKey documentKey,
-    RazorCodeDocument codeDocument,
-    ILoggerFactory loggerFactory)
-    : IDynamicDocumentContainer
+internal sealed class DefaultDynamicDocumentContainer : IDynamicDocumentContainer
 {
+    private readonly DocumentKey _documentKey;
+    private readonly RazorCodeDocument _codeDocument;
+    private readonly ILoggerFactory _loggerFactory;
+
     private RazorDocumentExcerptService? _excerptService;
     private RazorSpanMappingService? _spanMappingService;
     private RazorMappingService? _mappingService;
 
-    public string FilePath => documentKey.FilePath;
+    public DefaultDynamicDocumentContainer(DocumentKey documentKey, RazorCodeDocument codeDocument, ILoggerFactory loggerFactory)
+    {
+        _documentKey = documentKey;
+        _loggerFactory = loggerFactory;
+
+        // The purpose of DefaultDynamicDocumentContainer is to provide a TextLoader and document services
+        // that will be held by RazorDynamicFileInfo and rooted within the Roslyn workspace. To avoid
+        // holding onto more memory than necessary, such as binding information, we create a new RazorCodeDocument
+        // with much of that data stripped out.
+
+        var newCodeDocument = RazorCodeDocument.Create(
+            codeDocument.Source,
+            codeDocument.ImportSources,
+            codeDocument.ParserOptions,
+            codeDocument.CodeGenerationOptions,
+            codeDocument.CssScope);
+
+        // RazorCSharpDocument references its RazorCodeDocument. So, we need create a new RazorCSharpDocument
+        // that references the new RazorCodeDocument.
+        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
+        var newCSharpDocument = new RazorCSharpDocument(
+            newCodeDocument,
+            csharpDocument.Text,
+            csharpDocument.Options,
+            csharpDocument.Diagnostics,
+            csharpDocument.SourceMappings,
+            csharpDocument.LinePragmas);
+
+        newCodeDocument.SetCSharpDocument(newCSharpDocument);
+
+        // If a C# SyntaxTree has already been parsed and stored in this RazorCodeDocument, we should
+        // grab that too. This is ultimately needed by the RazorMappingService, which calls
+        // RazorEditHelper.MapCSharpEditsAsync(...).
+        if (codeDocument.TryGetCSharpSyntaxTree(out var syntaxTree))
+        {
+            newCodeDocument.SetCSharpSyntaxTree(syntaxTree);
+        }
+
+        // Finally, we'll need the RazorSyntaxTree as well.
+        newCodeDocument.SetSyntaxTree(codeDocument.GetRequiredSyntaxTree());
+
+        _codeDocument = newCodeDocument;
+    }
+
+    public string FilePath => _documentKey.FilePath;
 
     public bool SupportsDiagnostics => false;
 
@@ -36,19 +80,19 @@ internal sealed class DefaultDynamicDocumentContainer(
     }
 
     public TextLoader GetTextLoader(string filePath)
-        => new GeneratedDocumentTextLoader(codeDocument, filePath);
+        => new GeneratedDocumentTextLoader(_codeDocument, filePath);
 
     public RazorDocumentExcerptService GetExcerptService()
         => _excerptService ?? InterlockedOperations.Initialize(ref _excerptService,
-            new RazorDocumentExcerptService(codeDocument, GetSpanMappingService()));
+            new RazorDocumentExcerptService(_codeDocument, GetSpanMappingService()));
 
     public RazorSpanMappingService GetSpanMappingService()
         => _spanMappingService ?? InterlockedOperations.Initialize(ref _spanMappingService,
-            new RazorSpanMappingService(codeDocument));
+            new RazorSpanMappingService(_codeDocument));
 
     public RazorMappingService GetMappingService()
         => _mappingService ?? InterlockedOperations.Initialize(ref _mappingService,
-            new RazorMappingService(codeDocument, NoOpTelemetryReporter.Instance, loggerFactory));
+            new RazorMappingService(_codeDocument, NoOpTelemetryReporter.Instance, _loggerFactory));
 
     IRazorSpanMappingService IDynamicDocumentContainer.GetSpanMappingService()
         => GetSpanMappingService();

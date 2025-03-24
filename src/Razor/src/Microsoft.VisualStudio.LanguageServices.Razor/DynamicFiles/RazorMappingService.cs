@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor;
@@ -68,17 +69,19 @@ internal sealed class RazorMappingService(
         try
         {
             var changes = await newDocument.GetTextChangesAsync(oldDocument, cancellationToken).ConfigureAwait(false);
-            var results = await RazorEditHelper.MapCSharpEditsAsync(
-                changes.SelectAsArray(c => c.ToRazorTextChange()),
-                _codeDocument,
-                _documentMappingService,
-                _telemetryReporter,
-                cancellationToken);
+            var results = await RazorEditHelper
+                .MapCSharpEditsAsync(
+                    changes.SelectAsArray(static c => c.ToRazorTextChange()),
+                    _codeDocument,
+                    _documentMappingService,
+                    _telemetryReporter,
+                    cancellationToken)
+                .ConfigureAwait(false);
 
-            var razorSourceText = _codeDocument.Source.Text;
-            var filePath = _codeDocument.Source.FilePath.AssumeNotNull();
-
-            var textChanges = results.SelectAsArray(te => te.ToTextChange());
+            // Grab the inner array from the resulting ImmutableArray to perform a non-mutating conversion
+            // without creating an extra array copy.
+            var array = ImmutableCollectionsMarshal.AsArray(results);
+            var textChanges = Array.ConvertAll(array, static x => x.ToTextChange());
 
             _logger.LogTrace($"""
                 Before:
@@ -88,7 +91,9 @@ internal sealed class RazorMappingService(
                 {DisplayEdits(textChanges)}
                 """);
 
-            return [new RazorMappedEditoResult() { FilePath = filePath, TextChanges = textChanges.ToArray() }];
+            var filePath = _codeDocument.Source.FilePath.AssumeNotNull();
+
+            return [new RazorMappedEditoResult() { FilePath = filePath, TextChanges = textChanges }];
         }
         catch (Exception ex)
         {

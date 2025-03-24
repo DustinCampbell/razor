@@ -50,19 +50,6 @@ internal sealed class DocumentSnapshot(ProjectSnapshot project, DocumentState st
         return new DocumentSnapshot(Project, _state.WithText(text, VersionStamp.Create()));
     }
 
-    public ValueTask<SyntaxTree> GetCSharpSyntaxTreeAsync(CancellationToken cancellationToken)
-    {
-        return TryGetGeneratedOutput(out var codeDocument)
-            ? new(codeDocument.GetOrParseCSharpSyntaxTree(cancellationToken))
-            : new(GetCSharpSyntaxTreeCoreAsync(cancellationToken));
-
-        async Task<SyntaxTree> GetCSharpSyntaxTreeCoreAsync(CancellationToken cancellationToken)
-        {
-            var codeDocument = await GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
-            return codeDocument.GetOrParseCSharpSyntaxTree(cancellationToken);
-        }
-    }
-
     public Task<RazorCodeDocument> GenerateDesignTimeOutputAsync(CancellationToken cancellationToken)
         => CompilationHelpers.GenerateDesignTimeCodeDocumentAsync(this, Project.ProjectEngine, cancellationToken);
 

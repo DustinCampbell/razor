@@ -107,7 +107,7 @@ internal sealed class RemoteDocumentSnapshot : IDocumentSnapshot
         if (document is not null &&
             document.TryGetSyntaxTree(out var tree))
         {
-            return new(tree.AssumeNotNull());
+            return new(tree);
         }
 
         return GetCSharpSyntaxTreeCoreAsync(document, cancellationToken);

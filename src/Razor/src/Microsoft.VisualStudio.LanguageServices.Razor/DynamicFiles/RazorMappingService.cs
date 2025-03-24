@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.PooledObjects;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Telemetry;
+using Microsoft.AspNetCore.Razor.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 using Microsoft.CodeAnalysis.Razor;
@@ -23,26 +23,23 @@ using Microsoft.VisualStudio.LanguageServer.Protocol;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporter telemetryReporter, ILoggerFactory loggerFactory) : IRazorMappingService
+internal sealed class RazorMappingService(
+    RazorCodeDocument codeDocument,
+    ITelemetryReporter telemetryReporter,
+    ILoggerFactory loggerFactory) : IRazorMappingService
 {
-    private readonly IDocumentSnapshot _document = document;
+    private readonly RazorCodeDocument _codeDocument = codeDocument;
+
     private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
     private readonly IDocumentMappingService _documentMappingService = new DocumentMappingService(loggerFactory);
     private readonly ILogger _logger = loggerFactory.GetOrCreateLogger<RazorMappingService>();
 
-    public async Task<ImmutableArray<RazorMappedSpanResult>> MapSpansAsync(Document document, IEnumerable<TextSpan> spans, CancellationToken cancellationToken)
+    public Task<ImmutableArray<RazorMappedSpanResult>> MapSpansAsync(Document document, IEnumerable<TextSpan> spans, CancellationToken cancellationToken)
     {
-        // Called on an uninitialized document.
-        if (_document is null)
-        {
-            return ImmutableArray<RazorMappedSpanResult>.Empty;
-        }
+        var source = _codeDocument.Source.Text;
 
-        var codeDocument = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
-        var source = codeDocument.Source.Text;
-
-        var csharpDocument = codeDocument.GetRequiredCSharpDocument();
-        var filePath = codeDocument.Source.FilePath.AssumeNotNull();
+        var csharpDocument = _codeDocument.GetRequiredCSharpDocument();
+        var filePath = _codeDocument.Source.FilePath.AssumeNotNull();
 
         using var results = new PooledArrayBuilder<RazorMappedSpanResult>();
 
@@ -58,29 +55,29 @@ internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporte
             }
         }
 
-        return results.DrainToImmutable();
+        if (results.Count == 0)
+        {
+            return SpecializedTasks.EmptyImmutableArray<RazorMappedSpanResult>();
+        }
+
+        return Task.FromResult(results.DrainToImmutable());
     }
 
     public async Task<ImmutableArray<RazorMappedEditoResult>> MapTextChangesAsync(Document oldDocument, Document newDocument, CancellationToken cancellationToken)
     {
         try
         {
-            if (_document.FilePath is null)
-            {
-                return ImmutableArray<RazorMappedEditoResult>.Empty;
-            }
-
             var changes = await newDocument.GetTextChangesAsync(oldDocument, cancellationToken).ConfigureAwait(false);
-            var csharpSource = await oldDocument.GetTextAsync(cancellationToken).ConfigureAwait(false);
             var results = await RazorEditHelper.MapCSharpEditsAsync(
                 changes.SelectAsArray(c => c.ToRazorTextChange()),
-                _document,
+                _codeDocument,
                 _documentMappingService,
                 _telemetryReporter,
                 cancellationToken);
 
-            var razorCodeDocument = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
-            var razorSource = razorCodeDocument.Source.Text;
+            var razorSourceText = _codeDocument.Source.Text;
+            var filePath = _codeDocument.Source.FilePath.AssumeNotNull();
+
             var textChanges = results.SelectAsArray(te => te.ToTextChange());
 
             _logger.LogTrace($"""
@@ -91,18 +88,20 @@ internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporte
                 {DisplayEdits(textChanges)}
                 """);
 
-            return [new RazorMappedEditoResult() { FilePath = _document.FilePath, TextChanges = textChanges.ToArray() }];
+            return [new RazorMappedEditoResult() { FilePath = filePath, TextChanges = textChanges.ToArray() }];
         }
         catch (Exception ex)
         {
             _telemetryReporter.ReportFault(ex, "Failed to map edits");
-            return ImmutableArray<RazorMappedEditoResult>.Empty;
+            return [];
         }
 
-        string DisplayEdits(IEnumerable<TextChange> changes)
-            => string.Join(
+        static string DisplayEdits(IEnumerable<TextChange> changes)
+        {
+            return string.Join(
                 Environment.NewLine,
                 changes.Select(e => $"{e.Span} => '{e.NewText}'"));
+        }
     }
 
     // Internal for testing.
@@ -136,7 +135,7 @@ internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporte
         return false;
     }
 
-    private class DocumentMappingService(ILoggerFactory loggerFactory) : AbstractDocumentMappingService(loggerFactory.GetOrCreateLogger<DocumentMappingService>())
+    private sealed class DocumentMappingService(ILoggerFactory loggerFactory) : AbstractDocumentMappingService(loggerFactory.GetOrCreateLogger<DocumentMappingService>())
     {
     }
 }

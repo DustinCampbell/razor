@@ -740,11 +740,10 @@ public class RazorEditHelperTest : LanguageServerTestBase
             sourceMappings.OrderByAsArray(s => s.GeneratedSpan.AbsoluteIndex));
 
         codeDocument.SetCSharpDocument(csharpDocument);
-        var snapshot = TestDocumentSnapshot.Create(razorPath, codeDocument);
 
         var mappedChanges = await RazorEditHelper.MapCSharpEditsAsync(
             changes.SelectAsArray(c => c.ToRazorTextChange()),
-            snapshot,
+            codeDocument,
             _documentMappingService,
             FailingTelemetryReporter.Instance,
             CancellationToken.None);

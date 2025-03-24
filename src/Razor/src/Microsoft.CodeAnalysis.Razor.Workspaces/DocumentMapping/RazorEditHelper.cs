@@ -7,8 +7,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.PooledObjects;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis.Razor.Formatting;
@@ -28,15 +28,14 @@ internal static partial class RazorEditHelper
     /// </remarks>
     internal static async Task<ImmutableArray<RazorTextChange>> MapCSharpEditsAsync(
         ImmutableArray<RazorTextChange> textChanges,
-        IDocumentSnapshot snapshot,
+        RazorCodeDocument codeDocument,
         IDocumentMappingService documentMappingService,
         ITelemetryReporter telemetryReporter,
         CancellationToken cancellationToken)
     {
-        var codeDocument = await snapshot.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
         using var textChangeBuilder = new TextChangeBuilder(documentMappingService);
 
-        var originalSyntaxTree = await snapshot.GetCSharpSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+        var originalSyntaxTree = codeDocument.GetOrParseCSharpSyntaxTree(cancellationToken);
         var csharpSourceText = await originalSyntaxTree.GetTextAsync(cancellationToken).ConfigureAwait(false);
 
         var newText = csharpSourceText.WithChanges(textChanges.Select(c => c.ToTextChange()));

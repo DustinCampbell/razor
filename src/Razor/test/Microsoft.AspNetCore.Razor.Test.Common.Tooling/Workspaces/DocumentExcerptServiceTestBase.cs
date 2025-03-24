@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Text;
@@ -39,7 +38,7 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
     }
 
     // Adds the text to a ProjectSnapshot, generates code, and updates the workspace.
-    private (DocumentSnapshot primary, Document secondary) InitializeDocument(SourceText sourceText)
+    private async Task<(DocumentSnapshot primary, Document secondary)> InitializeDocumentAsync(SourceText sourceText)
     {
         var state = ProjectState
             .Create(_hostProject, LanguageServerFeatureOptions.ToCompilerOptions(), ProjectEngineFactoryProvider)
@@ -48,6 +47,7 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
         var project = new ProjectSnapshot(state);
 
         var primary = project.GetRequiredDocument(_hostDocument.FilePath);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
         var solution = Workspace.CurrentSolution.AddProject(ProjectInfo.Create(
             ProjectId.CreateNewId(Path.GetFileNameWithoutExtension(_hostDocument.FilePath)),
@@ -60,7 +60,7 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
         solution = solution.AddDocument(
             DocumentId.CreateNewId(solution.ProjectIds.Single(), _hostDocument.FilePath),
             _hostDocument.FilePath,
-            new GeneratedDocumentTextLoader(primary, _hostDocument.FilePath));
+            new GeneratedDocumentTextLoader(codeDocument, _hostDocument.FilePath));
 
         var secondary = solution.Projects.Single().Documents.Single();
 
@@ -97,15 +97,15 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
     public async Task<(Document generatedDocument, SourceText razorSourceText, TextSpan primarySpan, TextSpan generatedSpan)> InitializeAsync(string razorSource, CancellationToken cancellationToken)
     {
         var (razorSourceText, primarySpan) = CreateText(razorSource);
-        var (primary, generatedDocument) = InitializeDocument(razorSourceText);
+        var (primary, generatedDocument) = await InitializeDocumentAsync(razorSourceText);
         var generatedSpan = await GetSecondarySpanAsync(primary, primarySpan, generatedDocument, cancellationToken);
         return (generatedDocument, razorSourceText, primarySpan, generatedSpan);
     }
 
-    internal async Task<(IDocumentSnapshot primary, Document generatedDocument, TextSpan generatedSpan)> InitializeWithSnapshotAsync(string razorSource, CancellationToken cancellationToken)
+    internal async Task<(DocumentSnapshot primary, Document generatedDocument, TextSpan generatedSpan)> InitializeWithSnapshotAsync(string razorSource, CancellationToken cancellationToken)
     {
         var (razorSourceText, primarySpan) = CreateText(razorSource);
-        var (primary, generatedDocument) = InitializeDocument(razorSourceText);
+        var (primary, generatedDocument) = await InitializeDocumentAsync(razorSourceText);
         var generatedSpan = await GetSecondarySpanAsync(primary, primarySpan, generatedDocument, cancellationToken);
         return (primary, generatedDocument, generatedSpan);
     }

@@ -148,9 +148,9 @@ internal static class RazorComponentDefinitionHelpers
         //      will error, but allowing them to Go To Def on that property regardless, actually helps
         //      them fix the error.
 
-        var csharpSyntaxTree = await documentSnapshot.GetCSharpSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
-        var root = await csharpSyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
         var codeDocument = await documentSnapshot.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
+        var csharpSyntaxTree = codeDocument.GetOrParseCSharpSyntaxTree(cancellationToken);
+        var root = await csharpSyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
 
         // Since we know how the compiler generates the C# source we can be a little specific here, and avoid
         // long tree walks. If the compiler ever changes how they generate their code, the tests for this will break

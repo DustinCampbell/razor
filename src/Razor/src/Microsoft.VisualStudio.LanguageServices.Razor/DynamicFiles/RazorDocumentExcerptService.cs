@@ -1,12 +1,13 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
@@ -15,12 +16,20 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal class RazorDocumentExcerptService(
-    IDocumentSnapshot document,
-    IRazorSpanMappingService mappingService) : DocumentExcerptService
+internal sealed class RazorDocumentExcerptService : DocumentExcerptService
 {
-    private readonly IDocumentSnapshot _document = document;
-    private readonly IRazorSpanMappingService _mappingService = mappingService;
+    private readonly RazorCodeDocument _codeDocument;
+    private readonly RazorSpanMappingService _mappingService;
+
+    public RazorDocumentExcerptService(RazorCodeDocument codeDocument, RazorSpanMappingService mappingService)
+    {
+        Debug.Assert(
+            ReferenceEquals(codeDocument, mappingService.CodeDocument),
+            $"{nameof(codeDocument)} and {nameof(mappingService)}{nameof(mappingService.CodeDocument)} must be the same instance.");
+
+        _codeDocument = codeDocument;
+        _mappingService = mappingService;
+    }
 
     internal override async Task<ExcerptResultInternal?> TryGetExcerptInternalAsync(
         Document document,
@@ -29,25 +38,19 @@ internal class RazorDocumentExcerptService(
         RazorClassificationOptionsWrapper options,
         CancellationToken cancellationToken)
     {
-        if (_document is null)
+        var mappedSpan = _mappingService.MapsSpans([span]).FirstOrDefault();
+
+        if (mappedSpan.Equals(default))
         {
             return null;
         }
 
-        var mappedSpans = await _mappingService.MapSpansAsync(document, new[] { span }, cancellationToken).ConfigureAwait(false);
-        if (mappedSpans.Length == 0 || mappedSpans[0].Equals(default(RazorMappedSpanResult)))
-        {
-            return null;
-        }
+        // We know that _mappingService.CodeDocument is the same as _codeDocument, so we can assume
+        // that its results point to _codeDocument. Assert just to be sure.
+        Debug.Assert(mappedSpan.FilePath == _codeDocument.Source.FilePath);
 
-        var project = _document.Project;
-        if (!project.TryGetDocument(mappedSpans[0].FilePath, out var razorDocument))
-        {
-            return null;
-        }
-
-        var razorDocumentText = await razorDocument.GetTextAsync(cancellationToken).ConfigureAwait(false);
-        var razorDocumentSpan = razorDocumentText.Lines.GetTextSpan(mappedSpans[0].LinePositionSpan);
+        var razorDocumentText = _codeDocument.Source.Text;
+        var razorDocumentSpan = razorDocumentText.Lines.GetTextSpan(mappedSpan.LinePositionSpan);
 
         var generatedDocument = document;
 
@@ -56,13 +59,16 @@ internal class RazorDocumentExcerptService(
 
         // Then we'll classify the spans based on the primary document, since that's the coordinate
         // space that our output mappings use.
-        var codeDocument = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
-        var mappings = codeDocument.GetRequiredCSharpDocument().SourceMappings;
-        var classifiedSpans = await ClassifyPreviewAsync(
+        var mappings = _codeDocument.GetRequiredCSharpDocument().SourceMappings;
+
+        using var _ = ArrayBuilderPool<ClassifiedSpan>.GetPooledObject(out var classifiedSpans);
+
+        await ClassifyPreviewAsync(
             excerptSpan,
             generatedDocument,
             mappings,
             options,
+            classifiedSpans,
             cancellationToken).ConfigureAwait(false);
 
         var excerptText = GetTranslatedExcerptText(razorDocumentText, ref razorDocumentSpan, ref excerptSpan, classifiedSpans);
@@ -70,15 +76,14 @@ internal class RazorDocumentExcerptService(
         return new ExcerptResultInternal(excerptText, razorDocumentSpan, classifiedSpans.ToImmutable(), document, span);
     }
 
-    private async Task<ImmutableArray<ClassifiedSpan>.Builder> ClassifyPreviewAsync(
+    private async Task ClassifyPreviewAsync(
         TextSpan excerptSpan,
         Document generatedDocument,
         ImmutableArray<SourceMapping> mappings,
         RazorClassificationOptionsWrapper options,
+        ImmutableArray<ClassifiedSpan>.Builder builder,
         CancellationToken cancellationToken)
     {
-        var builder = ImmutableArray.CreateBuilder<ClassifiedSpan>();
-
         var sorted = mappings.Sort((x, y) => x.OriginalSpan.AbsoluteIndex.CompareTo(y.OriginalSpan.AbsoluteIndex));
 
         // The algorithm here is to iterate through the source mappings (sorted) and use the C# classifier
@@ -120,11 +125,10 @@ internal class RazorDocumentExcerptService(
             //
             // However, we'll have to translate it to the the generated document's coordinates to do that.
             Debug.Assert(remainingSpan.Contains(primarySpan) && remainingSpan.Start == primarySpan.Start);
-            var classifiedSecondarySpans = await RazorClassifierAccessor.GetClassifiedSpansAsync(
-                generatedDocument,
-                secondarySpan,
-                options,
-                cancellationToken).ConfigureAwait(false);
+
+            var classifiedSecondarySpans = await RazorClassifierAccessor
+                .GetClassifiedSpansAsync(generatedDocument, secondarySpan, options, cancellationToken)
+                .ConfigureAwait(false);
 
             // NOTE: The Classifier will only returns spans for things that it understands. That means
             // that whitespace is not classified. The preview expects us to provide contiguous spans,
@@ -172,7 +176,5 @@ internal class RazorDocumentExcerptService(
             // Trailing Razor/markup text.
             builder.Add(new ClassifiedSpan(ClassificationTypeNames.Text, remainingSpan));
         }
-
-        return builder;
     }
 }

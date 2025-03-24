@@ -113,7 +113,7 @@ internal class CSharpVirtualDocumentPublisher : LSPDocumentChangeListener
         public TextLoader GetTextLoader(string filePath)
             => new SourceTextLoader(_textSnapshot.AsText(), filePath);
 
-        public IRazorMappingService? GetMappingService()
+        public IRazorMappingService GetMappingService()
             => _mappingService ?? InterlockedOperations.Initialize(ref _mappingService,
                 new RazorLSPMappingService(_lspDocumentMappingProvider, _documentSnapshot, _textSnapshot));
 

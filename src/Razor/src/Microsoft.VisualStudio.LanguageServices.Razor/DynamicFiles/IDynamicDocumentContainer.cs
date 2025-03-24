@@ -19,5 +19,5 @@ internal interface IDynamicDocumentContainer
     IRazorSpanMappingService? GetSpanMappingService();
     IRazorMappingService? GetMappingService();
     IRazorDocumentExcerptServiceImplementation? GetExcerptService();
-    IRazorDocumentPropertiesService GetDocumentPropertiesService();
+    IRazorDocumentPropertiesService? GetDocumentPropertiesService();
 }

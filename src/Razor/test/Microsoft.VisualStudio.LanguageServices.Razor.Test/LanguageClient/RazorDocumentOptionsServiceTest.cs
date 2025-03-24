@@ -31,7 +31,7 @@ public class RazorDocumentOptionsServiceTest(ITestOutputHelper testOutput) : Wor
         clientSettingsManager.Update(clientSpaceSettings);
         var optionsService = new RazorDocumentOptionsService(clientSettingsManager);
 
-        var document = InitializeDocument(SourceText.From("text"));
+        var document = await InitializeDocumentAsync(SourceText.From("text"));
 
         var useTabsOptionKey = GetUseTabsOptionKey(document);
         var tabSizeOptionKey = GetTabSizeOptionKey(document);
@@ -58,7 +58,7 @@ public class RazorDocumentOptionsServiceTest(ITestOutputHelper testOutput) : Wor
         clientSettingsManager.Update(spaceSettings);
         var optionsService = new RazorDocumentOptionsService(clientSettingsManager);
 
-        var document = InitializeDocument(SourceText.From("text"));
+        var document = await InitializeDocumentAsync(SourceText.From("text"));
 
         var useTabsOptionKey = GetUseTabsOptionKey(document);
         var tabSizeOptionKey = GetTabSizeOptionKey(document);
@@ -87,7 +87,7 @@ public class RazorDocumentOptionsServiceTest(ITestOutputHelper testOutput) : Wor
 
     // Adapted from DocumentExcerptServiceTestBase's InitializeDocument.
     // Adds the text to a ProjectSnapshot, generates code, and updates the workspace.
-    private Document InitializeDocument(SourceText sourceText)
+    private async Task<Document> InitializeDocumentAsync(SourceText sourceText)
     {
         var baseDirectory = PlatformInformation.IsWindows ? @"c:\users\example\src" : "/home/example";
         var hostProject = new HostProject(
@@ -95,11 +95,13 @@ public class RazorDocumentOptionsServiceTest(ITestOutputHelper testOutput) : Wor
         var hostDocument = new HostDocument(
             Path.Combine(baseDirectory, "SomeProject", "File1.cshtml"), "File1.cshtml", FileKinds.Legacy);
 
-        var project = new ProjectSnapshot(ProjectState
+        var projectState = ProjectState
             .Create(hostProject, CompilerOptions, ProjectEngineFactoryProvider)
-            .AddDocument(hostDocument, TestMocks.CreateTextLoader(sourceText)));
+            .AddDocument(hostDocument, TestMocks.CreateTextLoader(sourceText));
+        var project = new ProjectSnapshot(projectState);
 
         var document = project.GetRequiredDocument(hostDocument.FilePath);
+        var codeDocument = await document.GetGeneratedOutputAsync(DisposalToken);
 
         var solution = Workspace.CurrentSolution.AddProject(ProjectInfo.Create(
             ProjectId.CreateNewId(Path.GetFileNameWithoutExtension(hostDocument.FilePath)),
@@ -112,7 +114,7 @@ public class RazorDocumentOptionsServiceTest(ITestOutputHelper testOutput) : Wor
         solution = solution.AddDocument(
             DocumentId.CreateNewId(solution.ProjectIds.Single(), hostDocument.FilePath),
             hostDocument.FilePath,
-            new GeneratedDocumentTextLoader(document, hostDocument.FilePath));
+            new GeneratedDocumentTextLoader(codeDocument, hostDocument.FilePath));
 
         return solution.Projects.Single().Documents.Single();
     }

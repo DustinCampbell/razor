@@ -23,14 +23,6 @@ internal interface IDocumentSnapshot
     ValueTask<VersionStamp> GetTextVersionAsync(CancellationToken cancellationToken);
     ValueTask<RazorCodeDocument> GetGeneratedOutputAsync(CancellationToken cancellationToken);
 
-    /// <summary>
-    ///  Gets the Roslyn syntax tree for the generated C# for this Razor document
-    /// </summary>
-    /// <remarks>
-    ///  ⚠️ Should be used sparingly in language server scenarios.
-    /// </remarks>
-    ValueTask<SyntaxTree> GetCSharpSyntaxTreeAsync(CancellationToken cancellationToken);
-
     bool TryGetText([NotNullWhen(true)] out SourceText? result);
     bool TryGetTextVersion(out VersionStamp result);
     bool TryGetGeneratedOutput([NotNullWhen(true)] out RazorCodeDocument? result);

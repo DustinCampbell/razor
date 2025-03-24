@@ -35,6 +35,10 @@ internal static class RazorCodeDocumentExtensions
     ///  Retrieves a cached Roslyn <see cref="SyntaxTree"/> from the generated C# document.
     ///  If a tree has not yet been cached, a new one will be parsed and added to the cache.
     /// </summary>
+    /// <remarks>
+    ///  ⚠️ In co-hosting scenarios, <c>RemoteDocumentSnapshot.GetCSharpSyntaxTreeAsync</c>
+    ///  should be used when possible.
+    /// </remarks>
     public static SyntaxTree GetOrParseCSharpSyntaxTree(this RazorCodeDocument document, CancellationToken cancellationToken)
     {
         if (!document.Items.TryGetValue(s_csharpSyntaxTreeKey, out SyntaxTree? syntaxTree))

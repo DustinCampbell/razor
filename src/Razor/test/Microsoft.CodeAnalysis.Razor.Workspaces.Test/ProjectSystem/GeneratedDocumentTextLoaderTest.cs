@@ -26,8 +26,9 @@ public class GeneratedDocumentTextLoaderTest(ITestOutputHelper testOutput) : Wor
         var project = new ProjectSnapshot(state);
 
         var document = project.GetRequiredDocument(s_hostDocument.FilePath);
+        var codeDocument = await document.GetGeneratedOutputAsync(DisposalToken);
 
-        var loader = new GeneratedDocumentTextLoader(document, "file.cshtml");
+        var loader = new GeneratedDocumentTextLoader(codeDocument, "file.cshtml");
 
         // Act
         var textAndVersion = await loader.LoadTextAndVersionAsync(default, DisposalToken);

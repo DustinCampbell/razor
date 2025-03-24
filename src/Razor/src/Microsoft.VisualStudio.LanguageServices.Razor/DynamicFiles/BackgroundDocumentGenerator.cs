@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis.Razor;
@@ -88,9 +89,9 @@ internal partial class BackgroundDocumentGenerator : IRazorStartupService, IDisp
 
     protected virtual async Task ProcessDocumentAsync(DocumentSnapshot document, CancellationToken cancellationToken)
     {
-        await document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
+        var codeDocument = await document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
 
-        UpdateFileInfo(document);
+        UpdateFileInfo(document.Key, codeDocument);
     }
 
     public virtual void EnqueueIfNecessary(DocumentKey documentKey)
@@ -171,14 +172,12 @@ internal partial class BackgroundDocumentGenerator : IRazorStartupService, IDisp
         return false;
     }
 
-    private void UpdateFileInfo(DocumentSnapshot document)
+    private void UpdateFileInfo(DocumentKey documentKey, RazorCodeDocument codeDocument)
     {
-        var filePath = document.FilePath;
-
-        if (!_suppressedDocuments.Contains(filePath))
+        if (!_suppressedDocuments.Contains(documentKey.FilePath))
         {
-            var container = new DefaultDynamicDocumentContainer(document, _loggerFactory);
-            _infoProvider.UpdateFileInfo(document.Project.Key, container);
+            var container = new DefaultDynamicDocumentContainer(documentKey, codeDocument, _loggerFactory);
+            _infoProvider.UpdateFileInfo(documentKey.ProjectKey, container);
         }
     }
 

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
@@ -29,8 +29,9 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
 ";
 
         var (primary, secondary, secondarySpan) = await InitializeWithSnapshotAsync(razorSource, DisposalToken);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
-        var service = CreateExcerptService(primary);
+        var service = CreateExcerptService(codeDocument);
 
         // Act
         var options = RazorClassificationOptionsWrapper.Default;
@@ -107,8 +108,9 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
 ";
 
         var (primary, secondary, secondarySpan) = await InitializeWithSnapshotAsync(razorSource, DisposalToken);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
-        var service = CreateExcerptService(primary);
+        var service = CreateExcerptService(codeDocument);
 
         // Act
         var options = RazorClassificationOptionsWrapper.Default;
@@ -160,8 +162,9 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
 ";
 
         var (primary, secondary, secondarySpan) = await InitializeWithSnapshotAsync(razorSource, DisposalToken);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
-        var service = CreateExcerptService(primary);
+        var service = CreateExcerptService(codeDocument);
 
         // Act
         var options = RazorClassificationOptionsWrapper.Default;
@@ -267,8 +270,9 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
             """;
 
         var (primary, secondary, secondarySpan) = await InitializeWithSnapshotAsync(razorSource, DisposalToken);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
-        var service = CreateExcerptService(primary);
+        var service = CreateExcerptService(codeDocument);
 
         // Act
         var options = RazorClassificationOptionsWrapper.Default;
@@ -371,8 +375,9 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
             """;
 
         var (primary, secondary, secondarySpan) = await InitializeWithSnapshotAsync(razorSource, DisposalToken);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
-        var service = CreateExcerptService(primary);
+        var service = CreateExcerptService(codeDocument);
 
         // Act
         var options = RazorClassificationOptionsWrapper.Default;
@@ -445,8 +450,9 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
 ";
 
         var (primary, secondary, secondarySpan) = await InitializeWithSnapshotAsync(razorSource, DisposalToken);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
-        var service = CreateExcerptService(primary);
+        var service = CreateExcerptService(codeDocument);
 
         // Act
         var options = RazorClassificationOptionsWrapper.Default;
@@ -554,8 +560,9 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
         var razorSource = @"@{ var [|foo|] = ""Hello, World!""; }";
 
         var (primary, secondary, secondarySpan) = await InitializeWithSnapshotAsync(razorSource, DisposalToken);
+        var codeDocument = await primary.GetGeneratedOutputAsync(DisposalToken);
 
-        var service = CreateExcerptService(primary);
+        var service = CreateExcerptService(codeDocument);
 
         // Act
         var options = RazorClassificationOptionsWrapper.Default;
@@ -640,8 +647,8 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
             });
     }
 
-    private RazorDocumentExcerptService CreateExcerptService(IDocumentSnapshot document)
+    private RazorDocumentExcerptService CreateExcerptService(RazorCodeDocument codeDocument)
     {
-        return new RazorDocumentExcerptService(document, new RazorSpanMappingService(document));
+        return new RazorDocumentExcerptService(codeDocument, new RazorSpanMappingService(codeDocument));
     }
 }

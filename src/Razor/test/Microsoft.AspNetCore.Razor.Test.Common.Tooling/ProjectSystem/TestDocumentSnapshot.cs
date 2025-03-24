@@ -82,13 +82,6 @@ internal sealed class TestDocumentSnapshot : IDocumentSnapshot
     public ValueTask<VersionStamp> GetTextVersionAsync(CancellationToken cancellationToken)
         => RealSnapshot.GetTextVersionAsync(cancellationToken);
 
-    public ValueTask<SyntaxTree> GetCSharpSyntaxTreeAsync(CancellationToken cancellationToken)
-    {
-        return _codeDocument is null
-            ? RealSnapshot.GetCSharpSyntaxTreeAsync(cancellationToken)
-            : new(_codeDocument.GetOrParseCSharpSyntaxTree(cancellationToken));
-    }
-
     public bool TryGetGeneratedOutput([NotNullWhen(true)] out RazorCodeDocument? result)
     {
         if (_codeDocument is { } codeDocument)

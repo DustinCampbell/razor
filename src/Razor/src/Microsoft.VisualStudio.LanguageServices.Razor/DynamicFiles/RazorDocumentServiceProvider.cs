@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
@@ -10,10 +11,10 @@ internal class RazorDocumentServiceProvider(IDynamicDocumentContainer? documentC
     private readonly IDynamicDocumentContainer? _documentContainer = documentContainer;
     private readonly object _lock = new object();
 
-    private IRazorSpanMappingService? _spanMappingService;
-    private IRazorDocumentExcerptServiceImplementation? _documentExcerptService;
-    private IRazorDocumentPropertiesService? _documentPropertiesService;
-    private IRazorMappingService? _mappingService;
+    private Optional<IRazorSpanMappingService?> _spanMappingService;
+    private Optional<IRazorDocumentExcerptServiceImplementation?> _documentExcerptService;
+    private Optional<IRazorDocumentPropertiesService?> _documentPropertiesService;
+    private Optional<IRazorMappingService?> _mappingService;
 
     public RazorDocumentServiceProvider()
         : this(null)
@@ -35,54 +36,54 @@ internal class RazorDocumentServiceProvider(IDynamicDocumentContainer? documentC
 
         if (serviceType == typeof(IRazorSpanMappingService))
         {
-            if (_spanMappingService is null)
+            if (!_spanMappingService.HasValue)
             {
                 lock (_lock)
                 {
-                    _spanMappingService ??= _documentContainer.GetSpanMappingService();
+                    _spanMappingService = new(_documentContainer.GetSpanMappingService());
                 }
             }
 
-            return (TService?)_spanMappingService;
+            return (TService?)_spanMappingService.Value;
         }
 
         if (serviceType == typeof(IRazorDocumentExcerptServiceImplementation))
         {
-            if (_documentExcerptService is null)
+            if (!_documentExcerptService.HasValue)
             {
                 lock (_lock)
                 {
-                    _documentExcerptService ??= _documentContainer.GetExcerptService();
+                    _documentExcerptService = new(_documentContainer.GetExcerptService());
                 }
             }
 
-            return (TService?)_documentExcerptService;
+            return (TService?)_documentExcerptService.Value;
         }
 
         if (serviceType == typeof(IRazorDocumentPropertiesService))
         {
-            if (_documentPropertiesService is null)
+            if (!_documentPropertiesService.HasValue)
             {
                 lock (_lock)
                 {
-                    _documentPropertiesService ??= _documentContainer.GetDocumentPropertiesService();
+                    _documentPropertiesService = new(_documentContainer.GetDocumentPropertiesService());
                 }
             }
 
-            return (TService?)_documentPropertiesService;
+            return (TService?)_documentPropertiesService.Value;
         }
 
         if (serviceType == typeof(IRazorMappingService))
         {
-            if (_mappingService is null)
+            if (!_mappingService.HasValue)
             {
                 lock (_lock)
                 {
-                    _mappingService ??= _documentContainer.GetMappingService();
+                    _mappingService = new(_documentContainer.GetMappingService());
                 }
             }
 
-            return (TService?)_mappingService;
+            return (TService?)_mappingService.Value;
         }
 
         return this as TService;

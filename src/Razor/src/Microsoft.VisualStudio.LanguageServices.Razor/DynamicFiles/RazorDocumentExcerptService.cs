@@ -6,20 +6,20 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 using Microsoft.CodeAnalysis.Razor;
+using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
 internal class RazorDocumentExcerptService(
-    IDocumentSnapshot document,
+    DocumentSnapshot document,
     IRazorSpanMappingService mappingService) : DocumentExcerptService
 {
-    private readonly IDocumentSnapshot _document = document;
+    private readonly DocumentSnapshot _document = document;
     private readonly IRazorSpanMappingService _mappingService = mappingService;
 
     internal override async Task<ExcerptResultInternal?> TryGetExcerptInternalAsync(

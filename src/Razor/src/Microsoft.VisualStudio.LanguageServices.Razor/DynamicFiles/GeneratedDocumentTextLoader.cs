@@ -6,13 +6,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal sealed class GeneratedDocumentTextLoader(IDocumentSnapshot document, string filePath) : TextLoader
+internal sealed class GeneratedDocumentTextLoader(DocumentSnapshot document, string filePath) : TextLoader
 {
     private readonly AsyncLazy<TextAndVersion> _lazyTextAndVersion = AsyncLazy.Create(
         async (arg, cancellationToken) =>

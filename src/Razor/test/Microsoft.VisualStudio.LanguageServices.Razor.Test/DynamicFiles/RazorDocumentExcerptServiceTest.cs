@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
+using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -638,7 +639,7 @@ public class RazorDocumentExcerptServiceTest(ITestOutputHelper testOutput) : Doc
             });
     }
 
-    private RazorDocumentExcerptService CreateExcerptService(IDocumentSnapshot document)
+    private RazorDocumentExcerptService CreateExcerptService(DocumentSnapshot document)
     {
         return new RazorDocumentExcerptService(document, new RazorSpanMappingService(document));
     }

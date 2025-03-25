@@ -42,7 +42,7 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
     }
 
     // Adds the text to a ProjectSnapshot, generates code, and updates the workspace.
-    private (IDocumentSnapshot primary, Document secondary) InitializeDocument(SourceText sourceText)
+    private (DocumentSnapshot primary, Document secondary) InitializeDocument(SourceText sourceText)
     {
         var state = ProjectState
             .Create(_hostProject, LanguageServerFeatureOptions.ToCompilerOptions(), ProjectEngineFactoryProvider)
@@ -101,7 +101,7 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
         return (generatedDocument, razorSourceText, primarySpan, generatedSpan);
     }
 
-    internal async Task<(IDocumentSnapshot primary, Document generatedDocument, TextSpan generatedSpan)> InitializeWithSnapshotAsync(string razorSource, CancellationToken cancellationToken)
+    internal async Task<(DocumentSnapshot primary, Document generatedDocument, TextSpan generatedSpan)> InitializeWithSnapshotAsync(string razorSource, CancellationToken cancellationToken)
     {
         var (razorSourceText, primarySpan) = CreateText(razorSource);
         var (primary, generatedDocument) = InitializeDocument(razorSourceText);

@@ -10,22 +10,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.PooledObjects;
-using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Telemetry;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 using Microsoft.CodeAnalysis.Razor;
 using Microsoft.CodeAnalysis.Razor.DocumentMapping;
 using Microsoft.CodeAnalysis.Razor.Logging;
+using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Razor.Protocol;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporter telemetryReporter, ILoggerFactory loggerFactory) : IRazorMappingService
+internal class RazorMappingService(DocumentSnapshot document, ITelemetryReporter telemetryReporter, ILoggerFactory loggerFactory) : IRazorMappingService
 {
-    private readonly IDocumentSnapshot _document = document;
+    private readonly DocumentSnapshot _document = document;
     private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
     private readonly IDocumentMappingService _documentMappingService = new DocumentMappingService(loggerFactory);
     private readonly ILogger _logger = loggerFactory.GetOrCreateLogger<RazorMappingService>();

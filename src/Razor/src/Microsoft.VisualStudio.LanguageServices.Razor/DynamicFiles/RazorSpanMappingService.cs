@@ -1,7 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
@@ -13,11 +12,12 @@ using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 using Microsoft.CodeAnalysis.Razor;
+using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal class RazorSpanMappingService(IDocumentSnapshot document) : IRazorSpanMappingService
+internal class RazorSpanMappingService(DocumentSnapshot document) : IRazorSpanMappingService
 {
     private readonly IDocumentSnapshot _document = document;
 

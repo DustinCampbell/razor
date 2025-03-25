@@ -7,25 +7,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
+using Microsoft.AspNetCore.Razor.Threading;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal class GeneratedDocumentTextLoader(IDocumentSnapshot document, string filePath) : TextLoader
+internal sealed class GeneratedDocumentTextLoader(IDocumentSnapshot document, string filePath) : TextLoader
 {
-    private readonly IDocumentSnapshot _document = document;
-    private readonly string _filePath = filePath;
-    private readonly VersionStamp _version = VersionStamp.Create();
+    private readonly AsyncLazy<TextAndVersion> _lazyTextAndVersion = AsyncLazy.Create(
+        async (arg, cancellationToken) =>
+        {
+            var (document, filePath) = arg;
 
-    public override async Task<TextAndVersion> LoadTextAndVersionAsync(LoadTextOptions options, CancellationToken cancellationToken)
+            var codeDocument = await document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
+            var csharpSourceText = codeDocument.GetCSharpDocument().Text;
+
+            // If the encoding isn't UTF8, edit-and-continue won't work.
+            Debug.Assert(csharpSourceText.Encoding == Encoding.UTF8);
+
+            return TextAndVersion.Create(csharpSourceText, VersionStamp.Create(), filePath);
+        },
+        arg: (document, filePath));
+
+    public override Task<TextAndVersion> LoadTextAndVersionAsync(LoadTextOptions options, CancellationToken cancellationToken)
     {
-        var output = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
-
-        var csharpSourceText = output.GetCSharpDocument().Text;
-
-        // If the encoding isn't UTF8, edit-continue won't work.
-        Debug.Assert(csharpSourceText.Encoding == Encoding.UTF8);
-
-        return TextAndVersion.Create(csharpSourceText, _version, _filePath);
+        return _lazyTextAndVersion.GetValueAsync(cancellationToken);
     }
 }

@@ -8,14 +8,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.ProjectSystem;
+using Microsoft.AspNetCore.Razor.Test.Common;
+using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.VisualStudio.Razor.DynamicFiles;
 using Xunit;
 using Xunit.Abstractions;
 using TestFileMarkupParser = Microsoft.CodeAnalysis.Testing.TestFileMarkupParser;
 
-namespace Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
+namespace Microsoft.VisualStudio.Razor;
 
 public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutput) : WorkspaceTestBase(testOutput)
 {
@@ -76,7 +79,7 @@ public abstract class DocumentExcerptServiceTestBase(ITestOutputHelper testOutpu
         foreach (var mapping in output.GetCSharpDocument().SourceMappings)
         {
             if (mapping.OriginalSpan.AbsoluteIndex <= primarySpan.Start &&
-                (mapping.OriginalSpan.AbsoluteIndex + mapping.OriginalSpan.Length) >= primarySpan.End)
+                mapping.OriginalSpan.AbsoluteIndex + mapping.OriginalSpan.Length >= primarySpan.End)
             {
                 var offset = mapping.GeneratedSpan.AbsoluteIndex - mapping.OriginalSpan.AbsoluteIndex;
                 var secondarySpan = new TextSpan(primarySpan.Start + offset, primarySpan.Length);

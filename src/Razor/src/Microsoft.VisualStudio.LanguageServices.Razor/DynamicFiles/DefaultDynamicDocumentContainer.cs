@@ -43,13 +43,13 @@ internal sealed class DefaultDynamicDocumentContainer(IDocumentSnapshot document
         => _spanMappingService ?? InterlockedOperations.Initialize(ref _spanMappingService,
             new RazorSpanMappingService(_documentSnapshot));
 
-    public IRazorDocumentPropertiesService GetDocumentPropertiesService()
+    public IRazorDocumentPropertiesService? GetDocumentPropertiesService()
     {
         // DocumentPropertiesServices are used to tell Roslyn to provide C# diagnostics for LSP provided documents to be shown
         // in the editor given a specific Language Server Client. Given this type is a container for DocumentSnapshots, we don't
         // have a Language Server to associate errors with or an open document to display those errors on. We return `null` to
         // opt out of those features.
-        return null!;
+        return null;
     }
 
     public IRazorMappingService? GetMappingService()

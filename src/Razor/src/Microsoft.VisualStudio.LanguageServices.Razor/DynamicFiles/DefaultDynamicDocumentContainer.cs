@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 // the scenes C#.
 internal sealed class DefaultDynamicDocumentContainer(IDocumentSnapshot documentSnapshot, ILoggerFactory loggerFactory) : IDynamicDocumentContainer
 {
-    private readonly IDocumentSnapshot _documentSnapshot = documentSnapshot ?? throw new ArgumentNullException(nameof(documentSnapshot));
+    private readonly IDocumentSnapshot _documentSnapshot = documentSnapshot;
     private RazorDocumentExcerptService? _excerptService;
     private RazorSpanMappingService? _spanMappingService;
     private RazorMappingService? _mappingService;

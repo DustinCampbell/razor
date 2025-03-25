@@ -29,11 +29,6 @@ internal class RazorDocumentExcerptService(
         RazorClassificationOptionsWrapper options,
         CancellationToken cancellationToken)
     {
-        if (_document is null)
-        {
-            return null;
-        }
-
         var mappedSpans = await _mappingService.MapSpansAsync(document, new[] { span }, cancellationToken).ConfigureAwait(false);
         if (mappedSpans.Length == 0 || mappedSpans[0].Equals(default(RazorMappedSpanResult)))
         {

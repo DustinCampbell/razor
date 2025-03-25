@@ -26,21 +26,8 @@ internal class RazorSpanMappingService(IDocumentSnapshot document) : IRazorSpanM
         IEnumerable<TextSpan> spans,
         CancellationToken cancellationToken)
     {
-        if (document is null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
-
-        if (spans is null)
-        {
-            throw new ArgumentNullException(nameof(spans));
-        }
-
-        // Called on an uninitialized document.
-        if (_document is null)
-        {
-            return ImmutableArray<RazorMappedSpanResult>.Empty;
-        }
+        ArgHelper.ThrowIfNull(document);
+        ArgHelper.ThrowIfNull(spans);
 
         var output = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
         var source = output.Source.Text;

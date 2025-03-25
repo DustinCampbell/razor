@@ -32,12 +32,6 @@ internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporte
 
     public async Task<ImmutableArray<RazorMappedSpanResult>> MapSpansAsync(Document document, IEnumerable<TextSpan> spans, CancellationToken cancellationToken)
     {
-        // Called on an uninitialized document.
-        if (_document is null)
-        {
-            return ImmutableArray<RazorMappedSpanResult>.Empty;
-        }
-
         var output = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
         var source = output.Source.Text;
 
@@ -65,11 +59,6 @@ internal class RazorMappingService(IDocumentSnapshot document, ITelemetryReporte
     {
         try
         {
-            if (_document.FilePath is null)
-            {
-                return ImmutableArray<RazorMappedEditoResult>.Empty;
-            }
-
             var changes = await newDocument.GetTextChangesAsync(oldDocument, cancellationToken).ConfigureAwait(false);
             var csharpSource = await oldDocument.GetTextAsync(cancellationToken).ConfigureAwait(false);
             var results = await RazorEditHelper.MapCSharpEditsAsync(

@@ -3,43 +3,69 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.Extensions.Internal;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.ProjectSystem;
 
 internal sealed class ProjectWorkspaceState : IEquatable<ProjectWorkspaceState>
 {
-    public static readonly ProjectWorkspaceState Default = new(ImmutableArray<TagHelperDescriptor>.Empty);
+    public static readonly ProjectWorkspaceState Default = new([]);
 
     public ImmutableArray<TagHelperDescriptor> TagHelpers { get; }
 
-    private ProjectWorkspaceState(
-        ImmutableArray<TagHelperDescriptor> tagHelpers)
+    private Checksum? _checksum;
+
+    private ProjectWorkspaceState(ImmutableArray<TagHelperDescriptor> tagHelpers)
     {
-        TagHelpers = tagHelpers;
+        TagHelpers = tagHelpers.NullToEmpty();
     }
 
-    public static ProjectWorkspaceState Create(
-        ImmutableArray<TagHelperDescriptor> tagHelpers)
+    public static ProjectWorkspaceState Create(ImmutableArray<TagHelperDescriptor> tagHelpers)
         => tagHelpers.IsEmpty
             ? Default
             : new(tagHelpers);
 
+    private Checksum Checksum
+    {
+        get
+        {
+            return _checksum ?? InterlockedOperations.Initialize(ref _checksum, ComputeChecksum(TagHelpers));
+
+            static Checksum ComputeChecksum(ImmutableArray<TagHelperDescriptor> descriptors)
+            {
+                if (descriptors.IsEmpty)
+                {
+                    return Checksum.Null;
+                }
+
+                var builder = new Checksum.Builder();
+
+                foreach (var descriptor in descriptors)
+                {
+                    builder.AppendData(descriptor.Checksum);
+                }
+
+                return builder.FreeAndGetChecksum();
+            }
+        }
+    }
+
     public override bool Equals(object? obj)
-        => obj is ProjectWorkspaceState other && Equals(other);
+        => obj is ProjectWorkspaceState other &&
+           Equals(other);
 
     public bool Equals(ProjectWorkspaceState? other)
-        => other is not null &&
-           TagHelpers.SequenceEqual(other.TagHelpers);
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return ReferenceEquals(this, other) ||
+               Checksum.Equals(other.Checksum);
+    }
 
     public override int GetHashCode()
-    {
-        var hash = HashCodeCombiner.Start();
-
-        hash.Add(TagHelpers);
-
-        return hash.CombinedHash;
-    }
+        => Checksum.GetHashCode();
 }

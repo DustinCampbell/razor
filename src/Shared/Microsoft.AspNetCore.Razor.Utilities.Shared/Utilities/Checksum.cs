@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.AspNetCore.Razor.Utilities;
 
-internal sealed partial record Checksum
+internal sealed partial record Checksum : IComparable<Checksum>
 {
     // Size of SHA-256
     private const int HashSize = 256 / 8;
@@ -20,6 +20,11 @@ internal sealed partial record Checksum
 
     public Checksum(HashData data)
         => Data = data;
+
+    public int CompareTo(Checksum? other)
+        => other is not null
+            ? Data.CompareTo(other.Data)
+            : 1;
 
     public static Checksum From(ReadOnlySpan<byte> source)
     {
@@ -67,9 +72,9 @@ internal sealed partial record Checksum
     }
 
     public static Checksum FromBase64String(string value)
-        => value is null
-            ? Null
-            : From(Convert.FromBase64String(value));
+        => value is not null
+            ? From(Convert.FromBase64String(value))
+            : Null;
 
     public override string ToString()
         => ToBase64String();

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.AspNetCore.Razor.Utilities;
@@ -8,7 +9,7 @@ namespace Microsoft.AspNetCore.Razor.Utilities;
 internal sealed partial record Checksum
 {
     [StructLayout(LayoutKind.Explicit, Size = HashSize)]
-    public readonly record struct HashData
+    public readonly record struct HashData : IComparable<HashData>
     {
         [FieldOffset(0)]
         public readonly long Data1;
@@ -28,6 +29,29 @@ internal sealed partial record Checksum
             Data2 = data2;
             Data3 = data3;
             Data4 = data4;
+        }
+
+        public int CompareTo(HashData other)
+        {
+            var result = Data1.CompareTo(other.Data1);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            result = Data2.CompareTo(other.Data2);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            result = Data3.CompareTo(other.Data3);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            return Data4.CompareTo(other.Data4);
         }
 
         public override int GetHashCode()

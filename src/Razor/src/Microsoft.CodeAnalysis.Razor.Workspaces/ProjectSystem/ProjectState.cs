@@ -271,8 +271,7 @@ internal sealed class ProjectState
     {
         ArgHelper.ThrowIfNull(projectWorkspaceState);
 
-        if (ProjectWorkspaceState == projectWorkspaceState ||
-            ProjectWorkspaceState.Equals(projectWorkspaceState))
+        if (ProjectWorkspaceState.Equals(projectWorkspaceState))
         {
             return this;
         }

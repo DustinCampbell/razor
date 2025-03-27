@@ -18,7 +18,6 @@ internal sealed class DefaultDynamicDocumentContainer(DocumentSnapshot document,
 {
     private readonly DocumentSnapshot _document = document;
     private RazorDocumentExcerptService? _excerptService;
-    private RazorSpanMappingService? _spanMappingService;
     private RazorMappingService? _mappingService;
 
     public string FilePath => _document.FilePath;
@@ -35,11 +34,7 @@ internal sealed class DefaultDynamicDocumentContainer(DocumentSnapshot document,
 
     public IRazorDocumentExcerptServiceImplementation GetExcerptService()
         => _excerptService ?? InterlockedOperations.Initialize(ref _excerptService,
-            new RazorDocumentExcerptService(_document, GetSpanMappingService()));
-
-    public IRazorSpanMappingService GetSpanMappingService()
-        => _spanMappingService ?? InterlockedOperations.Initialize(ref _spanMappingService,
-            new RazorSpanMappingService(_document));
+            new RazorDocumentExcerptService(_document, GetMappingService()));
 
     public IRazorDocumentPropertiesService? GetDocumentPropertiesService()
     {
@@ -50,7 +45,7 @@ internal sealed class DefaultDynamicDocumentContainer(DocumentSnapshot document,
         return null;
     }
 
-    public IRazorMappingService? GetMappingService()
+    public IRazorMappingService GetMappingService()
         => _mappingService ?? InterlockedOperations.Initialize(ref _mappingService,
             new RazorMappingService(_document, NoOpTelemetryReporter.Instance, loggerFactory));
 }

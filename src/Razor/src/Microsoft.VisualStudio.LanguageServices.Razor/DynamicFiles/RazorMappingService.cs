@@ -23,14 +23,17 @@ using Microsoft.VisualStudio.LanguageServer.Protocol;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal class RazorMappingService(DocumentSnapshot document, ITelemetryReporter telemetryReporter, ILoggerFactory loggerFactory) : IRazorMappingService
+internal sealed class RazorMappingService(
+    DocumentSnapshot document, ITelemetryReporter telemetryReporter, ILoggerFactory loggerFactory)
+    : IRazorMappingService
 {
     private readonly DocumentSnapshot _document = document;
     private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
     private readonly IDocumentMappingService _documentMappingService = new DocumentMappingService(loggerFactory);
     private readonly ILogger _logger = loggerFactory.GetOrCreateLogger<RazorMappingService>();
 
-    public async Task<ImmutableArray<RazorMappedSpanResult>> MapSpansAsync(Document document, IEnumerable<TextSpan> spans, CancellationToken cancellationToken)
+    public async Task<ImmutableArray<RazorMappedSpanResult>> MapSpansAsync(
+        Document document, IEnumerable<TextSpan> spans, CancellationToken cancellationToken)
     {
         var output = await _document.GetGeneratedOutputAsync(cancellationToken).ConfigureAwait(false);
         var source = output.Source.Text;
@@ -55,7 +58,8 @@ internal class RazorMappingService(DocumentSnapshot document, ITelemetryReporter
         return results.DrainToImmutable();
     }
 
-    public async Task<ImmutableArray<RazorMappedEditoResult>> MapTextChangesAsync(Document oldDocument, Document newDocument, CancellationToken cancellationToken)
+    public async Task<ImmutableArray<RazorMappedEditResult>> MapTextChangesAsync(
+        Document oldDocument, Document newDocument, CancellationToken cancellationToken)
     {
         try
         {
@@ -80,22 +84,25 @@ internal class RazorMappingService(DocumentSnapshot document, ITelemetryReporter
                 {DisplayEdits(textChanges)}
                 """);
 
-            return [new RazorMappedEditoResult() { FilePath = _document.FilePath, TextChanges = textChanges.ToArray() }];
+            return [new RazorMappedEditResult() { FilePath = _document.FilePath, TextChanges = [.. textChanges] }];
         }
         catch (Exception ex)
         {
             _telemetryReporter.ReportFault(ex, "Failed to map edits");
-            return ImmutableArray<RazorMappedEditoResult>.Empty;
+            return [];
         }
 
-        string DisplayEdits(IEnumerable<TextChange> changes)
-            => string.Join(
+        static string DisplayEdits(IEnumerable<TextChange> changes)
+        {
+            return string.Join(
                 Environment.NewLine,
                 changes.Select(e => $"{e.Span} => '{e.NewText}'"));
+        }
     }
 
     // Internal for testing.
-    internal static bool TryGetMappedSpans(TextSpan span, SourceText source, RazorCSharpDocument output, out LinePositionSpan linePositionSpan, out TextSpan mappedSpan)
+    internal static bool TryGetMappedSpans(
+        TextSpan span, SourceText source, RazorCSharpDocument output, out LinePositionSpan linePositionSpan, out TextSpan mappedSpan)
     {
         foreach (var mapping in output.SourceMappings)
         {
@@ -125,7 +132,6 @@ internal class RazorMappingService(DocumentSnapshot document, ITelemetryReporter
         return false;
     }
 
-    private class DocumentMappingService(ILoggerFactory loggerFactory) : AbstractDocumentMappingService(loggerFactory.GetOrCreateLogger<DocumentMappingService>())
-    {
-    }
+    private class DocumentMappingService(ILoggerFactory loggerFactory)
+        : AbstractDocumentMappingService(loggerFactory.GetOrCreateLogger<DocumentMappingService>());
 }

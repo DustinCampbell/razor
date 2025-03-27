@@ -6,12 +6,11 @@ using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 
 namespace Microsoft.VisualStudio.Razor.DynamicFiles;
 
-internal class RazorDocumentServiceProvider(IDynamicDocumentContainer? documentContainer) : IRazorDocumentServiceProvider, IRazorDocumentOperationService
+internal class RazorDocumentServiceProvider(IDynamicDocumentContainer? documentContainer) : IRazorDocumentServiceProvider
 {
     private readonly IDynamicDocumentContainer? _documentContainer = documentContainer;
-    private readonly object _lock = new object();
+    private readonly object _lock = new();
 
-    private Optional<IRazorSpanMappingService?> _spanMappingService;
     private Optional<IRazorDocumentExcerptServiceImplementation?> _documentExcerptService;
     private Optional<IRazorDocumentPropertiesService?> _documentPropertiesService;
     private Optional<IRazorMappingService?> _mappingService;
@@ -33,19 +32,6 @@ internal class RazorDocumentServiceProvider(IDynamicDocumentContainer? documentC
         }
 
         var serviceType = typeof(TService);
-
-        if (serviceType == typeof(IRazorSpanMappingService))
-        {
-            if (!_spanMappingService.HasValue)
-            {
-                lock (_lock)
-                {
-                    _spanMappingService = new(_documentContainer.GetSpanMappingService());
-                }
-            }
-
-            return (TService?)_spanMappingService.Value;
-        }
 
         if (serviceType == typeof(IRazorDocumentExcerptServiceImplementation))
         {

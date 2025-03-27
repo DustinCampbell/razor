@@ -20,7 +20,6 @@ internal class DocumentContext(Uri uri, IDocumentSnapshot snapshot, VSProjectCon
 {
     private readonly VSProjectContext? _projectContext = projectContext;
     private RazorCodeDocument? _codeDocument;
-    private SourceText? _sourceText;
 
     public Uri Uri { get; } = uri;
     public IDocumentSnapshot Snapshot { get; } = snapshot;
@@ -64,21 +63,7 @@ internal class DocumentContext(Uri uri, IDocumentSnapshot snapshot, VSProjectCon
     }
 
     public ValueTask<SourceText> GetSourceTextAsync(CancellationToken cancellationToken)
-    {
-        return _sourceText is SourceText sourceText
-            ? new(sourceText)
-            : GetSourceTextCoreAsync(cancellationToken);
-
-        async ValueTask<SourceText> GetSourceTextCoreAsync(CancellationToken cancellationToken)
-        {
-            var sourceText = await Snapshot.GetTextAsync(cancellationToken).ConfigureAwait(false);
-
-            // Interlock to ensure that we only ever return one instance of RazorCodeDocument.
-            // In race scenarios, when more than one RazorCodeDocument is produced, we want to
-            // return whichever RazorCodeDocument is cached.
-            return InterlockedOperations.Initialize(ref _sourceText, sourceText);
-        }
-    }
+        => Snapshot.GetTextAsync(cancellationToken);
 
     public ValueTask<RazorSyntaxTree> GetSyntaxTreeAsync(CancellationToken cancellationToken)
     {

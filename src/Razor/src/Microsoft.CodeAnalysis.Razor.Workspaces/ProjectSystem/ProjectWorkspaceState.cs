@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.ProjectSystem;
 
-internal sealed class ProjectWorkspaceState : IEquatable<ProjectWorkspaceState>
+internal sealed record class ProjectWorkspaceState : IEquatable<ProjectWorkspaceState>
 {
     public static readonly ProjectWorkspaceState Default = new([]);
 
@@ -50,10 +50,6 @@ internal sealed class ProjectWorkspaceState : IEquatable<ProjectWorkspaceState>
             }
         }
     }
-
-    public override bool Equals(object? obj)
-        => obj is ProjectWorkspaceState other &&
-           Equals(other);
 
     public bool Equals(ProjectWorkspaceState? other)
     {

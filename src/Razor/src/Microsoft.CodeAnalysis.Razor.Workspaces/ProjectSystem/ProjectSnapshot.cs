@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Razor.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem.Legacy;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
@@ -102,6 +104,35 @@ internal sealed class ProjectSnapshot(ProjectState state) : IProjectSnapshot, IL
 
         document = null;
         return false;
+    }
+
+    internal ProjectSnapshot AddDocument(HostDocument hostDocument, SourceText text)
+        => UpdateState((hostDocument, text), static (state, arg) => state.AddDocument(arg.hostDocument, arg.text));
+
+    internal ProjectSnapshot AddDocument(HostDocument hostDocument, TextLoader textLoader)
+        => UpdateState((hostDocument, textLoader), static (state, arg) => state.AddDocument(arg.hostDocument, arg.textLoader));
+
+    internal ProjectSnapshot RemoveDocument(string documentFilePath)
+        => UpdateState(documentFilePath, static (state, documentFilePath) => state.RemoveDocument(documentFilePath));
+
+    internal ProjectSnapshot WithDocumentText(string documentFilePath, SourceText text)
+        => UpdateState((documentFilePath, text), static (state, arg) => state.WithDocumentText(arg.documentFilePath, arg.text));
+
+    internal ProjectSnapshot WithDocumentText(string documentFilePath, TextLoader textLoader)
+        => UpdateState((documentFilePath, textLoader), static (state, arg) => state.WithDocumentText(arg.documentFilePath, arg.textLoader));
+
+    internal ProjectSnapshot WithHostProject(HostProject hostProject)
+        => UpdateState(hostProject, static (state, hostProject) => state.WithHostProject(hostProject));
+
+    internal ProjectSnapshot WithProjectWorkspaceState(ProjectWorkspaceState projectWorkspaceState)
+        => UpdateState(projectWorkspaceState, static (state, projectWorkspaceState) => state.WithProjectWorkspaceState(projectWorkspaceState));
+
+    private ProjectSnapshot UpdateState<TArg>(TArg arg, Func<ProjectState, TArg, ProjectState> transformer)
+    {
+        var oldState = _state;
+        var newState = transformer(oldState, arg);
+
+        return ReferenceEquals(oldState, newState) ? this : new(newState);
     }
 
     /// <summary>

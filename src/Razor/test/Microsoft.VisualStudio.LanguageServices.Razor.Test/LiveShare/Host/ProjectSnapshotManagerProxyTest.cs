@@ -172,7 +172,7 @@ public class ProjectSnapshotManagerProxyTest(ITestOutputHelper testOutput) : Vis
         Assert.NotNull(project);
         Assert.Equal(_hostProject1.Key, project.Key);
         Assert.Equal(_hostProject1.FilePath, project.FilePath);
-        Assert.Equal(_hostProject1.IntermediateOutputPath, project.IntermediateOutputPath);
+        Assert.Equal(_hostProject1.IntermediateOutputPath, project.HostProject.IntermediateOutputPath);
         Assert.Equal(_hostProject1.Configuration, project.Configuration);
         Assert.Equal(_hostProject1.RootNamespace, project.RootNamespace);
         Assert.Equal(_hostProject1.DisplayName, project.DisplayName);

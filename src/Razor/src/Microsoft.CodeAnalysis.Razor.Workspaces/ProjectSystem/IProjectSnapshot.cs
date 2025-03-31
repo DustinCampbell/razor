@@ -21,11 +21,6 @@ internal interface IProjectSnapshot
     /// </summary>
     string FilePath { get; }
 
-    /// <summary>
-    /// Gets the full path to the folder under 'obj' where the project.razor.bin file will live
-    /// </summary>
-    string IntermediateOutputPath { get; }
-
     string? RootNamespace { get; }
     string DisplayName { get; }
 

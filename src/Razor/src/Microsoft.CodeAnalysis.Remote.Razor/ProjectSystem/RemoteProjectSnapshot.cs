@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
-using Microsoft.CodeAnalysis.Razor.Utilities;
 using Microsoft.NET.Sdk.Razor.SourceGenerators;
 
 namespace Microsoft.CodeAnalysis.Remote.Razor.ProjectSystem;
@@ -45,8 +44,6 @@ internal sealed class RemoteProjectSnapshot : IProjectSnapshot
             .Select(static d => d.FilePath.AssumeNotNull());
 
     public string FilePath => _project.FilePath.AssumeNotNull();
-
-    public string IntermediateOutputPath => FilePathNormalizer.GetNormalizedDirectoryName(_project.CompilationOutputInfo.AssemblyPath);
 
     public string? RootNamespace => _project.DefaultNamespace ?? "ASP";
 

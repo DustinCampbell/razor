@@ -6,7 +6,6 @@ using System;
 #endif
 
 using System.Diagnostics;
-using Microsoft.CodeAnalysis.Razor.Serialization;
 using Microsoft.CodeAnalysis.Razor.Utilities;
 
 namespace Microsoft.CodeAnalysis.Razor.ProjectSystem;
@@ -28,9 +27,6 @@ internal static class Extensions
 
         return FilePathNormalizer.AreDirectoryPathsEquivalent(projectKey.Id, project.CompilationOutputInfo.AssemblyPath);
     }
-
-    public static DocumentSnapshotHandle ToHandle(this IDocumentSnapshot snapshot)
-        => new(snapshot.FilePath, snapshot.TargetPath, snapshot.FileKind);
 
     public static ProjectKey ToProjectKey(this Project project)
     {

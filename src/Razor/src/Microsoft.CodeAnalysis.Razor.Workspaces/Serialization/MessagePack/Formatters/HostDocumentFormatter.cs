@@ -4,18 +4,19 @@
 using MessagePack;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
 namespace Microsoft.CodeAnalysis.Razor.Serialization.MessagePack.Formatters;
 
-internal sealed class DocumentSnapshotHandleFormatter : ValueFormatter<DocumentSnapshotHandle>
+internal sealed class HostDocumentFormatter : ValueFormatter<HostDocument>
 {
-    public static readonly ValueFormatter<DocumentSnapshotHandle> Instance = new DocumentSnapshotHandleFormatter();
+    public static readonly ValueFormatter<HostDocument> Instance = new HostDocumentFormatter();
 
-    private DocumentSnapshotHandleFormatter()
+    private HostDocumentFormatter()
     {
     }
 
-    public override DocumentSnapshotHandle Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
+    public override HostDocument Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
         reader.ReadArrayHeaderAndVerify(3);
 
@@ -23,10 +24,10 @@ internal sealed class DocumentSnapshotHandleFormatter : ValueFormatter<DocumentS
         var targetPath = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var fileKind = (RazorFileKind)reader.ReadByte();
 
-        return new DocumentSnapshotHandle(filePath, targetPath, fileKind);
+        return new(filePath, targetPath, fileKind);
     }
 
-    public override void Serialize(ref MessagePackWriter writer, DocumentSnapshotHandle value, SerializerCachingOptions options)
+    public override void Serialize(ref MessagePackWriter writer, HostDocument value, SerializerCachingOptions options)
     {
         writer.WriteArrayHeader(3);
 

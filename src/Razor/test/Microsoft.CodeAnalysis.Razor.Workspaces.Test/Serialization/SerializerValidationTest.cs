@@ -1,4 +1,7 @@
-﻿using System.Collections.Immutable;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the MIT license. See License.txt in the project root for license information.
+
+using System.Collections.Immutable;
 using MessagePack;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Razor.Language;
@@ -82,12 +85,7 @@ public class SerializerValidationTest(ITestOutputHelper testOutput) : ToolingTes
         Assert.NotNull(actualProjectInfo);
 
         // Assert
-        Assert.Equal(originalProjectInfo.ProjectKey, actualProjectInfo.ProjectKey);
-        Assert.Equal(originalProjectInfo.FilePath, actualProjectInfo.FilePath);
-        Assert.Equal(originalProjectInfo.Configuration, actualProjectInfo.Configuration);
-        Assert.Equal(originalProjectInfo.RootNamespace, actualProjectInfo.RootNamespace);
-        Assert.Equal(originalProjectInfo.ProjectWorkspaceState, actualProjectInfo.ProjectWorkspaceState);
-        Assert.Equal<DocumentSnapshotHandle>(originalProjectInfo.Documents, actualProjectInfo.Documents);
+        Assert.Equal(originalProjectInfo, actualProjectInfo);
     }
 
     [Theory]

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
-using Microsoft.CodeAnalysis.Razor.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -87,7 +86,7 @@ public class StreamExtensionTests(ITestOutputHelper testOutputHelper) : ToolingT
             "TestNamespace",
             "Test",
             projectWorkspaceState,
-            [new DocumentSnapshotHandle(@"C:\test\document.razor", @"document.razor", RazorFileKind.Component)]);
+            [new(@"C:\test\document.razor", @"document.razor", RazorFileKind.Component)]);
 
         var bytesToSerialize = projectInfo.Serialize();
 

@@ -24,7 +24,7 @@ internal sealed record class HostDocument : IComparable<HostDocument>
         => other is not null &&
            FilePathComparer.Instance.Equals(FilePath, other.FilePath) &&
            FilePathComparer.Instance.Equals(TargetPath, other.TargetPath) &&
-           StringComparer.OrdinalIgnoreCase.Equals(FileKind, other.FileKind);
+           FileKind == other.FileKind;
 
     public override int GetHashCode()
     {
@@ -32,7 +32,7 @@ internal sealed record class HostDocument : IComparable<HostDocument>
 
         combiner.Add(FilePath, FilePathComparer.Instance);
         combiner.Add(TargetPath, FilePathComparer.Instance);
-        combiner.Add(FileKind, StringComparer.OrdinalIgnoreCase);
+        combiner.Add(FileKind);
 
         return combiner.CombinedHash;
     }

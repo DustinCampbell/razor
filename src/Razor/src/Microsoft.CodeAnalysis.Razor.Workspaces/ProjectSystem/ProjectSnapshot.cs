@@ -31,7 +31,6 @@ internal sealed class ProjectSnapshot(ProjectState state) : IProjectSnapshot, IL
     public string IntermediateOutputPath => _state.HostProject.IntermediateOutputPath;
     public string? RootNamespace => _state.HostProject.RootNamespace;
     public string DisplayName => _state.HostProject.DisplayName;
-    public LanguageVersion CSharpLanguageVersion => _state.CSharpLanguageVersion;
     public ProjectWorkspaceState ProjectWorkspaceState => _state.ProjectWorkspaceState;
 
     public int DocumentCount => _state.Documents.Count;
@@ -143,7 +142,7 @@ internal sealed class ProjectSnapshot(ProjectState state) : IProjectSnapshot, IL
     RazorConfiguration ILegacyProjectSnapshot.Configuration => Configuration;
     string ILegacyProjectSnapshot.FilePath => FilePath;
     string? ILegacyProjectSnapshot.RootNamespace => RootNamespace;
-    LanguageVersion ILegacyProjectSnapshot.CSharpLanguageVersion => CSharpLanguageVersion;
+    LanguageVersion ILegacyProjectSnapshot.CSharpLanguageVersion => _state.CSharpLanguageVersion;
     ImmutableArray<TagHelperDescriptor> ILegacyProjectSnapshot.TagHelpers => ProjectWorkspaceState.TagHelpers;
 
     RazorProjectEngine ILegacyProjectSnapshot.GetProjectEngine()

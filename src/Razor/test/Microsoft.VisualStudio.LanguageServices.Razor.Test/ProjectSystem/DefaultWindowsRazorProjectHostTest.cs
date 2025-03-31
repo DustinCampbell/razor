@@ -1414,7 +1414,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         // Changing intermediate output path is effectively removing the old project and adding a new one.
         project = Assert.Single(_projectManager.GetProjects());
         Assert.Equal(TestProjectData.SomeProject.FilePath, project.FilePath);
-        Assert.Equal(TestProjectData.SomeProject.IntermediateOutputPath + "2", project.IntermediateOutputPath);
+        Assert.Equal(TestProjectData.SomeProject.IntermediateOutputPath + "2", project.HostProject.IntermediateOutputPath);
 
         await Task.Run(async () => await host.DisposeAsync());
         Assert.Empty(_projectManager.GetProjects());

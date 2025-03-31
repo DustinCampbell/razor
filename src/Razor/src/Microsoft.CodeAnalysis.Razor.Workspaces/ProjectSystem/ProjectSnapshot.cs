@@ -28,7 +28,6 @@ internal sealed class ProjectSnapshot(ProjectState state) : IProjectSnapshot, IL
     public RazorConfiguration Configuration => _state.HostProject.Configuration;
     public IEnumerable<string> DocumentFilePaths => _state.Documents.Keys;
     public string FilePath => _state.HostProject.FilePath;
-    public string IntermediateOutputPath => _state.HostProject.IntermediateOutputPath;
     public string? RootNamespace => _state.HostProject.RootNamespace;
     public string DisplayName => _state.HostProject.DisplayName;
     public ProjectWorkspaceState ProjectWorkspaceState => _state.ProjectWorkspaceState;

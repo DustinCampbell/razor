@@ -101,9 +101,9 @@ internal class ProjectSnapshotManagerProxy : IProjectSnapshotManagerProxy, IColl
         }
 
         var projectFilePath = _session.ConvertLocalPathToSharedUri(project.FilePath);
-        var intermediateOutputPath = _session.ConvertLocalPathToSharedUri(project.HostProject.IntermediateOutputPath);
+        var projectKeyId = _session.ConvertLocalPathToSharedUri(project.Key.Id);
         var projectHandleProxy = new ProjectSnapshotHandleProxy(
-            projectFilePath, intermediateOutputPath, project.Configuration, project.RootNamespace, project.ProjectWorkspaceState);
+            projectFilePath, projectKeyId, project.Configuration, project.RootNamespace, project.ProjectWorkspaceState);
 
         return Task.FromResult(projectHandleProxy).AsNullable();
     }

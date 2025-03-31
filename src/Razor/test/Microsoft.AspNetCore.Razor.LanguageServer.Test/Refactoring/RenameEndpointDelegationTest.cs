@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.LanguageServer.ProjectSystem;
+using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Razor.Rename;
 using Microsoft.CodeAnalysis.Razor.Workspaces;
 using Microsoft.CodeAnalysis.Testing;
@@ -56,8 +57,8 @@ public class RenameEndpointDelegationTest(ITestOutputHelper testOutput) : Single
         await projectManager.UpdateAsync(updater =>
         {
             updater.AddProject(new(
+                new ProjectKey("C:/path/to/obj"),
                 filePath: "C:/path/to/project.csproj",
-                intermediateOutputPath: "C:/path/to/obj",
                 configuration: RazorConfiguration.Default,
                 rootNamespace: "project"));
         });

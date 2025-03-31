@@ -17,9 +17,9 @@ internal partial class RazorProjectService
         public ValueTask WaitForInitializationAsync()
             => instance.WaitForInitializationAsync();
 
-        public async Task<ProjectKey> AddProjectAsync(
+        public async Task AddProjectAsync(
+            ProjectKey projectKey,
             string filePath,
-            string intermediateOutputPath,
             RazorConfiguration? configuration,
             string? rootNamespace,
             string? displayName,
@@ -29,9 +29,9 @@ internal partial class RazorProjectService
 
             await service.WaitForInitializationAsync().ConfigureAwait(false);
 
-            return await instance._projectManager
+            await instance._projectManager
                 .UpdateAsync(
-                    updater => service.AddProjectCore(updater, filePath, intermediateOutputPath, configuration, rootNamespace, displayName),
+                    updater => service.AddProjectCore(updater, projectKey, filePath, configuration, rootNamespace, displayName),
                     cancellationToken)
                 .ConfigureAwait(false);
         }

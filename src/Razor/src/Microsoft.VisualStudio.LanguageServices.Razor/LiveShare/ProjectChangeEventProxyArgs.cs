@@ -28,6 +28,6 @@ public sealed class ProjectChangeEventProxyArgs : EventArgs
         Kind = kind;
 
         ProjectFilePath = older?.FilePath ?? newer.AssumeNotNull().FilePath;
-        IntermediateOutputPath = older?.IntermediateOutputPath ?? newer.AssumeNotNull().IntermediateOutputPath;
+        IntermediateOutputPath = older?.ProjectKeyId ?? newer.AssumeNotNull().ProjectKeyId;
     }
 }

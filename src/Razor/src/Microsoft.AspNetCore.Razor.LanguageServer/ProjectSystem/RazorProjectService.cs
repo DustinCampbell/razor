@@ -356,18 +356,17 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
         }
     }
 
-    private ProjectKey AddProjectCore(ProjectSnapshotManager.Updater updater, string filePath, string intermediateOutputPath, RazorConfiguration? configuration, string? rootNamespace, string? displayName)
+    private void AddProjectCore(
+        ProjectSnapshotManager.Updater updater, ProjectKey projectKey, string filePath, RazorConfiguration? configuration, string? rootNamespace, string? displayName)
     {
         var normalizedPath = FilePathNormalizer.Normalize(filePath);
         var hostProject = new HostProject(
-            normalizedPath, intermediateOutputPath, configuration ?? FallbackRazorConfiguration.Latest, rootNamespace, displayName);
+            projectKey, normalizedPath, configuration ?? FallbackRazorConfiguration.Latest, rootNamespace, displayName);
 
         // ProjectAdded will no-op if the project already exists
         updater.AddProject(hostProject);
 
         _logger.LogInformation($"Added project '{filePath}' with key {hostProject.Key} to project system.");
-
-        return hostProject.Key;
     }
 
     private Task AddOrUpdateProjectCoreAsync(
@@ -395,12 +394,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
                         return;
                     }
 
-                    // If we've been given a project file path, then we have enough info to add the project ourselves, because we know
-                    // the intermediate output path from the id
-                    var intermediateOutputPath = projectKey.Id;
-
-                    var newKey = AddProjectCore(updater, filePath, intermediateOutputPath, configuration, rootNamespace, displayName);
-                    Debug.Assert(newKey == projectKey);
+                    AddProjectCore(updater, projectKey, filePath, configuration, rootNamespace, displayName);
 
                     project = _projectManager.GetRequiredProject(projectKey);
                 }
@@ -438,7 +432,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
                     _logger.LogInformation($"Updating project '{project.Key}''s root namespace to '{rootNamespace}'.");
                 }
 
-                var hostProject = new HostProject(project.FilePath, project.HostProject.IntermediateOutputPath, configuration, rootNamespace, displayName);
+                var hostProject = new HostProject(project.Key, project.FilePath, configuration, rootNamespace, displayName);
                 updater.UpdateProjectConfiguration(hostProject);
             },
             cancellationToken);

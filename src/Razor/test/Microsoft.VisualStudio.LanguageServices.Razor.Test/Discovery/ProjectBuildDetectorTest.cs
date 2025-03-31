@@ -51,7 +51,7 @@ public class ProjectBuildDetectorTest : VisualStudioTestBase
                         filePath: s_someProject.FilePath)
                     .WithCompilationOutputInfo(
                         new CompilationOutputInfo()
-                            .WithAssemblyPath(Path.Combine(s_someProject.IntermediateOutputPath, "SomeProject.dll"))));
+                            .WithAssemblyPath(Path.Combine(TestProjectData.SomeProjectIntermediateOutputPath, "SomeProject.dll"))));
             });
         _someWorkspaceProject = someWorkspaceProject.AssumeNotNull();
 
@@ -256,7 +256,7 @@ public class ProjectBuildDetectorTest : VisualStudioTestBase
         await projectManager.UpdateAsync(updater =>
         {
             updater.AddProject(
-                new HostProject("/Some/Unknown/Path.csproj", "/Some/Unknown/obj", RazorConfiguration.Default, "Path"));
+                new HostProject(new ProjectKey("/Some/Unknown/obj"), "/Some/Unknown/Path.csproj", RazorConfiguration.Default, "Path"));
         });
 
         var updater = new TestProjectStateUpdater();

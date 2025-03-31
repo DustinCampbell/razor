@@ -38,8 +38,8 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
         var projectWorkspaceState = ProjectWorkspaceState.Create(tagHelpers);
 
         var hostProject = new HostProject(
-            "C:/path/to/project.csproj",
-            "C:/path/to/obj/1",
+            new ProjectKey("C:/path/to/obj/1"),
+            filePath: "C:/path/to/project.csproj",
             RazorConfiguration.Default,
             rootNamespace: null,
             displayName: "project");
@@ -76,15 +76,15 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
         var projectWorkspaceState = ProjectWorkspaceState.Create(tagHelpers);
 
         var hostProject1 = new HostProject(
-            "C:/path/to/project.csproj",
-            "C:/path/to/obj/1",
+            new ProjectKey("C:/path/to/obj/1"),
+            filePath: "C:/path/to/project.csproj",
             RazorConfiguration.Default,
             rootNamespace: null,
             displayName: "project1");
 
         var hostProject2 = new HostProject(
-            "C:/path/to/project.csproj",
-            "C:/path/to/obj/2",
+            new ProjectKey("C:/path/to/obj/2"),
+            filePath: "C:/path/to/project.csproj",
             RazorConfiguration.Default,
             rootNamespace: null,
             displayName: "project2");
@@ -125,15 +125,15 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
         var projectWorkspaceState = ProjectWorkspaceState.Create(tagHelpers);
 
         var hostProject1 = new HostProject(
-            "C:/path/to/project.csproj",
-            "C:/path/to/obj/1",
+            new ProjectKey("C:/path/to/obj/1"),
+            filePath: "C:/path/to/project.csproj",
             RazorConfiguration.Default,
             rootNamespace: null,
             displayName: "project1");
 
         var hostProject2 = new HostProject(
-            "C:/path/to/project.csproj",
-            "C:/path/to/obj/2",
+            new ProjectKey("C:/path/to/obj/2"),
+            filePath: "C:/path/to/project.csproj",
             RazorConfiguration.Default,
             rootNamespace: null,
             displayName: "project2");
@@ -170,15 +170,15 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
     public async Task GetProjectAvailabilityText_NotAvailableInAnyProject_ReturnsText()
     {
         var hostProject1 = new HostProject(
-            "C:/path/to/project.csproj",
-            "C:/path/to/obj/1",
+            new ProjectKey("C:/path/to/obj/1"),
+            filePath: "C:/path/to/project.csproj",
             RazorConfiguration.Default,
             rootNamespace: null,
             displayName: "project1");
 
         var hostProject2 = new HostProject(
-            "C:/path/to/project.csproj",
-            "C:/path/to/obj/2",
+            new ProjectKey("C:/path/to/obj/2"),
+            filePath: "C:/path/to/project.csproj",
             RazorConfiguration.Default,
             rootNamespace: null,
             displayName: "project2");

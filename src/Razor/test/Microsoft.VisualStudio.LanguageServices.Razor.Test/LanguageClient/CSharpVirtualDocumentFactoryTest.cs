@@ -173,14 +173,14 @@ public class CSharpVirtualDocumentFactoryTest : VisualStudioTestBase
         var projectManager = CreateProjectSnapshotManager();
 
         var hostProject1 = TestHostProject.Create(
-            filePath: @"C:\path\to\project1.csproj",
-            intermediateOutputPath: @"C:\path\to\obj1");
+            new ProjectKey(@"C:\path\to\obj1"),
+            filePath: @"C:\path\to\project1.csproj");
 
         var hostDocument1 = TestHostDocument.Create(hostProject1, @"C:\path\to\file.razor");
 
         var hostProject2 = TestHostProject.Create(
-            filePath: @"C:\path\to\project2.csproj",
-            intermediateOutputPath: @"C:\path\to\obj2");
+            new ProjectKey(@"C:\path\to\obj2"),
+            filePath: @"C:\path\to\project2.csproj");
 
         var hostDocument2 = TestHostDocument.Create(hostProject2, @"C:\path\to\file.razor");
 

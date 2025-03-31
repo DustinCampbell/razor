@@ -76,7 +76,7 @@ internal class ProjectSnapshotSynchronizationService(
         {
             var guestPath = ResolveGuestPath(args.ProjectFilePath);
             var guestIntermediateOutputPath = ResolveGuestPath(args.IntermediateOutputPath);
-            var hostProject = new HostProject(guestPath, guestIntermediateOutputPath, args.Newer!.Configuration, args.Newer.RootNamespace);
+            var hostProject = new HostProject(new ProjectKey(guestIntermediateOutputPath), guestPath, args.Newer!.Configuration, args.Newer.RootNamespace);
 
             await _projectManager.UpdateAsync(
                 static (updater, state) =>
@@ -111,8 +111,8 @@ internal class ProjectSnapshotSynchronizationService(
             if (!args.Older!.Configuration.Equals(args.Newer!.Configuration))
             {
                 var guestPath = ResolveGuestPath(args.Newer.FilePath);
-                var guestIntermediateOutputPath = ResolveGuestPath(args.Newer.IntermediateOutputPath);
-                var hostProject = new HostProject(guestPath, guestIntermediateOutputPath, args.Newer.Configuration, args.Newer.RootNamespace);
+                var guestIntermediateOutputPath = ResolveGuestPath(args.Newer.ProjectKeyId);
+                var hostProject = new HostProject(new ProjectKey(guestIntermediateOutputPath), guestPath, args.Newer.Configuration, args.Newer.RootNamespace);
                 await _projectManager.UpdateAsync(
                     static (updater, hostProject) => updater.UpdateProjectConfiguration(hostProject),
                     state: hostProject,
@@ -143,8 +143,8 @@ internal class ProjectSnapshotSynchronizationService(
         foreach (var projectHandle in projectHandles)
         {
             var guestPath = ResolveGuestPath(projectHandle.FilePath);
-            var guestIntermediateOutputPath = ResolveGuestPath(projectHandle.IntermediateOutputPath);
-            var hostProject = new HostProject(guestPath, guestIntermediateOutputPath, projectHandle.Configuration, projectHandle.RootNamespace);
+            var guestIntermediateOutputPath = ResolveGuestPath(projectHandle.ProjectKeyId);
+            var hostProject = new HostProject(new ProjectKey(guestIntermediateOutputPath), guestPath, projectHandle.Configuration, projectHandle.RootNamespace);
             await _projectManager.UpdateAsync(
                 static (updater, state) =>
                 {

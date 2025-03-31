@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.AspNetCore.Razor.LanguageServer.ProjectSystem;
 
-public class IProjectSnapshotManagerExtensionsTest(ITestOutputHelper testOutput) : LanguageServerTestBase(testOutput)
+public class ProjectSnapshotManagerExtensionsTest(ITestOutputHelper testOutput) : LanguageServerTestBase(testOutput)
 {
     [Fact]
     public async Task TryResolveDocumentInAnyProject_AsksPotentialParentProjectForDocumentItsTracking_ReturnsTrue()

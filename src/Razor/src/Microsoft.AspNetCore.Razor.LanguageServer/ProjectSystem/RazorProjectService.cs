@@ -438,7 +438,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
                     _logger.LogInformation($"Updating project '{project.Key}''s root namespace to '{rootNamespace}'.");
                 }
 
-                var hostProject = new HostProject(project.FilePath, project.IntermediateOutputPath, configuration, rootNamespace, displayName);
+                var hostProject = new HostProject(project.FilePath, project.HostProject.IntermediateOutputPath, configuration, rootNamespace, displayName);
                 updater.UpdateProjectConfiguration(hostProject);
             },
             cancellationToken);

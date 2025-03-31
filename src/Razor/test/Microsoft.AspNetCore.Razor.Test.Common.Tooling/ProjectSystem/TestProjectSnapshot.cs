@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Razor.ProjectEngineHost;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
@@ -40,7 +39,6 @@ internal sealed class TestProjectSnapshot : IProjectSnapshot
     public ProjectKey Key => RealSnapshot.Key;
     public IEnumerable<string> DocumentFilePaths => RealSnapshot.DocumentFilePaths;
     public string FilePath => RealSnapshot.FilePath;
-    public string IntermediateOutputPath => RealSnapshot.IntermediateOutputPath;
     public string? RootNamespace => RealSnapshot.RootNamespace;
     public string DisplayName => RealSnapshot.DisplayName;
 

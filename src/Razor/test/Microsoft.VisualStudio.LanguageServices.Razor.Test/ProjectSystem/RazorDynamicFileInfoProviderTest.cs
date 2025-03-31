@@ -89,7 +89,7 @@ public class RazorDynamicFileInfoProviderTest(ITestOutputHelper testOutput) : Vi
 
         var projectInfo = ProjectInfo.Create(
             _projectId, version: default, "Project", "Assembly", LanguageNames.CSharp, filePath: _project.FilePath)
-            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(_project.IntermediateOutputPath, "project.dll")));
+            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(_project.HostProject.IntermediateOutputPath, "project.dll")));
         var newSolution = Workspace.CurrentSolution.AddProject(projectInfo);
         Workspace.TryApplyChanges(newSolution);
     }

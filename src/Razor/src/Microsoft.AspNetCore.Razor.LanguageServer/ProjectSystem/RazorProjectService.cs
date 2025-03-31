@@ -377,7 +377,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
         string? rootNamespace,
         string? displayName,
         ProjectWorkspaceState projectWorkspaceState,
-        ImmutableArray<DocumentSnapshotHandle> documents,
+        ImmutableArray<HostDocument> documents,
         CancellationToken cancellationToken)
     {
         // Note: We specifically don't wait for initialization here because this is called *during* initialization.
@@ -446,7 +446,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
 
     private void UpdateProjectDocuments(
         ProjectSnapshotManager.Updater updater,
-        ImmutableArray<DocumentSnapshotHandle> documents,
+        ImmutableArray<HostDocument> documents,
         ProjectKey projectKey)
     {
         _logger.LogDebug($"UpdateProjectDocuments for {projectKey} with {documents.Length} documents: {string.Join(", ", documents.Select(d => d.FilePath))}");
@@ -476,21 +476,21 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
         // Update existing documents
         foreach (var documentFilePath in project.DocumentFilePaths)
         {
-            if (!documentMap.TryGetValue(documentFilePath, out var documentHandle))
+            if (!documentMap.TryGetValue(documentFilePath, out var hostDocument))
             {
                 // Document exists in the project but not in the configured documents. Chances are the project configuration is from a fallback
                 // configuration case (< 2.1) or the project isn't fully loaded yet.
                 continue;
             }
 
-            if (!project.TryGetDocument(documentFilePath, out var document))
+            if (!project.TryGetDocument(documentFilePath, out var currentDocument))
             {
                 continue;
             }
 
-            var currentHostDocument = document.HostDocument;
-            var newFilePath = EnsureFullPath(documentHandle.FilePath, projectDirectory);
-            var newHostDocument = new HostDocument(newFilePath, documentHandle.TargetPath, documentHandle.FileKind);
+            var currentHostDocument = currentDocument.HostDocument;
+            var newFilePath = EnsureFullPath(hostDocument.FilePath, projectDirectory);
+            var newHostDocument = new HostDocument(newFilePath, hostDocument.TargetPath, hostDocument.FileKind);
 
             if (currentHostDocument == newHostDocument)
             {
@@ -504,7 +504,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
             // it has received text change info from LSP. eg, if someone changes the TargetPath of the file while its open in the editor
             // with unsaved changes, we don't want to reload it from disk.
             var textLoader = FilePathComparer.Instance.Equals(currentHostDocument.FilePath, newHostDocument.FilePath)
-                ? new DocumentSnapshotTextLoader(document)
+                ? new DocumentSnapshotTextLoader(currentDocument)
                 : _remoteTextLoaderFactory.Create(newFilePath);
 
             updater.RemoveDocument(currentProjectKey, currentHostDocument.FilePath);

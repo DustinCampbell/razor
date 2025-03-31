@@ -12,7 +12,6 @@ using MessagePack;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Razor.Serialization;
 using Microsoft.CodeAnalysis.Razor.Serialization.MessagePack.Resolvers;
 using Microsoft.Extensions.Internal;
 
@@ -31,7 +30,7 @@ internal sealed record class RazorProjectInfo
     public string? RootNamespace { get; init; }
     public string DisplayName { get; init; }
     public ProjectWorkspaceState ProjectWorkspaceState { get; init; }
-    public ImmutableArray<DocumentSnapshotHandle> Documents { get; init; }
+    public ImmutableArray<HostDocument> Documents { get; init; }
 
     public RazorProjectInfo(
         ProjectKey projectKey,
@@ -40,7 +39,7 @@ internal sealed record class RazorProjectInfo
         string? rootNamespace,
         string displayName,
         ProjectWorkspaceState projectWorkspaceState,
-        ImmutableArray<DocumentSnapshotHandle> documents)
+        ImmutableArray<HostDocument> documents)
     {
         ProjectKey = projectKey;
         FilePath = filePath;

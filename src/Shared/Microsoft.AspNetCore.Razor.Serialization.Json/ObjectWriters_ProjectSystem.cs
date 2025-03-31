@@ -4,22 +4,11 @@
 #if JSONSERIALIZATION_PROJECTSYSTEM
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
-using Microsoft.CodeAnalysis.Razor.Serialization;
 
 namespace Microsoft.AspNetCore.Razor.Serialization.Json;
 
 internal static partial class ObjectWriters
 {
-    public static void Write(JsonDataWriter writer, ProjectSnapshotHandle? value)
-        => writer.WriteObject(value, WriteProperties);
-
-    public static void WriteProperties(JsonDataWriter writer, ProjectSnapshotHandle value)
-    {
-        writer.Write(nameof(value.ProjectId), value.ProjectId.Id.ToString());
-        writer.WriteObject(nameof(value.Configuration), value.Configuration, WriteProperties);
-        writer.WriteIfNotNull(nameof(value.RootNamespace), value.RootNamespace);
-    }
-
     public static void Write(JsonDataWriter writer, HostDocument? value)
         => writer.WriteObject(value, WriteProperties);
 

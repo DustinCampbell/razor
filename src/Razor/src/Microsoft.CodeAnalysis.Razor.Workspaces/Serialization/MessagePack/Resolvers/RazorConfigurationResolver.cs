@@ -9,11 +9,11 @@ using Microsoft.CodeAnalysis.Razor.Serialization.MessagePack.Formatters;
 
 namespace Microsoft.CodeAnalysis.Razor.Serialization.MessagePack.Resolvers;
 
-internal sealed class ProjectSnapshotHandleResolver : IFormatterResolver
+internal sealed class RazorConfigurationResolver : IFormatterResolver
 {
-    public static readonly ProjectSnapshotHandleResolver Instance = new();
+    public static readonly RazorConfigurationResolver Instance = new();
 
-    private ProjectSnapshotHandleResolver()
+    private RazorConfigurationResolver()
     {
     }
 
@@ -36,7 +36,6 @@ internal sealed class ProjectSnapshotHandleResolver : IFormatterResolver
     {
         private static readonly Dictionary<Type, object> s_map = new()
         {
-            ProjectSnapshotHandleFormatter.Instance,
             RazorConfigurationFormatter.Instance
         };
 

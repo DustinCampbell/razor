@@ -15,7 +15,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Razor.Compiler.CSharp;
 using Microsoft.CodeAnalysis.Razor.ProjectEngineHost;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
-using Microsoft.CodeAnalysis.Razor.Serialization;
 using Microsoft.CodeAnalysis.Razor.Telemetry;
 
 namespace Microsoft.CodeAnalysis.Razor.Utilities;
@@ -140,9 +139,9 @@ internal static class RazorProjectInfoFactory
         return razorConfiguration;
     }
 
-    internal static ImmutableArray<DocumentSnapshotHandle> GetDocuments(Project project, string projectPath)
+    internal static ImmutableArray<HostDocument> GetDocuments(Project project, string projectPath)
     {
-        using var documents = new PooledArrayBuilder<DocumentSnapshotHandle>();
+        using var documents = new PooledArrayBuilder<HostDocument>();
 
         var normalizedProjectPath = FilePathNormalizer.NormalizeDirectory(projectPath);
 
@@ -152,7 +151,7 @@ internal static class RazorProjectInfoFactory
             if (document.FilePath is { } filePath &&
                 FileKinds.TryGetFileKindFromPath(filePath, out var kind))
             {
-                documents.Add(new DocumentSnapshotHandle(filePath, GetTargetPath(filePath, normalizedProjectPath), kind));
+                documents.Add(new(filePath, GetTargetPath(filePath, normalizedProjectPath), kind));
             }
         }
 
@@ -167,7 +166,7 @@ internal static class RazorProjectInfoFactory
                 if (TryGetRazorFileName(document.FilePath, out var razorFilePath) &&
                     FileKinds.TryGetFileKindFromPath(razorFilePath, out var kind))
                 {
-                    documents.Add(new DocumentSnapshotHandle(razorFilePath, GetTargetPath(razorFilePath, normalizedProjectPath), kind));
+                    documents.Add(new(razorFilePath, GetTargetPath(razorFilePath, normalizedProjectPath), kind));
                 }
             }
         }

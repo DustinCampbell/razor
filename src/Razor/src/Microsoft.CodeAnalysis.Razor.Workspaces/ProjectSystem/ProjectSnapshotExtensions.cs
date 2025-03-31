@@ -3,7 +3,6 @@
 
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.PooledObjects;
-using Microsoft.CodeAnalysis.Razor.Serialization;
 
 namespace Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
@@ -27,15 +26,13 @@ internal static class ProjectSnapshotExtensions
 
     public static RazorProjectInfo ToRazorProjectInfo(this ProjectSnapshot project)
     {
-        using var documents = new PooledArrayBuilder<DocumentSnapshotHandle>();
+        using var documents = new PooledArrayBuilder<HostDocument>(capacity: project.DocumentCount);
 
         foreach (var documentFilePath in project.DocumentFilePaths)
         {
             if (project.TryGetDocument(documentFilePath, out var document))
             {
-                var documentHandle = document.ToHandle();
-
-                documents.Add(documentHandle);
+                documents.Add(document.HostDocument);
             }
         }
 

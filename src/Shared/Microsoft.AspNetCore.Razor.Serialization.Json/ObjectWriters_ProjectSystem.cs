@@ -20,10 +20,10 @@ internal static partial class ObjectWriters
         writer.WriteIfNotNull(nameof(value.RootNamespace), value.RootNamespace);
     }
 
-    public static void Write(JsonDataWriter writer, DocumentSnapshotHandle? value)
+    public static void Write(JsonDataWriter writer, HostDocument? value)
         => writer.WriteObject(value, WriteProperties);
 
-    public static void WriteProperties(JsonDataWriter writer, DocumentSnapshotHandle value)
+    public static void WriteProperties(JsonDataWriter writer, HostDocument value)
     {
         writer.Write(nameof(value.FilePath), value.FilePath);
         writer.Write(nameof(value.TargetPath), value.TargetPath);

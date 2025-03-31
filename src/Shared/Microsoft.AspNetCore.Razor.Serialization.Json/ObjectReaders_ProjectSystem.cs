@@ -25,13 +25,13 @@ internal static partial class ObjectReaders
         return new(projectId, configuration, rootNamespace);
     }
 
-    public static DocumentSnapshotHandle ReadDocumentSnapshotHandleFromProperties(JsonDataReader reader)
+    public static HostDocument ReadHostDocumentFromProperties(JsonDataReader reader)
     {
-        var filePath = reader.ReadNonNullString(nameof(DocumentSnapshotHandle.FilePath));
-        var targetPath = reader.ReadNonNullString(nameof(DocumentSnapshotHandle.TargetPath));
-        var fileKind = (RazorFileKind)reader.ReadInt32OrDefault(nameof(DocumentSnapshotHandle.FileKind), defaultValue: (int)RazorFileKind.Component);
+        var filePath = reader.ReadNonNullString(nameof(HostDocument.FilePath));
+        var targetPath = reader.ReadNonNullString(nameof(HostDocument.TargetPath));
+        var fileKind = (RazorFileKind)reader.ReadInt32OrDefault(nameof(HostDocument.FileKind), defaultValue: (int)RazorFileKind.Component);
 
-        return new DocumentSnapshotHandle(filePath, targetPath, fileKind);
+        return new HostDocument(filePath, targetPath, fileKind);
     }
 
     public static ProjectWorkspaceState ReadProjectWorkspaceStateFromProperties(JsonDataReader reader)
@@ -58,7 +58,7 @@ internal static partial class ObjectReaders
         var configuration = reader.ReadObject(nameof(RazorProjectInfo.Configuration), ReadConfigurationFromProperties) ?? RazorConfiguration.Default;
         var projectWorkspaceState = reader.ReadObject(nameof(RazorProjectInfo.ProjectWorkspaceState), ReadProjectWorkspaceStateFromProperties) ?? ProjectWorkspaceState.Default;
         var rootNamespace = reader.ReadString(nameof(RazorProjectInfo.RootNamespace));
-        var documents = reader.ReadImmutableArray(nameof(RazorProjectInfo.Documents), static r => r.ReadNonNullObject(ReadDocumentSnapshotHandleFromProperties));
+        var documents = reader.ReadImmutableArray(nameof(RazorProjectInfo.Documents), static r => r.ReadNonNullObject(ReadHostDocumentFromProperties));
 
         var displayName = Path.GetFileNameWithoutExtension(filePath);
 

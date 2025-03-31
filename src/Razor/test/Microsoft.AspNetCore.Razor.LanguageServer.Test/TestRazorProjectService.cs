@@ -3,12 +3,10 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.LanguageServer.Common;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.CodeAnalysis.Razor.Logging;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
-using Microsoft.CodeAnalysis.Razor.Serialization;
 using Moq;
 
 namespace Microsoft.AspNetCore.Razor.LanguageServer.ProjectSystem;
@@ -39,8 +37,7 @@ internal class TestRazorProjectService(
 
     public async Task AddDocumentToPotentialProjectsAsync(string textDocumentPath, CancellationToken cancellationToken)
     {
-        var document = new DocumentSnapshotHandle(
-            textDocumentPath, textDocumentPath, FileKinds.GetFileKindFromPath(textDocumentPath));
+        var hostDocument = new HostDocument(textDocumentPath, textDocumentPath);
 
         foreach (var projectSnapshot in _projectManager.FindPotentialProjects(textDocumentPath))
         {
@@ -48,7 +45,7 @@ internal class TestRazorProjectService(
 
             projectInfo = projectInfo with
             {
-                Documents = projectInfo.Documents.Add(document)
+                Documents = projectInfo.Documents.Add(hostDocument)
             };
 
             await ((IRazorProjectInfoListener)this)

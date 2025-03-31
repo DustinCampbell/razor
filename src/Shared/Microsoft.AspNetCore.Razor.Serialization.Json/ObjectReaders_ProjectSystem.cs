@@ -2,10 +2,8 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 #if JSONSERIALIZATION_PROJECTSYSTEM
-using System;
 using System.IO;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Razor.Serialization;
 using SR = Microsoft.AspNetCore.Razor.Serialization.Json.Internal.Strings;
@@ -14,17 +12,6 @@ namespace Microsoft.AspNetCore.Razor.Serialization.Json;
 
 internal static partial class ObjectReaders
 {
-    public static ProjectSnapshotHandle ReadProjectSnapshotHandleFromProperties(JsonDataReader reader)
-    {
-        var projectIdString = reader.ReadNonNullString(nameof(ProjectSnapshotHandle.ProjectId));
-        var configuration = reader.ReadObjectOrNull(nameof(ProjectSnapshotHandle.Configuration), ReadConfigurationFromProperties) ?? RazorConfiguration.Default;
-        var rootNamespace = reader.ReadStringOrNull(nameof(ProjectSnapshotHandle.RootNamespace));
-
-        var projectId = ProjectId.CreateFromSerialized(Guid.Parse(projectIdString));
-
-        return new(projectId, configuration, rootNamespace);
-    }
-
     public static HostDocument ReadHostDocumentFromProperties(JsonDataReader reader)
     {
         var filePath = reader.ReadNonNullString(nameof(HostDocument.FilePath));

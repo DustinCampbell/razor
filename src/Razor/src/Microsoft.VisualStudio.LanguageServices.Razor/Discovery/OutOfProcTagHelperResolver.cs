@@ -81,12 +81,10 @@ internal class OutOfProcTagHelperResolver(
             lastResultId = -1;
         }
 
-        var projectHandle = new ProjectSnapshotHandle(project.Id, projectSnapshot.Configuration, projectSnapshot.RootNamespace);
-
         var deltaResult = await _remoteServiceInvoker.TryInvokeAsync<IRemoteTagHelperProviderService, TagHelperDeltaResult>(
             project.Solution,
             (service, solutionInfo, innerCancellationToken) =>
-                service.GetTagHelpersDeltaAsync(solutionInfo, projectHandle, lastResultId, innerCancellationToken),
+                service.GetTagHelpersDeltaAsync(solutionInfo, project.Id, projectSnapshot.Configuration, lastResultId, innerCancellationToken),
             cancellationToken);
 
         if (deltaResult is null)
@@ -131,7 +129,7 @@ internal class OutOfProcTagHelperResolver(
             var fetchResult = await _remoteServiceInvoker.TryInvokeAsync<IRemoteTagHelperProviderService, FetchTagHelpersResult>(
                 project.Solution,
                 (service, solutionInfo, innerCancellationToken) =>
-                    service.FetchTagHelpersAsync(solutionInfo, projectHandle, checksumsToFetch, innerCancellationToken),
+                    service.FetchTagHelpersAsync(solutionInfo, project.Id, projectSnapshot.Configuration, checksumsToFetch, innerCancellationToken),
                 cancellationToken);
 
             if (fetchResult is null)

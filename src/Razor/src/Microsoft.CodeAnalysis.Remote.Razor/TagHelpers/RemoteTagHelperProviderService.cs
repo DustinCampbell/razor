@@ -27,17 +27,19 @@ internal sealed partial class RemoteTagHelperProviderService(in ServiceArgs args
 
     public ValueTask<FetchTagHelpersResult> FetchTagHelpersAsync(
         RazorPinnedSolutionInfoWrapper solutionInfo,
-        ProjectSnapshotHandle projectHandle,
+        ProjectId projectId,
+        RazorConfiguration configuration,
         ImmutableArray<Checksum> checksums,
         CancellationToken cancellationToken)
         => RunServiceAsync(
             solutionInfo,
-            solution => FetchTagHelpersCoreAsync(solution, projectHandle, checksums, cancellationToken),
+            solution => FetchTagHelpersCoreAsync(solution, projectId, configuration, checksums, cancellationToken),
             cancellationToken);
 
     private async ValueTask<FetchTagHelpersResult> FetchTagHelpersCoreAsync(
         Solution solution,
-        ProjectSnapshotHandle projectHandle,
+        ProjectId projectId,
+        RazorConfiguration configuration,
         ImmutableArray<Checksum> checksums,
         CancellationToken cancellationToken)
     {
@@ -47,7 +49,7 @@ internal sealed partial class RemoteTagHelperProviderService(in ServiceArgs args
             // In practice, this shouldn't happen because FetchTagHelpersAsync(...) is normally called immediately after
             // calling GetTagHelpersDeltaAsync(...), which caches the tag helpers it computes.
 
-            if (solution.GetProject(projectHandle.ProjectId) is not Project workspaceProject)
+            if (solution.GetProject(projectId) is not Project workspaceProject)
             {
                 // This is bad. In this case, we're being asked to retrieve tag helpers for a project that no longer exists.
                 // The best we can do is just return an empty array.
@@ -56,7 +58,7 @@ internal sealed partial class RemoteTagHelperProviderService(in ServiceArgs args
 
             // Compute the latest tag helpers and add them all to the cache.
             var latestTagHelpers = await _tagHelperResolver
-                .GetTagHelpersAsync(workspaceProject, projectHandle.Configuration, cancellationToken)
+                .GetTagHelpersAsync(workspaceProject, configuration, cancellationToken)
                 .ConfigureAwait(false);
 
             var cache = TagHelperCache.Default;
@@ -99,36 +101,38 @@ internal sealed partial class RemoteTagHelperProviderService(in ServiceArgs args
 
     public ValueTask<TagHelperDeltaResult> GetTagHelpersDeltaAsync(
         RazorPinnedSolutionInfoWrapper solutionInfo,
-        ProjectSnapshotHandle projectHandle,
+        ProjectId projectId,
+        RazorConfiguration configuration,
         int lastResultId,
         CancellationToken cancellationToken)
         => RunServiceAsync(
             solutionInfo,
-            solution => GetTagHelpersDeltaCoreAsync(solution, projectHandle, lastResultId, cancellationToken),
+            solution => GetTagHelpersDeltaCoreAsync(solution, projectId, configuration, lastResultId, cancellationToken),
             cancellationToken);
 
     private async ValueTask<TagHelperDeltaResult> GetTagHelpersDeltaCoreAsync(
         Solution solution,
-        ProjectSnapshotHandle projectHandle,
+        ProjectId projectId,
+        RazorConfiguration configuration,
         int lastResultId,
         CancellationToken cancellationToken)
     {
         ImmutableArray<Checksum> checksums;
 
-        if (solution.GetProject(projectHandle.ProjectId) is not Project workspaceProject)
+        if (solution.GetProject(projectId) is not Project workspaceProject)
         {
             checksums = ImmutableArray<Checksum>.Empty;
         }
         else
         {
             var tagHelpers = await _tagHelperResolver
-                .GetTagHelpersAsync(workspaceProject, projectHandle.Configuration, cancellationToken)
+                .GetTagHelpersAsync(workspaceProject, configuration, cancellationToken)
                 .ConfigureAwait(false);
 
             checksums = GetChecksums(tagHelpers);
         }
 
-        return _tagHelperDeltaProvider.GetTagHelpersDelta(projectHandle.ProjectId, lastResultId, checksums);
+        return _tagHelperDeltaProvider.GetTagHelpersDelta(projectId, lastResultId, checksums);
 
         static ImmutableArray<Checksum> GetChecksums(ImmutableArray<TagHelperDescriptor> tagHelpers)
         {

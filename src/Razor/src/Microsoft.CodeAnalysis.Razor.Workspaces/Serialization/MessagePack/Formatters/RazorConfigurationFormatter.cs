@@ -10,11 +10,11 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Microsoft.CodeAnalysis.Razor.Serialization.MessagePack.Formatters;
 
-internal sealed class RazorConfigurationFormatter : ValueFormatter<RazorConfiguration>
+internal sealed class RazorConfigurationFormatter : TopLevelFormatter<RazorConfiguration>
 {
     private const int SerializerPropertyCount = 7;
 
-    public static readonly ValueFormatter<RazorConfiguration> Instance = new RazorConfigurationFormatter();
+    public static readonly TopLevelFormatter<RazorConfiguration> Instance = new RazorConfigurationFormatter();
 
     private RazorConfigurationFormatter()
     {

@@ -43,7 +43,8 @@ public class RazorDynamicFileInfoProviderTest(ITestOutputHelper testOutput) : Vi
 
         _projectManager = CreateProjectSnapshotManager();
 
-        var hostProject = new HostProject(@"C:\project.csproj", @"C:\obj", RazorConfiguration.Default, rootNamespace: "TestNamespace");
+        var intermediateOutputPath = @"C:\obj";
+        var hostProject = new HostProject(new ProjectKey(intermediateOutputPath), @"C:\project.csproj", RazorConfiguration.Default, rootNamespace: "TestNamespace");
         var hostDocument1 = new HostDocument(@"C:\document1.razor", "document1.razor", RazorFileKind.Component);
         var hostDocument2 = new HostDocument(@"C:\document2.razor", "document2.razor", RazorFileKind.Component);
 
@@ -89,7 +90,7 @@ public class RazorDynamicFileInfoProviderTest(ITestOutputHelper testOutput) : Vi
 
         var projectInfo = ProjectInfo.Create(
             _projectId, version: default, "Project", "Assembly", LanguageNames.CSharp, filePath: _project.FilePath)
-            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(_project.HostProject.IntermediateOutputPath, "project.dll")));
+            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(intermediateOutputPath, "project.dll")));
         var newSolution = Workspace.CurrentSolution.AddProject(projectInfo);
         Workspace.TryApplyChanges(newSolution);
     }

@@ -25,8 +25,8 @@ public class ProjectSnapshotManagerProxyTest(ITestOutputHelper testOutput) : Vis
     private const string LspProjectFilePath1 = $"vsls:/path/to/first/{ProjectName1}.csproj";
     private const string LspProjectFilePath2 = $"vsls:/path/to/second/{ProjectName2}.csproj";
 
-    private readonly HostProject _hostProject1 = new(ProjectFilePath1, IntermediateOutputPath1, RazorConfiguration.Default, ProjectName1);
-    private readonly HostProject _hostProject2 = new(ProjectFilePath2, IntermediateOutputPath2, RazorConfiguration.Default, ProjectName2);
+    private readonly HostProject _hostProject1 = new(new ProjectKey(IntermediateOutputPath1), ProjectFilePath1, RazorConfiguration.Default, ProjectName1);
+    private readonly HostProject _hostProject2 = new(new ProjectKey(IntermediateOutputPath2), ProjectFilePath2, RazorConfiguration.Default, ProjectName2);
 
     private readonly ProjectWorkspaceState _projectWorkspaceState1 = ProjectWorkspaceState.Create(
         [TagHelperDescriptorBuilder.Create("test1", "TestAssembly1").Build()]);
@@ -172,7 +172,6 @@ public class ProjectSnapshotManagerProxyTest(ITestOutputHelper testOutput) : Vis
         Assert.NotNull(project);
         Assert.Equal(_hostProject1.Key, project.Key);
         Assert.Equal(_hostProject1.FilePath, project.FilePath);
-        Assert.Equal(_hostProject1.IntermediateOutputPath, project.HostProject.IntermediateOutputPath);
         Assert.Equal(_hostProject1.Configuration, project.Configuration);
         Assert.Equal(_hostProject1.RootNamespace, project.RootNamespace);
         Assert.Equal(_hostProject1.DisplayName, project.DisplayName);

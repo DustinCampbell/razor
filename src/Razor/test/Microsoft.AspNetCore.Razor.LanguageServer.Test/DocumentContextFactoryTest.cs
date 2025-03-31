@@ -86,14 +86,14 @@ public class DocumentContextFactoryTest : LanguageServerTestBase
     public async Task TryCreateAsync_WithProjectContext_Resolves()
     {
         // Arrange
+        var proejctKey = new ProjectKey(Path.Combine(s_baseDirectory, "obj"));
         var filePath = FilePathNormalizer.Normalize(Path.Combine(s_baseDirectory, "file.cshtml"));
-        var intermediateOutputPath = Path.Combine(s_baseDirectory, "obj");
         var projectFilePath = Path.Combine(s_baseDirectory, "project.csproj");
         var uri = new Uri(filePath);
 
         var factory = new DocumentContextFactory(_projectManager, LoggerFactory);
 
-        var hostProject = new HostProject(projectFilePath, intermediateOutputPath, RazorConfiguration.Default, rootNamespace: null);
+        var hostProject = new HostProject(proejctKey, projectFilePath, RazorConfiguration.Default, rootNamespace: null);
         var hostDocument = new HostDocument(filePath, "file.cshtml");
 
         await _projectManager.UpdateAsync(updater =>

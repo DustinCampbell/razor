@@ -16,8 +16,8 @@ namespace Microsoft.AspNetCore.Razor.LanguageServer;
 
 public class GeneratedDocumentPublisherTest : LanguageServerTestBase
 {
-    private static readonly HostProject s_hostProject = new("/path/to/project.csproj", "/path/to/obj", RazorConfiguration.Default, "TestRootNamespace");
-    private static readonly HostProject s_hostProject2 = new("/path/to/project2.csproj", "/path/to/obj2", RazorConfiguration.Default, "TestRootNamespace");
+    private static readonly HostProject s_hostProject = new(new ProjectKey("/path/to/obj"), "/path/to/project.csproj", RazorConfiguration.Default, "TestRootNamespace");
+    private static readonly HostProject s_hostProject2 = new(new ProjectKey("/path/to/obj2"), "/path/to/project2.csproj", RazorConfiguration.Default, "TestRootNamespace");
     private static readonly HostDocument s_hostDocument = new("/path/to/file.razor", "file.razor");
 
     private readonly TestClient _serverClient = new();

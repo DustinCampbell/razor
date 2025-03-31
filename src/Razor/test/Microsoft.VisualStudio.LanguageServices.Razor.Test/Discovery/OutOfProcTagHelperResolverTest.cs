@@ -27,13 +27,13 @@ namespace Microsoft.VisualStudio.Razor.Discovery;
 public partial class OutOfProcTagHelperResolverTest : VisualStudioTestBase
 {
     private static readonly HostProject s_hostProject_For_2_0 = new(
+        new ProjectKey("/obj"),
         filePath: "Test.csproj",
-        intermediateOutputPath: "/obj",
         configuration: FallbackRazorConfiguration.MVC_2_0,
         rootNamespace: null);
     private static readonly HostProject s_hostProject_For_NonSerializableConfiguration = new(
+        new ProjectKey("/obj"),
         filePath: "Test.csproj",
-        intermediateOutputPath: "/obj",
         configuration: new(RazorLanguageVersion.Version_2_1, "Random-0.1", Extensions: []),
         rootNamespace: null);
 

@@ -62,7 +62,7 @@ public class FallbackProjectManagerTest : VisualStudioWorkspaceTestBase
         var projectInfo = ProjectInfo.Create(
             projectId, VersionStamp.Default, "DisplayName", "AssemblyName", LanguageNames.CSharp, filePath: SomeProject.FilePath)
             .WithCompilationOutputInfo(
-                new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProject.IntermediateOutputPath, "SomeProject.dll")));
+                new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProjectIntermediateOutputPath, "SomeProject.dll")));
         Workspace.TryApplyChanges(Workspace.CurrentSolution.AddProject(projectInfo));
 
         _fallbackProjectManger.DynamicFileAdded(
@@ -84,7 +84,7 @@ public class FallbackProjectManagerTest : VisualStudioWorkspaceTestBase
         var projectId = ProjectId.CreateNewId();
         var projectInfo = ProjectInfo.Create(
             projectId, VersionStamp.Default, "DisplayName", "AssemblyName", LanguageNames.CSharp, filePath: SomeProject.FilePath)
-            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProject.IntermediateOutputPath, "SomeProject.dll")))
+            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProjectIntermediateOutputPath, "SomeProject.dll")))
             .WithDefaultNamespace("RootNamespace");
 
         Workspace.TryApplyChanges(Workspace.CurrentSolution.AddProject(projectInfo));
@@ -115,7 +115,7 @@ public class FallbackProjectManagerTest : VisualStudioWorkspaceTestBase
         var projectId = ProjectId.CreateNewId();
         var projectInfo = ProjectInfo.Create(
             projectId, VersionStamp.Default, "DisplayName", "AssemblyName", LanguageNames.CSharp, filePath: SomeProject.FilePath)
-            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProject.IntermediateOutputPath, "SomeProject.dll")))
+            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProjectIntermediateOutputPath, "SomeProject.dll")))
             .WithDefaultNamespace("RootNamespace");
 
         Workspace.TryApplyChanges(Workspace.CurrentSolution.AddProject(projectInfo));
@@ -153,7 +153,7 @@ public class FallbackProjectManagerTest : VisualStudioWorkspaceTestBase
         var projectId = ProjectId.CreateNewId();
         var projectInfo = ProjectInfo.Create(
             projectId, VersionStamp.Default, "DisplayName", "AssemblyName", LanguageNames.CSharp, filePath: SomeProject.FilePath)
-            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProject.IntermediateOutputPath, "SomeProject.dll")))
+            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProjectIntermediateOutputPath, "SomeProject.dll")))
             .WithDefaultNamespace("RootNamespace");
 
         Workspace.TryApplyChanges(Workspace.CurrentSolution.AddProject(projectInfo));
@@ -202,7 +202,7 @@ public class FallbackProjectManagerTest : VisualStudioWorkspaceTestBase
         var projectId = ProjectId.CreateNewId();
         var projectInfo = ProjectInfo.Create(
             projectId, VersionStamp.Default, "DisplayName", "AssemblyName", LanguageNames.CSharp, filePath: SomeProject.FilePath)
-            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProject.IntermediateOutputPath, "SomeProject.dll")))
+            .WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(Path.Combine(SomeProjectIntermediateOutputPath, "SomeProject.dll")))
             .WithDefaultNamespace("RootNamespace");
 
         Workspace.TryApplyChanges(Workspace.CurrentSolution.AddProject(projectInfo));

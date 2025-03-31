@@ -10,8 +10,8 @@ namespace Microsoft.AspNetCore.Razor.Test.Common.ProjectSystem;
 internal static class TestHostProject
 {
     public static HostProject Create(string filePath)
-        => Create(filePath, intermediateOutputPath: Path.Combine(Path.GetDirectoryName(filePath) ?? @"\\path", "obj"));
+        => Create(new ProjectKey(Path.Combine(Path.GetDirectoryName(filePath) ?? @"\\path", "obj")), filePath);
 
-    public static HostProject Create(string filePath, string intermediateOutputPath)
-        => new(filePath, intermediateOutputPath, RazorConfiguration.Default, rootNamespace: "TestRootNamespace");
+    public static HostProject Create(ProjectKey projectKey, string filePath)
+        => new(projectKey, filePath, RazorConfiguration.Default, rootNamespace: "TestRootNamespace");
 }

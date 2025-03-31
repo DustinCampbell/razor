@@ -690,7 +690,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         _razorGenerateWithTargetPathItems.Item(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath));
         _razorGenerateWithTargetPathItems.Property(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath), Rules.RazorGenerateWithTargetPath.TargetPathProperty, TestProjectData.SomeProjectFile1.TargetPath);
 
-        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProject.IntermediateOutputPath);
+        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProjectIntermediateOutputPath);
         _configurationGeneral.Property(WindowsRazorProjectHostBase.IntermediateOutputPathPropertyName, "obj");
 
         var changes = new TestProjectChangeDescription[]
@@ -870,7 +870,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         _razorGenerateWithTargetPathItems.Item(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath));
         _razorGenerateWithTargetPathItems.Property(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath), Rules.RazorGenerateWithTargetPath.TargetPathProperty, TestProjectData.SomeProjectFile1.TargetPath);
 
-        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProject.IntermediateOutputPath);
+        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProjectIntermediateOutputPath);
         _configurationGeneral.Property(WindowsRazorProjectHostBase.IntermediateOutputPathPropertyName, "obj");
 
         var changes = new TestProjectChangeDescription[]
@@ -925,7 +925,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         _razorGenerateWithTargetPathItems.Item(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath));
         _razorGenerateWithTargetPathItems.Property(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath), Rules.RazorGenerateWithTargetPath.TargetPathProperty, TestProjectData.SomeProjectFile1.TargetPath);
 
-        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProject.IntermediateOutputPath);
+        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProjectIntermediateOutputPath);
         _configurationGeneral.Property(WindowsRazorProjectHostBase.IntermediateOutputPathPropertyName, "obj");
 
         var changes = new TestProjectChangeDescription[]
@@ -1082,7 +1082,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         _razorGenerateWithTargetPathItems.Item(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath));
         _razorGenerateWithTargetPathItems.Property(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath), Rules.RazorGenerateWithTargetPath.TargetPathProperty, TestProjectData.SomeProjectFile1.TargetPath);
 
-        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProject.IntermediateOutputPath);
+        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProjectIntermediateOutputPath);
         _configurationGeneral.Property(WindowsRazorProjectHostBase.IntermediateOutputPathPropertyName, "obj");
 
         var changes = new TestProjectChangeDescription[]
@@ -1158,7 +1158,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         _razorGenerateWithTargetPathItems.Item(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath));
         _razorGenerateWithTargetPathItems.Property(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath), Rules.RazorGenerateWithTargetPath.TargetPathProperty, TestProjectData.SomeProjectFile1.TargetPath);
 
-        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProject.IntermediateOutputPath);
+        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProjectIntermediateOutputPath);
         _configurationGeneral.Property(WindowsRazorProjectHostBase.IntermediateOutputPathPropertyName, "obj");
 
         var changes = new TestProjectChangeDescription[]
@@ -1238,7 +1238,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         _razorGenerateWithTargetPathItems.Item(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath));
         _razorGenerateWithTargetPathItems.Property(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath), Rules.RazorGenerateWithTargetPath.TargetPathProperty, TestProjectData.SomeProjectFile1.TargetPath);
 
-        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProject.IntermediateOutputPath);
+        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProjectIntermediateOutputPath);
         _configurationGeneral.Property(WindowsRazorProjectHostBase.IntermediateOutputPathPropertyName, "obj");
 
         var changes = new TestProjectChangeDescription[]
@@ -1337,7 +1337,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         _razorGenerateWithTargetPathItems.Item(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath));
         _razorGenerateWithTargetPathItems.Property(Path.GetFileName(TestProjectData.SomeProjectFile1.FilePath), Rules.RazorGenerateWithTargetPath.TargetPathProperty, TestProjectData.SomeProjectFile1.TargetPath);
 
-        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProject.IntermediateOutputPath);
+        _configurationGeneral.Property(WindowsRazorProjectHostBase.BaseIntermediateOutputPathPropertyName, TestProjectData.SomeProjectIntermediateOutputPath);
         _configurationGeneral.Property(WindowsRazorProjectHostBase.IntermediateOutputPathPropertyName, "obj");
 
         var changes = new TestProjectChangeDescription[]
@@ -1414,7 +1414,7 @@ public class DefaultWindowsRazorProjectHostTest : VisualStudioWorkspaceTestBase
         // Changing intermediate output path is effectively removing the old project and adding a new one.
         project = Assert.Single(_projectManager.GetProjects());
         Assert.Equal(TestProjectData.SomeProject.FilePath, project.FilePath);
-        Assert.Equal(TestProjectData.SomeProject.IntermediateOutputPath + "2", project.HostProject.IntermediateOutputPath);
+        Assert.Equal(new ProjectKey(TestProjectData.SomeProjectIntermediateOutputPath + "2"), project.Key);
 
         await Task.Run(async () => await host.DisposeAsync());
         Assert.Empty(_projectManager.GetProjects());

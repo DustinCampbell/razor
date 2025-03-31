@@ -124,7 +124,7 @@ public class ProjectSnapshotSynchronizationServiceTest : VisualStudioWorkspaceTe
             _projectManager,
             LoggerFactory,
             JoinableTaskFactory);
-        var hostProject = new HostProject("/guest/path/project.csproj", "/guest/path/obj", RazorConfiguration.Default, "project");
+        var hostProject = new HostProject(new ProjectKey("/guest/path/obj"), "/guest/path/project.csproj", RazorConfiguration.Default, "project");
 
         await _projectManager.UpdateAsync(updater =>
         {
@@ -154,7 +154,7 @@ public class ProjectSnapshotSynchronizationServiceTest : VisualStudioWorkspaceTe
         var newConfiguration = new RazorConfiguration(RazorLanguageVersion.Version_1_0, "Custom-1.0", Extensions: []);
         var newHandle = new ProjectSnapshotHandleProxy(
             oldHandle.FilePath,
-            oldHandle.IntermediateOutputPath,
+            oldHandle.ProjectKeyId,
             newConfiguration,
             oldHandle.RootNamespace,
             oldHandle.ProjectWorkspaceState);
@@ -164,7 +164,7 @@ public class ProjectSnapshotSynchronizationServiceTest : VisualStudioWorkspaceTe
             _projectManager,
             LoggerFactory,
             JoinableTaskFactory);
-        var hostProject = new HostProject("/guest/path/project.csproj", "/guest/path/obj", RazorConfiguration.Default, "project");
+        var hostProject = new HostProject(new ProjectKey("/guest/path/obj"), "/guest/path/project.csproj", RazorConfiguration.Default, "project");
 
         await _projectManager.UpdateAsync(updater =>
         {
@@ -198,7 +198,7 @@ public class ProjectSnapshotSynchronizationServiceTest : VisualStudioWorkspaceTe
         var newProjectWorkspaceState = _projectWorkspaceStateWithTagHelpers;
         var newHandle = new ProjectSnapshotHandleProxy(
             oldHandle.FilePath,
-            oldHandle.IntermediateOutputPath,
+            oldHandle.ProjectKeyId,
             oldHandle.Configuration,
             oldHandle.RootNamespace,
             newProjectWorkspaceState);
@@ -208,7 +208,7 @@ public class ProjectSnapshotSynchronizationServiceTest : VisualStudioWorkspaceTe
             _projectManager,
             LoggerFactory,
             JoinableTaskFactory);
-        var hostProject = new HostProject("/guest/path/project.csproj", "/guest/path/obj", RazorConfiguration.Default, "project");
+        var hostProject = new HostProject(new ProjectKey("/guest/path/obj"), "/guest/path/project.csproj", RazorConfiguration.Default, "project");
 
         await _projectManager.UpdateAsync(updater =>
         {

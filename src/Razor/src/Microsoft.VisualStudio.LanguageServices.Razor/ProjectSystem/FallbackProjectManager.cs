@@ -149,7 +149,7 @@ internal sealed class FallbackProjectManager : IFallbackProjectManager
         // generation for closed files for documents in these projects. If these projects become "real", either because capabilities
         // change or simply a timing difference between Roslyn and our CPS components, we'll receive a priority notification from
         // the IProjectSnapshotManager and remove this project's key from the_fallbackProjects set.
-        var hostProject = new HostProject(project.FilePath, intermediateOutputPath, configuration, rootNamespace, project.Name);
+        var hostProject = new HostProject(new ProjectKey(intermediateOutputPath), project.FilePath, configuration, rootNamespace, project.Name);
 
         ImmutableInterlocked.Update(ref _fallbackProjects, set => set.Add(hostProject.Key));
 

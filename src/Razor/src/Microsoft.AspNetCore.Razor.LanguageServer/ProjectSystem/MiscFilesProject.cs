@@ -28,7 +28,7 @@ internal static class MiscFilesProject
         DirectoryPath = tempDirectory;
 
         HostProject = new(
-            normalizedPath,
+            new ProjectKey(normalizedPath),
             normalizedPath,
             FallbackRazorConfiguration.Latest,
             rootNamespace: null,

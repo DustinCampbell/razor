@@ -19,10 +19,11 @@ internal static class TestProjectData
     static TestProjectData()
     {
         var baseDirectory = PlatformInformation.IsWindows ? @"c:\users\example\src" : "/home/example";
-        SomeProjectPath = Path.Combine(baseDirectory, "SomeProject");
-        var someProjectObjPath = Path.Combine(SomeProjectPath, "obj");
 
-        SomeProject = new HostProject(Path.Combine(SomeProjectPath, "SomeProject.csproj"), someProjectObjPath, RazorConfiguration.Default, "SomeProject");
+        SomeProjectPath = Path.Combine(baseDirectory, "SomeProject");
+        SomeProjectIntermediateOutputPath = Path.Combine(SomeProjectPath, "obj");
+
+        SomeProject = new HostProject(new ProjectKey(SomeProjectIntermediateOutputPath), Path.Combine(SomeProjectPath, "SomeProject.csproj"), RazorConfiguration.Default, "SomeProject");
         SomeProjectFile1 = new HostDocument(Path.Combine(SomeProjectPath, "File1.cshtml"), "File1.cshtml", RazorFileKind.Legacy);
         SomeProjectFile2 = new HostDocument(Path.Combine(SomeProjectPath, "File2.cshtml"), "File2.cshtml", RazorFileKind.Legacy);
         SomeProjectImportFile = new HostDocument(Path.Combine(SomeProjectPath, "_ViewImports.cshtml"), "_ViewImports.cshtml", RazorFileKind.Legacy);
@@ -39,7 +40,7 @@ internal static class TestProjectData
         var anotherProjectPath = Path.Combine(baseDirectory, "AnotherProject");
         var anotherProjectObjPath = Path.Combine(anotherProjectPath, "obj");
 
-        AnotherProject = new HostProject(Path.Combine(anotherProjectPath, "AnotherProject.csproj"), anotherProjectObjPath, RazorConfiguration.Default, "AnotherProject");
+        AnotherProject = new HostProject(new ProjectKey(anotherProjectObjPath), Path.Combine(anotherProjectPath, "AnotherProject.csproj"), RazorConfiguration.Default, "AnotherProject");
         AnotherProjectFile1 = new HostDocument(Path.Combine(anotherProjectPath, "File1.cshtml"), "File1.cshtml", RazorFileKind.Legacy);
         AnotherProjectFile2 = new HostDocument(Path.Combine(anotherProjectPath, "File2.cshtml"), "File2.cshtml", RazorFileKind.Legacy);
         AnotherProjectImportFile = new HostDocument(Path.Combine(anotherProjectPath, "_ViewImports.cshtml"), "_ViewImports.cshtml", RazorFileKind.Legacy);
@@ -52,8 +53,10 @@ internal static class TestProjectData
         AnotherProjectNestedComponentFile4 = new HostDocument(Path.Combine(anotherProjectPath, "Nested", "File4.razor"), "Nested\\File2.razor", RazorFileKind.Component);
     }
 
-    public static readonly HostProject SomeProject;
     public static readonly string SomeProjectPath;
+    public static readonly string SomeProjectIntermediateOutputPath;
+
+    public static readonly HostProject SomeProject;
     public static readonly HostDocument SomeProjectFile1;
     public static readonly HostDocument SomeProjectFile2;
     public static readonly HostDocument SomeProjectImportFile;

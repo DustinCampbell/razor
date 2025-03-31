@@ -266,7 +266,7 @@ public class IProjectSnapshotManagerExtensionsTest(ITestOutputHelper testOutput)
     private static void AssertSnapshotsEqual(ProjectSnapshot first, ProjectSnapshot second)
     {
         Assert.Equal(first.FilePath, second.FilePath);
-        Assert.Equal(first.CSharpLanguageVersion, second.CSharpLanguageVersion);
+        Assert.Equal(first.Configuration, second.Configuration);
         Assert.Equal(first.RootNamespace, second.RootNamespace);
     }
 }

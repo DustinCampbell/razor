@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -13,7 +14,7 @@ namespace Microsoft.CodeAnalysis.Razor;
 
 internal sealed class EventHandlerTagHelperDescriptorProvider : TagHelperDescriptorProviderBase
 {
-    public override void Execute(TagHelperDescriptorProviderContext context)
+    public override void Execute(TagHelperDescriptorProviderContext context, CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(context);
 
@@ -28,7 +29,7 @@ internal sealed class EventHandlerTagHelperDescriptorProvider : TagHelperDescrip
         var targetSymbol = context.TargetSymbol;
 
         var collector = new Collector(compilation, targetSymbol, eventHandlerAttribute);
-        collector.Collect(context);
+        collector.Collect(context, cancellationToken);
     }
 
     private class Collector(Compilation compilation, ISymbol? targetSymbol, INamedTypeSymbol eventHandlerAttribute)
@@ -36,7 +37,7 @@ internal sealed class EventHandlerTagHelperDescriptorProvider : TagHelperDescrip
     {
         private readonly INamedTypeSymbol _eventHandlerAttribute = eventHandlerAttribute;
 
-        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results)
+        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results, CancellationToken cancellationToken)
         {
             using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
             var visitor = new EventHandlerDataVisitor(types);
@@ -45,6 +46,8 @@ internal sealed class EventHandlerTagHelperDescriptorProvider : TagHelperDescrip
 
             foreach (var type in types)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // Create helper to delay computing display names for this type when we need them.
                 var displayNames = new DisplayNameHelper(type);
 

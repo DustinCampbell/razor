@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -10,7 +11,7 @@ namespace Microsoft.CodeAnalysis.Razor;
 
 public sealed class DefaultTagHelperDescriptorProvider : TagHelperDescriptorProviderBase
 {
-    public override void Execute(TagHelperDescriptorProviderContext context)
+    public override void Execute(TagHelperDescriptorProviderContext context, CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(context);
 
@@ -26,7 +27,7 @@ public sealed class DefaultTagHelperDescriptorProvider : TagHelperDescriptorProv
         var targetSymbol = context.TargetSymbol;
         var factory = new DefaultTagHelperDescriptorFactory(compilation, context.IncludeDocumentation, context.ExcludeHidden);
         var collector = new Collector(compilation, targetSymbol, factory, tagHelperTypeSymbol);
-        collector.Collect(context);
+        collector.Collect(context, cancellationToken);
     }
 
     private class Collector(
@@ -36,7 +37,7 @@ public sealed class DefaultTagHelperDescriptorProvider : TagHelperDescriptorProv
         private readonly DefaultTagHelperDescriptorFactory _factory = factory;
         private readonly INamedTypeSymbol _tagHelperTypeSymbol = tagHelperTypeSymbol;
 
-        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results)
+        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results, CancellationToken cancellationToken)
         {
             using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
             var visitor = new TagHelperTypeVisitor(_tagHelperTypeSymbol, types);
@@ -45,6 +46,8 @@ public sealed class DefaultTagHelperDescriptorProvider : TagHelperDescriptorProv
 
             foreach (var type in types)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 var descriptor = _factory.CreateDescriptor(type);
 
                 if (descriptor != null)

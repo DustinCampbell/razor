@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -12,9 +13,9 @@ namespace Microsoft.CodeAnalysis.Razor;
 // Run after the component tag helper provider, because later we may want component-type-specific variants of this
 internal sealed class RefTagHelperDescriptorProvider() : TagHelperDescriptorProviderBase(order: 1000)
 {
-    private static readonly Lazy<TagHelperDescriptor> s_refTagHelper = new(CreateRefTagHelper);
+    private static readonly Lazy<TagHelperDescriptor> s_lazyRefTagHelper = new(CreateRefTagHelper);
 
-    public override void Execute(TagHelperDescriptorProviderContext context)
+    public override void Execute(TagHelperDescriptorProviderContext context, CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(context);
 
@@ -33,7 +34,9 @@ internal sealed class RefTagHelperDescriptorProvider() : TagHelperDescriptorProv
             return;
         }
 
-        context.Results.Add(s_refTagHelper.Value);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        context.Results.Add(s_lazyRefTagHelper.Value);
     }
 
     private static TagHelperDescriptor CreateRefTagHelper()

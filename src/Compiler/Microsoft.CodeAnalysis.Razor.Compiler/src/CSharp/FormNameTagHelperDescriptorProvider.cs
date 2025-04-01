@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -13,9 +14,9 @@ namespace Microsoft.CodeAnalysis.Razor;
 // Run after the component tag helper provider
 internal sealed class FormNameTagHelperDescriptorProvider() : TagHelperDescriptorProviderBase(order: 1000)
 {
-    private static readonly Lazy<TagHelperDescriptor> s_formNameTagHelper = new(CreateFormNameTagHelper);
+    private static readonly Lazy<TagHelperDescriptor> s_lazyFormNameTagHelper = new(CreateFormNameTagHelper);
 
-    public override void Execute(TagHelperDescriptorProviderContext context)
+    public override void Execute(TagHelperDescriptorProviderContext context, CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(context);
 
@@ -25,6 +26,7 @@ internal sealed class FormNameTagHelperDescriptorProvider() : TagHelperDescripto
             .Where(static t => t.DeclaredAccessibility == Accessibility.Public &&
                 t.GetMembers(ComponentsApi.RenderTreeBuilder.AddNamedEvent).Any(static m => m.DeclaredAccessibility == Accessibility.Public))
             .Take(2).ToArray();
+
         if (renderTreeBuilders is not [var renderTreeBuilder])
         {
             return;
@@ -35,7 +37,9 @@ internal sealed class FormNameTagHelperDescriptorProvider() : TagHelperDescripto
             return;
         }
 
-        context.Results.Add(s_formNameTagHelper.Value);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        context.Results.Add(s_lazyFormNameTagHelper.Value);
     }
 
     private static TagHelperDescriptor CreateFormNameTagHelper()

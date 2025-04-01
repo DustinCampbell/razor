@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -16,9 +17,9 @@ namespace Microsoft.CodeAnalysis.Razor;
 // Run after the component tag helper provider, because we need to see the results.
 internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorProviderBase(order: 1000)
 {
-    private static readonly Lazy<TagHelperDescriptor> s_fallbackBindTagHelper = new(CreateFallbackBindTagHelper);
+    private static readonly Lazy<TagHelperDescriptor> s_lazyFallbackBindTagHelper = new(CreateFallbackBindTagHelper);
 
-    public override void Execute(TagHelperDescriptorProviderContext context)
+    public override void Execute(TagHelperDescriptorProviderContext context, CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(context);
 
@@ -101,7 +102,7 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
         }
 
         // Tag Helper definition for case #1. This is the most general case.
-        context.Results.Add(s_fallbackBindTagHelper.Value);
+        context.Results.Add(s_lazyFallbackBindTagHelper.Value);
 
         var bindElementAttribute = compilation.GetTypeByMetadataName(ComponentsApi.BindElementAttribute.FullTypeName);
         var bindInputElementAttribute = compilation.GetTypeByMetadataName(ComponentsApi.BindInputElementAttribute.FullTypeName);
@@ -113,9 +114,8 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
         }
 
         // We want to walk the compilation and its references, not the target symbol.
-        var collector = new Collector(
-            compilation, bindElementAttribute, bindInputElementAttribute);
-        collector.Collect(context);
+        var collector = new Collector(compilation, bindElementAttribute, bindInputElementAttribute);
+        collector.Collect(context, cancellationToken);
     }
 
     private static TagHelperDescriptor CreateFallbackBindTagHelper()
@@ -225,7 +225,7 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
         Compilation compilation, INamedTypeSymbol bindElementAttribute, INamedTypeSymbol bindInputElementAttribute)
         : TagHelperCollector<Collector>(compilation, targetSymbol: null)
     {
-        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results)
+        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results, CancellationToken cancellationToken)
         {
             using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
             var visitor = new BindElementDataVisitor(types);
@@ -234,6 +234,8 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
 
             foreach (var type in types)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // Create helper to delay computing display names for this type when we need them.
                 var displayNames = new DisplayNameHelper(type);
 
@@ -309,7 +311,7 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
 
             foreach (var tagHelper in results)
             {
-                AddComponentBindTagHelpers(tagHelper, ref componentBindTagHelpers.AsRef());
+                AddComponentBindTagHelpers(tagHelper, ref componentBindTagHelpers.AsRef(), cancellationToken);
             }
 
             foreach (var tagHelper in componentBindTagHelpers)
@@ -544,7 +546,10 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
             return builder.Build();
         }
 
-        private static void AddComponentBindTagHelpers(TagHelperDescriptor tagHelper, ref PooledArrayBuilder<TagHelperDescriptor> results)
+        private static void AddComponentBindTagHelpers(
+            TagHelperDescriptor tagHelper,
+            ref PooledArrayBuilder<TagHelperDescriptor> results,
+            CancellationToken cancellationToken)
         {
             if (!tagHelper.IsComponentTagHelper)
             {
@@ -599,6 +604,8 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
                     // No matching attribute found.
                     continue;
                 }
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 using var _ = TagHelperDescriptorBuilder.GetPooledInstance(
                     ComponentMetadata.Bind.TagHelperKind, tagHelper.Name, tagHelper.AssemblyName,
@@ -712,7 +719,7 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
             }
         }
 
-        private class BindElementDataVisitor(List<INamedTypeSymbol> results) : SymbolVisitor
+        private sealed class BindElementDataVisitor(List<INamedTypeSymbol> results) : SymbolVisitor
         {
             private readonly List<INamedTypeSymbol> _results = results;
 

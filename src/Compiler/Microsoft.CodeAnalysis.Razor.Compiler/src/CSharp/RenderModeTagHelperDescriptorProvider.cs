@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Threading;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -12,9 +13,9 @@ namespace Microsoft.CodeAnalysis.Razor;
 // Run after the component tag helper provider
 internal sealed class RenderModeTagHelperDescriptorProvider() : TagHelperDescriptorProviderBase(order: 1000)
 {
-    private static readonly Lazy<TagHelperDescriptor> s_renderModeTagHelper = new(CreateRenderModeTagHelper);
+    private static readonly Lazy<TagHelperDescriptor> s_lazyRenderModeTagHelper = new(CreateRenderModeTagHelper);
 
-    public override void Execute(TagHelperDescriptorProviderContext context)
+    public override void Execute(TagHelperDescriptorProviderContext context, CancellationToken cancellationToken = default)
     {
         ArgHelper.ThrowIfNull(context);
 
@@ -33,7 +34,9 @@ internal sealed class RenderModeTagHelperDescriptorProvider() : TagHelperDescrip
             return;
         }
 
-        context.Results.Add(s_renderModeTagHelper.Value);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        context.Results.Add(s_lazyRenderModeTagHelper.Value);
     }
 
     private static TagHelperDescriptor CreateRenderModeTagHelper()

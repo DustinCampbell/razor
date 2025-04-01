@@ -3,43 +3,61 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Linq;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.Extensions.Internal;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
-internal sealed class ProjectWorkspaceState : IEquatable<ProjectWorkspaceState>
+internal sealed record class ProjectWorkspaceState : IEquatable<ProjectWorkspaceState>
 {
-    public static readonly ProjectWorkspaceState Default = new(ImmutableArray<TagHelperDescriptor>.Empty);
+    public static readonly ProjectWorkspaceState Default = new([]);
 
     public ImmutableArray<TagHelperDescriptor> TagHelpers { get; }
 
-    private ProjectWorkspaceState(
-        ImmutableArray<TagHelperDescriptor> tagHelpers)
+    private Checksum? _checksum;
+
+    private ProjectWorkspaceState(ImmutableArray<TagHelperDescriptor> tagHelpers)
     {
         TagHelpers = tagHelpers;
     }
 
-    public static ProjectWorkspaceState Create(
-        ImmutableArray<TagHelperDescriptor> tagHelpers)
+    public static ProjectWorkspaceState Create(ImmutableArray<TagHelperDescriptor> tagHelpers)
         => tagHelpers.IsEmpty
             ? Default
             : new(tagHelpers);
 
-    public override bool Equals(object? obj)
-        => obj is ProjectWorkspaceState other && Equals(other);
+    private Checksum Checksum
+    {
+        get
+        {
+            return _checksum ?? InterlockedOperations.Initialize(ref _checksum, ComputeChecksum(TagHelpers));
+
+            static Checksum ComputeChecksum(ImmutableArray<TagHelperDescriptor> tagHelpers)
+            {
+                var builder = new Checksum.Builder();
+
+                foreach (var tagHelper in tagHelpers)
+                {
+                    builder.AppendData(tagHelper.Checksum);
+                }
+
+                return builder.FreeAndGetChecksum();
+            }
+        }
+    }
 
     public bool Equals(ProjectWorkspaceState? other)
-        => other is not null &&
-           TagHelpers.SequenceEqual(other.TagHelpers);
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return other is not null &&
+               Checksum.Equals(other.Checksum);
+    }
 
     public override int GetHashCode()
-    {
-        var hash = HashCodeCombiner.Start();
-
-        hash.Add(TagHelpers);
-
-        return hash.CombinedHash;
-    }
+        => Checksum.GetHashCode();
 }

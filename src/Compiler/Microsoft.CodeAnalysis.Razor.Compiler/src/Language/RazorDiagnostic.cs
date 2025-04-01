@@ -38,7 +38,7 @@ public sealed class RazorDiagnostic : IEquatable<RazorDiagnostic>, IFormattable
         => new(descriptor, span, args);
 
     internal Checksum Checksum
-        => _checksum ?? InterlockedOperations.Initialize(ref _checksum, ComputeChecksum());
+        => _checksum ??= ComputeChecksum();
 
     private Checksum ComputeChecksum()
     {

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
-#if !NET5_0_OR_GREATER
+#if !NET
 using System.Buffers;
 #endif
 using System.Buffers.Binary;
@@ -19,7 +19,7 @@ using Microsoft.Extensions.ObjectPool;
 //
 // See https://github.com/dotnet/roslyn/issues/67995 for more detail.
 
-#if NET5_0_OR_GREATER
+#if NET
 using HashingType = System.Security.Cryptography.IncrementalHash;
 #else
 using HashingType = System.Security.Cryptography.SHA256;
@@ -27,7 +27,7 @@ using HashingType = System.Security.Cryptography.SHA256;
 
 namespace Microsoft.AspNetCore.Razor.Utilities;
 
-internal sealed partial record Checksum
+internal readonly partial record struct Checksum
 {
     internal readonly ref partial struct Builder
     {
@@ -55,7 +55,7 @@ internal sealed partial record Checksum
         {
             _hash = s_hashPool.Get();
 
-#if !NET5_0_OR_GREATER
+#if !NET
             _hash.Initialize();
 #endif
         }
@@ -65,7 +65,7 @@ internal sealed partial record Checksum
 
         public Checksum FreeAndGetChecksum()
         {
-#if NET5_0_OR_GREATER
+#if NET
             Span<byte> hash = stackalloc byte[HashSize];
             _hash.GetHashAndReset(hash);
             var result = From(hash);
@@ -82,7 +82,7 @@ internal sealed partial record Checksum
         {
             Debug.Assert(s_buffer is not null);
 
-#if NET5_0_OR_GREATER
+#if NET
             _hash.AppendData(s_buffer, offset: 0, count);
 #else
             _hash.TransformBlock(s_buffer, inputOffset: 0, inputCount: count, outputBuffer: null, outputOffset: 0);
@@ -131,7 +131,7 @@ internal sealed partial record Checksum
 
         private void AppendStringValue(string value)
         {
-#if NET5_0_OR_GREATER
+#if NET
             _hash.AppendData(MemoryMarshal.AsBytes(value.AsSpan()));
             _hash.AppendData(MemoryMarshal.AsBytes("\0".AsSpan()));
 #else
@@ -158,13 +158,6 @@ internal sealed partial record Checksum
                 }
             }
 #endif
-        }
-        private void AppendHashDataValue(HashData value)
-        {
-            AppendInt64Value(value.Data1);
-            AppendInt64Value(value.Data2);
-            AppendInt64Value(value.Data3);
-            AppendInt64Value(value.Data4);
         }
 
         public void AppendNull()
@@ -217,7 +210,10 @@ internal sealed partial record Checksum
         public void AppendData(Checksum value)
         {
             AppendTypeKind(TypeKind.Checksum);
-            AppendHashDataValue(value.Data);
+            AppendInt64Value(value.Data1);
+            AppendInt64Value(value.Data2);
+            AppendInt64Value(value.Data3);
+            AppendInt64Value(value.Data4);
         }
 
         public void AppendData(object? value)

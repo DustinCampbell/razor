@@ -2,11 +2,11 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using Microsoft.Extensions.ObjectPool;
-#if NET5_0_OR_GREATER
+#if NET
 using System.Diagnostics;
 #endif
 
-#if NET5_0_OR_GREATER
+#if NET
 using HashAlgorithmName = System.Security.Cryptography.HashAlgorithmName;
 using HashingType = System.Security.Cryptography.IncrementalHash;
 #else
@@ -15,7 +15,7 @@ using HashingType = System.Security.Cryptography.SHA256;
 
 namespace Microsoft.AspNetCore.Razor.Utilities;
 
-internal sealed partial record Checksum
+internal readonly partial record struct Checksum
 {
     internal readonly ref partial struct Builder
     {
@@ -28,7 +28,7 @@ internal sealed partial record Checksum
             }
 
             public HashingType Create()
-#if NET5_0_OR_GREATER
+#if NET
                 => HashingType.CreateHash(HashAlgorithmName.SHA256);
 #else
                 => HashingType.Create();
@@ -36,7 +36,7 @@ internal sealed partial record Checksum
 
             public bool Return(HashingType hash)
             {
-#if NET5_0_OR_GREATER
+#if NET
                 Debug.Assert(hash.AlgorithmName == HashAlgorithmName.SHA256);
 #endif
 

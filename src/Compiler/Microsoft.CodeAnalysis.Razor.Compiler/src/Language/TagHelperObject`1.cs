@@ -24,7 +24,7 @@ public abstract class TagHelperObject<T> : IEquatable<T>
     }
 
     internal Checksum Checksum
-        => _checksum ?? InterlockedOperations.Initialize(ref _checksum, ComputeChecksum());
+        => _checksum ??= ComputeChecksum();
 
     // Internal for benchmarks
     internal Checksum ComputeChecksum()

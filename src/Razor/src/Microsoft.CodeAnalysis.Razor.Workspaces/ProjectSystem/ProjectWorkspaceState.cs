@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Utilities;
 
@@ -50,7 +49,7 @@ internal sealed record class ProjectWorkspaceState : IEquatable<ProjectWorkspace
     {
         get
         {
-            return _checksum ?? InterlockedOperations.Initialize(ref _checksum, ComputeChecksum(TagHelpers));
+            return _checksum ??= ComputeChecksum(TagHelpers);
 
             static Checksum ComputeChecksum(ImmutableArray<TagHelperDescriptor> tagHelpers)
             {

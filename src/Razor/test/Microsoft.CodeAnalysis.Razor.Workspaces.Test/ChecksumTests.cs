@@ -154,6 +154,8 @@ public class ChecksumTests(ITestOutputHelper testOutput) : ToolingTestBase(testO
 
         var result = builder.FreeAndGetChecksum();
 
-        Assert.NotNull(result);
+        Assert.True(
+            result.Data1 != 0 || result.Data2 != 0 || result.Data3 != 0 || result.Data4 != 0,
+            "Checksum should not be all zeros for a large string.");
     }
 }

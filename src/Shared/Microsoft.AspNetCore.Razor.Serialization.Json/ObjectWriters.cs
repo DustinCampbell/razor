@@ -14,12 +14,10 @@ internal static partial class ObjectWriters
 
     public static void WriteProperties(JsonDataWriter writer, Checksum value)
     {
-        var data = value.Data;
-
-        writer.Write(nameof(data.Data1), data.Data1);
-        writer.Write(nameof(data.Data2), data.Data2);
-        writer.Write(nameof(data.Data3), data.Data3);
-        writer.Write(nameof(data.Data4), data.Data4);
+        writer.Write(nameof(value.Data1), value.Data1);
+        writer.Write(nameof(value.Data2), value.Data2);
+        writer.Write(nameof(value.Data3), value.Data3);
+        writer.Write(nameof(value.Data4), value.Data4);
     }
 
     public static void Write(JsonDataWriter writer, RazorConfiguration? value)

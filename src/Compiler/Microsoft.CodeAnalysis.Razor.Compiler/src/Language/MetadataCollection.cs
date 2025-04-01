@@ -51,7 +51,7 @@ public abstract partial class MetadataCollection : IReadOnlyDictionary<string, s
     IEnumerator<KeyValuePair<string, string?>> IEnumerable<KeyValuePair<string, string?>>.GetEnumerator() => GetEnumerator();
 
     internal Checksum Checksum
-        => _checksum ?? InterlockedOperations.Initialize(ref _checksum, ComputeChecksum());
+        => _checksum ??= ComputeChecksum();
 
     private Checksum ComputeChecksum()
     {

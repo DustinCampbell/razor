@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
@@ -16,10 +17,28 @@ internal sealed record class ProjectWorkspaceState : IEquatable<ProjectWorkspace
     public ImmutableArray<TagHelperDescriptor> TagHelpers { get; }
 
     private Checksum? _checksum;
+    private readonly Lazy<HashSet<Checksum>> _lazyTagHelperSet;
 
     private ProjectWorkspaceState(ImmutableArray<TagHelperDescriptor> tagHelpers)
     {
         TagHelpers = tagHelpers;
+        _lazyTagHelperSet = new(ComputeTagHelperSet);
+    }
+
+    private HashSet<Checksum> ComputeTagHelperSet()
+    {
+        var result = new HashSet<Checksum>();
+
+#if NET
+        result.EnsureCapacity(TagHelpers.Length);
+#endif
+
+        foreach (var tagHelper in TagHelpers)
+        {
+            result.Add(tagHelper.Checksum);
+        }
+
+        return result;
     }
 
     public static ProjectWorkspaceState Create(ImmutableArray<TagHelperDescriptor> tagHelpers)
@@ -60,4 +79,19 @@ internal sealed record class ProjectWorkspaceState : IEquatable<ProjectWorkspace
 
     public override int GetHashCode()
         => Checksum.GetHashCode();
+
+    public bool ContainsAll(ImmutableArray<Checksum> checksums)
+    {
+        var set = _lazyTagHelperSet.Value;
+
+        foreach (var checksum in checksums)
+        {
+            if (!set.Contains(checksum))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

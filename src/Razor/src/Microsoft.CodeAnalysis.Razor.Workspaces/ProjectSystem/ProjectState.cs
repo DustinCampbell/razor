@@ -270,13 +270,15 @@ internal sealed class ProjectState
     {
         ArgHelper.ThrowIfNull(projectWorkspaceState);
 
-        if (ProjectWorkspaceState == projectWorkspaceState ||
-            ProjectWorkspaceState.Equals(projectWorkspaceState))
+        if (ProjectWorkspaceState == projectWorkspaceState)
         {
             return this;
         }
 
-        var documents = UpdateDocuments(static x => x.UpdateVersion());
+        var documents = UpdateDocuments(x =>
+        {
+            return x.UpdateProjectWorkspaceState(projectWorkspaceState);
+        });
 
         return new(this, HostProject, projectWorkspaceState, documents, ImportsToRelatedDocuments, retainProjectEngine: true);
     }

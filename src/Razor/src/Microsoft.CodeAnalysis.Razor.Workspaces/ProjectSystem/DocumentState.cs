@@ -110,6 +110,11 @@ internal sealed partial class DocumentState
     public ValueTask<RazorCodeDocument> GetCodeDocumentAsync(DocumentSnapshot document, CancellationToken cancellationToken)
         => _generatedOutputSource.GetValueAsync(document, cancellationToken);
 
+    public DocumentState UpdateProjectWorkspaceState(ProjectWorkspaceState projectWorkspaceState)
+        => _generatedOutputSource.IsAffectedBy(projectWorkspaceState)
+            ? UpdateVersion()
+            : this;
+
     public DocumentState UpdateVersion()
         => new(this, _textAndVersionSource);
 

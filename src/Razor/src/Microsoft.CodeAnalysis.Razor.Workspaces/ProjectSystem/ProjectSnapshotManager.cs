@@ -39,10 +39,9 @@ internal partial class ProjectSnapshotManager : IDisposable
     #region protected by lock
 
     /// <summary>
-    /// A map of <see cref="ProjectKey"/> to <see cref="Entry"/>, which wraps a <see cref="ProjectState"/>
-    /// and lazily creates a <see cref="ProjectSnapshot"/>.
+    /// A map of <see cref="ProjectKey"/> to <see cref="ProjectSnapshot"/>, which wraps a <see cref="ProjectState"/>.
     /// </summary>
-    private readonly Dictionary<ProjectKey, Entry> _projectMap = [];
+    private readonly Dictionary<ProjectKey, ProjectSnapshot> _projectMap = [];
 
     /// <summary>
     /// The set of open documents.
@@ -125,9 +124,9 @@ internal partial class ProjectSnapshotManager : IDisposable
         {
             using var builder = new PooledArrayBuilder<ProjectSnapshot>(_projectMap.Count);
 
-            foreach (var (_, entry) in _projectMap)
+            foreach (var (_, project) in _projectMap)
             {
-                builder.Add(entry.GetSnapshot());
+                builder.Add(project);
             }
 
             return builder.DrainToImmutable();
@@ -154,9 +153,8 @@ internal partial class ProjectSnapshotManager : IDisposable
     {
         using (_readerWriterLock.DisposableRead())
         {
-            if (_projectMap.TryGetValue(projectKey, out var entry))
+            if (_projectMap.TryGetValue(projectKey, out project))
             {
-                project = entry.GetSnapshot();
                 return true;
             }
         }
@@ -171,9 +169,9 @@ internal partial class ProjectSnapshotManager : IDisposable
         {
             using var projects = new PooledArrayBuilder<ProjectKey>(capacity: _projectMap.Count);
 
-            foreach (var (key, entry) in _projectMap)
+            foreach (var (key, project) in _projectMap)
             {
-                if (FilePathComparer.Instance.Equals(entry.State.HostProject.FilePath, filePath))
+                if (FilePathComparer.Instance.Equals(project.FilePath, filePath))
                 {
                     projects.Add(key);
                 }
@@ -364,12 +362,11 @@ internal partial class ProjectSnapshotManager : IDisposable
 
         var state = ProjectState.Create(hostProject, _compilerOptions, _projectEngineFactoryProvider);
 
-        var newEntry = new Entry(state);
+        newProject = new ProjectSnapshot(state);
 
         upgradeableLock.EnterWrite();
-        _projectMap.Add(hostProject.Key, newEntry);
+        _projectMap.Add(hostProject.Key, newProject);
 
-        newProject = newEntry.GetSnapshot();
         return true;
     }
 
@@ -384,13 +381,11 @@ internal partial class ProjectSnapshotManager : IDisposable
 
         isSolutionClosing = _isSolutionClosing;
 
-        if (!_projectMap.TryGetValue(projectKey, out var entry))
+        if (!_projectMap.TryGetValue(projectKey, out oldProject))
         {
             oldProject = null;
             return false;
         }
-
-        oldProject = entry.GetSnapshot();
 
         upgradeableLock.EnterWrite();
         _projectMap.Remove(projectKey);
@@ -400,7 +395,7 @@ internal partial class ProjectSnapshotManager : IDisposable
 
     private bool TryUpdateProject(
         ProjectKey projectKey,
-        Func<ProjectState, ProjectState> transformer,
+        Func<ProjectSnapshot, ProjectSnapshot> transformer,
         [NotNullWhen(true)] out ProjectSnapshot? oldProject,
         [NotNullWhen(true)] out ProjectSnapshot? newProject,
         out bool isSolutionClosing)
@@ -414,7 +409,7 @@ internal partial class ProjectSnapshotManager : IDisposable
 
         isSolutionClosing = _isSolutionClosing;
 
-        if (!_projectMap.TryGetValue(projectKey, out var oldEntry))
+        if (!_projectMap.TryGetValue(projectKey, out oldProject))
         {
             oldProject = newProject = null;
             return false;
@@ -423,14 +418,13 @@ internal partial class ProjectSnapshotManager : IDisposable
         // If the solution is closing, we don't need to bother computing new state.
         if (isSolutionClosing)
         {
-            oldProject = newProject = oldEntry.GetSnapshot();
+            newProject = oldProject;
             return true;
         }
 
-        var oldState = oldEntry.State;
-        var newState = transformer(oldState);
+        newProject = transformer(oldProject);
 
-        if (ReferenceEquals(oldState, newState))
+        if (ReferenceEquals(oldProject, newProject))
         {
             oldProject = newProject = null;
             return false;
@@ -438,11 +432,7 @@ internal partial class ProjectSnapshotManager : IDisposable
 
         upgradeableLock.EnterWrite();
 
-        var newEntry = new Entry(newState);
-        _projectMap[projectKey] = newEntry;
-
-        oldProject = oldEntry.GetSnapshot();
-        newProject = newEntry.GetSnapshot();
+        _projectMap[projectKey] = newProject;
 
         return true;
     }

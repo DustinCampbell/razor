@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem.Legacy;
 using Microsoft.CodeAnalysis.Razor.Utilities;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.CodeAnalysis.Razor.ProjectSystem;
 
@@ -101,6 +103,36 @@ internal sealed class ProjectSnapshot(ProjectState state) : IProjectSnapshot, IL
 
         document = null;
         return false;
+    }
+
+    internal ProjectSnapshot AddDocument(HostDocument hostDocument, SourceText text)
+        => Update(state => state.AddDocument(hostDocument, text));
+
+    internal ProjectSnapshot AddDocument(HostDocument hostDocument, TextLoader textLoader)
+        => Update(state => state.AddDocument(hostDocument, textLoader));
+
+    internal ProjectSnapshot RemoveDocument(string documentFilePath)
+        => Update(state => state.RemoveDocument(documentFilePath));
+
+    internal ProjectSnapshot WithDocumentText(string documentFilePath, SourceText text)
+        => Update(state => state.WithDocumentText(documentFilePath, text));
+
+    internal ProjectSnapshot WithDocumentText(string documentFilePath, TextLoader textLoader)
+        => Update(state => state.WithDocumentText(documentFilePath, textLoader));
+
+    internal ProjectSnapshot WithHostProject(HostProject hostProject)
+        => Update(state => state.WithHostProject(hostProject));
+
+    internal ProjectSnapshot WithProjectWorkspaceState(ProjectWorkspaceState projectWorkspaceState)
+        => Update(state => state.WithProjectWorkspaceState(projectWorkspaceState));
+
+    private ProjectSnapshot Update(Func<ProjectState, ProjectState> update)
+    {
+        var newState = update(_state);
+
+        return ReferenceEquals(newState, _state)
+            ? this
+            : new(newState);
     }
 
     /// <summary>

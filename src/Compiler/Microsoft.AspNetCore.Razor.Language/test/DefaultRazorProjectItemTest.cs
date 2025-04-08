@@ -8,6 +8,8 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public class DefaultRazorProjectItemTest
 {
+    private const string BasePath = "/";
+
     private static string TestFolder { get; } = Path.Combine(
         TestProject.GetProjectDirectory(typeof(DefaultRazorProjectFileSystemTest), layer: TestProject.Layer.Compiler),
         "TestFiles",
@@ -17,30 +19,39 @@ public class DefaultRazorProjectItemTest
     public void DefaultRazorProjectItem_SetsProperties()
     {
         // Arrange
-        var fileInfo = new FileInfo(Path.Combine(TestFolder, "Home.cshtml"));
+        const string FileName = "Home.cshtml";
+        const string CssScope = "MyCssScope";
+
+        var filePath = BasePath + FileName; // /Home.cshtml
+        var physicalFilePath = Path.Combine(TestFolder, FileName);
 
         // Act
-        var projectItem = new DefaultRazorProjectItem("/", "/Home.cshtml", "Home.cshtml", RazorFileKind.ComponentImport, fileInfo, "MyCssScope");
+        var projectItem = new DefaultRazorProjectItem(
+            BasePath, filePath, physicalFilePath, relativePhysicalPath: FileName, RazorFileKind.Legacy, cssScope: CssScope);
 
         // Assert
-        Assert.Equal("/Home.cshtml", projectItem.FilePath);
-        Assert.Equal("/", projectItem.BasePath);
+        Assert.Equal(filePath, projectItem.FilePath);
+        Assert.Equal(BasePath, projectItem.BasePath);
         Assert.True(projectItem.Exists);
-        Assert.Equal("Home.cshtml", projectItem.FileName);
-        Assert.Equal(RazorFileKind.ComponentImport, projectItem.FileKind);
-        Assert.Equal(fileInfo.FullName, projectItem.PhysicalPath);
-        Assert.Equal("Home.cshtml", projectItem.RelativePhysicalPath);
-        Assert.Equal("MyCssScope", projectItem.CssScope);
+        Assert.Equal(FileName, projectItem.FileName);
+        Assert.Equal(RazorFileKind.Legacy, projectItem.FileKind);
+        Assert.Equal(physicalFilePath, projectItem.PhysicalPath);
+        Assert.Equal(FileName, projectItem.RelativePhysicalPath);
+        Assert.Equal(CssScope, projectItem.CssScope);
     }
 
     [Fact]
     public void DefaultRazorProjectItem_InfersFileKind_Component()
     {
         // Arrange
-        var fileInfo = new FileInfo(Path.Combine(TestFolder, "Home.cshtml"));
+        const string FileName = "Home.razor";
+
+        var filePath = BasePath + FileName; // /Home.razor
+        var physicalFilePath = Path.Combine(TestFolder, FileName);
 
         // Act
-        var projectItem = new DefaultRazorProjectItem("/", "/Home.razor", "Home.razor", fileKind: null, fileInfo, cssScope: null);
+        var projectItem = new DefaultRazorProjectItem(
+            BasePath, filePath, physicalFilePath, relativePhysicalPath: FileName, fileKind: null, cssScope: null);
 
         // Assert
         Assert.Equal(RazorFileKind.Component, projectItem.FileKind);
@@ -50,23 +61,30 @@ public class DefaultRazorProjectItemTest
     public void DefaultRazorProjectItem_InfersFileKind_Legacy()
     {
         // Arrange
-        var fileInfo = new FileInfo(Path.Combine(TestFolder, "Home.cshtml"));
+        const string FileName = "Home.cshtml";
+
+        var filePath = BasePath + FileName; // /Home.cshtml
+        var physicalFilePath = Path.Combine(TestFolder, FileName);
 
         // Act
-        var projectItem = new DefaultRazorProjectItem("/", "/Home.cshtml", "Home.cshtml", fileKind: null, fileInfo, cssScope: null);
+        var projectItem = new DefaultRazorProjectItem(
+            BasePath, filePath, physicalFilePath, relativePhysicalPath: FileName, fileKind: null, cssScope: null);
 
         // Assert
         Assert.Equal(RazorFileKind.Legacy, projectItem.FileKind);
     }
 
     [Fact]
-    public void DefaultRazorProjectItem_InfersFileKind_Null()
+    public void DefaultRazorProjectItem_InfersFileKind_None()
     {
         // Arrange
-        var fileInfo = new FileInfo(Path.Combine(TestFolder, "Home.cshtml"));
+        const string FileName = "Home.cshtml";
+
+        var physicalFilePath = Path.Combine(TestFolder, FileName);
 
         // Act
-        var projectItem = new DefaultRazorProjectItem("/", filePath: null, "Home.cshtml", fileKind: null, fileInfo, cssScope: null);
+        var projectItem = new DefaultRazorProjectItem(
+            BasePath, filePath: null, physicalFilePath, relativePhysicalPath: FileName, fileKind: null, cssScope: null);
 
         // Assert
         Assert.Equal(RazorFileKind.None, projectItem.FileKind);
@@ -76,11 +94,16 @@ public class DefaultRazorProjectItemTest
     public void Exists_ReturnsFalseWhenFileDoesNotExist()
     {
         // Arrange
-        var fileInfo = new FileInfo(Path.Combine(TestFolder, "Views", "FileDoesNotExist.cshtml"));
+        const string BasePath = "/Views";
+        const string FileName = "FileDoesNotExist.cshtml";
+
+        var filePath = BasePath + FileName; // /Home.cshtml
+        var physicalFilePath = Path.Combine(TestFolder, "Views", FileName);
+        var relativePhysicalPath = Path.Combine("Views", FileName);
 
         // Act
         var projectItem = new DefaultRazorProjectItem(
-            "/Views", "/FileDoesNotExist.cshtml", Path.Combine("Views", "FileDoesNotExist.cshtml"), fileKind: null, fileInfo, cssScope: null);
+            BasePath, filePath, physicalFilePath, relativePhysicalPath, fileKind: null, cssScope: null);
 
         // Assert
         Assert.False(projectItem.Exists);
@@ -90,13 +113,18 @@ public class DefaultRazorProjectItemTest
     public void Read_ReturnsReadStream()
     {
         // Arrange
-        var fileInfo = new FileInfo(Path.Combine(TestFolder, "Home.cshtml"));
-        var projectItem = new DefaultRazorProjectItem("/", "/Home.cshtml", "Home.cshtml", fileKind: null, fileInfo, cssScope: null);
+        const string FileName = "Home.cshtml";
+
+        var filePath = BasePath + FileName; // /Home.cshtml
+        var physicalFilePath = Path.Combine(TestFolder, FileName);
+        var projectItem = new DefaultRazorProjectItem(
+            BasePath, filePath, physicalFilePath, relativePhysicalPath: FileName, fileKind: null, cssScope: null);
 
         // Act
         var stream = projectItem.Read();
 
         // Assert
-        Assert.Equal("home-content", new StreamReader(stream).ReadToEnd());
+        using var reader = new StreamReader(stream);
+        Assert.Equal("home-content", reader.ReadToEnd());
     }
 }

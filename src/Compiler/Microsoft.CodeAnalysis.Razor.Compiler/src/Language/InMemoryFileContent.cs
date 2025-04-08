@@ -3,9 +3,8 @@
 
 using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Razor;
 
-namespace Microsoft.CodeAnalysis.Razor.Language;
+namespace Microsoft.AspNetCore.Razor.Language;
 
 internal sealed class InMemoryFileContent(string content)
 {

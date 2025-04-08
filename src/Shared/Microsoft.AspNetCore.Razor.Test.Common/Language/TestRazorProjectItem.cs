@@ -3,7 +3,6 @@
 
 using System;
 using System.IO;
-using Microsoft.CodeAnalysis.Razor.Language;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 

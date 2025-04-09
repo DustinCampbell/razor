@@ -227,7 +227,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
     public void Execute_NoIdentifier_Noops()
     {
         // Arrange
-        var source = TestRazorSourceDocument.Create("", RazorSourceDocumentProperties.Default);
+        var source = TestRazorSourceDocument.Create("", RazorSourceDocumentProperties.Empty);
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
         var documentNode = new DocumentIntermediateNode()

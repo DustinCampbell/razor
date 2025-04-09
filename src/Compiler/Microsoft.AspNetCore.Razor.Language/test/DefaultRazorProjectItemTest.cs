@@ -33,7 +33,6 @@ public class DefaultRazorProjectItemTest
         Assert.Equal(filePath, projectItem.FilePath);
         Assert.Equal(BasePath, projectItem.BasePath);
         Assert.True(projectItem.Exists);
-        Assert.Equal(FileName, projectItem.FileName);
         Assert.Equal(RazorFileKind.Legacy, projectItem.FileKind);
         Assert.Equal(physicalFilePath, projectItem.PhysicalPath);
         Assert.Equal(FileName, projectItem.RelativePhysicalPath);

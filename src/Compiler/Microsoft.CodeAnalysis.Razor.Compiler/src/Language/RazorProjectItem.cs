@@ -69,55 +69,6 @@ public abstract class RazorProjectItem
             ? FilePath
             : BasePath + FilePath;
 
-    /// <summary>
-    /// The extension of the file.
-    /// </summary>
-    public string Extension
-    {
-        get
-        {
-            var index = FileName.LastIndexOf('.');
-            if (index == -1)
-            {
-                return null;
-            }
-            else
-            {
-                return FileName.Substring(index);
-            }
-        }
-    }
-
-    /// <summary>
-    /// The name of the file including the extension.
-    /// </summary>
-    public string FileName
-    {
-        get
-        {
-            var index = FilePath.LastIndexOf('/');
-            return FilePath.Substring(index + 1);
-        }
-    }
-
-    /// <summary>
-    /// File path relative to <see cref="BasePath"/> without the extension.
-    /// </summary>
-    public string FilePathWithoutExtension
-    {
-        get
-        {
-            var index = FilePath.LastIndexOf('.');
-            if (index == -1)
-            {
-                return FilePath;
-            }
-            else
-            {
-                return FilePath.Substring(0, index);
-            }
-        }
-    }
 
     internal virtual RazorSourceDocument GetSource()
         => RazorSourceDocument.ReadFrom(this);

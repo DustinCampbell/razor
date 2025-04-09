@@ -11,7 +11,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 /// <summary>
 /// An item in a <see cref="RazorProjectFileSystem"/>.
 /// </summary>
-[DebuggerDisplay("{" + nameof(DebuggerToString) + "()}")]
+[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}()}}")]
 public abstract class RazorProjectItem
 {
     /// <summary>
@@ -61,18 +61,11 @@ public abstract class RazorProjectItem
     /// </summary>
     public abstract bool Exists { get; }
 
-    /// <summary>
-    /// The root relative path of the item.
-    /// </summary>
-    public string CombinedPath
-        => BasePath == RazorProjectFileSystem.DefaultBasePath
-            ? FilePath
-            : BasePath + FilePath;
-
-
     internal virtual RazorSourceDocument GetSource()
         => RazorSourceDocument.ReadFrom(this);
 
-    protected virtual string DebuggerToString()
-        => CombinedPath;
+    protected virtual string GetDebuggerDisplay()
+        => BasePath == RazorProjectFileSystem.DefaultBasePath
+            ? FilePath
+            : BasePath + FilePath;
 }

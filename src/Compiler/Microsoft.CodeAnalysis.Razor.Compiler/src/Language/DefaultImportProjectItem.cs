@@ -23,5 +23,5 @@ internal sealed class DefaultImportProjectItem(string name, string content) : Ra
     internal override RazorSourceDocument GetSource()
         => _source ?? InterlockedOperations.Initialize(ref _source, base.GetSource());
 
-    protected override string DebuggerToString() => _name;
+    protected override string GetDebuggerDisplay() => _name;
 }

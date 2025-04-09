@@ -615,7 +615,7 @@ public class ExtractToComponentCodeActionProviderTest(ITestOutputHelper testOutp
         relativePath ??= filePath;
         var fileKindValue = fileKind ?? RazorFileKind.Component;
 
-        var source = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(filePath, relativePath));
+        var source = TestRazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(filePath, relativePath));
         var codeDocument = RazorCodeDocument.Create(
             source,
             parserOptions: RazorParserOptions.Create(RazorLanguageVersion.Latest, fileKindValue, builder =>

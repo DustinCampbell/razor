@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Text;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -20,35 +19,41 @@ public sealed class RazorSourceDocument
 
     private RazorSourceDocument(SourceText text, RazorSourceDocumentProperties properties)
     {
+        ArgHelper.ThrowIfNull(text);
+        ArgHelper.ThrowIfNull(properties);
+
         Text = text;
         _properties = properties;
     }
 
-    /// <summary>
-    /// Gets the file path of the original source document.
-    /// </summary>
-    /// <remarks>
-    /// The file path may be either an absolute path or project-relative path. An absolute path is required
-    /// to generate debuggable assemblies.
-    /// </remarks>
+    /// <inheritdoc cref="RazorSourceDocumentProperties.FilePath"/>
     public string? FilePath => _properties.FilePath;
 
-    /// <summary>
-    /// Gets the project-relative path to the source file. May be <c>null</c>.
-    /// </summary>
-    /// <remarks>
-    /// The relative path (if provided) is used for display (error messages). The project-relative path may also
-    /// be used to embed checksums of the original source documents to support runtime recompilation of Razor code.
-    /// </remarks>
+    /// <inheritdoc cref="RazorSourceDocumentProperties.RelativePath"/>
     public string? RelativePath => _properties.RelativePath;
 
     /// <summary>
-    /// Gets the file path in a format that should be used for display.
+    ///  Gets the file path in a format that should be used for display.
     /// </summary>
-    /// <returns>The <see cref="RelativePath"/> if set, or the <see cref="FilePath"/>.</returns>
+    /// <returns>
+    ///  The <see cref="RelativePath"/> if set, or the <see cref="FilePath"/>.
+    /// </returns>
     public string? GetFilePathForDisplay()
     {
         return RelativePath ?? FilePath;
+    }
+
+    /// <summary>
+    ///  Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="text"/>.
+    /// </summary>
+    /// <param name="content">The source text.</param>
+    /// <param name="properties">Properties to configure the <see cref="RazorSourceDocument"/>.</param>
+    /// <returns>
+    ///  The <see cref="RazorSourceDocument"/>.
+    /// </returns>
+    public static RazorSourceDocument Create(SourceText text, RazorSourceDocumentProperties properties)
+    {
+        return new(text, properties);
     }
 
     /// <summary>
@@ -81,82 +86,5 @@ public sealed class RazorSourceDocument
         var relativePath = projectItem.RelativePhysicalPath ?? projectItem.FilePath;
         var sourceText = SourceText.From(stream, checksumAlgorithm: SourceHashAlgorithm.Sha256);
         return new RazorSourceDocument(sourceText, RazorSourceDocumentProperties.Create(filePath, relativePath));
-    }
-
-    /// <summary>
-    /// Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
-    /// </summary>
-    /// <param name="content">The source document content.</param>
-    /// <param name="fileName">The file name of the <see cref="RazorSourceDocument"/>.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    /// <remarks>Uses <see cref="System.Text.Encoding.UTF8" /></remarks>
-    public static RazorSourceDocument Create(string content, string fileName)
-    {
-        ArgHelper.ThrowIfNull(content);
-
-        return Create(content, fileName, Encoding.UTF8);
-    }
-
-    /// <summary>
-    /// Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
-    /// </summary>
-    /// <param name="content">The source document content.</param>
-    /// <param name="properties">Properties to configure the <see cref="RazorSourceDocument"/>.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    /// <remarks>Uses <see cref="System.Text.Encoding.UTF8" /></remarks>
-    public static RazorSourceDocument Create(string content, RazorSourceDocumentProperties properties)
-    {
-        ArgHelper.ThrowIfNull(content);
-        ArgHelper.ThrowIfNull(properties);
-
-        return Create(content, Encoding.UTF8, properties);
-    }
-
-    /// <summary>
-    /// Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
-    /// </summary>
-    /// <param name="content">The source document content.</param>
-    /// <param name="fileName">The file name of the <see cref="RazorSourceDocument"/>.</param>
-    /// <param name="encoding">The <see cref="System.Text.Encoding"/> of the file <paramref name="content"/> was read from.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    public static RazorSourceDocument Create(string content, string fileName, Encoding encoding)
-    {
-        ArgHelper.ThrowIfNull(content);
-        ArgHelper.ThrowIfNull(encoding);
-
-        var properties = RazorSourceDocumentProperties.Create(fileName, relativePath: null);
-        var sourceText = SourceText.From(content, encoding, checksumAlgorithm: SourceHashAlgorithm.Sha256);
-        return new RazorSourceDocument(sourceText, properties);
-    }
-
-    /// <summary>
-    /// Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
-    /// </summary>
-    /// <param name="content">The source document content.</param>
-    /// <param name="encoding">The encoding of the source document.</param>
-    /// <param name="properties">Properties to configure the <see cref="RazorSourceDocument"/>.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    public static RazorSourceDocument Create(string content, Encoding encoding, RazorSourceDocumentProperties properties)
-    {
-        ArgHelper.ThrowIfNull(content);
-        ArgHelper.ThrowIfNull(encoding);
-        ArgHelper.ThrowIfNull(properties);
-
-        var sourceText = SourceText.From(content, encoding, checksumAlgorithm: SourceHashAlgorithm.Sha256);
-        return new RazorSourceDocument(sourceText, properties);
-    }
-
-    /// <summary>
-    /// Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="text"/>.
-    /// </summary>
-    /// <param name="content">The source text.</param>
-    /// <param name="properties">Properties to configure the <see cref="RazorSourceDocument"/>.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    public static RazorSourceDocument Create(SourceText text, RazorSourceDocumentProperties properties)
-    {
-        ArgHelper.ThrowIfNull(text);
-        ArgHelper.ThrowIfNull(properties);
-
-        return new RazorSourceDocument(text, properties);
     }
 }

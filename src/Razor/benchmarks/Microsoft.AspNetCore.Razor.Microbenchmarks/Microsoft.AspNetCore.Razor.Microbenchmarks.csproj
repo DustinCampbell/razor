@@ -24,23 +24,15 @@
     <None Remove="BenchmarkDotNet.Artifacts\**" />
 
     <Compile Include="..\..\src\Microsoft.CodeAnalysis.Razor.Workspaces\GlobalUsings.cs" Link="GlobalUsings.cs" />
-
-    <Compile Remove="Resources\**\*.*" />
-    <None Remove="Resources\**\*.*" />
-
-    <EmbeddedResource Include="Resources\**\*.*" />
-    <EmbeddedResource Include="$(SharedFilesRoot)\Tooling\**\*.*" Link="Resources\%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="$(SharedFilesRoot)\Compiler\MSN.cshtml" Link="Resources\%(FileName)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
-    <PackageReference Include="Moq" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-    <PackageReference Include="Microsoft.DiaSymReader" />
   </ItemGroup>
 
-  <Import Project="..\..\..\Shared\Microsoft.AspNetCore.Razor.Serialization.Json\Microsoft.AspNetCore.Razor.Serialization.Json.projitems" Label="Shared" />
+  <!-- We only import JSON serialization on NetFx.
+       For .NET Core, we rely on the JSON serialization compiled into Microsoft.AspNetCore.Razor.Test.Common.Tooling. -->
+  <Import Condition="'$(TargetFramework)' == '$(NetFxVS)'" Project="$(SharedSourceRoot)Microsoft.AspNetCore.Razor.Serialization.Json\Microsoft.AspNetCore.Razor.Serialization.Json.projitems" Label="Shared" />
 
 </Project>

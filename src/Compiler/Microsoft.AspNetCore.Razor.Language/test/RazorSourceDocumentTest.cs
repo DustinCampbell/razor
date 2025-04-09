@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Text;
 using Xunit;
 
@@ -10,64 +8,6 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public class RazorSourceDocumentTest
 {
-    [Fact]
-    public void ReadFrom()
-    {
-        // Arrange
-        var content = TestRazorSourceDocument.CreateStreamContent();
-
-        // Act
-        var document = RazorSourceDocument.ReadFrom(content, "file.cshtml");
-
-        // Assert
-        Assert.Equal("file.cshtml", document.FilePath);
-        Assert.Same(Encoding.UTF8, document.Text.Encoding);
-    }
-
-    [Fact]
-    public void ReadFrom_WithEncoding()
-    {
-        // Arrange
-        var content = TestRazorSourceDocument.CreateStreamContent(encoding: Encoding.UTF32);
-
-        // Act
-        var document = RazorSourceDocument.ReadFrom(content, "file.cshtml", Encoding.UTF32);
-
-        // Assert
-        Assert.Equal("file.cshtml", document.FilePath);
-        Assert.Same(Encoding.UTF32, document.Text.Encoding);
-    }
-
-    [Fact]
-    public void ReadFrom_WithProperties()
-    {
-        // Arrange
-        var content = TestRazorSourceDocument.CreateStreamContent(encoding: Encoding.UTF32);
-        var properties = RazorSourceDocumentProperties.Create("c:\\myapp\\filePath.cshtml", "filePath.cshtml");
-
-        // Act
-        var document = RazorSourceDocument.ReadFrom(content, Encoding.UTF32, properties);
-
-        // Assert
-        Assert.Equal("c:\\myapp\\filePath.cshtml", document.FilePath);
-        Assert.Equal("filePath.cshtml", document.RelativePath);
-        Assert.Same(Encoding.UTF32, document.Text.Encoding);
-    }
-
-    [Fact]
-    public void ReadFrom_EmptyStream_WithEncoding()
-    {
-        // Arrange
-        var content = TestRazorSourceDocument.CreateStreamContent(content: string.Empty, encoding: Encoding.UTF32);
-
-        // Act
-        var document = RazorSourceDocument.ReadFrom(content, "file.cshtml", Encoding.UTF32);
-
-        // Assert
-        Assert.Equal("file.cshtml", document.FilePath);
-        Assert.Same(Encoding.UTF32, document.Text.Encoding);
-    }
-
     [Fact]
     public void ReadFrom_ProjectItem()
     {

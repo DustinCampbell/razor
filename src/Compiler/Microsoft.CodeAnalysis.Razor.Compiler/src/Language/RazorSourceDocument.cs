@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.IO;
 using System.Text;
 using Microsoft.CodeAnalysis.Text;
 
@@ -50,55 +49,6 @@ public sealed class RazorSourceDocument
     public string? GetFilePathForDisplay()
     {
         return RelativePath ?? FilePath;
-    }
-
-    /// <summary>
-    /// Reads the <see cref="RazorSourceDocument"/> from the specified <paramref name="stream"/>.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> to read from.</param>
-    /// <param name="fileName">The file name of the template.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    public static RazorSourceDocument ReadFrom(Stream stream, string fileName)
-    {
-        ArgHelper.ThrowIfNull(stream);
-
-        var properties = RazorSourceDocumentProperties.Create(fileName, relativePath: null);
-        var sourceText = SourceText.From(stream, checksumAlgorithm: SourceHashAlgorithm.Sha256);
-        return new RazorSourceDocument(sourceText, properties);
-    }
-
-    /// <summary>
-    /// Reads the <see cref="RazorSourceDocument"/> from the specified <paramref name="stream"/>.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> to read from.</param>
-    /// <param name="fileName">The file name of the template.</param>
-    /// <param name="encoding">The <see cref="System.Text.Encoding"/> to use to read the <paramref name="stream"/>.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    public static RazorSourceDocument ReadFrom(Stream stream, string fileName, Encoding encoding)
-    {
-        ArgHelper.ThrowIfNull(stream);
-        ArgHelper.ThrowIfNull(encoding);
-
-        var properties = RazorSourceDocumentProperties.Create(fileName, relativePath: null);
-        var sourceText = SourceText.From(stream, encoding, checksumAlgorithm: SourceHashAlgorithm.Sha256);
-        return new RazorSourceDocument(sourceText, properties);
-    }
-
-    /// <summary>
-    /// Reads the <see cref="RazorSourceDocument"/> from the specified <paramref name="stream"/>.
-    /// </summary>
-    /// <param name="stream">The <see cref="Stream"/> to read from.</param>
-    /// <param name="encoding">The <see cref="System.Text.Encoding"/> to use to read the <paramref name="stream"/>.</param>
-    /// <param name="properties">Properties to configure the <see cref="RazorSourceDocument"/>.</param>
-    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
-    public static RazorSourceDocument ReadFrom(Stream stream, Encoding encoding, RazorSourceDocumentProperties properties)
-    {
-        ArgHelper.ThrowIfNull(stream);
-        ArgHelper.ThrowIfNull(encoding);
-        ArgHelper.ThrowIfNull(properties);
-
-        var sourceText = SourceText.From(stream, encoding, checksumAlgorithm: SourceHashAlgorithm.Sha256);
-        return new RazorSourceDocument(sourceText, properties);
     }
 
     /// <summary>

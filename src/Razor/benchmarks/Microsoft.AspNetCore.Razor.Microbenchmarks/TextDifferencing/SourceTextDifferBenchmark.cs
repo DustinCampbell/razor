@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.CodeAnalysis.Razor.TextDifferencing;
 using Microsoft.CodeAnalysis.Text;
 
@@ -19,7 +20,7 @@ public class SourceTextDifferBenchmark
     [GlobalSetup]
     public void GlobalSetup()
     {
-        var largeFileText = Resources.GetResourceText("MSN.cshtml");
+        var largeFileText = RazorTestResources.GetResourceText("MSN.cshtml");
 
         _largeFileOriginal = SourceText.From(largeFileText);
 

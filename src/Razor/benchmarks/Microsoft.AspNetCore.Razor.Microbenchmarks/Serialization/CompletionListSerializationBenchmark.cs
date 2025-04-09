@@ -66,7 +66,7 @@ public class CompletionListSerializationBenchmark
 
     private CompletionList GenerateCompletionList(string documentContent, int queryIndex, TagHelperCompletionProvider componentCompletionProvider)
     {
-        var sourceDocument = RazorSourceDocument.Create(documentContent, RazorSourceDocumentProperties.Empty);
+        var sourceDocument = TestRazorSourceDocument.Create(documentContent, RazorSourceDocumentProperties.Empty);
         var syntaxTree = RazorSyntaxTree.Parse(sourceDocument);
         var tagHelperDocumentContext = TagHelperDocumentContext.Create(prefix: string.Empty, CommonResources.LegacyTagHelpers);
 

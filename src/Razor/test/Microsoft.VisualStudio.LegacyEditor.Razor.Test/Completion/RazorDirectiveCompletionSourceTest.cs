@@ -203,7 +203,7 @@ public class RazorDirectiveCompletionSourceTest(ITestOutputHelper testOutput) : 
 
     private static IVisualStudioRazorParser CreateParser(string text, params DirectiveDescriptor[] directives)
     {
-        var source = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Empty);
+        var source = TestRazorSourceDocument.Create(text, RazorSourceDocumentProperties.Empty);
         var codeDocument = RazorCodeDocument.Create(
             source,
             parserOptions: RazorParserOptions.Default.WithDirectives([.. directives]));

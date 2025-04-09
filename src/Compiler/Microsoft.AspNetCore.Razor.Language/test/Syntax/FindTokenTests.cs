@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Roslyn.Test.Utilities;
 using Xunit;
@@ -28,7 +29,8 @@ public class FindTokenTests
 
     private static RazorSyntaxTree Parse(string text)
     {
-        return RazorSyntaxTree.Parse(RazorSourceDocument.Create(text, System.Text.Encoding.Default, RazorSourceDocumentProperties.Empty));
+        var source = TestRazorSourceDocument.Create(text, Encoding.Default, RazorSourceDocumentProperties.Empty);
+        return RazorSyntaxTree.Parse(source);
     }
 
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/7505")]

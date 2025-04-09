@@ -385,7 +385,7 @@ public class ExtractToCodeBehindCodeActionProviderTest(ITestOutputHelper testOut
         RazorFileKind? fileKind = null,
         bool supportsFileCreation = true)
     {
-        var source = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(filePath, relativePath));
+        var source = TestRazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(filePath, relativePath));
 
         var fileKindValue = fileKind ?? RazorFileKind.Component;
 

@@ -173,7 +173,7 @@ public class MvcViewDocumentClassifierPassTest : RazorProjectEngineTestBase
     public void MvcViewDocumentClassifierPass_SetsUpExecuteAsyncMethod()
     {
         // Arrange
-        var source = RazorSourceDocument.Create("some-content", "Test.cshtml");
+        var source = TestRazorSourceDocument.Create("some-content", "Test.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
         var processor = CreateCodeDocumentProcessor(codeDocument);
 

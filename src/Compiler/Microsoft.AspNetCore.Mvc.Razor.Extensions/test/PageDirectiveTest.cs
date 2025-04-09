@@ -40,7 +40,7 @@ public class PageDirectiveTest : RazorProjectEngineTestBase
     public void TryGetPageDirective_ReturnsTrue_IfPageIsImported()
     {
         // Arrange
-        var importSource = RazorSourceDocument.Create("@page", "import.cshtml");
+        var importSource = TestRazorSourceDocument.Create("@page", "import.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument("Hello world", [importSource]);
         var processor = CreateCodeDocumentProcessor(codeDocument);
         var documentNode = processor.GetDocumentNode();

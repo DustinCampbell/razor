@@ -163,7 +163,7 @@ public class ComponentDuplicateAttributeDiagnosticPassTest
         content = content.Replace("\r", "");
         content = content.Replace("\n", "\r\n");
 
-        var source = RazorSourceDocument.Create(content, "test.cshtml");
+        var source = TestRazorSourceDocument.Create(content, "test.cshtml");
         return ProjectEngine.CreateCodeDocument(source, RazorFileKind.Component);
     }
 

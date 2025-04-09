@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -32,7 +33,7 @@ public static class TestRazorSourceDocument
             }
 
             var properties = RazorSourceDocumentProperties.Create(resourcePath, resourcePath);
-            return RazorSourceDocument.Create(content, encoding ?? Encoding.UTF8, properties);
+            return Create(content, encoding ?? Encoding.UTF8, properties);
         }
     }
 
@@ -54,7 +55,7 @@ public static class TestRazorSourceDocument
                 content = NormalizeNewLines(content);
             }
 
-            return RazorSourceDocument.Create(content, encoding ?? Encoding.UTF8, properties);
+            return Create(content, encoding ?? Encoding.UTF8, properties);
         }
     }
 
@@ -77,6 +78,71 @@ public static class TestRazorSourceDocument
         return stream;
     }
 
+    /// <summary>
+    ///  Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
+    /// </summary>
+    /// <param name="content">The source document content.</param>
+    /// <param name="properties">Properties to configure the <see cref="RazorSourceDocument"/>.</param>
+    /// <returns>
+    ///  The <see cref="RazorSourceDocument"/>.
+    /// </returns>
+    /// <remarks>
+    ///  Uses <see cref="Encoding.UTF8" />.
+    /// </remarks>
+    public static RazorSourceDocument Create(string content, RazorSourceDocumentProperties properties)
+    {
+        return Create(content, Encoding.UTF8, properties);
+    }
+
+    /// <summary>
+    /// Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
+    /// </summary>
+    /// <param name="content">The source document content.</param>
+    /// <param name="encoding">The encoding of the source document.</param>
+    /// <param name="properties">Properties to configure the <see cref="RazorSourceDocument"/>.</param>
+    /// <returns>
+    ///  The <see cref="RazorSourceDocument"/>.
+    /// </returns>
+    public static RazorSourceDocument Create(string content, Encoding encoding, RazorSourceDocumentProperties properties)
+    {
+        ArgHelper.ThrowIfNull(content);
+        ArgHelper.ThrowIfNull(encoding);
+
+        var text = SourceText.From(content, encoding, checksumAlgorithm: SourceHashAlgorithm.Sha256);
+
+        return RazorSourceDocument.Create(text, properties);
+    }
+
+    /// <summary>
+    ///  Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
+    /// </summary>
+    /// <param name="content">The source document content.</param>
+    /// <param name="fileName">The file name of the <see cref="RazorSourceDocument"/>.</param>
+    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
+    /// <remarks>Uses <see cref="Encoding.UTF8" /></remarks>
+    public static RazorSourceDocument Create(string content, string fileName)
+    {
+        return Create(content, fileName, Encoding.UTF8);
+    }
+
+    /// <summary>
+    ///  Creates a <see cref="RazorSourceDocument"/> from the specified <paramref name="content"/>.
+    /// </summary>
+    /// <param name="content">The source document content.</param>
+    /// <param name="fileName">The file name of the <see cref="RazorSourceDocument"/>.</param>
+    /// <param name="encoding">The <see cref="Encoding"/> of the file <paramref name="content"/> was read from.</param>
+    /// <returns>The <see cref="RazorSourceDocument"/>.</returns>
+    public static RazorSourceDocument Create(string content, string fileName, Encoding encoding)
+    {
+        ArgHelper.ThrowIfNull(content);
+        ArgHelper.ThrowIfNull(encoding);
+
+        var properties = RazorSourceDocumentProperties.Create(fileName, relativePath: null);
+        var text = SourceText.From(content, encoding, checksumAlgorithm: SourceHashAlgorithm.Sha256);
+
+        return RazorSourceDocument.Create(text, properties);
+    }
+
     public static RazorSourceDocument Create(
         string content = "Hello, world!",
         Encoding encoding = null,
@@ -90,7 +156,7 @@ public static class TestRazorSourceDocument
         }
 
         var properties = RazorSourceDocumentProperties.Create(filePath, relativePath);
-        return RazorSourceDocument.Create(content, encoding ?? Encoding.UTF8, properties);
+        return Create(content, encoding ?? Encoding.UTF8, properties);
     }
 
     public static RazorSourceDocument Create(
@@ -104,7 +170,7 @@ public static class TestRazorSourceDocument
             content = NormalizeNewLines(content);
         }
 
-        return RazorSourceDocument.Create(content, encoding ?? Encoding.UTF8, properties);
+        return Create(content, encoding ?? Encoding.UTF8, properties);
     }
 
     private static string NormalizeNewLines(string content)

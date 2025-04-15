@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.CodeAnalysis.Razor;
 
-public class DefaultTypeNameFeatureTest
+public class TypeNameFeatureTest
 {
     [Theory]
     [InlineData("C", 0)]
@@ -32,7 +32,7 @@ public class DefaultTypeNameFeatureTest
     public void ParseTypeParameters(string input, int expectedNumberOfTs)
     {
         // Arrange.
-        var feature = new DefaultTypeNameFeature();
+        var feature = new TypeNameFeature();
 
         // Act.
         var parsed = feature.ParseTypeParameters(input);

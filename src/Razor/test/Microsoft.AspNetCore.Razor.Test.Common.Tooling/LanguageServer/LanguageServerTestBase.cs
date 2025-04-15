@@ -74,7 +74,7 @@ public abstract class LanguageServerTestBase(ITestOutputHelper testOutput) : Too
                 builder.UseRoslynTokenizer = true;
             });
 
-            b.Features.Add(new DefaultTypeNameFeature());
+            b.Features.Add(new TypeNameFeature());
         });
 
         var importDocumentName = fileKind == RazorFileKind.Legacy ? "_ViewImports.cshtml" : "_Imports.razor";

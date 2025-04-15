@@ -322,7 +322,7 @@ public abstract class IntegrationTestBase
                 });
             }
 
-            b.Features.Add(new DefaultTypeNameFeature());
+            b.Features.Add(new TypeNameFeature());
             b.SetCSharpLanguageVersion(CSharpParseOptions.LanguageVersion);
 
             b.ConfigureParserOptions(builder =>

@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.CodeAnalysis.Razor;
 
-internal sealed class TypeNameFeature : RazorEngineFeatureBase
+internal sealed partial class TypeNameFeature : RazorEngineFeatureBase
 {
     public IReadOnlyList<string> ParseTypeParameters(string typeName)
     {

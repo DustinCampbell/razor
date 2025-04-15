@@ -4,11 +4,10 @@
 #nullable disable
 
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Razor.Language;
 
-namespace Microsoft.AspNetCore.Razor.Language;
+namespace Microsoft.CodeAnalysis.Razor;
 
-// Razor.Language doesn't reference Microsoft.CodeAnalysis.CSharp so we
-// need some indirection.
 internal abstract class TypeNameFeature : RazorEngineFeatureBase
 {
     public abstract IReadOnlyList<string> ParseTypeParameters(string typeName);

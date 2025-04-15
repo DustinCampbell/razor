@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.CodeAnalysis.Razor;
 
-internal sealed partial class TypeNameFeature
+internal static partial class TypeNameHelpers
 {
     private sealed class GenericTypeNameRewriter : TypeNameRewriter
     {

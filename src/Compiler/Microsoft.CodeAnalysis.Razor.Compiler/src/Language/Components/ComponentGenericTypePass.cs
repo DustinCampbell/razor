@@ -17,26 +17,9 @@ namespace Microsoft.AspNetCore.Razor.Language.Components;
 // 3. Rewrites the type names of parameters/child content to substitute generic type arguments
 internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRazorOptimizationPass
 {
-    private TypeNameFeature? _typeNameFeature;
-
     // Runs after components/eventhandlers/ref/bind/templates. We want to validate every component
     // and it's usage of ChildContent.
     public override int Order => 160;
-
-    private TypeNameFeature TypeNameFeature
-    {
-        get
-        {
-            // Doing lazy initialization here to avoid making things really complicated when we don't
-            // need to exercise this code in tests.
-            if (_typeNameFeature == null)
-            {
-                _typeNameFeature = GetRequiredFeature<TypeNameFeature>();
-            }
-
-            return _typeNameFeature;
-        }
-    }
 
     protected override void ExecuteCore(RazorCodeDocument codeDocument, DocumentIntermediateNode documentNode)
     {
@@ -45,20 +28,17 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             return;
         }
 
-        var visitor = new Visitor(this);
+        var visitor = new Visitor();
         visitor.Visit(documentNode);
     }
 
     private class Visitor : IntermediateNodeWalker
     {
-        private readonly ComponentGenericTypePass _pass;
-
         // Incrementing ID for type inference method names
         private int _id;
 
-        public Visitor(ComponentGenericTypePass pass)
+        public Visitor()
         {
-            _pass = pass;
         }
 
         public override void VisitComponent(ComponentIntermediateNode node)
@@ -118,7 +98,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 if (ValidateTypeArguments(node, bindings))
                 {
                     var mappings = bindings.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Content);
-                    RewriteTypeNames(_pass.TypeNameFeature.CreateGenericTypeRewriter(mappings), node, hasTypeArgumentSpecified);
+                    RewriteTypeNames(TypeNameHelpers.CreateGenericTypeRewriter(mappings), node, hasTypeArgumentSpecified);
                 }
 
                 return;
@@ -132,7 +112,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
             // Since we're generating code in a different namespace, we need to 'global qualify' all of the types
             // to avoid clashes with our generated code.
-            RewriteTypeNames(_pass.TypeNameFeature.CreateGlobalQualifiedTypeNameRewriter(bindings.Keys), node, hasTypeArgumentSpecified: false, bindings);
+            RewriteTypeNames(TypeNameHelpers.CreateGlobalQualifiedTypeNameRewriter(bindings.Keys), node, hasTypeArgumentSpecified: false, bindings);
 
             //
             // We need to verify that an argument was provided that 'covers' each type parameter.
@@ -146,7 +126,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     // Keep only type parameters defined by this component.
                     typeParameters = typeParameters.Where(bindings.ContainsKey).ToArray();
 
-                    var attributeValueIsLambda = _pass.TypeNameFeature.IsLambda(GetContent(attribute));
+                    var attributeValueIsLambda = TypeNameHelpers.IsLambda(GetContent(attribute));
                     var provideCascadingGenericTypes = new CascadingGenericTypeParameter
                     {
                         GenericTypeNames = typeParameters,
@@ -260,7 +240,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 // helpful as possible. So let's substitute 'object' for all of those type parameters, and add
                 // an error.
                 var mappings = bindings.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Content);
-                RewriteTypeNames(_pass.TypeNameFeature.CreateGenericTypeRewriter(mappings), node, bindings: bindings);
+                RewriteTypeNames(TypeNameHelpers.CreateGenericTypeRewriter(mappings), node, bindings: bindings);
 
                 node.Diagnostics.Add(ComponentDiagnosticFactory.Create_GenericComponentTypeInferenceUnderspecified(node.Source, node, node.Component.GetTypeParameters()));
             }
@@ -291,7 +271,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             // Two cases;
             // 1. name is a simple identifier like TItem
             // 2. name contains type parameters like Dictionary<string, TItem>
-            typeParameters = _pass.TypeNameFeature.ParseTypeParameters(globallyQualifiedTypeName ?? boundAttribute.TypeName);
+            typeParameters = TypeNameHelpers.ParseTypeParameters(globallyQualifiedTypeName ?? boundAttribute.TypeName);
             if (typeParameters.Count == 0)
             {
                 typeParameters = new[] { boundAttribute.TypeName };
@@ -334,10 +314,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
         }
 
         private void RewriteTypeNames(TypeNameRewriter rewriter, ComponentIntermediateNode node, bool? hasTypeArgumentSpecified = null, IDictionary<string, Binding>? bindings = null)
-        {
-            var typeNameFeature = _pass.TypeNameFeature;
-
-            // Rewrite the component type name
+        {            // Rewrite the component type name
             node.TypeName = rewriter.Rewrite(node.TypeName);
 
             foreach (var attribute in node.Attributes)
@@ -372,7 +349,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     }
                     else if(attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
                     {
-                        var typeParameters = typeNameFeature.ParseTypeParameters(attribute.TypeName);
+                        var typeParameters = TypeNameHelpers.ParseTypeParameters(attribute.TypeName);
                         for (int i = 0; i < typeParameters.Count; i++)
                         {
                             var parameter = typeParameters[i];

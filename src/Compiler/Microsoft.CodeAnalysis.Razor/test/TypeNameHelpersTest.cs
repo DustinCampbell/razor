@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.CodeAnalysis.Razor;
 
-public class TypeNameFeatureTest
+public class TypeNameHelpersTest
 {
     [Theory]
     [InlineData("C", 0)]
@@ -32,11 +32,8 @@ public class TypeNameFeatureTest
     [InlineData("C<NS.T>", 0)]
     public void ParseTypeParameters(string input, int expectedNumberOfTs)
     {
-        // Arrange.
-        var feature = new TypeNameFeature();
-
         // Act.
-        var parsed = feature.ParseTypeParameters(input);
+        var parsed = TypeNameHelpers.ParseTypeParameters(input);
 
         // Assert.
         Assert.Equal(Enumerable.Repeat("T", expectedNumberOfTs), parsed);
@@ -100,8 +97,7 @@ public class TypeNameFeatureTest
     public void CreateGenericTypeNameRewriter_CanReplaceTypeParametersWithTypeArguments(string original, string expected)
     {
         // Arrange
-        var feature = new TypeNameFeature();
-        var visitor = feature.CreateGenericTypeRewriter(new Dictionary<string, string>()
+        var visitor = TypeNameHelpers.CreateGenericTypeRewriter(new Dictionary<string, string>()
             {
                 { "TItem1", "Type1" },
                 { "TItem2", "Type2" },
@@ -131,8 +127,7 @@ public class TypeNameFeatureTest
     public void CreateGlobalQualifiedTypeNameRewriter_CanQualifyNames(string original, string expected)
     {
         // Arrange
-        var feature = new TypeNameFeature();
-        var visitor = feature.CreateGlobalQualifiedTypeNameRewriter(new[] { "TItem1", "TItem2", "TItem3" });
+        var visitor = TypeNameHelpers.CreateGlobalQualifiedTypeNameRewriter(new[] { "TItem1", "TItem2", "TItem3" });
 
         // Act
         var actual = visitor.Rewrite(original);

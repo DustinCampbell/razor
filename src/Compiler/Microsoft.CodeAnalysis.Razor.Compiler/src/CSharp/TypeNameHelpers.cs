@@ -13,9 +13,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.CodeAnalysis.Razor;
 
-internal sealed partial class TypeNameFeature : RazorEngineFeatureBase
+internal static partial class TypeNameHelpers
 {
-    public IReadOnlyList<string> ParseTypeParameters(string typeName)
+    public static IReadOnlyList<string> ParseTypeParameters(string typeName)
     {
         if (typeName == null)
         {
@@ -74,7 +74,7 @@ internal sealed partial class TypeNameFeature : RazorEngineFeatureBase
         }
     }
 
-    public TypeNameRewriter CreateGenericTypeRewriter(Dictionary<string, string> bindings)
+    public static TypeNameRewriter CreateGenericTypeRewriter(Dictionary<string, string> bindings)
     {
         if (bindings == null)
         {
@@ -84,7 +84,7 @@ internal sealed partial class TypeNameFeature : RazorEngineFeatureBase
         return new GenericTypeNameRewriter(bindings);
     }
 
-    public TypeNameRewriter CreateGlobalQualifiedTypeNameRewriter(ICollection<string> ignore)
+    public static TypeNameRewriter CreateGlobalQualifiedTypeNameRewriter(ICollection<string> ignore)
     {
         if (ignore == null)
         {
@@ -94,7 +94,7 @@ internal sealed partial class TypeNameFeature : RazorEngineFeatureBase
         return new GlobalQualifiedTypeNameRewriter(ignore);
     }
 
-    public bool IsLambda(string expression)
+    public static bool IsLambda(string expression)
     {
         var parsed = SyntaxFactory.ParseExpression(expression);
         return parsed is LambdaExpressionSyntax;

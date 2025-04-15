@@ -30,10 +30,10 @@ public class TypeNameHelpersTest
     [InlineData("C<D<T>[]>>", 1)]
     [InlineData("C<D<T[]>>", 1)]
     [InlineData("C<NS.T>", 0)]
-    public void ParseTypeParameters(string input, int expectedNumberOfTs)
+    public void ParseTypeArguments(string input, int expectedNumberOfTs)
     {
         // Act.
-        var parsed = TypeNameHelpers.ParseTypeParameters(input);
+        var parsed = TypeNameHelpers.ParseTypeArguments(input);
 
         // Assert.
         Assert.Equal(Enumerable.Repeat("T", expectedNumberOfTs), parsed);

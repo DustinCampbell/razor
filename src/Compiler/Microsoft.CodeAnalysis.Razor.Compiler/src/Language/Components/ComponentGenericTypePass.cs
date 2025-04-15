@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.CodeAnalysis.Razor;
@@ -84,7 +84,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     node.ProvidesCascadingGenericTypes ??= new();
                     node.ProvidesCascadingGenericTypes[typeArgumentNode.TypeParameterName] = new CascadingGenericTypeParameter
                     {
-                        GenericTypeNames = new[] { typeArgumentNode.TypeParameterName },
+                        GenericTypeNames = [typeArgumentNode.TypeParameterName],
                         ValueType = typeArgumentNode.TypeParameterName,
                         ValueExpression = $"default({binding.Content})",
                     };
@@ -124,7 +124,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 if (attribute != null && TryFindGenericTypeNames(attribute.BoundAttribute, attribute.GloballyQualifiedTypeName, out var typeParameters))
                 {
                     // Keep only type parameters defined by this component.
-                    typeParameters = typeParameters.Where(bindings.ContainsKey).ToArray();
+                    typeParameters = typeParameters.WhereAsArray(bindings.ContainsKey);
 
                     var attributeValueIsLambda = TypeNameHelpers.IsLambda(GetContent(attribute));
                     var provideCascadingGenericTypes = new CascadingGenericTypeParameter
@@ -144,7 +144,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                             // or Dictionary<T, U>, we prefer List<T>.
                             node.ProvidesCascadingGenericTypes ??= new();
                             if (!node.ProvidesCascadingGenericTypes.TryGetValue(typeName, out var existingValue)
-                                || existingValue.GenericTypeNames.Count > typeParameters.Count)
+                                || existingValue.GenericTypeNames.Length > typeParameters.Length)
                             {
                                 node.ProvidesCascadingGenericTypes[typeName] = provideCascadingGenericTypes;
                             }
@@ -252,18 +252,21 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             CreateTypeInferenceMethod(documentNode, node, receivesCascadingGenericTypes);
         }
 
-        private bool TryFindGenericTypeNames(BoundAttributeDescriptor? boundAttribute, string? globallyQualifiedTypeName, [NotNullWhen(true)] out IReadOnlyList<string>? typeParameters)
+        private bool TryFindGenericTypeNames(
+            BoundAttributeDescriptor? boundAttribute,
+            string? globallyQualifiedTypeName,
+            out ImmutableArray<string> typeParameters)
         {
             if (boundAttribute == null)
             {
                 // Will be null for attributes set on the component that don't match a declared component parameter
-                typeParameters = null;
+                typeParameters = default;
                 return false;
             }
 
             if (!boundAttribute.IsGenericTypedProperty())
             {
-                typeParameters = null;
+                typeParameters = default;
                 return false;
             }
 
@@ -271,10 +274,11 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             // Two cases;
             // 1. name is a simple identifier like TItem
             // 2. name contains type parameters like Dictionary<string, TItem>
-            typeParameters = TypeNameHelpers.ParseTypeParameters(globallyQualifiedTypeName ?? boundAttribute.TypeName);
-            if (typeParameters.Count == 0)
+            typeParameters = TypeNameHelpers.ParseTypeArguments(globallyQualifiedTypeName ?? boundAttribute.TypeName);
+
+            if (typeParameters.Length == 0)
             {
-                typeParameters = new[] { boundAttribute.TypeName };
+                typeParameters = [boundAttribute.TypeName];
             }
 
             return true;
@@ -314,7 +318,8 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
         }
 
         private void RewriteTypeNames(TypeNameRewriter rewriter, ComponentIntermediateNode node, bool? hasTypeArgumentSpecified = null, IDictionary<string, Binding>? bindings = null)
-        {            // Rewrite the component type name
+        {
+            // Rewrite the component type name
             node.TypeName = rewriter.Rewrite(node.TypeName);
 
             foreach (var attribute in node.Attributes)
@@ -349,10 +354,9 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     }
                     else if(attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
                     {
-                        var typeParameters = TypeNameHelpers.ParseTypeParameters(attribute.TypeName);
-                        for (int i = 0; i < typeParameters.Count; i++)
+                        var typeParameters = TypeNameHelpers.ParseTypeArguments(attribute.TypeName);
+                        foreach (var parameter in typeParameters)
                         {
-                            var parameter = typeParameters[i];
                             if (bindings!.ContainsKey(parameter))
                             {
                                 attribute.Annotations.Add(ComponentMetadata.Component.OpenGenericKey, true);

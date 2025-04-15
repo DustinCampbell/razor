@@ -6,71 +6,72 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CSharpSyntaxKind = Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace Microsoft.CodeAnalysis.Razor;
 
 internal static partial class TypeNameHelpers
 {
-    public static IReadOnlyList<string> ParseTypeParameters(string typeName)
+    public static ImmutableArray<string> ParseTypeArguments(string typeName)
     {
-        if (typeName == null)
+        var type = SyntaxFactory.ParseTypeName(typeName);
+
+        if (type is IdentifierNameSyntax)
         {
-            throw new ArgumentNullException(nameof(typeName));
+            return [];
         }
 
-        var parsed = SyntaxFactory.ParseTypeName(typeName);
+        using var builder = new PooledArrayBuilder<string>();
 
-        if (parsed is IdentifierNameSyntax identifier)
+        CollectTypeArguments(type, ref builder.AsRef());
+
+        return builder.DrainToImmutable();
+
+        static void CollectTypeArguments(TypeSyntax type, ref PooledArrayBuilder<string> builder)
         {
-            return Array.Empty<string>();
-        }
-
-        if (TryParseCore(parsed) is { IsDefault: false } list)
-        {
-            return list;
-        }
-
-        return parsed.DescendantNodesAndSelf()
-            .OfType<TypeArgumentListSyntax>()
-            .SelectMany(arg => arg.Arguments)
-            .SelectMany(t => ParseCore(t)).ToArray();
-
-        static ImmutableArray<string> TryParseCore(TypeSyntax parsed)
-        {
-            if (parsed is ArrayTypeSyntax array)
+            switch (type.Kind())
             {
-                return ParseCore(array.ElementType);
+                case CSharpSyntaxKind.IdentifierName:
+                    var identifierName = (IdentifierNameSyntax)type;
+                    if (identifierName.Parent is not QualifiedNameSyntax)
+                    {
+                        builder.Add(identifierName.Identifier.Text);
+                    }
+
+                    break;
+
+                case CSharpSyntaxKind.QualifiedName:
+                    CollectTypeArguments(((QualifiedNameSyntax)type).Right, ref builder);
+                    break;
+
+                case CSharpSyntaxKind.AliasQualifiedName:
+                    CollectTypeArguments(((AliasQualifiedNameSyntax)type).Name, ref builder);
+                    break;
+
+                case CSharpSyntaxKind.GenericName:
+                    foreach (var typeArgument in ((GenericNameSyntax)type).TypeArgumentList.Arguments)
+                    {
+                        CollectTypeArguments(typeArgument, ref builder);
+                    }
+
+                    break;
+
+                case CSharpSyntaxKind.ArrayType:
+                    CollectTypeArguments(((ArrayTypeSyntax)type).ElementType, ref builder);
+                    break;
+
+                case CSharpSyntaxKind.TupleType:
+                    foreach (var element in ((TupleTypeSyntax)type).Elements)
+                    {
+                        CollectTypeArguments(element.Type, ref builder);
+                    }
+
+                    break;
             }
-
-            if (parsed is TupleTypeSyntax tuple)
-            {
-                return tuple.Elements.SelectManyAsArray(a => ParseCore(a.Type));
-            }
-
-            return default;
-        }
-
-        static ImmutableArray<string> ParseCore(TypeSyntax parsed)
-        {
-            // Recursively drill into arrays `T[]` and tuples `(T, T)`.
-            if (TryParseCore(parsed) is { IsDefault: false } list)
-            {
-                return list;
-            }
-
-            // When we encounter an identifier, we assume it's a type parameter.
-            if (parsed is IdentifierNameSyntax identifier)
-            {
-                return ImmutableArray.Create(identifier.Identifier.Text);
-            }
-
-            // Generic names like `C<T>` are ignored here because we will visit their type argument list
-            // via the `.DescendantNodesAndSelf().OfType<TypeArgumentListSyntax>()` call above.
-            return ImmutableArray<string>.Empty;
         }
     }
 

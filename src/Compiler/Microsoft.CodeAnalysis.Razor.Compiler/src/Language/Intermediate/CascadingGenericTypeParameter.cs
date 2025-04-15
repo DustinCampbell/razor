@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -12,7 +13,7 @@ public sealed class CascadingGenericTypeParameter
     /// <summary>
     /// Gets or sets the type parameter names covered by the value type, e.g., TKey and TItem
     /// </summary>
-    public IReadOnlyCollection<string> GenericTypeNames { get; set; }
+    public ImmutableArray<string> GenericTypeNames { get; set; }
 
     /// <summary>
     /// Gets or sets a <see cref="ComponentAttributeIntermediateNode"/> that supplies content for

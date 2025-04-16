@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.Razor;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
@@ -58,14 +59,25 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             //
             // Listing all type parameters that exist
             var bindings = new Dictionary<string, Binding>();
-            var componentTypeParameters = node.Component.GetTypeParameters().ToList();
-            var supplyCascadingTypeParameters = componentTypeParameters
-                .Where(p => p.IsCascadingTypeParameterProperty())
-                .Select(p => p.Name)
-                .ToList();
+
+            using var componentTypeParameters = new PooledArrayBuilder<BoundAttributeDescriptor>();
+            node.Component.CollectTypeParameters(ref componentTypeParameters.AsRef());
+
+            using var pooledSet1 = StringHashSetPool.Ordinal.GetPooledObject(out var componentTypeParameterNames);
+            using var pooledSet2 = StringHashSetPool.GetPooledObject(out var supplyCascadingTypeParameters);
+
             foreach (var attribute in componentTypeParameters)
             {
-                bindings.Add(attribute.Name, new Binding(attribute));
+                var name = attribute.Name;
+
+                componentTypeParameterNames.Add(name);
+
+                if (attribute.IsCascadingTypeParameterProperty())
+                {
+                    supplyCascadingTypeParameters.Add(name);
+                }
+
+                bindings.Add(name, new Binding(attribute));
             }
 
             // Listing all type arguments that have been specified.
@@ -188,7 +200,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                         // overcome in the future if we want. We'd need to figure out which extra types are unwanted,
                         // and rewrite them to some unique name, and add that to the generic parameters list of the
                         // inference methods.
-                        if (genericTypeProvider.GenericTypeNames.All(GenericTypeIsUsed))
+                        if (genericTypeProvider.GenericTypeNames.All(componentTypeParameterNames.Contains))
                         {
                             bindings.Remove(uncoveredBindingKey);
                             receivesCascadingGenericTypes ??= new();
@@ -197,10 +209,6 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                             // It's sufficient to identify the closest provider for each type parameter
                             break;
                         }
-
-                        bool GenericTypeIsUsed(string typeName) => componentTypeParameters
-                            .Select(t => t.Name)
-                            .Contains(typeName, StringComparer.Ordinal);
                     }
                 }
             }

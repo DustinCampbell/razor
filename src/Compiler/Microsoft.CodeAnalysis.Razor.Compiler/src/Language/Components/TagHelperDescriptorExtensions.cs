@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -232,6 +233,21 @@ internal static class TagHelperDescriptorExtensions
             }
         }
     }
+
+#nullable enable
+
+    public static void CollectTypeParameters(this TagHelperDescriptor tagHelpers, ref PooledArrayBuilder<BoundAttributeDescriptor> builder)
+    {
+        foreach (var attribute in tagHelpers.BoundAttributes)
+        {
+            if (attribute.IsTypeParameterProperty())
+            {
+                builder.Add(attribute);
+            }
+        }
+    }
+
+#nullable disable
 
     /// <summary>
     /// Gets a flag that indicates whether the corresponding component supplies any cascading

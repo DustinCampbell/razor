@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Razor.Utilities;
 
@@ -129,6 +128,48 @@ internal static class CodeWriterExtensions
         else
         {
             WriteCStyleStringLiteral(writer, literal);
+        }
+
+        return writer;
+    }
+
+    public static CodeWriter WriteSeparatedList<T>(this CodeWriter writer, string separator, IEnumerable<T> items, Func<T, string> selector)
+    {
+        var isFirst = true;
+
+        foreach (var item in items)
+        {
+            if (!isFirst)
+            {
+                writer.Write(separator);
+            }
+            else
+            {
+                isFirst = false;
+            }
+
+            writer.Write(selector(item));
+        }
+
+        return writer;
+    }
+
+    public static CodeWriter WriteSeparatedList(this CodeWriter writer, string separator, IEnumerable<string> items)
+    {
+        var isFirst = true;
+
+        foreach (var item in items)
+        {
+            if (!isFirst)
+            {
+                writer.Write(separator);
+            }
+            else
+            {
+                isFirst = false;
+            }
+
+            writer.Write(item);
         }
 
         return writer;
@@ -333,7 +374,7 @@ internal static class CodeWriterExtensions
     {
         return
             WriteStartMethodInvocation(writer, methodName)
-            .Write(string.Join(", ", parameters))
+            .WriteSeparatedList(", ", parameters)
             .WriteEndMethodInvocation(endLine);
     }
 
@@ -434,7 +475,7 @@ internal static class CodeWriterExtensions
             writer.Write("async");
         }
 
-        writer.Write("(").Write(string.Join(", ", parameterNames)).Write(") => ");
+        writer.Write("(").WriteSeparatedList(", ", parameterNames).Write(") => ");
 
         var scope = new CSharpCodeWritingScope(writer);
 
@@ -631,7 +672,7 @@ internal static class CodeWriterExtensions
             .Write(" ")
             .Write(name)
             .Write("(")
-            .Write(string.Join(", ", parameters.Select(p => p.Key + " " + p.Value)))
+            .WriteSeparatedList(", ", parameters, static p => p.Key + " " + p.Value)
             .WriteLine(")");
 
         return new CSharpCodeWritingScope(writer);

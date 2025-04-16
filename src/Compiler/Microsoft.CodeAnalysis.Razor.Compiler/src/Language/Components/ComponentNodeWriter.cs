@@ -116,7 +116,7 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
         writer.Write(" ");
         writer.Write(node.MethodName);
         writer.Write("<");
-        writer.Write(string.Join(", ", node.Component.Component.GetTypeParameters().Select(a => a.Name)));
+        writer.WriteSeparatedList(", ", node.Component.Component.GetTypeParameters(), static x => x.Name);
         writer.Write(">");
 
         writer.Write("(");
@@ -281,7 +281,7 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
             writer.Write("public static void ");
             writer.Write(node.MethodName);
             writer.Write("_CaptureParameters<");
-            writer.Write(string.Join(", ", node.Component.Component.GetTypeParameters().Select(a => a.Name)));
+            writer.WriteSeparatedList(", ", node.Component.Component.GetTypeParameters(), static x => x.Name);
             writer.Write(">");
 
             writer.Write("(");

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
-#nullable disable
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -87,7 +85,7 @@ public abstract partial class SingleServerDelegatingEndpointTestBase
         private static TextEdit[] HandleSimplifyMethod<TParams>(TParams @params)
         {
             Assert.IsType<DelegatedSimplifyMethodParams>(@params);
-            return null;
+            return null!;
         }
 
         private Task<VSProjectContextList> HandleProjectContextsAsync<TParams>(TParams @params)

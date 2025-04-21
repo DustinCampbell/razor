@@ -135,20 +135,22 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
         return server;
     }
 
-    internal Task ExecuteRequestAsync<RequestType>(
+    internal Task ExecuteRequestAsync<TRequest>(
         string methodName,
-        RequestType request,
-        CancellationToken cancellationToken) where RequestType : class
+        TRequest request,
+        CancellationToken cancellationToken)
+        where TRequest : notnull
         => _clientRpc.InvokeWithParameterObjectAsync(
             methodName,
             request,
             cancellationToken);
 
-    internal Task<ResponseType> ExecuteRequestAsync<RequestType, ResponseType>(
+    internal Task<TResponse> ExecuteRequestAsync<TRequest, TResponse>(
         string methodName,
-        RequestType request,
+        TRequest request,
         CancellationToken cancellationToken)
-        => _clientRpc.InvokeWithParameterObjectAsync<ResponseType>(
+        where TRequest : notnull
+        => _clientRpc.InvokeWithParameterObjectAsync<TResponse>(
             methodName,
             request,
             cancellationToken);

@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 using Microsoft.CodeAnalysis.Razor.Protocol;
-using Microsoft.CodeAnalysis.Razor.Workspaces.Protocol.SemanticTokens;
+using Microsoft.CodeAnalysis.Razor.Protocol.SemanticTokens;
 using Microsoft.VisualStudio.LanguageServer.ContainedLanguage;
 using Newtonsoft.Json.Linq;
 

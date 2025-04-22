@@ -4,7 +4,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.CodeAnalysis.Razor.Workspaces.Protocol.SemanticTokens;
+namespace Microsoft.CodeAnalysis.Razor.Protocol.SemanticTokens;
 
 internal class ProvideSemanticTokensRangesParams : SemanticTokensParams
 {

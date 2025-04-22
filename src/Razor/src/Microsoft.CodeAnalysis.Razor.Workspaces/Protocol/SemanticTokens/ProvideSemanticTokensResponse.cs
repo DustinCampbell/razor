@@ -3,7 +3,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Microsoft.CodeAnalysis.Razor.Workspaces.Protocol.SemanticTokens;
+namespace Microsoft.CodeAnalysis.Razor.Protocol.SemanticTokens;
 
 /// <summary>
 /// Transports C# semantic token responses from the Razor LS client to the Razor LS.

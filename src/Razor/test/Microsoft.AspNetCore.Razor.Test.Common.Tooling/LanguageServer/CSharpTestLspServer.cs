@@ -2,9 +2,6 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading;
@@ -195,43 +192,37 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
 
     public async Task OpenDocumentAsync(Uri documentUri, string documentText)
     {
-        var didOpenParams = CreateDidOpenTextDocumentParams(documentUri, documentText);
-        await ExecuteRequestAsync<DidOpenTextDocumentParams, object>(Methods.TextDocumentDidOpenName, didOpenParams, _disposeTokenSource.Token);
-
-        static DidOpenTextDocumentParams CreateDidOpenTextDocumentParams(Uri uri, string source)
-            => new()
+        var didOpenParams = new DidOpenTextDocumentParams
+        {
+            TextDocument = new TextDocumentItem
             {
-                TextDocument = new TextDocumentItem
-                {
-                    Text = source,
-                    Uri = uri
-                }
-            };
+                Text = documentText,
+                Uri = documentUri
+            }
+        };
+
+        await ExecuteRequestAsync<DidOpenTextDocumentParams, object>(Methods.TextDocumentDidOpenName, didOpenParams, _disposeTokenSource.Token);
     }
 
     internal async Task ReplaceTextAsync(Uri documentUri, params (LspRange Range, string Text)[] changes)
     {
-        var didChangeParams = CreateDidChangeTextDocumentParams(
-            documentUri,
-            changes.Select(change => (change.Range, change.Text)).ToImmutableArray());
+        var didChangeParams = new DidChangeTextDocumentParams
+        {
+            TextDocument = new VersionedTextDocumentIdentifier
+            {
+                Uri = documentUri
+            },
+            ContentChanges = Array.ConvertAll(changes, ConvertToChangeEvent)
+        };
 
         await ExecuteRequestAsync<DidChangeTextDocumentParams, object>(Methods.TextDocumentDidChangeName, didChangeParams, _disposeTokenSource.Token);
 
-        static DidChangeTextDocumentParams CreateDidChangeTextDocumentParams(Uri documentUri, ImmutableArray<(LspRange Range, string Text)> changes)
+        static TextDocumentContentChangeEvent ConvertToChangeEvent((LspRange Range, string Text) change)
         {
-            var changeEvents = changes.Select(change => new TextDocumentContentChangeEvent
+            return new()
             {
                 Text = change.Text,
-                Range = change.Range,
-            }).ToArray();
-
-            return new DidChangeTextDocumentParams()
-            {
-                TextDocument = new VersionedTextDocumentIdentifier
-                {
-                    Uri = documentUri
-                },
-                ContentChanges = changeEvents
+                Range = change.Range
             };
         }
     }

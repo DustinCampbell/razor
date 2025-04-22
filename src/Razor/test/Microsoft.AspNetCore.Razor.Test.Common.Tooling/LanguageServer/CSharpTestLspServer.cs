@@ -34,17 +34,16 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
     private readonly HeaderDelimitedMessageHandler _clientMessageHandler;
     private readonly HeaderDelimitedMessageHandler _serverMessageHandler;
 
-    private readonly CancellationToken _cancellationToken;
+    private readonly CancellationTokenSource _disposeTokenSource;
 
     private CSharpTestLspServer(
         AdhocWorkspace testWorkspace,
         ExportProvider exportProvider,
-        VSInternalServerCapabilities serverCapabilities,
-        CancellationToken cancellationToken)
+        VSInternalServerCapabilities serverCapabilities)
     {
         _testWorkspace = testWorkspace;
         _exportProvider = exportProvider;
-        _cancellationToken = cancellationToken;
+        _disposeTokenSource = new();
 
         var (clientStream, serverStream) = FullDuplexStream.CreatePair();
 
@@ -120,7 +119,7 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
         VSInternalServerCapabilities serverCapabilities,
         CancellationToken cancellationToken)
     {
-        var server = new CSharpTestLspServer(testWorkspace, exportProvider, serverCapabilities, cancellationToken);
+        var server = new CSharpTestLspServer(testWorkspace, exportProvider, serverCapabilities);
 
         await server.ExecuteRequestAsync<InitializeParams, InitializeResult>(
             Methods.InitializeName,
@@ -157,6 +156,14 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        if (_disposeTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
+
+        _disposeTokenSource.Cancel();
+        _disposeTokenSource.Dispose();
+
         // This is a bit of a hack, but we need to call ShutdownAsync and ExitAsync on the RoslynLanguageServer
         // so that it disconnects gracefully from _serverRpc. Otherwise, it'll fail if we dispose _serverRpc
         // which forcibly disconnects the JsonRpc from the RoslynLanguageServer.
@@ -189,7 +196,7 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
     public async Task OpenDocumentAsync(Uri documentUri, string documentText)
     {
         var didOpenParams = CreateDidOpenTextDocumentParams(documentUri, documentText);
-        await ExecuteRequestAsync<DidOpenTextDocumentParams, object>(Methods.TextDocumentDidOpenName, didOpenParams, _cancellationToken);
+        await ExecuteRequestAsync<DidOpenTextDocumentParams, object>(Methods.TextDocumentDidOpenName, didOpenParams, _disposeTokenSource.Token);
 
         static DidOpenTextDocumentParams CreateDidOpenTextDocumentParams(Uri uri, string source)
             => new()
@@ -208,7 +215,7 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
             documentUri,
             changes.Select(change => (change.Range, change.Text)).ToImmutableArray());
 
-        await ExecuteRequestAsync<DidChangeTextDocumentParams, object>(Methods.TextDocumentDidChangeName, didChangeParams, _cancellationToken);
+        await ExecuteRequestAsync<DidChangeTextDocumentParams, object>(Methods.TextDocumentDidChangeName, didChangeParams, _disposeTokenSource.Token);
 
         static DidChangeTextDocumentParams CreateDidChangeTextDocumentParams(Uri documentUri, ImmutableArray<(LspRange Range, string Text)> changes)
         {

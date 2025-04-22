@@ -1030,7 +1030,7 @@ public partial class SemanticTokensTest(ITestOutputHelper testOutput) : TagHelpe
         var csharpDocumentUri = new Uri("C:\\TestSolution\\TestProject\\TestDocument.cs");
         var csharpSourceText = codeDocument.GetCSharpSourceText();
 
-        await using var csharpServer = await CSharpTestLspServerHelpers.CreateCSharpLspServerAsync(
+        await using var csharpServer = await CSharpTestLspServer.CreateAsync(
             csharpSourceText,
             csharpDocumentUri,
             s_semanticTokensServerCapabilities,

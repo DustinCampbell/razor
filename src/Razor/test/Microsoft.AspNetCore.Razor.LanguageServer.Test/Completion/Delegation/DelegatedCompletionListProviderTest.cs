@@ -369,7 +369,7 @@ public class DelegatedCompletionListProviderTest : LanguageServerTestBase
                 TriggerCharacters = [" ", "(", "=", "#", ".", "<", "[", "{", "\"", "/", ":", "~"]
             }
         };
-        await using var csharpServer = await CSharpTestLspServerHelpers.CreateCSharpLspServerAsync(
+        await using var csharpServer = await CSharpTestLspServer.CreateAsync(
             csharpSourceText, csharpDocumentUri, serverCapabilities, DisposalToken);
 
         await csharpServer.OpenDocumentAsync(csharpDocumentUri, csharpSourceText.ToString());

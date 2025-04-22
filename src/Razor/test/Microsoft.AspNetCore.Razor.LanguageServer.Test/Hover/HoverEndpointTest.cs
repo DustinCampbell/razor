@@ -181,7 +181,7 @@ public class HoverEndpointTest(ITestOutputHelper testOutput) : TagHelperServiceT
             HoverProvider = true
         };
 
-        await using var csharpServer = await CSharpTestLspServerHelpers.CreateCSharpLspServerAsync(
+        await using var csharpServer = await CSharpTestLspServer.CreateAsync(
             csharpSourceText, csharpDocumentUri, serverCapabilities, razorMappingService: null, capabilitiesUpdater: null, DisposalToken);
         await csharpServer.OpenDocumentAsync(csharpDocumentUri, csharpSourceText.ToString());
 

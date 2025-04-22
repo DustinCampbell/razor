@@ -269,7 +269,7 @@ public class DelegatedCompletionItemResolverTest : LanguageServerTestBase
             }
         };
 
-        var csharpServer = await CSharpTestLspServerHelpers.CreateCSharpLspServerAsync(
+        var csharpServer = await CSharpTestLspServer.CreateAsync(
             csharpSourceText, csharpDocumentUri, serverCapabilities, DisposalToken);
 
         await csharpServer.OpenDocumentAsync(csharpDocumentUri, csharpSourceText.ToString());

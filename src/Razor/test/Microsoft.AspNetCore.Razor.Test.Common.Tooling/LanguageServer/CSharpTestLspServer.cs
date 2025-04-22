@@ -2,13 +2,20 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Test.Common.Mef;
+using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.ExternalAccess.Razor;
+using Microsoft.CodeAnalysis.Razor;
+using Microsoft.CodeAnalysis.Testing;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Composition;
 using Nerdbank.Streams;
 using StreamJsonRpc;
@@ -18,6 +25,8 @@ namespace Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
 
 public sealed class CSharpTestLspServer : IAsyncDisposable
 {
+    private const string EditRangeSetting = "editRange";
+
     private readonly AdhocWorkspace _testWorkspace;
     private readonly ExportProvider _exportProvider;
 
@@ -109,14 +118,86 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
         }
     }
 
+    internal static Task<CSharpTestLspServer> CreateAsync(
+        SourceText csharpSourceText,
+        Uri csharpDocumentUri,
+        VSInternalServerCapabilities serverCapabilities,
+        CancellationToken cancellationToken) =>
+        CreateAsync(csharpSourceText, csharpDocumentUri, serverCapabilities, razorMappingService: null, capabilitiesUpdater: null, cancellationToken);
+
+    internal static Task<CSharpTestLspServer> CreateAsync(
+        SourceText csharpSourceText,
+        Uri csharpDocumentUri,
+        VSInternalServerCapabilities serverCapabilities,
+        IRazorMappingService? razorMappingService,
+        Action<VSInternalClientCapabilities>? capabilitiesUpdater,
+        CancellationToken cancellationToken)
+    {
+        return CreateAsync(
+            [(csharpDocumentUri, csharpSourceText)],
+            serverCapabilities,
+            razorMappingService,
+            multiTargetProject: true,
+            capabilitiesUpdater,
+            cancellationToken);
+    }
+
     internal static async Task<CSharpTestLspServer> CreateAsync(
-        AdhocWorkspace testWorkspace,
+        IEnumerable<(Uri Uri, SourceText SourceText)> csharpFiles,
+        VSInternalServerCapabilities serverCapabilities,
+        IRazorMappingService? razorMappingService,
+        bool multiTargetProject,
+        Action<VSInternalClientCapabilities>? capabilitiesUpdater,
+        CancellationToken cancellationToken)
+    {
+        var exportProvider = TestComposition.Roslyn.ExportProviderFactory.CreateExportProvider();
+
+        var metadataReferences = await ReferenceAssemblies.Default.ResolveAsync(language: LanguageNames.CSharp, cancellationToken);
+        metadataReferences = metadataReferences.Add(ReferenceUtil.AspNetLatestComponents);
+
+        var workspace = CreateCSharpTestWorkspace(csharpFiles, exportProvider, metadataReferences, razorMappingService, multiTargetProject);
+
+        var clientCapabilities = new VSInternalClientCapabilities
+        {
+            SupportsVisualStudioExtensions = true,
+            TextDocument = new TextDocumentClientCapabilities
+            {
+                Completion = new VSInternalCompletionSetting
+                {
+                    CompletionListSetting = new()
+                    {
+                        ItemDefaults = [EditRangeSetting]
+                    },
+                    CompletionItem = new()
+                    {
+                        SnippetSupport = true
+                    }
+                },
+                InlayHint = new()
+                {
+                    ResolveSupport = new InlayHintResolveSupportSetting { Properties = ["tooltip"] }
+                }
+            },
+            SupportsDiagnosticRequests = true,
+            Workspace = new()
+            {
+                Configuration = true
+            }
+        };
+
+        capabilitiesUpdater?.Invoke(clientCapabilities);
+
+        return await CreateAsync(workspace, exportProvider, clientCapabilities, serverCapabilities, cancellationToken);
+    }
+
+    internal static async Task<CSharpTestLspServer> CreateAsync(
+        AdhocWorkspace workspace,
         ExportProvider exportProvider,
         ClientCapabilities clientCapabilities,
         VSInternalServerCapabilities serverCapabilities,
         CancellationToken cancellationToken)
     {
-        var server = new CSharpTestLspServer(testWorkspace, exportProvider, serverCapabilities);
+        var server = new CSharpTestLspServer(workspace, exportProvider, serverCapabilities);
 
         await server.ExecuteRequestAsync<InitializeParams, InitializeResult>(
             Methods.InitializeName,
@@ -130,6 +211,73 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
 
         return server;
     }
+
+    private static AdhocWorkspace CreateCSharpTestWorkspace(
+        IEnumerable<(Uri Uri, SourceText SourceText)> csharpFiles,
+        ExportProvider exportProvider,
+        ImmutableArray<MetadataReference> metadataReferences,
+        IRazorMappingService? razorMappingService,
+        bool multiTargetProject)
+    {
+        var workspace = TestWorkspace.CreateWithDiagnosticAnalyzers(exportProvider);
+
+        // Add project and solution to workspace
+        var projectInfoNet60 = ProjectInfo.Create(
+            id: ProjectId.CreateNewId("TestProject (net6.0)"),
+            version: VersionStamp.Default,
+            name: "TestProject (net6.0)",
+            assemblyName: "TestProject.dll",
+            language: LanguageNames.CSharp,
+            filePath: @"C:\TestSolution\TestProject.csproj",
+            metadataReferences: metadataReferences).WithCompilationOutputInfo(new CompilationOutputInfo().WithAssemblyPath(@"C:\TestSolution\obj\TestProject.dll"));
+
+        var projectInfoNet80 = ProjectInfo.Create(
+            id: ProjectId.CreateNewId("TestProject (net8.0)"),
+            version: VersionStamp.Default,
+            name: "TestProject (net8.0)",
+            assemblyName: "TestProject.dll",
+            language: LanguageNames.CSharp,
+            filePath: @"C:\TestSolution\TestProject.csproj",
+            metadataReferences: metadataReferences);
+
+        ProjectInfo[] projectInfos = multiTargetProject
+            ? [projectInfoNet60, projectInfoNet80]
+            : [projectInfoNet80];
+
+        foreach (var projectInfo in projectInfos)
+        {
+            workspace.AddProject(projectInfo);
+        }
+
+        // Add document to workspace. We use an IVT method to create the DocumentInfo variable because there's
+        // a special constructor in Roslyn that will help identify the document as belonging to Razor.
+        var languageServerFactory = exportProvider.GetExportedValue<AbstractRazorLanguageServerFactoryWrapper>();
+
+        var documentCount = 0;
+        foreach (var (documentUri, csharpSourceText) in csharpFiles)
+        {
+            var documentFilePath = documentUri.GetDocumentFilePath();
+            var textAndVersion = TextAndVersion.Create(csharpSourceText, VersionStamp.Default, documentFilePath);
+
+            foreach (var projectInfo in projectInfos)
+            {
+                var documentInfo = languageServerFactory.CreateDocumentInfo(
+                    id: DocumentId.CreateNewId(projectInfo.Id),
+                    name: "TestDocument" + documentCount,
+                    filePath: documentFilePath,
+                    loader: TextLoader.From(textAndVersion),
+                    razorDocumentServiceProvider: new TestRazorDocumentServiceProvider(razorMappingService));
+
+                workspace.AddDocument(documentInfo);
+            }
+
+            documentCount++;
+        }
+
+        return workspace;
+    }
+
+    private record CSharpFile(Uri DocumentUri, SourceText CSharpSourceText);
 
     internal Task ExecuteRequestAsync<TRequest>(
         string methodName,

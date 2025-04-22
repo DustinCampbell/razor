@@ -5,9 +5,9 @@ using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 
 namespace Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
 
-internal class TestRazorDocumentServiceProvider(IRazorMappingService mappingService) : IRazorDocumentServiceProvider
+internal class TestRazorDocumentServiceProvider(IRazorMappingService? mappingService) : IRazorDocumentServiceProvider
 {
-    private readonly IRazorMappingService _mappingService = mappingService;
+    private readonly IRazorMappingService? _mappingService = mappingService;
 
     public bool CanApplyChange => true;
 

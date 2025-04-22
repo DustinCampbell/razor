@@ -2,11 +2,8 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Razor.Extensions;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.LanguageServer;
@@ -16,20 +13,17 @@ using Microsoft.AspNetCore.Razor.LanguageServer.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.ProjectSystem;
 using Microsoft.AspNetCore.Razor.Test.Common.Workspaces;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 using Microsoft.CodeAnalysis.Razor;
 using Microsoft.CodeAnalysis.Razor.ProjectEngineHost;
 using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Razor.Protocol;
 using Microsoft.CodeAnalysis.Razor.Workspaces;
-using Microsoft.CodeAnalysis.Text;
 using Xunit.Abstractions;
 
 namespace Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
 
 public abstract class LanguageServerTestBase(ITestOutputHelper testOutput) : ToolingTestBase(testOutput)
 {
-    private protected IRazorMappingService SpanMappingService { get; } = new ThrowingRazorMappingService();
     private protected IFilePathService FilePathService { get; } = new LSPFilePathService(TestLanguageServerFeatureOptions.Instance);
     private protected JsonSerializerOptions SerializerOptions { get; } = JsonHelpers.JsonSerializerOptions;
 
@@ -172,18 +166,5 @@ public abstract class LanguageServerTestBase(ITestOutputHelper testOutput) : Too
         }
 
         return flags;
-    }
-
-    private class ThrowingRazorMappingService : IRazorMappingService
-    {
-        public Task<ImmutableArray<RazorMappedSpanResult>> MapSpansAsync(Document document, IEnumerable<TextSpan> spans, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ImmutableArray<RazorMappedEditResult>> MapTextChangesAsync(Document oldDocument, Document newDocument, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

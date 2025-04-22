@@ -233,9 +233,9 @@ public class DelegatedCompletionItemResolverTest : LanguageServerTestBase
     {
         TestFileMarkupParser.GetPosition(content, out var documentContent, out var cursorPosition);
         var codeDocument = CreateCodeDocument(documentContent, filePath: "C:/path/to/file.razor");
-        await using var csharpServer = await CreateCSharpServerAsync(codeDocument);
+        await using var csharpServer = await CreateCSharpServerAsync(codeDocument, cancellationToken);
 
-        var server = TestDelegatedCompletionItemResolverServer.Create(csharpServer, DisposalToken);
+        var server = TestDelegatedCompletionItemResolverServer.Create(csharpServer, cancellationToken);
         var documentContextFactory = new TestDocumentContextFactory("C:/path/to/file.razor", codeDocument);
         var optionsMonitor = TestRazorLSPOptionsMonitor.Create();
         var resolver = new DelegatedCompletionItemResolver(documentContextFactory, _formattingService.GetValue(), optionsMonitor, server);
@@ -256,7 +256,7 @@ public class DelegatedCompletionItemResolverTest : LanguageServerTestBase
         return resolvedItem;
     }
 
-    private async Task<CSharpTestLspServer> CreateCSharpServerAsync(RazorCodeDocument codeDocument)
+    private static async Task<CSharpTestLspServer> CreateCSharpServerAsync(RazorCodeDocument codeDocument, CancellationToken cancellationToken)
     {
         var csharpSourceText = codeDocument.GetCSharpSourceText();
         var csharpDocumentUri = new Uri("C:/path/to/file.razor__virtual.g.cs");
@@ -270,7 +270,11 @@ public class DelegatedCompletionItemResolverTest : LanguageServerTestBase
         };
 
         var csharpServer = await CSharpTestLspServer.CreateAsync(
-            csharpSourceText, csharpDocumentUri, serverCapabilities, DisposalToken);
+            csharpSourceText,
+            csharpDocumentUri,
+            serverCapabilities,
+            capabilitiesUpdater: null,
+            cancellationToken);
 
         await csharpServer.OpenDocumentAsync(csharpDocumentUri, csharpSourceText.ToString());
 

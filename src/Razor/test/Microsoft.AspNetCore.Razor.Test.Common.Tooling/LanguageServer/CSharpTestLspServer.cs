@@ -122,21 +122,12 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
         SourceText csharpSourceText,
         Uri csharpDocumentUri,
         VSInternalServerCapabilities serverCapabilities,
-        CancellationToken cancellationToken) =>
-        CreateAsync(csharpSourceText, csharpDocumentUri, serverCapabilities, razorMappingService: null, capabilitiesUpdater: null, cancellationToken);
-
-    internal static Task<CSharpTestLspServer> CreateAsync(
-        SourceText csharpSourceText,
-        Uri csharpDocumentUri,
-        VSInternalServerCapabilities serverCapabilities,
-        IRazorMappingService? razorMappingService,
         Action<VSInternalClientCapabilities>? capabilitiesUpdater,
         CancellationToken cancellationToken)
     {
         return CreateAsync(
             [(csharpDocumentUri, csharpSourceText)],
             serverCapabilities,
-            razorMappingService,
             multiTargetProject: true,
             capabilitiesUpdater,
             cancellationToken);
@@ -145,7 +136,6 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
     internal static async Task<CSharpTestLspServer> CreateAsync(
         IEnumerable<(Uri Uri, SourceText SourceText)> csharpFiles,
         VSInternalServerCapabilities serverCapabilities,
-        IRazorMappingService? razorMappingService,
         bool multiTargetProject,
         Action<VSInternalClientCapabilities>? capabilitiesUpdater,
         CancellationToken cancellationToken)
@@ -155,7 +145,7 @@ public sealed class CSharpTestLspServer : IAsyncDisposable
         var metadataReferences = await ReferenceAssemblies.Default.ResolveAsync(language: LanguageNames.CSharp, cancellationToken);
         metadataReferences = metadataReferences.Add(ReferenceUtil.AspNetLatestComponents);
 
-        var workspace = CreateCSharpTestWorkspace(csharpFiles, exportProvider, metadataReferences, razorMappingService, multiTargetProject);
+        var workspace = CreateCSharpTestWorkspace(csharpFiles, exportProvider, metadataReferences, razorMappingService: null, multiTargetProject);
 
         var clientCapabilities = new VSInternalClientCapabilities
         {

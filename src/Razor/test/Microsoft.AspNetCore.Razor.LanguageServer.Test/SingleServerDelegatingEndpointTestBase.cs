@@ -71,7 +71,6 @@ public abstract partial class SingleServerDelegatingEndpointTestBase(ITestOutput
             {
                 SupportsDiagnosticRequests = true,
             },
-            razorMappingService: null,
             multiTargetProject,
             capabilitiesUpdater,
             DisposalToken);

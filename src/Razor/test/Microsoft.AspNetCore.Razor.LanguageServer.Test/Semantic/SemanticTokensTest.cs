@@ -1034,7 +1034,6 @@ public partial class SemanticTokensTest(ITestOutputHelper testOutput) : TagHelpe
             csharpSourceText,
             csharpDocumentUri,
             s_semanticTokensServerCapabilities,
-            SpanMappingService,
             capabilitiesUpdater: null,
             DisposalToken);
 

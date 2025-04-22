@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.ExternalAccess.Razor;
 
 namespace Microsoft.AspNetCore.Razor.Test.Common.LanguageServer;
 
-internal class TestRazorDocumentServiceProvider(IRazorMappingService? mappingService) : IRazorDocumentServiceProvider
+internal sealed class TestRazorDocumentServiceProvider(IRazorMappingService? mappingService) : IRazorDocumentServiceProvider
 {
     private readonly IRazorMappingService? _mappingService = mappingService;
 
@@ -13,7 +13,8 @@ internal class TestRazorDocumentServiceProvider(IRazorMappingService? mappingSer
 
     public bool SupportDiagnostics => true;
 
-    TService? IRazorDocumentServiceProvider.GetService<TService>() where TService : class
+    TService? IRazorDocumentServiceProvider.GetService<TService>()
+        where TService : class
     {
         var serviceType = typeof(TService);
 
@@ -24,19 +25,20 @@ internal class TestRazorDocumentServiceProvider(IRazorMappingService? mappingSer
 
         if (serviceType == typeof(IRazorDocumentPropertiesService))
         {
-            return (TService?)(IRazorDocumentPropertiesService)new TestRazorDocumentPropertiesService();
-        }
-
-        if (serviceType == typeof(IRazorMappingService))
-        {
-            return null;
+            return (TService?)TestRazorDocumentPropertiesService.Instance;
         }
 
         return (this as TService).AssumeNotNull();
     }
 
-    private class TestRazorDocumentPropertiesService : IRazorDocumentPropertiesService
+    private sealed class TestRazorDocumentPropertiesService : IRazorDocumentPropertiesService
     {
+        public static IRazorDocumentPropertiesService Instance { get; } = new TestRazorDocumentPropertiesService();
+
+        private TestRazorDocumentPropertiesService()
+        {
+        }
+
         public bool DesignTimeOnly => false;
 
         public string DiagnosticsLspClientName => "RazorCSharp";

@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis.CSharp;
@@ -45,12 +43,7 @@ internal static partial class TypeNameHelpers
                 _ignore = ignore;
             }
 
-            public override SyntaxNode Visit(SyntaxNode node)
-            {
-                return base.Visit(node);
-            }
-
-            public override SyntaxNode VisitQualifiedName(QualifiedNameSyntax node)
+            public override SyntaxNode? VisitQualifiedName(QualifiedNameSyntax node)
             {
                 if (node.Parent is QualifiedNameSyntax)
                 {
@@ -58,23 +51,30 @@ internal static partial class TypeNameHelpers
                 }
 
                 // Need to rewrite postorder so we can rewrite the names of generic type arguments.
-                node = (QualifiedNameSyntax)base.VisitQualifiedName(node);
+                var newNode = (QualifiedNameSyntax?)base.VisitQualifiedName(node);
+
+                if (newNode is null)
+                {
+                    return null;
+                }
 
                 // Rewriting these is complicated, best to just tostring and parse again.
-                return SyntaxFactory.ParseTypeName(IsGloballyQualified(node) ? node.ToString() : "global::" + node.ToString())
+                return SyntaxFactory
+                    .ParseTypeName(IsAliasQualified(newNode) ? newNode.ToString() : "global::" + newNode.ToString())
                     .WithTriviaFrom(node);
 
-                static bool IsGloballyQualified(QualifiedNameSyntax node)
+                static bool IsAliasQualified(QualifiedNameSyntax? node)
                 {
-                    var candidate = node;
-                    while (candidate != null)
+                    while (node is not null)
                     {
-                        if (candidate.Left is AliasQualifiedNameSyntax)
+                        if (node.Left is AliasQualifiedNameSyntax)
                         {
                             return true;
                         }
-                        candidate = candidate.Left as QualifiedNameSyntax;
+
+                        node = node.Left as QualifiedNameSyntax;
                     }
+
                     return false;
                 }
             }
@@ -91,7 +91,10 @@ internal static partial class TypeNameHelpers
                     return node;
                 }
 
-                return SyntaxFactory.AliasQualifiedName(SyntaxFactory.IdentifierName(SyntaxFactory.Token(CSharp.SyntaxKind.GlobalKeyword)), node);
+                return SyntaxFactory.AliasQualifiedName(
+                    alias: SyntaxFactory.IdentifierName(
+                        identifier: SyntaxFactory.Token(CSharp.SyntaxKind.GlobalKeyword)),
+                    name: node);
             }
         }
     }

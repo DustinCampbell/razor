@@ -85,14 +85,9 @@ internal static partial class TypeNameHelpers
         return new GenericTypeNameRewriter(bindings);
     }
 
-    public static TypeNameRewriter CreateGlobalQualifiedTypeNameRewriter(ICollection<string> ignore)
+    public static TypeNameRewriter CreateGlobalQualifiedTypeNameRewriter(HashSet<string> typeParameterNames)
     {
-        if (ignore == null)
-        {
-            throw new ArgumentNullException(nameof(ignore));
-        }
-
-        return new GlobalQualifiedTypeNameRewriter(ignore);
+        return new GlobalQualifiedTypeNameRewriter(typeParameterNames);
     }
 
     public static bool IsLambda(string expression)

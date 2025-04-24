@@ -58,7 +58,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             // First collect all of the information we have about each type parameter
             //
             // Listing all type parameters that exist
-            var bindings = new Dictionary<string, Binding>();
+            var componentTypeParameterMap = new Dictionary<string, Binding>();
 
             using var componentTypeParameters = new PooledArrayBuilder<BoundAttributeDescriptor>();
             node.Component.CollectTypeParameters(ref componentTypeParameters.AsRef());
@@ -77,7 +77,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     supplyCascadingTypeParameters.Add(name);
                 }
 
-                bindings.Add(name, new Binding(attribute));
+                componentTypeParameterMap.Add(name, new Binding(attribute));
             }
 
             // Listing all type arguments that have been specified.
@@ -86,7 +86,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             {
                 hasTypeArgumentSpecified = true;
 
-                var binding = bindings[typeArgumentNode.TypeParameterName];
+                var binding = componentTypeParameterMap[typeArgumentNode.TypeParameterName];
                 binding.Node = typeArgumentNode;
                 binding.Content = GetContent(typeArgumentNode);
 
@@ -107,9 +107,9 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             {
                 // OK this means that the developer has specified at least one type parameter.
                 // Either they specified everything and its OK to rewrite, or its an error.
-                if (ValidateTypeArguments(node, bindings))
+                if (ValidateTypeArguments(node, componentTypeParameterMap))
                 {
-                    var mappings = bindings.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Content);
+                    var mappings = componentTypeParameterMap.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Content);
                     RewriteTypeNames(TypeNameHelpers.CreateGenericTypeRewriter(mappings), node, hasTypeArgumentSpecified);
                 }
 
@@ -124,7 +124,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
             // Since we're generating code in a different namespace, we need to 'global qualify' all of the types
             // to avoid clashes with our generated code.
-            RewriteTypeNames(TypeNameHelpers.CreateGlobalQualifiedTypeNameRewriter(bindings.Keys), node, hasTypeArgumentSpecified: false, bindings);
+            RewriteTypeNames(TypeNameHelpers.CreateGlobalQualifiedTypeNameRewriter(componentTypeParameterNames), node, hasTypeArgumentSpecified: false, componentTypeParameterMap);
 
             //
             // We need to verify that an argument was provided that 'covers' each type parameter.
@@ -136,7 +136,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 if (attribute != null && TryFindGenericTypeNames(attribute.BoundAttribute, attribute.GloballyQualifiedTypeName, out var typeParameters))
                 {
                     // Keep only type parameters defined by this component.
-                    typeParameters = typeParameters.WhereAsArray(bindings.ContainsKey);
+                    typeParameters = typeParameters.WhereAsArray(componentTypeParameterMap.ContainsKey);
 
                     var attributeValueIsLambda = TypeNameHelpers.IsLambda(GetContent(attribute));
                     var provideCascadingGenericTypes = new CascadingGenericTypeParameter
@@ -170,14 +170,14 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                             // accept cascaded generic types from ancestors if they are compatible with the lambda,
                             // hence we don't remove it from the list of uncovered generic types until after
                             // we try matching against ancestor cascades.
-                            if (bindings.TryGetValue(typeName, out var binding))
+                            if (componentTypeParameterMap.TryGetValue(typeName, out var binding))
                             {
                                 binding.CoveredByLambda = true;
                             }
                         }
                         else
                         {
-                            bindings.Remove(typeName);
+                            componentTypeParameterMap.Remove(typeName);
                         }
                     }
                 }
@@ -186,7 +186,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             // For any remaining bindings, scan up the hierarchy of ancestor components and try to match them
             // with a cascaded generic parameter that can cover this one
             List<CascadingGenericTypeParameter>? receivesCascadingGenericTypes = null;
-            foreach (var uncoveredBindingKey in bindings.Keys.ToList())
+            foreach (var uncoveredBindingKey in componentTypeParameterMap.Keys.ToList())
             {
                 foreach (var candidateAncestor in Ancestors.OfType<ComponentIntermediateNode>())
                 {
@@ -202,7 +202,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                         // inference methods.
                         if (genericTypeProvider.GenericTypeNames.All(componentTypeParameterNames.Contains))
                         {
-                            bindings.Remove(uncoveredBindingKey);
+                            componentTypeParameterMap.Remove(uncoveredBindingKey);
                             receivesCascadingGenericTypes ??= new();
                             receivesCascadingGenericTypes.Add(genericTypeProvider);
 
@@ -219,11 +219,11 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             //
             // [1] Attributes given as lambda expressions. These are lower priority than ancestor
             //     cascades because in most cases, lambdas don't provide type info
-            foreach (var entryToRemove in bindings.Where(e => e.Value.CoveredByLambda).ToList())
+            foreach (var entryToRemove in componentTypeParameterMap.Where(e => e.Value.CoveredByLambda).ToList())
             {
                 // Treat this binding as covered, because it's possible that the lambda does provide
                 // enough info for type inference to succeed.
-                bindings.Remove(entryToRemove.Key);
+                componentTypeParameterMap.Remove(entryToRemove.Key);
             }
 
             // [2] Child content parameters, which are nearly always defined as untyped lambdas
@@ -235,20 +235,20 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 {
                     foreach (var typeName in typeParameters)
                     {
-                        bindings.Remove(typeName);
+                        componentTypeParameterMap.Remove(typeName);
                     }
                 }
             }
 
             // If any bindings remain then this means we would never be able to infer the arguments of this
             // component usage because the user hasn't set properties that include all of the types.
-            if (bindings.Count > 0)
+            if (componentTypeParameterMap.Count > 0)
             {
                 // However we still want to generate 'type inference' code because we want the errors to be as
                 // helpful as possible. So let's substitute 'object' for all of those type parameters, and add
                 // an error.
-                var mappings = bindings.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Content);
-                RewriteTypeNames(TypeNameHelpers.CreateGenericTypeRewriter(mappings), node, bindings: bindings);
+                var mappings = componentTypeParameterMap.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Content);
+                RewriteTypeNames(TypeNameHelpers.CreateGenericTypeRewriter(mappings), node, bindings: componentTypeParameterMap);
 
                 node.Diagnostics.Add(ComponentDiagnosticFactory.Create_GenericComponentTypeInferenceUnderspecified(node.Source, node, node.Component.GetTypeParameters()));
             }

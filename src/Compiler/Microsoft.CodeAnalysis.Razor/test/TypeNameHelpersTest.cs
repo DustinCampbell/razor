@@ -127,7 +127,7 @@ public class TypeNameHelpersTest
     public void CreateGlobalQualifiedTypeNameRewriter_CanQualifyNames(string original, string expected)
     {
         // Arrange
-        var visitor = TypeNameHelpers.CreateGlobalQualifiedTypeNameRewriter(new[] { "TItem1", "TItem2", "TItem3" });
+        var visitor = TypeNameHelpers.CreateGlobalQualifiedTypeNameRewriter(["TItem1", "TItem2", "TItem3"]);
 
         // Act
         var actual = visitor.Rewrite(original);

@@ -15,33 +15,23 @@ internal static partial class TypeNameHelpers
     // This is useful when we're generating code in a different namespace than
     // what the user code lives in. When we synthesize a namespace it's easy to have
     // clashes.
-    private sealed class GlobalQualifiedTypeNameRewriter : TypeNameRewriter
+    private sealed class GlobalQualifiedTypeNameRewriter(HashSet<string> typeParameterNames) : TypeNameRewriter
     {
         // List of names to ignore.
         //
         // NOTE: this is the list of type parameters defined on the component.
-        private readonly HashSet<string> _ignore;
-
-        public GlobalQualifiedTypeNameRewriter(ICollection<string> ignore)
-        {
-            _ignore = new HashSet<string>(ignore);
-        }
+        private readonly HashSet<string> _typeParameterNames = typeParameterNames;
 
         public override string Rewrite(string typeName)
         {
             var parsed = SyntaxFactory.ParseTypeName(typeName);
-            var rewritten = (TypeSyntax)new Visitor(_ignore).Visit(parsed);
+            var rewritten = (TypeSyntax)new Visitor(_typeParameterNames).Visit(parsed);
             return rewritten.ToFullString();
         }
 
-        private class Visitor : CSharpSyntaxRewriter
+        private sealed class Visitor(HashSet<string> typeParameterNames) : CSharpSyntaxRewriter
         {
-            private readonly HashSet<string> _ignore;
-
-            public Visitor(HashSet<string> ignore)
-            {
-                _ignore = ignore;
-            }
+            private readonly HashSet<string> _typeParameterNames = typeParameterNames;
 
             public override SyntaxNode? VisitQualifiedName(QualifiedNameSyntax node)
             {
@@ -81,7 +71,7 @@ internal static partial class TypeNameHelpers
 
             public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
             {
-                if (_ignore.Contains(node.ToString()))
+                if (_typeParameterNames.Contains(node.ToString()))
                 {
                     return node;
                 }

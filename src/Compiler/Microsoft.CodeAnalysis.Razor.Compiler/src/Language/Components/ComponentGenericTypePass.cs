@@ -88,7 +88,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
                 var binding = componentTypeParameterMap[typeArgumentNode.TypeParameterName];
                 binding.Node = typeArgumentNode;
-                binding.Content = GetContent(typeArgumentNode);
+                binding.Content = typeArgumentNode.GetAllContent();
 
                 // Offer this explicit type argument to descendants too
                 if (supplyCascadingTypeParameters.Contains(typeArgumentNode.TypeParameterName))
@@ -138,7 +138,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     // Keep only type parameters defined by this component.
                     typeParameters = typeParameters.WhereAsArray(componentTypeParameterMap.ContainsKey);
 
-                    var attributeValueIsLambda = TypeNameHelpers.IsLambda(GetContent(attribute));
+                    var attributeValueIsLambda = TypeNameHelpers.IsLambda(attribute.GetAllContent());
                     var provideCascadingGenericTypes = new CascadingGenericTypeParameter
                     {
                         GenericTypeNames = typeParameters,
@@ -290,36 +290,6 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             }
 
             return true;
-        }
-
-        private static string GetContent(IntermediateNode node)
-        {
-            using var _ = ListPool<IntermediateToken>.GetPooledObject(out var csharpTokens);
-
-            node.CollectDescendentNodes(csharpTokens, static t => t.IsCSharp);
-
-            var length = 0;
-
-            foreach (var token in csharpTokens)
-            {
-                length += token.Content?.Length ?? 0;
-            }
-
-            return StringExtensions.CreateString(length, csharpTokens, static (span, csharpTokens) =>
-            {
-                foreach (var token in csharpTokens)
-                {
-                    var content = token.Content.AsSpan();
-
-                    if (content.Length > 0)
-                    {
-                        content.CopyTo(span);
-                        span = span[content.Length..];
-                    }
-                }
-
-                Debug.Assert(span.IsEmpty);
-            });
         }
 
         private static bool ValidateTypeArguments(ComponentIntermediateNode node, Dictionary<string, Binding> bindings)

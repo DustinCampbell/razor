@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
@@ -51,6 +52,36 @@ public static class IntermediateNodeExtensions
                 CollectDiagnostics(childNode, ref diagnostics);
             }
         }
+    }
+
+    internal static string GetAllContent(this IntermediateNode node, Func<IntermediateToken, bool>? includeToken = null)
+    {
+        using var _ = ListPool<IntermediateToken>.GetPooledObject(out var tokens);
+
+        node.CollectDescendentNodes(tokens, includeToken);
+
+        var length = 0;
+
+        foreach (var token in tokens)
+        {
+            length += token.Content?.Length ?? 0;
+        }
+
+        return StringExtensions.CreateString(length, tokens, static (span, tokens) =>
+        {
+            foreach (var token in tokens)
+            {
+                var content = token.Content.AsSpan();
+
+                if (content.Length > 0)
+                {
+                    content.CopyTo(span);
+                    span = span[content.Length..];
+                }
+            }
+
+            Debug.Assert(span.IsEmpty);
+        });
     }
 
     public static IReadOnlyList<TNode> FindDescendantNodes<TNode>(this IntermediateNode node, Func<TNode, bool>? includeNode = null)

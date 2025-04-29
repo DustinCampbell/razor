@@ -45,7 +45,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
         var customDirectives = documentNode.FindDirectiveReferences(directive);
-        var customDirective = (DirectiveIntermediateNode)Assert.Single(customDirectives).Node;
+        var customDirective = Assert.Single(customDirectives).Node;
         var stringToken = Assert.Single(customDirective.Tokens);
         Assert.Equal("\"hello\"", stringToken.Content);
     }
@@ -83,7 +83,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
         var customDirectives = documentNode.FindDirectiveReferences(directive);
-        var customDirective = (DirectiveIntermediateNode)Assert.Single(customDirectives).Node;
+        var customDirective = Assert.Single(customDirectives).Node;
         var stringToken = Assert.Single(customDirective.Tokens);
         Assert.Equal("\"world\"", stringToken.Content);
     }
@@ -122,7 +122,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseTest
         // Assert
         var documentNode = codeDocument.GetDocumentIntermediateNode();
         var customDirectives = documentNode.FindDirectiveReferences(directive);
-        var customDirective = (DirectiveIntermediateNode)Assert.Single(customDirectives).Node;
+        var customDirective = Assert.Single(customDirectives).Node;
         var stringToken = Assert.Single(customDirective.Tokens);
         Assert.Equal("\"world\"", stringToken.Content);
     }

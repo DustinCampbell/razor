@@ -120,7 +120,7 @@ internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
             var typeParamReferences = documentNode.FindDirectiveReferences(directiveType);
             for (var i = 0; i < typeParamReferences.Count; i++)
             {
-                var typeParamNode = (DirectiveIntermediateNode)typeParamReferences[i].Node;
+                var typeParamNode = typeParamReferences[i].Node;
                 if (typeParamNode.HasDiagnostics)
                 {
                     continue;

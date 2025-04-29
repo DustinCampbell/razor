@@ -29,12 +29,12 @@ public static class DocumentIntermediateNodeExtensions
         return FindWithAnnotation<NamespaceDeclarationIntermediateNode>(documentNode, CommonAnnotations.PrimaryNamespace);
     }
 
-    public static IReadOnlyList<IntermediateNodeReference> FindDirectiveReferences(this DocumentIntermediateNode documentNode, DirectiveDescriptor directive)
+    public static IReadOnlyList<IntermediateNodeReference<DirectiveIntermediateNode>> FindDirectiveReferences(this DocumentIntermediateNode documentNode, DirectiveDescriptor directive)
     {
         ArgHelper.ThrowIfNull(documentNode);
         ArgHelper.ThrowIfNull(directive);
 
-        var results = new List<IntermediateNodeReference>();
+        var results = new List<IntermediateNodeReference<DirectiveIntermediateNode>>();
         DirectiveVisitor.Collect(documentNode, directive, results);
 
         return results;
@@ -51,7 +51,10 @@ public static class DocumentIntermediateNodeExtensions
         return results;
     }
 
-    internal static void CollectDirectiveReferences(this DocumentIntermediateNode documentNode, DirectiveDescriptor directive, List<IntermediateNodeReference> results)
+    internal static void CollectDirectiveReferences(
+        this DocumentIntermediateNode documentNode,
+        DirectiveDescriptor directive,
+        List<IntermediateNodeReference<DirectiveIntermediateNode>> results)
         => DirectiveVisitor.Collect(documentNode, directive, results);
 
     internal static void CollectDescendantReferences<TNode>(this DocumentIntermediateNode documentNode, List<IntermediateNodeReference> results)
@@ -86,15 +89,15 @@ public static class DocumentIntermediateNodeExtensions
     private sealed class DirectiveVisitor : IntermediateNodeWalker
     {
         private readonly DirectiveDescriptor _directive;
-        private readonly List<IntermediateNodeReference> _results;
+        private readonly List<IntermediateNodeReference<DirectiveIntermediateNode>> _results;
 
-        private DirectiveVisitor(DirectiveDescriptor directive, List<IntermediateNodeReference> results)
+        private DirectiveVisitor(DirectiveDescriptor directive, List<IntermediateNodeReference<DirectiveIntermediateNode>> results)
         {
             _directive = directive;
             _results = results;
         }
 
-        public static void Collect(DocumentIntermediateNode documentNode, DirectiveDescriptor directive, List<IntermediateNodeReference> results)
+        public static void Collect(DocumentIntermediateNode documentNode, DirectiveDescriptor directive, List<IntermediateNodeReference<DirectiveIntermediateNode>> results)
         {
             var visitor = new DirectiveVisitor(directive, results);
             visitor.Visit(documentNode);

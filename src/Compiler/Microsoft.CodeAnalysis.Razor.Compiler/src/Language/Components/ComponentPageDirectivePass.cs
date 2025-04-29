@@ -56,7 +56,7 @@ internal class ComponentPageDirectivePass : IntermediateNodePassBase, IRazorDire
 
         for (var i = 0; i < directives.Count; i++)
         {
-            var pageDirective = (DirectiveIntermediateNode)directives[i].Node;
+            var pageDirective = directives[i].Node;
 
             // The parser also adds errors for invalid syntax, we just need to not crash.
             var routeToken = pageDirective.Tokens.First();

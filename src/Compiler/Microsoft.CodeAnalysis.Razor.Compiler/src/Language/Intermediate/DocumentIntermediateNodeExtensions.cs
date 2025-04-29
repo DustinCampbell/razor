@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -51,17 +52,22 @@ public static class DocumentIntermediateNodeExtensions
     private static T? FindWithAnnotation<T>(IntermediateNode node, object annotation)
         where T : IntermediateNode
     {
-        if (node is T target && object.ReferenceEquals(target.Annotations[annotation], annotation))
-        {
-            return target;
-        }
+        using var stack = new PooledArrayBuilder<IntermediateNode>();
+        stack.Push(node);
 
-        for (var i = 0; i < node.Children.Count; i++)
+        while (stack.Count > 0)
         {
-            var result = FindWithAnnotation<T>(node.Children[i], annotation);
-            if (result != null)
+            var current = stack.Pop();
+
+            if (current is T target && ReferenceEquals(target.Annotations[annotation], annotation))
             {
-                return result;
+                return target;
+            }
+
+            // Note: Push in reverse order
+            for (var i = current.Children.Count - 1; i >= 0; i--)
+            {
+                stack.Push(current.Children[i]);
             }
         }
 

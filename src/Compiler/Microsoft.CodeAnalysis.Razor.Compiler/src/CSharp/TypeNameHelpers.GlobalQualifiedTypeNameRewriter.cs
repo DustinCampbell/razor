@@ -17,6 +17,10 @@ internal static partial class TypeNameHelpers
     // clashes.
     private sealed class GlobalQualifiedTypeNameRewriter(HashSet<string> typeParameterNames) : TypeNameRewriter
     {
+        private static readonly IdentifierNameSyntax s_globalIdentifierName =
+            SyntaxFactory.IdentifierName(
+                SyntaxFactory.Token(CSharp.SyntaxKind.GlobalKeyword));
+
         // List of names to ignore.
         //
         // NOTE: this is the list of type parameters defined on the component.
@@ -31,60 +35,42 @@ internal static partial class TypeNameHelpers
 
         private sealed class Visitor(HashSet<string> typeParameterNames) : CSharpSyntaxRewriter
         {
+            private const string DynamicKeyword = "dynamic";
+
             private readonly HashSet<string> _typeParameterNames = typeParameterNames;
-
-            public override SyntaxNode? VisitQualifiedName(QualifiedNameSyntax node)
-            {
-                if (node.Parent is QualifiedNameSyntax)
-                {
-                    return base.VisitQualifiedName(node);
-                }
-
-                // Need to rewrite postorder so we can rewrite the names of generic type arguments.
-                var newNode = (QualifiedNameSyntax?)base.VisitQualifiedName(node);
-
-                if (newNode is null)
-                {
-                    return null;
-                }
-
-                // Rewriting these is complicated, best to just tostring and parse again.
-                return SyntaxFactory
-                    .ParseTypeName(IsAliasQualified(newNode) ? newNode.ToString() : "global::" + newNode.ToString())
-                    .WithTriviaFrom(node);
-
-                static bool IsAliasQualified(QualifiedNameSyntax? node)
-                {
-                    while (node is not null)
-                    {
-                        if (node.Left is AliasQualifiedNameSyntax)
-                        {
-                            return true;
-                        }
-
-                        node = node.Left as QualifiedNameSyntax;
-                    }
-
-                    return false;
-                }
-            }
 
             public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
             {
-                if (_typeParameterNames.Contains(node.ToString()))
+                // If global:: isn't allowed to the left of this identifier, we're done.
+                if (!IsGlobalKeywordAllowed(node))
                 {
                     return node;
                 }
 
-                if (node.Parent != null)
+                var identifier = node.Identifier;
+
+                // If the identifier is a keyword of any kind, 'dynamic', or a known type parameter name, we're done.
+                if (identifier.IsKeyword() ||
+                    identifier.Text == DynamicKeyword ||
+                    _typeParameterNames.Contains(identifier.Text))
                 {
                     return node;
                 }
 
-                return SyntaxFactory.AliasQualifiedName(
-                    alias: SyntaxFactory.IdentifierName(
-                        identifier: SyntaxFactory.Token(CSharp.SyntaxKind.GlobalKeyword)),
-                    name: node);
+                // ... otherwise, go ahead and globally-qualify this identifier.
+                return SyntaxFactory.AliasQualifiedName(alias: s_globalIdentifierName, name: node);
+            }
+
+            private static bool IsGlobalKeywordAllowed(IdentifierNameSyntax identifierName)
+            {
+                // global:: is syntactically allowed to the left of this identifier if it...
+                //
+                // 1. doesn't have a parent, e.g. |List
+                // 2. is a generic type argument, e.g. List<|X>
+                // 3. is the left side of qualified name, e.g. |System.Collections
+
+                return identifierName.Parent is null or TypeArgumentListSyntax ||
+                      (identifierName.Parent is QualifiedNameSyntax { Left: var left } && left == identifierName);
             }
         }
     }

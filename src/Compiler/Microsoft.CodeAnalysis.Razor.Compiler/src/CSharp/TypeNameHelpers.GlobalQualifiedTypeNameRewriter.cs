@@ -17,19 +17,13 @@ internal static partial class TypeNameHelpers
     // clashes.
     private sealed class GlobalQualifiedTypeNameRewriter(HashSet<string> typeParameterNames) : TypeNameRewriter
     {
-        private static readonly IdentifierNameSyntax s_globalIdentifierName =
-            SyntaxFactory.IdentifierName(
-                SyntaxFactory.Token(CSharp.SyntaxKind.GlobalKeyword));
-
-        // List of names to ignore.
-        //
-        // NOTE: this is the list of type parameters defined on the component.
-        private readonly HashSet<string> _typeParameterNames = typeParameterNames;
+        private readonly Visitor _visitor = new(typeParameterNames);
 
         public override string Rewrite(string typeName)
         {
             var parsed = SyntaxFactory.ParseTypeName(typeName);
-            var rewritten = (TypeSyntax)new Visitor(_typeParameterNames).Visit(parsed);
+            var rewritten = _visitor.Visit(parsed);
+
             return rewritten.ToFullString();
         }
 
@@ -37,6 +31,13 @@ internal static partial class TypeNameHelpers
         {
             private const string DynamicKeyword = "dynamic";
 
+            private static readonly IdentifierNameSyntax s_globalIdentifierName =
+                SyntaxFactory.IdentifierName(
+                    SyntaxFactory.Token(CSharp.SyntaxKind.GlobalKeyword));
+
+            // List of names to ignore.
+            //
+            // NOTE: this is the list of type parameters defined on the component.
             private readonly HashSet<string> _typeParameterNames = typeParameterNames;
 
             public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)

@@ -28,7 +28,7 @@ public readonly struct IntermediateNodeReference
         node = Node;
     }
 
-    public IntermediateNodeReference InsertAfter(IntermediateNode node)
+    public void InsertAfter(IntermediateNode node)
     {
         ArgHelper.ThrowIfNull(node);
 
@@ -49,7 +49,6 @@ public readonly struct IntermediateNodeReference
         }
 
         Parent.Children.Insert(index + 1, node);
-        return new IntermediateNodeReference(Parent, node);
     }
 
     public void InsertAfter(IEnumerable<IntermediateNode> nodes)
@@ -78,7 +77,7 @@ public readonly struct IntermediateNodeReference
         }
     }
 
-    public IntermediateNodeReference InsertBefore(IntermediateNode node)
+    public void InsertBefore(IntermediateNode node)
     {
         ArgHelper.ThrowIfNull(node);
 
@@ -99,7 +98,6 @@ public readonly struct IntermediateNodeReference
         }
 
         Parent.Children.Insert(index, node);
-        return new IntermediateNodeReference(Parent, node);
     }
 
     public void InsertBefore(IEnumerable<IntermediateNode> nodes)
@@ -149,7 +147,7 @@ public readonly struct IntermediateNodeReference
         Parent.Children.RemoveAt(index);
     }
 
-    public IntermediateNodeReference Replace(IntermediateNode node)
+    public void Replace(IntermediateNode node)
     {
         ArgHelper.ThrowIfNull(node);
 
@@ -170,7 +168,6 @@ public readonly struct IntermediateNodeReference
         }
 
         Parent.Children[index] = node;
-        return new IntermediateNodeReference(Parent, node);
     }
 
     private string GetDebuggerDisplay()

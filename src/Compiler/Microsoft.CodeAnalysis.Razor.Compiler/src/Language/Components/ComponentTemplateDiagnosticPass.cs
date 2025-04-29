@@ -60,7 +60,7 @@ internal class ComponentTemplateDiagnosticPass : ComponentIntermediateNodePassBa
                     // Inside a directive attribute
                     ancestor is TagHelperDirectiveAttributeIntermediateNode)
                 {
-                    Candidates.Add(new IntermediateNodeReference(Parent, node));
+                    Candidates.Add(IntermediateNodeReference.Create(Parent, node));
                 }
             }
         }

@@ -70,6 +70,10 @@ public readonly struct IntermediateNodeReference
         Node = node;
     }
 
+    public static IntermediateNodeReference<TNode> Create<TNode>(IntermediateNode parent, TNode node)
+        where TNode : IntermediateNode
+        => new(parent, node);
+
     public void Deconstruct(out IntermediateNode parent, out IntermediateNode node)
     {
         parent = Parent;

@@ -35,7 +35,7 @@ internal class DirectiveRemovalOptimizationPass : IntermediateNodePassBase, IRaz
 
         public override void VisitDirective(DirectiveIntermediateNode node)
         {
-            DirectiveNodes.Add(new IntermediateNodeReference(Parent, node));
+            DirectiveNodes.Add(IntermediateNodeReference.Create(Parent, node));
         }
     }
 }

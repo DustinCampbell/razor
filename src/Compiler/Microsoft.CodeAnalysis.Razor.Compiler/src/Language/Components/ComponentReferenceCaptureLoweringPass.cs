@@ -4,6 +4,7 @@
 #nullable disable
 
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -27,11 +28,13 @@ internal class ComponentReferenceCaptureLoweringPass : ComponentIntermediateNode
             return;
         }
 
-        var references = documentNode.FindDescendantReferences<TagHelperDirectiveAttributeIntermediateNode>();
-        for (var i = 0; i < references.Count; i++)
+        using var _ = ListPool<IntermediateNodeReference<TagHelperDirectiveAttributeIntermediateNode>>.GetPooledObject(out var references);
+
+        documentNode.CollectDescendantReferences(references);
+
+        foreach (var reference in references)
         {
-            var reference = references[i];
-            var node = (TagHelperDirectiveAttributeIntermediateNode)reference.Node;
+            var node = reference.Node;
 
             if (node.TagHelper.IsRefTagHelper())
             {

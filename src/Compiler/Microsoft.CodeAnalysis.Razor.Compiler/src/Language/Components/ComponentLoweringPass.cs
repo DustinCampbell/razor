@@ -32,14 +32,15 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
         }
 
         // For each component *usage* we need to rewrite the tag helper node to map to the relevant component APIs.
-        using var _ = ListPool<UsingDirectiveIntermediateNode>.GetPooledObject(out var usings);
-        documentNode.CollectDescendantNodes(usings);
+        using var _1 = ListPool<UsingDirectiveIntermediateNode>.GetPooledObject(out var usings);
+        using var _2 = ListPool<IntermediateNodeReference<TagHelperIntermediateNode>>.GetPooledObject(out var references);
 
-        var references = documentNode.FindDescendantReferences<TagHelperIntermediateNode>();
-        for (var i = 0; i < references.Count; i++)
+        documentNode.CollectDescendantNodes(usings);
+        documentNode.CollectDescendantReferences(references);
+
+        foreach (var reference in references)
         {
-            var reference = references[i];
-            var node = (TagHelperIntermediateNode)reference.Node;
+            var node = reference.Node;
             if (node.TagHelpers.Any(t => t.IsChildContentTagHelper))
             {
                 // This is a child content tag helper. This will be rewritten when we visit its parent.

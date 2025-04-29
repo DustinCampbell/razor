@@ -40,12 +40,12 @@ public static class DocumentIntermediateNodeExtensions
         return results;
     }
 
-    public static IReadOnlyList<IntermediateNodeReference> FindDescendantReferences<TNode>(this DocumentIntermediateNode documentNode)
+    public static IReadOnlyList<IntermediateNodeReference<TNode>> FindDescendantReferences<TNode>(this DocumentIntermediateNode documentNode)
         where TNode : IntermediateNode
     {
         ArgHelper.ThrowIfNull(documentNode);
 
-        var results = new List<IntermediateNodeReference>();
+        var results = new List<IntermediateNodeReference<TNode>>();
         ReferenceVisitor<TNode>.Collect(documentNode, results);
 
         return results;
@@ -57,7 +57,7 @@ public static class DocumentIntermediateNodeExtensions
         List<IntermediateNodeReference<DirectiveIntermediateNode>> results)
         => DirectiveVisitor.Collect(documentNode, directive, results);
 
-    internal static void CollectDescendantReferences<TNode>(this DocumentIntermediateNode documentNode, List<IntermediateNodeReference> results)
+    internal static void CollectDescendantReferences<TNode>(this DocumentIntermediateNode documentNode, List<IntermediateNodeReference<TNode>> results)
         where TNode : IntermediateNode
         => ReferenceVisitor<TNode>.Collect(documentNode, results);
 
@@ -117,14 +117,14 @@ public static class DocumentIntermediateNodeExtensions
     private sealed class ReferenceVisitor<TNode> : IntermediateNodeWalker
         where TNode : IntermediateNode
     {
-        private readonly List<IntermediateNodeReference> _results;
+        private readonly List<IntermediateNodeReference<TNode>> _results;
 
-        private ReferenceVisitor(List<IntermediateNodeReference> results)
+        private ReferenceVisitor(List<IntermediateNodeReference<TNode>> results)
         {
             _results = results;
         }
 
-        public static void Collect(DocumentIntermediateNode documentNode, List<IntermediateNodeReference> results)
+        public static void Collect(DocumentIntermediateNode documentNode, List<IntermediateNodeReference<TNode>> results)
         {
             var visitor = new ReferenceVisitor<TNode>(results);
             visitor.Visit(documentNode);
@@ -138,9 +138,9 @@ public static class DocumentIntermediateNodeExtensions
             // change the parent nodes.
             //
             // This ensures that we always operate on the leaf nodes first.
-            if (node is TNode)
+            if (node is TNode typedNode)
             {
-                _results.Add(new(Parent, node));
+                _results.Add(new(Parent, typedNode));
             }
         }
     }

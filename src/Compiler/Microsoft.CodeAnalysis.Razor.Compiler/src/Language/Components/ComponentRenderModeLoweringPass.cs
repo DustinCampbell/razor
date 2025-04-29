@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -17,10 +18,13 @@ internal sealed class ComponentRenderModeLoweringPass : ComponentIntermediateNod
             return;
         }
 
-        var references = documentNode.FindDescendantReferences<TagHelperDirectiveAttributeIntermediateNode>();
+        using var _ = ListPool<IntermediateNodeReference<TagHelperDirectiveAttributeIntermediateNode>>.GetPooledObject(out var references);
+
+        documentNode.CollectDescendantReferences(references);
+
         foreach (var reference in references)
         {
-            if (reference is { Node: TagHelperDirectiveAttributeIntermediateNode node, Parent: IntermediateNode parentNode } && node.TagHelper.IsRenderModeTagHelper())
+            if (reference is { Node: var node, Parent: var parentNode } && node.TagHelper.IsRenderModeTagHelper())
             {
                 if (parentNode is not ComponentIntermediateNode componentNode)
                 {

@@ -33,19 +33,23 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
         // For each event handler *usage* we need to rewrite the tag helper node to map to basic constructs.
         // Each usage will be represented by a tag helper property that is a descendant of either
         // a component or element.
-        var references = documentNode.FindDescendantReferences<TagHelperDirectiveAttributeIntermediateNode>();
-        using var _ = ReferenceEqualityHashSetPool<IntermediateNode>.GetPooledObject(out var parents);
+        using var _1 = ListPool<IntermediateNodeReference<TagHelperDirectiveAttributeIntermediateNode>>.GetPooledObject(out var references);
+        using var _2 = ListPool<IntermediateNodeReference<TagHelperDirectiveAttributeParameterIntermediateNode>>.GetPooledObject(out var parameterReferences);
+        using var _3 = ReferenceEqualityHashSetPool<IntermediateNode>.GetPooledObject(out var parents);
 
-        for (var i = 0; i < references.Count; i++)
+        documentNode.CollectDescendantReferences(references);
+
+        foreach (var reference in references)
         {
-            parents.Add(references[i].Parent);
+            parents.Add(reference.Parent);
         }
 
         // We need to do something similar for directive attribute parameters like @onclick:preventDefault.
-        var parameterReferences = documentNode.FindDescendantReferences<TagHelperDirectiveAttributeParameterIntermediateNode>();
-        for (var i = 0; i < parameterReferences.Count; i++)
+        documentNode.CollectDescendantReferences(parameterReferences);
+
+        foreach (var parameterReference in parameterReferences)
         {
-            parents.Add(parameterReferences[i].Parent);
+            parents.Add(parameterReference.Parent);
         }
 
         foreach (var parent in parents)
@@ -53,10 +57,9 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
             ProcessDuplicates(parent);
         }
 
-        for (var i = 0; i < references.Count; i++)
+        foreach (var reference in references)
         {
-            var reference = references[i];
-            var node = (TagHelperDirectiveAttributeIntermediateNode)reference.Node;
+            var node = reference.Node;
 
             if (!reference.Parent.Children.Contains(node))
             {
@@ -70,12 +73,11 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
             }
         }
 
-        for (var i = 0; i < parameterReferences.Count; i++)
+        foreach (var parameterReference in parameterReferences)
         {
-            var reference = parameterReferences[i];
-            var node = (TagHelperDirectiveAttributeParameterIntermediateNode)reference.Node;
+            var node = parameterReference.Node;
 
-            if (!reference.Parent.Children.Contains(node))
+            if (!parameterReference.Parent.Children.Contains(node))
             {
                 // This node was removed as a duplicate, skip it.
                 continue;
@@ -83,7 +85,7 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
 
             if (node.TagHelper.IsEventHandlerTagHelper())
             {
-                reference.Replace(RewriteParameterUsage(node));
+                parameterReference.Replace(RewriteParameterUsage(node));
             }
         }
     }

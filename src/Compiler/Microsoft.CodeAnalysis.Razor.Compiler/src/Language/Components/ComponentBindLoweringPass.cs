@@ -42,17 +42,21 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         }
 
         // For each @bind *usage* we need to rewrite the tag helper node to map to basic constructs.
-        var references = documentNode.FindDescendantReferences<TagHelperDirectiveAttributeIntermediateNode>();
-        var parameterReferences = documentNode.FindDescendantReferences<TagHelperDirectiveAttributeParameterIntermediateNode>();
+        using var _1 = ListPool<IntermediateNodeReference<TagHelperDirectiveAttributeIntermediateNode>>.GetPooledObject(out var references);
+        using var _2 = ListPool<IntermediateNodeReference<TagHelperDirectiveAttributeParameterIntermediateNode>>.GetPooledObject(out var parameterReferences);
+        using var _3 = ReferenceEqualityHashSetPool<IntermediateNode>.GetPooledObject(out var parents);
 
-        var parents = new HashSet<IntermediateNode>();
-        for (var i = 0; i < references.Count; i++)
+        documentNode.CollectDescendantReferences(references);
+        documentNode.CollectDescendantReferences(parameterReferences);
+
+        foreach (var reference in references)
         {
-            parents.Add(references[i].Parent);
+            parents.Add(reference.Parent);
         }
-        for (var i = 0; i < parameterReferences.Count; i++)
+
+        foreach (var parameterReference in parameterReferences)
         {
-            parents.Add(parameterReferences[i].Parent);
+            parents.Add(parameterReference.Parent);
         }
 
         foreach (var parent in parents)
@@ -65,11 +69,11 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         // We don't have to worry about duplicate bound attributes in the same element
         // like, <Foo @bind="bar" @bind="bar" />, because IR lowering takes care of that.
         var bindEntries = new Dictionary<(IntermediateNode, string), BindEntry>();
-        for (var i = 0; i < references.Count; i++)
+
+        foreach (var reference in references)
         {
-            var reference = references[i];
             var parent = reference.Parent;
-            var node = (TagHelperDirectiveAttributeIntermediateNode)reference.Node;
+            var node = reference.Node;
 
             if (!parent.Children.Contains(node))
             {
@@ -85,11 +89,10 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
 
         // Do a pass to look for (@bind:get, @bind:set) pairs as this alternative form might have been used
         // to define the binding.
-        for (var i = 0; i < parameterReferences.Count; i++)
+        foreach (var parameterReference in parameterReferences)
         {
-            var reference = parameterReferences[i];
-            var parent = reference.Parent;
-            var node = (TagHelperDirectiveAttributeParameterIntermediateNode)reference.Node;
+            var parent = parameterReference.Parent;
+            var node = parameterReference.Node;
 
             if (!parent.Children.Contains(node))
             {
@@ -105,25 +108,24 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
                         node.Source,
                         node.AttributeName));
                 }
-                if (!bindEntries.TryGetValue((reference.Parent, node.AttributeNameWithoutParameter), out var existingEntry))
+                if (!bindEntries.TryGetValue((parameterReference.Parent, node.AttributeNameWithoutParameter), out var existingEntry))
                 {
-                    bindEntries[(reference.Parent, node.AttributeNameWithoutParameter)] = new BindEntry(reference);
+                    bindEntries[(parameterReference.Parent, node.AttributeNameWithoutParameter)] = new BindEntry(parameterReference);
                 }
                 else
                 {
                     existingEntry.BindNode.Diagnostics.Add(ComponentDiagnosticFactory.CreateBindAttributeParameter_InvalidSyntaxBindAndBindGet(
-                            node.Source,
-                            existingEntry.BindNode.AttributeName));
+                        node.Source,
+                        existingEntry.BindNode.AttributeName));
                 }
             }
         }
 
         // Now collect all the parameterized attributes and store them along with their corresponding @bind or @bind-* attributes.
-        for (var i = 0; i < parameterReferences.Count; i++)
+        foreach (var parameterReference in parameterReferences)
         {
-            var parameterReference = parameterReferences[i];
             var parent = parameterReference.Parent;
-            var node = (TagHelperDirectiveAttributeParameterIntermediateNode)parameterReference.Node;
+            var node = parameterReference.Node;
 
             if (!parent.Children.Contains(node))
             {
@@ -194,17 +196,18 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         }
 
         // We now have all the info we need to rewrite the tag helper.
-        foreach (var entry in bindEntries)
+        foreach (var (key, value) in bindEntries)
         {
-            var reference = entry.Value.BindNodeReference;
-            if (entry.Value.BindSetNode != null && entry.Value.BindAfterNode != null)
+            var reference = value.BindNodeReference;
+            if (value.BindSetNode != null && value.BindAfterNode != null)
             {
-                var afterNode = entry.Value.BindAfterNode;
-                entry.Key.Item1.Diagnostics.Add(ComponentDiagnosticFactory.CreateBindAttributeParameter_InvalidSyntaxBindSetAfter(
+                var afterNode = value.BindAfterNode;
+                key.Item1.Diagnostics.Add(ComponentDiagnosticFactory.CreateBindAttributeParameter_InvalidSyntaxBindSetAfter(
                     afterNode.Source,
                     afterNode.AttributeNameWithoutParameter));
             }
-            var rewritten = RewriteUsage(reference.Parent, entry.Value);
+
+            var rewritten = RewriteUsage(reference.Parent, value);
             reference.Remove();
 
             for (var j = 0; j < rewritten.Length; j++)
@@ -1164,13 +1167,18 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         return null;
     }
 
-    private class BindEntry
+    private sealed class BindEntry
     {
-        public BindEntry(IntermediateNodeReference bindNodeReference)
+        public BindEntry(IntermediateNodeReference<TagHelperDirectiveAttributeIntermediateNode> reference)
         {
-            BindNodeReference = bindNodeReference;
-            BindNode = bindNodeReference.Node as TagHelperDirectiveAttributeIntermediateNode;
-            BindGetNode = BindNodeReference.Node as TagHelperDirectiveAttributeParameterIntermediateNode;
+            BindNodeReference = reference;
+            BindNode = reference.Node;
+        }
+
+        public BindEntry(IntermediateNodeReference<TagHelperDirectiveAttributeParameterIntermediateNode> reference)
+        {
+            BindNodeReference = reference;
+            BindGetNode = reference.Node;
         }
 
         public IntermediateNodeReference BindNodeReference { get; }

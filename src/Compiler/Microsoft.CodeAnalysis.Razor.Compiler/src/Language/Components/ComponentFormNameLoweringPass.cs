@@ -3,6 +3,7 @@
 
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -18,10 +19,13 @@ internal sealed class ComponentFormNameLoweringPass : ComponentIntermediateNodeP
             return;
         }
 
-        var references = documentNode.FindDescendantReferences<TagHelperDirectiveAttributeIntermediateNode>();
+        using var _ = ListPool<IntermediateNodeReference<TagHelperDirectiveAttributeIntermediateNode>>.GetPooledObject(out var references);
+
+        documentNode.CollectDescendantReferences(references);
+
         foreach (var reference in references)
         {
-            var node = (TagHelperDirectiveAttributeIntermediateNode)reference.Node;
+            var node = reference.Node;
             if (node.TagHelper.IsFormNameTagHelper())
             {
                 var parent = reference.Parent;

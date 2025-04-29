@@ -6,6 +6,55 @@ using System.Diagnostics;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
+public readonly struct IntermediateNodeReference<TNode>
+    where TNode : IntermediateNode
+{
+    public TNode Node { get; }
+    public IntermediateNode Parent { get; }
+
+    public IntermediateNodeReference(IntermediateNode parent, TNode node)
+    {
+        ArgHelper.ThrowIfNull(parent);
+        ArgHelper.ThrowIfNull(node);
+
+        Parent = parent;
+        Node = node;
+    }
+
+    public void InsertAfter(IntermediateNode node)
+    {
+        ((IntermediateNodeReference)this).InsertAfter(node);
+    }
+
+    public void InsertAfter(IEnumerable<IntermediateNode> nodes)
+    {
+        ((IntermediateNodeReference)this).InsertAfter(nodes);
+    }
+
+    public void InsertBefore(IntermediateNode node)
+    {
+        ((IntermediateNodeReference)this).InsertBefore(node);
+    }
+
+    public void InsertBefore(IEnumerable<IntermediateNode> nodes)
+    {
+        ((IntermediateNodeReference)this).InsertBefore(nodes);
+    }
+
+    public void Remove()
+    {
+        ((IntermediateNodeReference)this).Remove();
+    }
+
+    public void Replace(IntermediateNode node)
+    {
+        ((IntermediateNodeReference)this).Replace(node);
+    }
+
+    public static implicit operator IntermediateNodeReference(IntermediateNodeReference<TNode> reference)
+        => new(reference.Parent, reference.Node);
+}
+
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public readonly struct IntermediateNodeReference
 {
@@ -110,4 +159,8 @@ public readonly struct IntermediateNodeReference
     {
         return $"ref: {Parent.DebuggerToString()} - {Node.DebuggerToString()}";
     }
+
+    public IntermediateNodeReference<TNode> As<TNode>()
+        where TNode : IntermediateNode
+        => new(Parent, (TNode)Node);
 }

@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -32,21 +31,7 @@ public readonly struct IntermediateNodeReference
     {
         ArgHelper.ThrowIfNull(node);
 
-        if (Parent == null)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.IntermediateNodeReference_NotInitialized);
-        }
-
-        if (Parent.Children.IsReadOnly)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_CollectionIsReadOnly(Parent));
-        }
-
-        var index = Parent.Children.IndexOf(Node);
-        if (index == -1)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_NodeNotFound(Node, Parent));
-        }
+        var index = GetNodeIndex();
 
         Parent.Children.Insert(index + 1, node);
     }
@@ -55,21 +40,7 @@ public readonly struct IntermediateNodeReference
     {
         ArgHelper.ThrowIfNull(nodes);
 
-        if (Parent == null)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.IntermediateNodeReference_NotInitialized);
-        }
-
-        if (Parent.Children.IsReadOnly)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_CollectionIsReadOnly(Parent));
-        }
-
-        var index = Parent.Children.IndexOf(Node);
-        if (index == -1)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_NodeNotFound(Node, Parent));
-        }
+        var index = GetNodeIndex();
 
         foreach (var node in nodes)
         {
@@ -81,21 +52,7 @@ public readonly struct IntermediateNodeReference
     {
         ArgHelper.ThrowIfNull(node);
 
-        if (Parent == null)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.IntermediateNodeReference_NotInitialized);
-        }
-
-        if (Parent.Children.IsReadOnly)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_CollectionIsReadOnly(Parent));
-        }
-
-        var index = Parent.Children.IndexOf(Node);
-        if (index == -1)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_NodeNotFound(Node, Parent));
-        }
+        var index = GetNodeIndex();
 
         Parent.Children.Insert(index, node);
     }
@@ -104,21 +61,7 @@ public readonly struct IntermediateNodeReference
     {
         ArgHelper.ThrowIfNull(nodes);
 
-        if (Parent == null)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.IntermediateNodeReference_NotInitialized);
-        }
-
-        if (Parent.Children.IsReadOnly)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_CollectionIsReadOnly(Parent));
-        }
-
-        var index = Parent.Children.IndexOf(Node);
-        if (index == -1)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_NodeNotFound(Node, Parent));
-        }
+        var index = GetNodeIndex();
 
         foreach (var node in nodes)
         {
@@ -128,21 +71,7 @@ public readonly struct IntermediateNodeReference
 
     public void Remove()
     {
-        if (Parent == null)
-        {
-            throw new InvalidOperationException(Resources.IntermediateNodeReference_NotInitialized);
-        }
-
-        if (Parent.Children.IsReadOnly)
-        {
-            throw new InvalidOperationException(Resources.FormatIntermediateNodeReference_CollectionIsReadOnly(Parent));
-        }
-
-        var index = Parent.Children.IndexOf(Node);
-        if (index == -1)
-        {
-            ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_NodeNotFound(Node, Parent));
-        }
+        var index = GetNodeIndex();
 
         Parent.Children.RemoveAt(index);
     }
@@ -151,6 +80,13 @@ public readonly struct IntermediateNodeReference
     {
         ArgHelper.ThrowIfNull(node);
 
+        var index = GetNodeIndex();
+
+        Parent.Children[index] = node;
+    }
+
+    private int GetNodeIndex()
+    {
         if (Parent == null)
         {
             ThrowHelper.ThrowInvalidOperationException(Resources.IntermediateNodeReference_NotInitialized);
@@ -167,7 +103,7 @@ public readonly struct IntermediateNodeReference
             ThrowHelper.ThrowInvalidOperationException(Resources.FormatIntermediateNodeReference_NodeNotFound(Node, Parent));
         }
 
-        Parent.Children[index] = node;
+        return index;
     }
 
     private string GetDebuggerDisplay()

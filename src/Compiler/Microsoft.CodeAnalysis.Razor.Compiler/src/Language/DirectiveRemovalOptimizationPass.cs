@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
@@ -46,6 +47,7 @@ internal class DirectiveRemovalOptimizationPass : IntermediateNodePassBase, IRaz
 
         public override void VisitDirective(DirectiveIntermediateNode node)
         {
+            Debug.Assert(HasParent);
             _results.Add(new(Parent, node));
         }
     }

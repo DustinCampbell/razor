@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -107,6 +108,7 @@ public static class DocumentIntermediateNodeExtensions
         {
             if (_directive == node.Directive)
             {
+                Debug.Assert(HasParent);
                 _results.Add(new(Parent, node));
             }
 
@@ -140,6 +142,7 @@ public static class DocumentIntermediateNodeExtensions
             // This ensures that we always operate on the leaf nodes first.
             if (node is TNode typedNode)
             {
+                Debug.Assert(HasParent);
                 _results.Add(new(Parent, typedNode));
             }
         }

@@ -4,9 +4,8 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Xunit;
@@ -64,7 +63,7 @@ public static class IntermediateNodeVerifier
             Assert.True(_baseline.Length == _index, "Not all lines of the baseline were visited!");
         }
 
-        private void AssertNodeEquals(IntermediateNode node, IEnumerable<IntermediateNode> ancestors, string expected, string actual)
+        private void AssertNodeEquals(IntermediateNode node, ImmutableArray<IntermediateNode> ancestors, string expected, string actual)
         {
             if (string.Equals(expected, actual))
             {
@@ -75,7 +74,7 @@ public static class IntermediateNodeVerifier
             if (expected == null)
             {
                 var message = "The node is missing from baseline.";
-                throw new IntermediateNodeBaselineException(node, Ancestors.ToArray(), expected, actual, message);
+                throw new IntermediateNodeBaselineException(node, Ancestors, expected, actual, message);
             }
 
             int charsVerified = 0;
@@ -89,7 +88,7 @@ public static class IntermediateNodeVerifier
             throw new InvalidOperationException("We can't figure out HOW these two things are different. This is a bug.");
         }
 
-        private static void AssertNestingEqual(IntermediateNode node, IEnumerable<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
+        private static void AssertNestingEqual(IntermediateNode node, ImmutableArray<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
         {
             var i = 0;
             for (; i < expected.Length; i++)
@@ -119,13 +118,13 @@ public static class IntermediateNodeVerifier
             if (failed)
             {
                 var message = "The node is at the wrong level of nesting. This usually means a child is missing.";
-                throw new IntermediateNodeBaselineException(node, ancestors.ToArray(), expected, actual, message);
+                throw new IntermediateNodeBaselineException(node, ancestors, expected, actual, message);
             }
 
             charsVerified = j;
         }
 
-        private static void AssertNameEqual(IntermediateNode node, IEnumerable<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
+        private static void AssertNameEqual(IntermediateNode node, ImmutableArray<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
         {
             var expectedName = GetName(expected, charsVerified);
             var actualName = GetName(actual, charsVerified);
@@ -133,7 +132,7 @@ public static class IntermediateNodeVerifier
             if (!string.Equals(expectedName, actualName))
             {
                 var message = "Node names are not equal.";
-                throw new IntermediateNodeBaselineException(node, ancestors.ToArray(), expected, actual, message);
+                throw new IntermediateNodeBaselineException(node, ancestors, expected, actual, message);
             }
 
             charsVerified += expectedName.Length;
@@ -174,7 +173,7 @@ public static class IntermediateNodeVerifier
             charsVerified += 3;
         }
 
-        private static void AssertLocationEqual(IntermediateNode node, IEnumerable<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
+        private static void AssertLocationEqual(IntermediateNode node, ImmutableArray<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
         {
             var expectedLocation = GetLocation(expected, charsVerified);
             var actualLocation = GetLocation(actual, charsVerified);
@@ -182,13 +181,13 @@ public static class IntermediateNodeVerifier
             if (!string.Equals(expectedLocation, actualLocation))
             {
                 var message = "Locations are not equal.";
-                throw new IntermediateNodeBaselineException(node, ancestors.ToArray(), expected, actual, message);
+                throw new IntermediateNodeBaselineException(node, ancestors, expected, actual, message);
             }
 
             charsVerified += expectedLocation.Length;
         }
 
-        private static void AssertContentEqual(IntermediateNode node, IEnumerable<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
+        private static void AssertContentEqual(IntermediateNode node, ImmutableArray<IntermediateNode> ancestors, string expected, string actual, ref int charsVerified)
         {
             var expectedContent = GetContent(expected, charsVerified);
             var actualContent = GetContent(actual, charsVerified);
@@ -196,7 +195,7 @@ public static class IntermediateNodeVerifier
             if (!string.Equals(expectedContent, actualContent))
             {
                 var message = "Contents are not equal.";
-                throw new IntermediateNodeBaselineException(node, ancestors.ToArray(), expected, actual, message);
+                throw new IntermediateNodeBaselineException(node, ancestors, expected, actual, message);
             }
 
             charsVerified += expectedContent.Length;
@@ -226,7 +225,7 @@ public static class IntermediateNodeVerifier
 
         private class IntermediateNodeBaselineException : XunitException
         {
-            public IntermediateNodeBaselineException(IntermediateNode node, IntermediateNode[] ancestors, string expected, string actual, string userMessage)
+            public IntermediateNodeBaselineException(IntermediateNode node, ImmutableArray<IntermediateNode> ancestors, string expected, string actual, string userMessage)
                 : base(Format(node, ancestors, expected, actual, userMessage))
             {
                 Node = node;
@@ -240,7 +239,7 @@ public static class IntermediateNodeVerifier
 
             public string Expected { get; }
 
-            private static string Format(IntermediateNode node, IntermediateNode[] ancestors, string expected, string actual, string userMessage)
+            private static string Format(IntermediateNode node, ImmutableArray<IntermediateNode> ancestors, string expected, string actual, string userMessage)
             {
                 using var _ = StringBuilderPool.GetPooledObject(out var builder);
 

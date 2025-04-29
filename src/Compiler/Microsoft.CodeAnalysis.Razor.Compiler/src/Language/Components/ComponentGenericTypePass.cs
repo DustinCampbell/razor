@@ -256,7 +256,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             // Next we need to generate a type inference 'method' node. This represents a method that we will codegen that
             // contains all of the operations on the render tree building. Calling a method to operate on the builder
             // will allow the C# compiler to perform type inference.
-            var documentNode = (DocumentIntermediateNode)Ancestors[Ancestors.Count - 1];
+            var documentNode = (DocumentIntermediateNode)Ancestors[^1];
             CreateTypeInferenceMethod(documentNode, node, receivesCascadingGenericTypes);
         }
 

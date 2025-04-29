@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Xunit;
 
@@ -95,7 +96,7 @@ public class IntermediateNodeWalkerTest
 
     private class DerivedIntermediateNodeWalker : IntermediateNodeWalker
     {
-        public new IReadOnlyList<IntermediateNode> Ancestors => base.Ancestors;
+        public new ImmutableArray<IntermediateNode> Ancestors => base.Ancestors;
 
         public new IntermediateNode Parent => base.Parent;
 

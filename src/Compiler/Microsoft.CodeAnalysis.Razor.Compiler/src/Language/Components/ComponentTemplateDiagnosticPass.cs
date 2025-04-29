@@ -43,10 +43,8 @@ internal class ComponentTemplateDiagnosticPass : ComponentIntermediateNodePassBa
         public void VisitExtension(TemplateIntermediateNode node)
         {
             // We found a template, let's check where it's located.
-            for (var i = 0; i < Ancestors.Count; i++)
+            foreach (var ancestor in Ancestors)
             {
-                var ancestor = Ancestors[i];
-
                 if (
                     // Inside markup attribute
                     ancestor is HtmlAttributeIntermediateNode ||

@@ -414,9 +414,12 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
         private void CreateTypeInferenceMethod(DocumentIntermediateNode documentNode, ComponentIntermediateNode node, List<CascadingGenericTypeParameter>? receivesCascadingGenericTypes)
         {
-            var @namespace = documentNode.FindPrimaryNamespace().Content;
-            @namespace = string.IsNullOrEmpty(@namespace) ? "__Blazor" : "__Blazor." + @namespace;
-            @namespace += "." + documentNode.FindPrimaryClass().ClassName;
+            var primaryNamespace = documentNode.FindPrimaryNamespace().AssumeNotNull();
+            var primaryClass = documentNode.FindPrimaryClass().AssumeNotNull();
+
+            var namespaceName = primaryNamespace.Content;
+            namespaceName = namespaceName.IsNullOrEmpty() ? "__Blazor" : $"__Blazor.{namespaceName}";
+            namespaceName += "." + primaryClass.ClassName;
 
             var genericTypeConstraints = node.Component.BoundAttributes
                 .Where(t => t.Metadata.ContainsKey(ComponentMetadata.Component.TypeParameterConstraintsKey))
@@ -429,7 +432,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 // Method name is generated and guaranteed not to collide, since it's unique for each
                 // component call site.
                 MethodName = $"Create{CSharpIdentifier.SanitizeIdentifier(node.TagName.AsSpanOrDefault())}_{_id++}",
-                FullTypeName = @namespace + ".TypeInference",
+                FullTypeName = namespaceName + ".TypeInference",
 
                 ReceivesCascadingGenericTypes = receivesCascadingGenericTypes,
                 GenericTypeConstraints = genericTypeConstraints
@@ -449,7 +452,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                         {
                             { ComponentMetadata.Component.GenericTypedKey, bool.TrueString },
                         },
-                    Content = @namespace,
+                    Content = namespaceName,
                 };
 
                 documentNode.Children.Add(namespaceNode);

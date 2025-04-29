@@ -1,56 +1,37 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using System.Collections.Generic;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public static class DocumentIntermediateNodeExtensions
 {
-    public static ClassDeclarationIntermediateNode FindPrimaryClass(this DocumentIntermediateNode node)
+    public static ClassDeclarationIntermediateNode? FindPrimaryClass(this DocumentIntermediateNode node)
     {
-        if (node == null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
+        ArgHelper.ThrowIfNull(node);
 
         return FindWithAnnotation<ClassDeclarationIntermediateNode>(node, CommonAnnotations.PrimaryClass);
     }
 
-    public static MethodDeclarationIntermediateNode FindPrimaryMethod(this DocumentIntermediateNode node)
+    public static MethodDeclarationIntermediateNode? FindPrimaryMethod(this DocumentIntermediateNode node)
     {
-        if (node == null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
+        ArgHelper.ThrowIfNull(node);
 
         return FindWithAnnotation<MethodDeclarationIntermediateNode>(node, CommonAnnotations.PrimaryMethod);
     }
 
-    public static NamespaceDeclarationIntermediateNode FindPrimaryNamespace(this DocumentIntermediateNode node)
+    public static NamespaceDeclarationIntermediateNode? FindPrimaryNamespace(this DocumentIntermediateNode node)
     {
-        if (node == null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
+        ArgHelper.ThrowIfNull(node);
 
         return FindWithAnnotation<NamespaceDeclarationIntermediateNode>(node, CommonAnnotations.PrimaryNamespace);
     }
 
     public static IReadOnlyList<IntermediateNodeReference> FindDirectiveReferences(this DocumentIntermediateNode node, DirectiveDescriptor directive)
     {
-        if (node == null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
-
-        if (directive == null)
-        {
-            throw new ArgumentNullException(nameof(directive));
-        }
+        ArgHelper.ThrowIfNull(node);
+        ArgHelper.ThrowIfNull(directive);
 
         var visitor = new DirectiveVisitor(directive);
         visitor.Visit(node);
@@ -60,17 +41,15 @@ public static class DocumentIntermediateNodeExtensions
     public static IReadOnlyList<IntermediateNodeReference> FindDescendantReferences<TNode>(this DocumentIntermediateNode document)
         where TNode : IntermediateNode
     {
-        if (document == null)
-        {
-            throw new ArgumentNullException(nameof(document));
-        }
+        ArgHelper.ThrowIfNull(document);
 
         var visitor = new ReferenceVisitor<TNode>();
         visitor.Visit(document);
         return visitor.References;
     }
 
-    private static T FindWithAnnotation<T>(IntermediateNode node, object annotation) where T : IntermediateNode
+    private static T? FindWithAnnotation<T>(IntermediateNode node, object annotation)
+        where T : IntermediateNode
     {
         if (node is T target && object.ReferenceEquals(target.Annotations[annotation], annotation))
         {

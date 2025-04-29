@@ -4,8 +4,8 @@
 #nullable disable
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -46,7 +46,10 @@ internal class ComponentSplatLoweringPass : ComponentIntermediateNodePassBase, I
             Source = node.Source,
         };
 
-        result.Children.AddRange(node.FindDescendantNodes<IntermediateToken>().Where(t => t.IsCSharp));
+        using var _ = ListPool<IntermediateToken>.GetPooledObject(out var tokens);
+        node.CollectDescendantNodes(tokens, static t => t.IsCSharp);
+
+        result.Children.AddRange(tokens);
         result.Diagnostics.AddRange(node.Diagnostics);
         return result;
     }

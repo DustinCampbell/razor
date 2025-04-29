@@ -4,8 +4,8 @@
 #nullable disable
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -29,12 +29,10 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         // First find all tag helper nodes that require the default tag helper runtime.
         //
         // This phase lowers the conceptual nodes to default runtime nodes we only care about those.
-        var tagHelperNodes = documentNode
-            .FindDescendantNodes<TagHelperIntermediateNode>()
-            .Where(IsTagHelperRuntimeNode)
-            .ToArray();
+        using var _ = ListPool<TagHelperIntermediateNode>.GetPooledObject(out var tagHelperNodes);
+        documentNode.CollectDescendantNodes(tagHelperNodes, IsTagHelperRuntimeNode);
 
-        if (tagHelperNodes.Length == 0)
+        if (tagHelperNodes.Count == 0)
         {
             // If nothing uses the default runtime then we're done.
             return;
@@ -44,10 +42,8 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
 
         // Each tagHelperNode should be rewritten to use the default tag helper runtime. That doesn't necessarily
         // mean that all of these tag helpers are the default kind, just that them are compatible with ITagHelper.
-        for (var i = 0; i < tagHelperNodes.Length; i++)
+        foreach (var tagHelperNode in tagHelperNodes)
         {
-            var tagHelperNode = tagHelperNodes[i];
-
             RewriteBody(tagHelperNode);
             RewriteHtmlAttributes(tagHelperNode);
             AddExecute(tagHelperNode);
@@ -208,7 +204,7 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         });
     }
 
-    private bool IsTagHelperRuntimeNode(TagHelperIntermediateNode node)
+    private static bool IsTagHelperRuntimeNode(TagHelperIntermediateNode node)
     {
         foreach (var tagHelper in node.TagHelpers)
         {

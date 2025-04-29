@@ -10,9 +10,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
-
-using CSharpSyntaxFacts = Microsoft.CodeAnalysis.CSharp.SyntaxFacts;
-using CSharpSyntaxKind = Microsoft.CodeAnalysis.CSharp.SyntaxKind;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -354,10 +352,11 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         context.CodeWriter.Write("-1");
         context.CodeWriter.WriteParameterSeparator();
 
-        var tokens = GetCSharpTokens(expression);
-        for (var i = 0; i < tokens.Count; i++)
+        using var _ = GetCSharpTokens(expression, out var tokens);
+
+        foreach (var token in tokens)
         {
-            context.CodeWriter.Write(tokens[i].Content);
+            context.CodeWriter.Write(token.Content);
         }
     }
 
@@ -791,7 +790,8 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             //      <MyComponent Value="@value" />
             //
             // Of a list of tokens directly in the attribute.
-            var tokens = GetCSharpTokens(node);
+
+            using var _ = GetCSharpTokens(node, out var tokens);
 
             if ((node.BoundAttribute?.IsDelegateProperty() ?? false) ||
                 (node.BoundAttribute?.IsChildContentProperty() ?? false))
@@ -806,9 +806,9 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
                 }
                 context.CodeWriter.WriteLine();
 
-                for (var i = 0; i < tokens.Count; i++)
+                foreach (var token in tokens)
                 {
-                    WriteCSharpToken(context, tokens[i]);
+                    WriteCSharpToken(context, token);
                 }
 
                 if (canTypeCheck)
@@ -862,9 +862,9 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
                 context.CodeWriter.WriteLine();
 
-                for (var i = 0; i < tokens.Count; i++)
+                foreach (var token in tokens)
                 {
-                    WriteCSharpToken(context, tokens[i]);
+                    WriteCSharpToken(context, token);
                 }
 
                 context.CodeWriter.Write(")");
@@ -888,9 +888,9 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
                     context.CodeWriter.Write("(");
                 }
 
-                for (var i = 0; i < tokens.Count; i++)
+                foreach (var token in tokens)
                 {
-                    WriteCSharpToken(context, tokens[i]);
+                    WriteCSharpToken(context, token);
                 }
 
                 if (canTypeCheck && NeedsTypeCheck(node))
@@ -930,10 +930,12 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         }
     }
 
-    private IReadOnlyList<IntermediateToken> GetCSharpTokens(IntermediateNode node)
+    private static PooledObject<List<IntermediateToken>> GetCSharpTokens(IntermediateNode node, out List<IntermediateToken> tokens)
     {
-        // We generally expect all children to be CSharp, this is here just in case.
-        return node.FindDescendantNodes<IntermediateToken>().Where(t => t.IsCSharp).ToArray();
+        var pooledList = ListPool<IntermediateToken>.GetPooledObject(out tokens);
+        node.CollectDescendantNodes(tokens, static t => t.IsCSharp);
+
+        return pooledList;
     }
 
     public override void WriteComponentChildContent(CodeRenderingContext context, ComponentChildContentIntermediateNode node)
@@ -1002,20 +1004,15 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         context.CodeWriter.Write(" = ");
         context.CodeWriter.Write("typeof(");
 
-        var tokens = GetCSharpTokens(node);
-        for (var i = 0; i < tokens.Count; i++)
+        using var _ = GetCSharpTokens(node, out var tokens);
+
+        foreach (var token in tokens)
         {
-            WriteCSharpToken(context, tokens[i]);
+            WriteCSharpToken(context, token);
         }
 
         context.CodeWriter.Write(");");
         context.CodeWriter.WriteLine();
-
-        IReadOnlyList<IntermediateToken> GetCSharpTokens(ComponentTypeArgumentIntermediateNode arg)
-        {
-            // We generally expect all children to be CSharp, this is here just in case.
-            return arg.FindDescendantNodes<IntermediateToken>().Where(t => t.IsCSharp).ToArray();
-        }
     }
 
     public override void WriteTemplate(CodeRenderingContext context, TemplateIntermediateNode node)
@@ -1100,7 +1097,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
     private void WriteSplatInnards(CodeRenderingContext context, SplatIntermediateNode node, bool canTypeCheck)
     {
-        var tokens = GetCSharpTokens(node);
+        using var _ = GetCSharpTokens(node, out var tokens);
 
         if (canTypeCheck)
         {
@@ -1111,9 +1108,9 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             context.CodeWriter.Write("(");
         }
 
-        for (var i = 0; i < tokens.Count; i++)
+        foreach (var token in tokens)
         {
-            WriteCSharpToken(context, tokens[i]);
+            WriteCSharpToken(context, token);
         }
 
         if (canTypeCheck)
@@ -1129,15 +1126,14 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             Debug.Assert(node.HasDiagnostics, "We should have reported an error for mixed content.");
         }
 
-        foreach (var token in node.FindDescendantNodes<IntermediateToken>())
+        using var _ = GetCSharpTokens(node, out var tokens);
+
+        foreach (var token in tokens)
         {
-            if (token.IsCSharp)
-            {
-                context.CodeWriter.Write(ComponentsApi.RuntimeHelpers.TypeCheck);
-                context.CodeWriter.Write("<string>(");
-                WriteCSharpToken(context, token);
-                context.CodeWriter.WriteLine(");");
-            }
+            context.CodeWriter.Write(ComponentsApi.RuntimeHelpers.TypeCheck);
+            context.CodeWriter.Write("<string>(");
+            WriteCSharpToken(context, token);
+            context.CodeWriter.WriteLine(");");
         }
     }
 
@@ -1224,7 +1220,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
                 new IntermediateToken
                 {
                     Kind = TokenKind.CSharp,
-                    Content = $"{DesignTimeVariable} = (global::{ComponentsApi.IComponentRenderMode.FullTypeName})(" 
+                    Content = $"{DesignTimeVariable} = (global::{ComponentsApi.IComponentRenderMode.FullTypeName})("
                 },
                 new CSharpCodeIntermediateNode
                 {

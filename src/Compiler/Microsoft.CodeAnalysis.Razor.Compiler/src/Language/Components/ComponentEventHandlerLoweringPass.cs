@@ -158,7 +158,9 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
 
     private static IntermediateNode RewriteUsage(IntermediateNode parent, TagHelperDirectiveAttributeIntermediateNode node)
     {
-        var original = GetAttributeContent(node);
+        using var _1 = ListPool<IntermediateToken>.GetPooledObject(out var original);
+        CollectAttributeContent(node, original);
+
         if (original.Count == 0)
         {
             // This can happen in error cases, the parser will already have flagged this
@@ -174,7 +176,7 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
         // correct context for intellisense when typing in the attribute.
         var eventArgsType = node.TagHelper.GetEventArgsType();
 
-        using var _ = ListPool<IntermediateToken>.GetPooledObject(out var tokens);
+        using var _2 = ListPool<IntermediateToken>.GetPooledObject(out var tokens);
         tokens.SetCapacityIfLarger(original.Count + 2);
 
         tokens.Add(
@@ -184,9 +186,9 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
                 Kind = TokenKind.CSharp
             });
 
-        for (var i = 0; i < original.Count; i++)
+        foreach (var token in original)
         {
-            tokens.Add(original[i]);
+            tokens.Add(token);
         }
 
         tokens.Add(
@@ -252,29 +254,51 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
         }
     }
 
-    private static IReadOnlyList<IntermediateToken> GetAttributeContent(IntermediateNode node)
+    private static void CollectAttributeContent(IntermediateNode node, List<IntermediateToken> tokens)
     {
-        var nodes = node.FindDescendantNodes<TemplateIntermediateNode>();
-        var template = nodes.Count > 0 ? nodes[0] : default;
-        if (template != null)
+        using var _1 = ListPool<TemplateIntermediateNode>.GetPooledObject(out var nodes);
+        node.CollectDescendantNodes(nodes);
+
+        if (nodes is [var template, ..])
         {
             // See comments in TemplateDiagnosticPass
             node.Diagnostics.Add(ComponentDiagnosticFactory.Create_TemplateInvalidLocation(template.Source));
-            return new[] { new IntermediateToken() { Kind = TokenKind.CSharp, Content = string.Empty, }, };
+            tokens.Add(new() { Kind = TokenKind.CSharp, Content = string.Empty });
         }
-
-        if (node.Children.Count == 1 && node.Children[0] is HtmlContentIntermediateNode htmlContentNode)
+        else if (node.Children is [HtmlContentIntermediateNode htmlContentNode])
         {
-            // This case can be hit for a 'string' attribute. We want to turn it into
-            // an expression.
-            var tokens = htmlContentNode.FindDescendantNodes<IntermediateToken>();
+            // This case can be hit for a 'string' attribute. We want to turn it into an expression.
+            using var _2 = ListPool<IntermediateToken>.GetPooledObject(out var htmlTokens);
+            using var _3 = StringBuilderPool.GetPooledObject(out var builder);
 
-            var content = "\"" + string.Join(string.Empty, tokens.Select(t => t.Content.Replace("\"", "\\\""))) + "\"";
-            return new[] { new IntermediateToken() { Content = content, Kind = TokenKind.CSharp, } };
+            htmlContentNode.CollectDescendantNodes(htmlTokens);
+
+            // Write HTML content and escape double quote ('"') characters.
+            builder.Append('"');
+
+            foreach (var token in htmlTokens)
+            {
+                foreach (var ch in token.Content)
+                {
+                    if (ch == '"')
+                    {
+                        builder.Append("\\\"");
+                    }
+                    else
+                    {
+                        builder.Append(ch);
+                    }
+                }
+            }
+
+            builder.Append('"');
+
+            tokens.Add(new() { Kind = TokenKind.CSharp, Content = builder.ToString() });
+            return;
         }
         else
         {
-            return node.FindDescendantNodes<IntermediateToken>();
+            node.CollectDescendantNodes(tokens);
         }
     }
 
@@ -315,7 +339,9 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
 
         if (node.AttributeStructure != AttributeStructure.Minimized)
         {
-            var tokens = GetAttributeContent(node);
+            using var _ = ListPool<IntermediateToken>.GetPooledObject(out var tokens);
+            CollectAttributeContent(node, tokens);
+
             var expressionNode = new CSharpExpressionIntermediateNode();
             result.Children.Add(expressionNode);
             expressionNode.Children.AddRange(tokens);

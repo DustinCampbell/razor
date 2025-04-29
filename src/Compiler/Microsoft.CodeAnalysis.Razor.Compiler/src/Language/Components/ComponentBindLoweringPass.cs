@@ -1104,27 +1104,27 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
 
     private static IntermediateToken GetAttributeContent(IntermediateNode node)
     {
-        var nodes = node.FindDescendantNodes<TemplateIntermediateNode>();
-        var template = nodes.Count > 0 ? nodes[0] : default;
-        if (template != null)
+        using var _ = ListPool<TemplateIntermediateNode>.GetPooledObject(out var nodes);
+        node.CollectDescendantNodes(nodes);
+
+        if (nodes is [var template, ..])
         {
             // See comments in TemplateDiagnosticPass
             node.Diagnostics.Add(ComponentDiagnosticFactory.Create_TemplateInvalidLocation(template.Source));
-            return new IntermediateToken() { Kind = TokenKind.CSharp, Content = string.Empty, };
+            return new() { Kind = TokenKind.CSharp, Content = string.Empty };
         }
 
-        if (node.Children[0] is HtmlContentIntermediateNode htmlContentNode)
+        if (node.Children is [HtmlContentIntermediateNode htmlContentNode, ..])
         {
-            // This case can be hit for a 'string' attribute. We want to turn it into
-            // an expression.
-            var content = "\"" + string.Join(string.Empty, htmlContentNode.Children.OfType<IntermediateToken>().Select(t => t.Content)) + "\"";
-            return new IntermediateToken() { Kind = TokenKind.CSharp, Content = content };
+            // This case can be hit for a 'string' attribute. We want to turn it into an expression.
+            var content = $"\"{htmlContentNode.GetAllChildContent()}\"";
+            return new() { Kind = TokenKind.CSharp, Content = content };
         }
-        else if (node.Children[0] is CSharpExpressionIntermediateNode cSharpNode)
+        else if (node.Children is [CSharpExpressionIntermediateNode csharpNode, ..])
         {
             // This case can be hit when the attribute has an explicit @ inside, which
             // 'escapes' any special sugar we provide for codegen.
-            return GetToken(cSharpNode);
+            return GetToken(csharpNode);
         }
         else
         {
@@ -1132,15 +1132,15 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
             return GetToken(node);
         }
 
-        IntermediateToken GetToken(IntermediateNode parent)
+        static IntermediateToken GetToken(IntermediateNode parent)
         {
-            if (parent.Children.Count == 1 && parent.Children[0] is IntermediateToken token)
+            if (parent.Children is [IntermediateToken token])
             {
                 return token;
             }
 
             // In error cases we won't have a single token, but we still want to generate the code.
-            return new IntermediateToken()
+            return new()
             {
                 Kind = TokenKind.CSharp,
                 Content = string.Join(string.Empty, parent.Children.OfType<IntermediateToken>().Select(t => t.Content)),

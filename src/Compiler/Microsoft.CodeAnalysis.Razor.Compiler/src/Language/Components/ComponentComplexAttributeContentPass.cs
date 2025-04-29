@@ -5,6 +5,7 @@
 
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -25,10 +26,12 @@ internal class ComponentComplexAttributeContentPass : ComponentIntermediateNodeP
             return;
         }
 
-        var nodes = documentNode.FindDescendantNodes<TagHelperIntermediateNode>();
-        for (var i = 0; i < nodes.Count; i++)
+        using var _ = ListPool<TagHelperIntermediateNode>.GetPooledObject(out var nodes);
+        documentNode.CollectDescendantNodes(nodes);
+
+        foreach (var node in nodes)
         {
-            ProcessAttributes(nodes[i]);
+            ProcessAttributes(node);
         }
     }
 

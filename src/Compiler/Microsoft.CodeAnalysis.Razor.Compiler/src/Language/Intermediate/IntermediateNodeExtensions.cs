@@ -58,8 +58,29 @@ public static class IntermediateNodeExtensions
     {
         using var _ = ListPool<IntermediateToken>.GetPooledObject(out var tokens);
 
-        node.CollectDescendentNodes(tokens, includeToken);
+        node.CollectDescendantNodes(tokens, includeToken);
 
+        return GetTokenContent(tokens);
+    }
+
+    internal static string GetAllChildContent(this IntermediateNode node)
+    {
+        using var _ = ListPool<IntermediateToken>.GetPooledObject(out var tokens);
+        tokens.SetCapacityIfLarger(node.Children.Count);
+
+        foreach (var child in node.Children)
+        {
+            if (child is IntermediateToken token)
+            {
+                tokens.Add(token);
+            }
+        }
+
+        return GetTokenContent(tokens);
+    }
+
+    private static string GetTokenContent(List<IntermediateToken> tokens)
+    {
         var length = 0;
 
         foreach (var token in tokens)
@@ -88,12 +109,12 @@ public static class IntermediateNodeExtensions
         where TNode : IntermediateNode
     {
         var results = new List<TNode>();
-        node.CollectDescendentNodes(results, includeNode);
+        node.CollectDescendantNodes(results, includeNode);
 
         return results;
     }
 
-    internal static void CollectDescendentNodes<TNode>(this IntermediateNode node, List<TNode> results, Func<TNode, bool>? includeNode = null)
+    internal static void CollectDescendantNodes<TNode>(this IntermediateNode node, List<TNode> results, Func<TNode, bool>? includeNode = null)
         where TNode : IntermediateNode
         => Visitor<TNode>.CollectNodes(node, includeNode, results);
 

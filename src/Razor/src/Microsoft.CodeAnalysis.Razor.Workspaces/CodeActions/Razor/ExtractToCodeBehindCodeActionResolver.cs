@@ -88,13 +88,13 @@ internal class ExtractToCodeBehindCodeActionResolver(
         };
     }
 
-    private string GenerateCodeBehindClass(string className, string namespaceName, string contents, RazorCodeDocument razorCodeDocument)
+    private static string GenerateCodeBehindClass(string className, string namespaceName, string contents, RazorCodeDocument razorCodeDocument)
     {
-        using var _ = StringBuilderPool.GetPooledObject(out var builder);
+        using var _1 = StringBuilderPool.GetPooledObject(out var builder);
+        using var _2 = ListPool<UsingDirectiveIntermediateNode>.GetPooledObject(out var usingDirectives);
 
-        var usingDirectives = razorCodeDocument
-            .GetDocumentIntermediateNode()
-            .FindDescendantNodes<UsingDirectiveIntermediateNode>();
+        var documentNode = razorCodeDocument.GetDocumentIntermediateNode();
+        documentNode.CollectDescendantNodes(usingDirectives);
 
         foreach (var usingDirective in usingDirectives)
         {
@@ -102,7 +102,7 @@ internal class ExtractToCodeBehindCodeActionResolver(
 
             var content = usingDirective.Content;
             var startIndex = content.StartsWith("global::", StringComparison.Ordinal)
-                ? 8
+                ? "global::".Length
                 : 0;
 
             builder.Append(content, startIndex, content.Length - startIndex);

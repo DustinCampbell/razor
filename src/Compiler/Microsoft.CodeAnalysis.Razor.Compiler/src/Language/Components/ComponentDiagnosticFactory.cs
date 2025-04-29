@@ -83,7 +83,7 @@ internal static class ComponentDiagnosticFactory
 
     public static RazorDiagnostic Create_UnsupportedComplexContent(IntermediateNode node, string attributeName)
     {
-        var content = string.Join("", node.FindDescendantNodes<IntermediateToken>().Select(t => t.Content));
+        var content = node.GetAllContent();
         return RazorDiagnostic.Create(UnsupportedComplexContent, node.Source, attributeName, content);
     }
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions;
 
@@ -36,10 +37,11 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
 
         // For each VCTH *usage* we need to rewrite the tag helper node to use the tag helper runtime to construct
         // and set properties on the the correct field, and using the name of the type we will generate.
-        var nodes = documentNode.FindDescendantNodes<TagHelperIntermediateNode>();
-        for (var i = 0; i < nodes.Count; i++)
+        using var _ = ListPool<TagHelperIntermediateNode>.GetPooledObject(out var nodes);
+        documentNode.CollectDescendantNodes(nodes);
+
+        foreach (var node in nodes)
         {
-            var node = nodes[i];
             foreach (var tagHelper in node.TagHelpers)
             {
                 RewriteUsage(context, node, tagHelper);

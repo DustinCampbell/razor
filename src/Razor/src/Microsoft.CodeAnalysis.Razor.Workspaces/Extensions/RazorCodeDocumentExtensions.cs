@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Razor;
@@ -136,14 +137,15 @@ internal static class RazorCodeDocumentExtensions
         return false;
     }
 
-    public static bool ComponentNamespaceMatches(this RazorCodeDocument razorCodeDocument, string fullyQualifiedNamespace)
+    public static bool ComponentNamespaceMatches(this RazorCodeDocument codeDocument, string fullyQualifiedNamespace)
     {
-        var namespaceNode = (NamespaceDeclarationIntermediateNode)razorCodeDocument
-            .GetDocumentIntermediateNode()
-            .FindDescendantNodes<IntermediateNode>()
-            .First(static n => n is NamespaceDeclarationIntermediateNode);
+        using var _ = ListPool<NamespaceDeclarationIntermediateNode>.GetPooledObject(out var namespaceNodes);
 
-        return namespaceNode.Content == fullyQualifiedNamespace;
+        var documentNode = codeDocument.GetDocumentIntermediateNode();
+        documentNode.CollectDescendantNodes(namespaceNodes);
+
+        return namespaceNodes is [var namespaceNode, ..] &&
+               namespaceNode.Content == fullyQualifiedNamespace;
     }
 
     public static RazorLanguageKind GetLanguageKind(this RazorCodeDocument codeDocument, int hostDocumentIndex, bool rightAssociative)

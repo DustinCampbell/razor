@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -30,9 +31,10 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
             return;
         }
 
-        // For each component *usage* we need to rewrite the tag helper node to map to the relevant component
-        // APIs.
-        var usings = documentNode.FindDescendantNodes<UsingDirectiveIntermediateNode>();
+        // For each component *usage* we need to rewrite the tag helper node to map to the relevant component APIs.
+        using var _ = ListPool<UsingDirectiveIntermediateNode>.GetPooledObject(out var usings);
+        documentNode.CollectDescendantNodes(usings);
+
         var references = documentNode.FindDescendantReferences<TagHelperIntermediateNode>();
         for (var i = 0; i < references.Count; i++)
         {
@@ -85,7 +87,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
         // tag helpers.
         // We look based on the set of usings if there is only a single component for that can be applied to that tag or if we detect more than one
         // we add a diagnostic and return null
-        static TagHelperDescriptor GetTagHelperOrAddDiagnostic(TagHelperIntermediateNode node, IReadOnlyList<UsingDirectiveIntermediateNode> usings)
+        static TagHelperDescriptor GetTagHelperOrAddDiagnostic(TagHelperIntermediateNode node, List<UsingDirectiveIntermediateNode> usings)
         {
             TagHelperDescriptor candidate = null;
             List<TagHelperDescriptor> matched = null;
@@ -97,9 +99,9 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
                     continue;
                 }
 
-                for (var j = 0; j < usings.Count; j++)
+                foreach (var @using in usings)
                 {
-                    var usingNamespace = usings[j].Content;
+                    var usingNamespace = @using.Content;
                     if (string.Equals(tagHelper.GetTypeNamespace(), usingNamespace, StringComparison.Ordinal))
                     {
                         if (candidate == null)

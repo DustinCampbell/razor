@@ -5,6 +5,7 @@
 
 using System;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -22,15 +23,17 @@ internal class ComponentCssScopePass : ComponentIntermediateNodePassBase, IRazor
         }
 
         var cssScope = codeDocument.GetCssScope();
-        if (string.IsNullOrEmpty(cssScope))
+        if (cssScope.IsNullOrEmpty())
         {
             return;
         }
 
-        var nodes = documentNode.FindDescendantNodes<MarkupElementIntermediateNode>();
-        for (var i = 0; i < nodes.Count; i++)
+        using var _ = ListPool<MarkupElementIntermediateNode>.GetPooledObject(out var nodes);
+        documentNode.CollectDescendantNodes(nodes);
+
+        foreach (var node in nodes)
         {
-            ProcessElement(nodes[i], cssScope);
+            ProcessElement(node, cssScope);
         }
     }
 

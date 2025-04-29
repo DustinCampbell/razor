@@ -5,6 +5,7 @@
 
 using System;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -16,7 +17,7 @@ internal class ViewCssScopePass : IntermediateNodePassBase, IRazorOptimizationPa
     protected override void ExecuteCore(RazorCodeDocument codeDocument, DocumentIntermediateNode documentNode)
     {
         var cssScope = codeDocument.GetCssScope();
-        if (string.IsNullOrEmpty(cssScope))
+        if (cssScope.IsNullOrEmpty())
         {
             return;
         }
@@ -28,7 +29,10 @@ internal class ViewCssScopePass : IntermediateNodePassBase, IRazorOptimizationPa
         }
 
         var scopeWithSeparator = " " + cssScope;
-        var nodes = documentNode.FindDescendantNodes<HtmlContentIntermediateNode>();
+
+        using var _ = ListPool<HtmlContentIntermediateNode>.GetPooledObject(out var nodes);
+        documentNode.CollectDescendantNodes(nodes);
+
         IntermediateToken previousTokenOpt = null;
         foreach (var node in nodes)
         {

@@ -1,11 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -22,12 +22,12 @@ internal class ComponentTemplateDiagnosticPass : ComponentIntermediateNodePassBa
             return;
         }
 
-        var visitor = new Visitor();
-        visitor.Visit(documentNode);
+        using var _ = ListPool<IntermediateNodeReference>.GetPooledObject(out var candidates);
 
-        for (var i = 0; i < visitor.Candidates.Count; i++)
+        Visitor.Collect(documentNode, candidates);
+
+        foreach (var candidate in candidates)
         {
-            var candidate = visitor.Candidates[i];
             candidate.Parent.Diagnostics.Add(ComponentDiagnosticFactory.Create_TemplateInvalidLocation(candidate.Node.Source));
 
             // Remove the offending node since we don't know how to render it. This means that the user won't get C#
@@ -38,27 +38,36 @@ internal class ComponentTemplateDiagnosticPass : ComponentIntermediateNodePassBa
 
     private class Visitor : IntermediateNodeWalker, IExtensionIntermediateNodeVisitor<TemplateIntermediateNode>
     {
-        public List<IntermediateNodeReference> Candidates { get; } = new List<IntermediateNodeReference>();
+        private readonly  List<IntermediateNodeReference> _results;
+
+        private Visitor(List<IntermediateNodeReference> results)
+        {
+            _results = results;
+        }
+
+        public static void Collect(DocumentIntermediateNode documentNode, List<IntermediateNodeReference> results)
+        {
+            var visitor = new Visitor(results);
+            visitor.Visit(documentNode);
+        }
 
         public void VisitExtension(TemplateIntermediateNode node)
         {
             // We found a template, let's check where it's located.
             foreach (var ancestor in Ancestors)
             {
-                if (
-                    // Inside markup attribute
-                    ancestor is HtmlAttributeIntermediateNode ||
+                // HtmlAttributeIntermediateNode: Inside markup attribute
+                // ComponentAttributeIntermediateNode: Inside component attribute
+                // TagHelperPropertyIntermediateNode: Inside malformed ref attribute
+                // TagHelperDirectiveAttributeIntermediateNode: Inside directive attribute
 
-                    // Inside component attribute
-                    ancestor is ComponentAttributeIntermediateNode ||
-
-                    // Inside malformed ref attribute
-                    ancestor is TagHelperPropertyIntermediateNode ||
-
-                    // Inside a directive attribute
-                    ancestor is TagHelperDirectiveAttributeIntermediateNode)
+                if (ancestor is HtmlAttributeIntermediateNode
+                             or ComponentAttributeIntermediateNode
+                             or TagHelperPropertyIntermediateNode
+                             or TagHelperDirectiveAttributeIntermediateNode)
                 {
-                    Candidates.Add(IntermediateNodeReference.Create(Parent, node));
+                    Debug.Assert(HasParent);
+                    _results.Add(IntermediateNodeReference.Create(Parent, node));
                 }
             }
         }

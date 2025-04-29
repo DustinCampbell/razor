@@ -8,46 +8,55 @@ namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public static class DocumentIntermediateNodeExtensions
 {
-    public static ClassDeclarationIntermediateNode? FindPrimaryClass(this DocumentIntermediateNode node)
+    public static ClassDeclarationIntermediateNode? FindPrimaryClass(this DocumentIntermediateNode documentNode)
     {
-        ArgHelper.ThrowIfNull(node);
+        ArgHelper.ThrowIfNull(documentNode);
 
-        return FindWithAnnotation<ClassDeclarationIntermediateNode>(node, CommonAnnotations.PrimaryClass);
+        return FindWithAnnotation<ClassDeclarationIntermediateNode>(documentNode, CommonAnnotations.PrimaryClass);
     }
 
-    public static MethodDeclarationIntermediateNode? FindPrimaryMethod(this DocumentIntermediateNode node)
+    public static MethodDeclarationIntermediateNode? FindPrimaryMethod(this DocumentIntermediateNode documentNode)
     {
-        ArgHelper.ThrowIfNull(node);
+        ArgHelper.ThrowIfNull(documentNode);
 
-        return FindWithAnnotation<MethodDeclarationIntermediateNode>(node, CommonAnnotations.PrimaryMethod);
+        return FindWithAnnotation<MethodDeclarationIntermediateNode>(documentNode, CommonAnnotations.PrimaryMethod);
     }
 
-    public static NamespaceDeclarationIntermediateNode? FindPrimaryNamespace(this DocumentIntermediateNode node)
+    public static NamespaceDeclarationIntermediateNode? FindPrimaryNamespace(this DocumentIntermediateNode documentNode)
     {
-        ArgHelper.ThrowIfNull(node);
+        ArgHelper.ThrowIfNull(documentNode);
 
-        return FindWithAnnotation<NamespaceDeclarationIntermediateNode>(node, CommonAnnotations.PrimaryNamespace);
+        return FindWithAnnotation<NamespaceDeclarationIntermediateNode>(documentNode, CommonAnnotations.PrimaryNamespace);
     }
 
-    public static IReadOnlyList<IntermediateNodeReference> FindDirectiveReferences(this DocumentIntermediateNode node, DirectiveDescriptor directive)
+    public static IReadOnlyList<IntermediateNodeReference> FindDirectiveReferences(this DocumentIntermediateNode documentNode, DirectiveDescriptor directive)
     {
-        ArgHelper.ThrowIfNull(node);
+        ArgHelper.ThrowIfNull(documentNode);
         ArgHelper.ThrowIfNull(directive);
 
-        var visitor = new DirectiveVisitor(directive);
-        visitor.Visit(node);
-        return visitor.Directives;
+        var results = new List<IntermediateNodeReference>();
+        DirectiveVisitor.Collect(documentNode, directive, results);
+
+        return results;
     }
 
-    public static IReadOnlyList<IntermediateNodeReference> FindDescendantReferences<TNode>(this DocumentIntermediateNode document)
+    public static IReadOnlyList<IntermediateNodeReference> FindDescendantReferences<TNode>(this DocumentIntermediateNode documentNode)
         where TNode : IntermediateNode
     {
-        ArgHelper.ThrowIfNull(document);
+        ArgHelper.ThrowIfNull(documentNode);
 
-        var visitor = new ReferenceVisitor<TNode>();
-        visitor.Visit(document);
-        return visitor.References;
+        var results = new List<IntermediateNodeReference>();
+        ReferenceVisitor<TNode>.Collect(documentNode, results);
+
+        return results;
     }
+
+    internal static void CollectDirectiveReferences(this DocumentIntermediateNode documentNode, DirectiveDescriptor directive, List<IntermediateNodeReference> results)
+        => DirectiveVisitor.Collect(documentNode, directive, results);
+
+    internal static void CollectDescendantReferences<TNode>(this DocumentIntermediateNode documentNode, List<IntermediateNodeReference> results)
+        where TNode : IntermediateNode
+        => ReferenceVisitor<TNode>.Collect(documentNode, results);
 
     private static T? FindWithAnnotation<T>(IntermediateNode node, object annotation)
         where T : IntermediateNode
@@ -74,32 +83,49 @@ public static class DocumentIntermediateNodeExtensions
         return null;
     }
 
-    private class DirectiveVisitor : IntermediateNodeWalker
+    private sealed class DirectiveVisitor : IntermediateNodeWalker
     {
         private readonly DirectiveDescriptor _directive;
+        private readonly List<IntermediateNodeReference> _results;
 
-        public DirectiveVisitor(DirectiveDescriptor directive)
+        private DirectiveVisitor(DirectiveDescriptor directive, List<IntermediateNodeReference> results)
         {
             _directive = directive;
+            _results = results;
         }
 
-        public List<IntermediateNodeReference> Directives = new List<IntermediateNodeReference>();
+        public static void Collect(DocumentIntermediateNode documentNode, DirectiveDescriptor directive, List<IntermediateNodeReference> results)
+        {
+            var visitor = new DirectiveVisitor(directive, results);
+            visitor.Visit(documentNode);
+        }
 
         public override void VisitDirective(DirectiveIntermediateNode node)
         {
             if (_directive == node.Directive)
             {
-                Directives.Add(new IntermediateNodeReference(Parent, node));
+                _results.Add(new(Parent, node));
             }
 
             base.VisitDirective(node);
         }
     }
 
-    private class ReferenceVisitor<TNode> : IntermediateNodeWalker
+    private sealed class ReferenceVisitor<TNode> : IntermediateNodeWalker
         where TNode : IntermediateNode
     {
-        public List<IntermediateNodeReference> References = new List<IntermediateNodeReference>();
+        private readonly List<IntermediateNodeReference> _results;
+
+        private ReferenceVisitor(List<IntermediateNodeReference> results)
+        {
+            _results = results;
+        }
+
+        public static void Collect(DocumentIntermediateNode documentNode, List<IntermediateNodeReference> results)
+        {
+            var visitor = new ReferenceVisitor<TNode>(results);
+            visitor.Visit(documentNode);
+        }
 
         public override void VisitDefault(IntermediateNode node)
         {
@@ -111,7 +137,7 @@ public static class DocumentIntermediateNodeExtensions
             // This ensures that we always operate on the leaf nodes first.
             if (node is TNode)
             {
-                References.Add(new IntermediateNodeReference(Parent, node));
+                _results.Add(new(Parent, node));
             }
         }
     }

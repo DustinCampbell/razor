@@ -1,8 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -54,30 +53,51 @@ public static class IntermediateNodeExtensions
         }
     }
 
-    public static IReadOnlyList<TNode> FindDescendantNodes<TNode>(this IntermediateNode node)
+    public static IReadOnlyList<TNode> FindDescendantNodes<TNode>(this IntermediateNode node, Func<TNode, bool>? includeNode = null)
         where TNode : IntermediateNode
     {
-        var visitor = new Visitor<TNode>();
-        visitor.Visit(node);
+        var results = new List<TNode>();
+        node.CollectDescendentNodes(results, includeNode);
 
-        if (visitor.Results.Count > 0 && visitor.Results[0] == node)
-        {
-            // Don't put the node itself in the results
-            visitor.Results.Remove((TNode)node);
-        }
-
-        return visitor.Results;
+        return results;
     }
 
-    private class Visitor<TNode> : IntermediateNodeWalker where TNode : IntermediateNode
+    internal static void CollectDescendentNodes<TNode>(this IntermediateNode node, List<TNode> results, Func<TNode, bool>? includeNode = null)
+        where TNode : IntermediateNode
+        => Visitor<TNode>.CollectNodes(node, includeNode, results);
+
+    private sealed class Visitor<TNode> : IntermediateNodeWalker
+        where TNode : IntermediateNode
     {
-        public List<TNode> Results { get; } = new List<TNode>();
+        private static readonly Func<TNode, bool> s_includeAll = _ => true;
+
+        private readonly IntermediateNode _root;
+        private readonly Func<TNode, bool> _includeNode;
+        private readonly List<TNode> _results;
+
+        private Visitor(IntermediateNode root, Func<TNode, bool>? includeNode, List<TNode> results)
+        {
+            _root = root;
+            _includeNode = includeNode ?? s_includeAll;
+            _results = results;
+        }
+
+        public static void CollectNodes(IntermediateNode root, Func<TNode, bool>? includeNode, List<TNode> results)
+        {
+            var visitor = new Visitor<TNode>(root, includeNode, results);
+
+            visitor.Visit(root);
+        }
 
         public override void VisitDefault(IntermediateNode node)
         {
-            if (node is TNode match)
+            if (node is TNode matchedNode && _includeNode(matchedNode))
             {
-                Results.Add(match);
+                // Don't put root in the results.
+                if (_results.Count > 0 || matchedNode != _root)
+                {
+                    _results.Add(matchedNode);
+                }
             }
 
             base.VisitDefault(node);

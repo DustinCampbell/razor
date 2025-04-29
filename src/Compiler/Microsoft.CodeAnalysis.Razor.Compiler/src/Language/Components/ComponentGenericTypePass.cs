@@ -292,14 +292,34 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             return true;
         }
 
-        private string GetContent(ComponentTypeArgumentIntermediateNode node)
+        private static string GetContent(IntermediateNode node)
         {
-            return string.Join(string.Empty, node.FindDescendantNodes<IntermediateToken>().Where(t => t.IsCSharp).Select(t => t.Content));
-        }
+            using var _ = ListPool<IntermediateToken>.GetPooledObject(out var csharpTokens);
 
-        private string GetContent(ComponentAttributeIntermediateNode node)
-        {
-            return string.Join(string.Empty, node.FindDescendantNodes<IntermediateToken>().Where(t => t.IsCSharp).Select(t => t.Content));
+            node.CollectDescendentNodes(csharpTokens, static t => t.IsCSharp);
+
+            var length = 0;
+
+            foreach (var token in csharpTokens)
+            {
+                length += token.Content?.Length ?? 0;
+            }
+
+            return StringExtensions.CreateString(length, csharpTokens, static (span, csharpTokens) =>
+            {
+                foreach (var token in csharpTokens)
+                {
+                    var content = token.Content.AsSpan();
+
+                    if (content.Length > 0)
+                    {
+                        content.CopyTo(span);
+                        span = span[content.Length..];
+                    }
+                }
+
+                Debug.Assert(span.IsEmpty);
+            });
         }
 
         private static bool ValidateTypeArguments(ComponentIntermediateNode node, Dictionary<string, Binding> bindings)
@@ -360,7 +380,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     {
                         attribute.Annotations.Add(ComponentMetadata.Component.ExplicitTypeNameKey, true);
                     }
-                    else if(attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
+                    else if (attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
                     {
                         var typeParameters = TypeNameHelpers.ParseTypeArguments(attribute.TypeName);
                         foreach (var parameter in typeParameters)

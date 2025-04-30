@@ -529,24 +529,60 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             return builder.ToList();
         }
 
+#nullable enable
         /// <summary>
         ///  Simple helper struct to simplify calling code that needs to skip elements
         ///  without resorting to LINQ.
         /// </summary>
-        protected readonly struct ChildNodesHelper(ChildSyntaxList list, int start = 0)
+        protected ref struct ChildNodesHelper
         {
-            public int Count { get; } = Math.Max(list.Count - start, 0);
+            private readonly SyntaxNode _node;
+            private readonly int _start;
 
-            public SyntaxNode this[int index] => list[start + index];
+            private ChildSyntaxList _childNodes;
+
+            public ChildNodesHelper(SyntaxNode node)
+                : this(node, childNodes: default, start: 0)
+            {
+            }
+
+            private ChildNodesHelper(SyntaxNode node, ChildSyntaxList childNodes, int start)
+            {
+                _node = node;
+                _childNodes = childNodes;
+                _start = start;
+            }
+
+            private ChildSyntaxList ChildNodes
+            {
+                get
+                {
+                    if (_childNodes == default)
+                    {
+                        _childNodes = _node.ChildNodes();
+                    }
+
+                    return _childNodes;
+                }
+            }
+
+            public int Count
+                => ChildNodes.Count;
+
+            public SyntaxNode this[int index]
+                => ChildNodes[_start + index];
 
             public ChildNodesHelper Skip(int count)
             {
-                return new ChildNodesHelper(list, start + count);
+                // Realize the child nodes here so the can be shared with the "skipepd" ChildNodesHelper.
+                return new(_node, ChildNodes, _start + count);
             }
 
-            public SyntaxNode FirstOrDefault() => Count > 0 ? this[0] : null;
+            public SyntaxNode? FirstOrDefault()
+                => Count > 0 ? this[0] : null;
 
             public bool TryCast<TNode>(out ImmutableArray<TNode> result)
+                where TNode : SyntaxNode
             {
                 // Note that this intentionally returns true for empty lists.
                 // This behavior matches the expectations of code that previously called
@@ -556,9 +592,11 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
                 using var builder = new PooledArrayBuilder<TNode>(Count);
 
-                for (var i = start; i < list.Count; i++)
+                var childNodes = ChildNodes;
+
+                for (var i = _start; i < childNodes.Count; i++)
                 {
-                    if (list[i] is not TNode node)
+                    if (childNodes[i] is not TNode node)
                     {
                         result = default;
                         return false;
@@ -571,6 +609,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 return true;
             }
         }
+#nullable disable
 
         protected static MarkupTextLiteralSyntax MergeAttributeValue(MarkupLiteralAttributeValueSyntax node)
         {
@@ -625,7 +664,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             {
                 if (node.Value is { } blockSyntax)
                 {
-                    var children = new ChildNodesHelper(blockSyntax.ChildNodes());
+                    var children = new ChildNodesHelper(blockSyntax);
 
                     if (children.TryCast<MarkupLiteralAttributeValueSyntax>(out var attributeLiteralArray))
                     {
@@ -1175,7 +1214,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 return;
             }
 
-            var children = new ChildNodesHelper(node.ChildNodes());
+            var children = new ChildNodesHelper(node);
             var position = node.Position;
             if (children.FirstOrDefault() is MarkupBlockSyntax { Children: [MarkupTextLiteralSyntax, MarkupEphemeralTextLiteralSyntax] } markupBlock)
             {
@@ -2145,7 +2184,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 return;
             }
 
-            var children = new ChildNodesHelper(node.ChildNodes());
+            var children = new ChildNodesHelper(node);
             var position = node.Position;
             if (children.FirstOrDefault() is MarkupBlockSyntax { Children: [MarkupTextLiteralSyntax, MarkupEphemeralTextLiteralSyntax] } markupBlock)
             {

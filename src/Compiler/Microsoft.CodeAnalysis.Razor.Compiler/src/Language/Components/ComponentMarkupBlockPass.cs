@@ -1,13 +1,13 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -31,9 +31,7 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
     // added in that pass.
     public override int Order => ComponentMarkupDiagnosticPass.DefaultOrder + 10;
 
-    protected override void ExecuteCore(
-        RazorCodeDocument codeDocument,
-        DocumentIntermediateNode documentNode)
+    protected override void ExecuteCore(RazorCodeDocument codeDocument, DocumentIntermediateNode documentNode)
     {
         if (!IsComponentDocument(documentNode))
         {
@@ -46,15 +44,16 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
             return;
         }
 
-        var findVisitor = new FindHtmlTreeVisitor(_version);
-        findVisitor.Visit(documentNode);
+        using var _1 = ListPool<IntermediateNodeReference>.GetPooledObject(out var trees);
+        using var _2 = StringBuilderPool.GetPooledObject(out var builder);
 
-        var trees = findVisitor.Trees;
-        var rewriteVisitor = new RewriteVisitor(trees);
+        FindHtmlTreeVisitor.Collect(documentNode, _version, trees);
+
+        var rewriteVisitor = new RewriteVisitor(trees, builder);
         while (trees.Count > 0)
         {
             // Walk backwards since we did a postorder traversal.
-            var reference = trees[trees.Count - 1];
+            var reference = trees[^1];
 
             // Forcibly remove a node to prevent infinite loops.
             trees.RemoveAt(trees.Count - 1);
@@ -78,7 +77,7 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
             while (start - 1 >= 0)
             {
                 var candidate = reference.Parent.Children[start - 1];
-                if (trees.Count == 0 || !ReferenceEquals(trees[trees.Count - 1].Node, candidate))
+                if (trees.Count == 0 || !ReferenceEquals(trees[^1].Node, candidate))
                 {
                     // This means the we're out of nodes, or the left sibling is not in the list.
                     break;
@@ -113,10 +112,10 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
 
             reference.Parent.Children.Insert(start, new MarkupBlockIntermediateNode()
             {
-                Content = rewriteVisitor.Builder.ToString(),
+                Content = builder.ToString(),
             });
 
-            rewriteVisitor.Builder.Clear();
+            builder.Clear();
         }
     }
 
@@ -134,15 +133,20 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
     private class FindHtmlTreeVisitor : IntermediateNodeWalker
     {
         private readonly RazorLanguageVersion _version;
-
-        public FindHtmlTreeVisitor(RazorLanguageVersion version)
-        {
-            _version = version;
-        }
-
+        private readonly List<IntermediateNodeReference> _results;
         private bool _foundNonHtml;
 
-        public List<IntermediateNodeReference> Trees { get; } = new List<IntermediateNodeReference>();
+        private FindHtmlTreeVisitor(RazorLanguageVersion version, List<IntermediateNodeReference> results)
+        {
+            _version = version;
+            _results = results;
+        }
+
+        public static void Collect(DocumentIntermediateNode documentNode, RazorLanguageVersion version, List<IntermediateNodeReference> results)
+        {
+            var visitor = new FindHtmlTreeVisitor(version, results);
+            visitor.Visit(documentNode);
+        }
 
         public override void VisitDefault(IntermediateNode node)
         {
@@ -191,7 +195,8 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
 
             if (!_foundNonHtml)
             {
-                Trees.Add(IntermediateNodeReference.Create(Parent, node));
+                Debug.Assert(HasParent);
+                _results.Add(new(Parent, node));
             }
 
             _foundNonHtml = originalState |= _foundNonHtml;
@@ -241,7 +246,8 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
 
             if (!_foundNonHtml)
             {
-                Trees.Add(IntermediateNodeReference.Create(Parent, node));
+                Debug.Assert(HasParent);
+                _results.Add(new(Parent, node));
             }
 
             _foundNonHtml = originalState |= _foundNonHtml;
@@ -262,26 +268,17 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
         }
     }
 
-    private class RewriteVisitor : IntermediateNodeWalker
+    private sealed class RewriteVisitor(List<IntermediateNodeReference> trees, StringBuilder builder) : IntermediateNodeWalker
     {
-        private readonly List<IntermediateNodeReference> _trees;
-
-        public RewriteVisitor(List<IntermediateNodeReference> trees)
-        {
-            _trees = trees;
-        }
-
-        public StringBuilder Builder { get; } = new StringBuilder();
-
         public override void VisitMarkupElement(MarkupElementIntermediateNode node)
         {
-            for (var i = 0; i < _trees.Count; i++)
+            for (var i = 0; i < trees.Count; i++)
             {
                 // Remove this node if it's in the list. This ensures that we don't
                 // do redundant operations.
-                if (ReferenceEquals(_trees[i].Node, node))
+                if (ReferenceEquals(trees[i].Node, node))
                 {
-                    _trees.RemoveAt(i);
+                    trees.RemoveAt(i);
                     break;
                 }
             }
@@ -289,8 +286,8 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
             var isVoid = Legacy.ParserHelpers.VoidElements.Contains(node.TagName);
             var hasBodyContent = node.Body.Any();
 
-            Builder.Append('<');
-            Builder.Append(node.TagName);
+            builder.Append('<');
+            builder.Append(node.TagName);
 
             foreach (var attribute in node.Attributes)
             {
@@ -302,36 +299,36 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
             if (!hasBodyContent && isVoid)
             {
                 // void
-                Builder.Append('>');
+                builder.Append('>');
                 return;
             }
             else if (!hasBodyContent)
             {
                 // In HTML5, we can't have self-closing non-void elements, so explicitly
                 // add a close tag
-                Builder.Append("></");
-                Builder.Append(node.TagName);
-                Builder.Append('>');
+                builder.Append("></");
+                builder.Append(node.TagName);
+                builder.Append('>');
                 return;
             }
 
             // start/end tag with body.
-            Builder.Append('>');
+            builder.Append('>');
 
             foreach (var item in node.Body)
             {
                 Visit(item);
             }
 
-            Builder.Append("</");
-            Builder.Append(node.TagName);
-            Builder.Append('>');
+            builder.Append("</");
+            builder.Append(node.TagName);
+            builder.Append('>');
         }
 
         public override void VisitHtmlAttribute(HtmlAttributeIntermediateNode node)
         {
-            Builder.Append(' ');
-            Builder.Append(node.AttributeName);
+            builder.Append(' ');
+            builder.Append(node.AttributeName);
 
             if (node.Children.Count == 0)
             {
@@ -341,37 +338,37 @@ internal class ComponentMarkupBlockPass : ComponentIntermediateNodePassBase, IRa
 
             // We examine the node.Prefix (e.g. " onfocus='" or " on focus=\"")
             // to preserve the quote type that is used in the original markup.
-            var quoteType = node.Prefix.EndsWith("'", StringComparison.Ordinal) ? "'" : "\"";
+            var quoteType = node.Prefix.EndsWith('\'') ? "'" : "\"";
 
-            Builder.Append('=');
-            Builder.Append(quoteType);
+            builder.Append('=');
+            builder.Append(quoteType);
 
             // Visit Children
             base.VisitDefault(node);
 
-            Builder.Append(quoteType);
+            builder.Append(quoteType);
         }
 
         public override void VisitHtmlAttributeValue(HtmlAttributeValueIntermediateNode node)
         {
-            for (var i = 0; i < node.Children.Count; i++)
+            foreach (var child in node.Children)
             {
-                Builder.Append(node.Prefix);
+                builder.Append(node.Prefix);
 
-                if (node.Children[i] is IntermediateToken token)
+                if (child is IntermediateToken token)
                 {
-                    Builder.Append(token.Content);
+                    builder.Append(token.Content);
                 }
             }
         }
 
         public override void VisitHtml(HtmlContentIntermediateNode node)
         {
-            for (var i = 0; i < node.Children.Count; i++)
+            foreach (var child in node.Children)
             {
-                if (node.Children[i] is IntermediateToken token)
+                if (child is IntermediateToken token)
                 {
-                    Builder.Append(token.Content);
+                    builder.Append(token.Content);
                 }
             }
         }

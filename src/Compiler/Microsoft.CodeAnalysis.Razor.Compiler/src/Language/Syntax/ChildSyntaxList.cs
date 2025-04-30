@@ -1,20 +1,18 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
-#nullable disable
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnlyList<SyntaxNode>
 {
-    private readonly SyntaxNode _node;
+    private readonly SyntaxNode? _node;
     private readonly int _count;
 
     internal ChildSyntaxList(SyntaxNode node)
@@ -26,13 +24,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// <summary>
     /// Gets the number of children contained in the <see cref="ChildSyntaxList"/>.
     /// </summary>
-    public int Count
-    {
-        get
-        {
-            return _count;
-        }
-    }
+    public int Count => _count;
 
     internal static int CountNodes(GreenNode green)
     {
@@ -67,22 +59,17 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         {
             if (unchecked((uint)index < (uint)_count))
             {
-                return ItemInternal(_node, index);
+                return ItemInternal(_node!, index);
             }
 
             throw new ArgumentOutOfRangeException(nameof(index));
         }
     }
 
-    internal SyntaxNode Node
-    {
-        get { return _node; }
-    }
+    internal SyntaxNode? Node => _node;
 
     private static int Occupancy(GreenNode green)
-    {
-        return green.IsList ? green.SlotCount : 1;
-    }
+        => green.IsList ? green.SlotCount : 1;
 
     /// <summary>
     /// internal indexer that does not verify index.
@@ -90,7 +77,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// </summary>
     internal static SyntaxNode ItemInternal(SyntaxNode node, int index)
     {
-        GreenNode greenChild;
+        GreenNode? greenChild;
         var green = node.Green;
         var idx = index;
         var slotIndex = 0;
@@ -155,7 +142,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// <remarks>
     /// Assumes that <paramref name="targetPosition"/> is within the span of <paramref name="node"/>.
     /// </remarks>
-    internal static SyntaxNode ChildThatContainsPosition(SyntaxNode node, int targetPosition, out int index)
+    internal static SyntaxNode? ChildThatContainsPosition(SyntaxNode node, int targetPosition, out int index)
     {
         // The targetPosition must already be within this node
         Debug.Assert(node.Span.Contains(targetPosition));
@@ -225,7 +212,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// internal indexer that does not verify index.
     /// Used when caller has already ensured that index is within bounds.
     /// </summary>
-    internal static SyntaxNode ItemInternalAsNode(SyntaxNode node, int index)
+    internal static SyntaxNode? ItemInternalAsNode(SyntaxNode node, int index)
     {
         GreenNode greenChild;
         var green = node.Green;
@@ -269,19 +256,11 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
 
     // for debugging
 #pragma warning disable IDE0051 // Remove unused private members
-    private SyntaxNode[] Nodes
+    private SyntaxNode[] Nodes => [.. this];
 #pragma warning restore IDE0051 // Remove unused private members
-    {
-        get
-        {
-            return this.ToArray();
-        }
-    }
 
     public bool Any()
-    {
-        return _count != 0;
-    }
+        => _count != 0;
 
     /// <summary>
     /// Returns the first child in the list.
@@ -307,7 +286,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     {
         if (Any())
         {
-            return this[_count - 1];
+            return this[^1];
         }
 
         throw new InvalidOperationException();
@@ -319,63 +298,44 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// <returns><see cref="Reversed"/> which contains all children of <see cref="ChildSyntaxList"/> in reversed order</returns>
     public Reversed Reverse()
     {
-        return new Reversed(_node, _count);
+        Debug.Assert(_node != null);
+        return new(_node, _count);
     }
 
     /// <summary>Returns an enumerator that iterates through the <see cref="ChildSyntaxList"/>.</summary>
     /// <returns>A <see cref="Enumerator"/> for the <see cref="ChildSyntaxList"/>.</returns>
     public Enumerator GetEnumerator()
-    {
-        if (_node == null)
-        {
-            return default;
-        }
-
-        return new Enumerator(_node, _count);
-    }
+        => _node != null
+            ? new(_node, _count)
+            : default;
 
     IEnumerator<SyntaxNode> IEnumerable<SyntaxNode>.GetEnumerator()
-    {
-        if (_node == null)
-        {
-            return EmptyEnumerator<SyntaxNode>.Instance;
-        }
-
-        return new EnumeratorImpl(_node, _count);
-    }
+        => _node == null
+            ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+            : new EnumeratorImpl(_node, _count);
 
     IEnumerator IEnumerable.GetEnumerator()
-    {
-        if (_node == null)
-        {
-            return EmptyEnumerator<SyntaxNode>.Instance;
-        }
-
-        return new EnumeratorImpl(_node, _count);
-    }
+        => _node == null
+            ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+            : new EnumeratorImpl(_node, _count);
 
     /// <summary>Determines whether the specified object is equal to the current instance.</summary>
     /// <returns>true if the specified object is a <see cref="ChildSyntaxList" /> structure and is equal to the current instance; otherwise, false.</returns>
     /// <param name="obj">The object to be compared with the current instance.</param>
-    public override bool Equals(object obj)
-    {
-        return obj is ChildSyntaxList && Equals((ChildSyntaxList)obj);
-    }
+    public override bool Equals([NotNullWhen(true)] object? obj)
+        => obj is ChildSyntaxList other &&
+           Equals(other);
 
     /// <summary>Determines whether the specified <see cref="ChildSyntaxList" /> structure is equal to the current instance.</summary>
     /// <returns>true if the specified <see cref="ChildSyntaxList" /> structure is equal to the current instance; otherwise, false.</returns>
     /// <param name="other">The <see cref="ChildSyntaxList" /> structure to be compared with the current instance.</param>
     public bool Equals(ChildSyntaxList other)
-    {
-        return _node == other._node;
-    }
+        => _node == other._node;
 
     /// <summary>Returns the hash code for the current instance.</summary>
     /// <returns>A 32-bit signed integer hash code.</returns>
     public override int GetHashCode()
-    {
-        return _node?.GetHashCode() ?? 0;
-    }
+        => _node?.GetHashCode() ?? 0;
 
     /// <summary>Indicates whether two <see cref="ChildSyntaxList" /> structures are equal.</summary>
     /// <returns>true if <paramref name="list1" /> is equal to <paramref name="list2" />; otherwise, false.</returns>
@@ -448,7 +408,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
             _childIndex = -1;
         }
 
-        internal bool TryMoveNextAndGetCurrent(out SyntaxNode current)
+        internal bool TryMoveNextAndGetCurrent(out SyntaxNode? current)
         {
             if (!MoveNext())
             {
@@ -460,7 +420,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
             return true;
         }
 
-        internal SyntaxNode TryMoveNextAndGetCurrentAsNode()
+        internal SyntaxNode? TryMoveNextAndGetCurrentAsNode()
         {
             while (MoveNext())
             {
@@ -475,13 +435,15 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         }
     }
 
-    private class EnumeratorImpl : IEnumerator<SyntaxNode>
+    private sealed class EnumeratorImpl(SyntaxNode node, int count) : IEnumerator<SyntaxNode>
     {
-        private Enumerator _enumerator;
+        private Enumerator _enumerator = new(node, count);
 
-        internal EnumeratorImpl(SyntaxNode node, int count)
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
         {
-            _enumerator = new Enumerator(node, count);
         }
 
         /// <summary>
@@ -489,22 +451,18 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         /// </summary>
         /// <returns>
         /// The element in the collection at the current position of the enumerator.
-        ///   </returns>
+        /// </returns>
         public SyntaxNode Current
-        {
-            get { return _enumerator.Current; }
-        }
+            => _enumerator.Current;
 
         /// <summary>
         /// Gets the element in the collection at the current position of the enumerator.
         /// </summary>
         /// <returns>
         /// The element in the collection at the current position of the enumerator.
-        ///   </returns>
+        /// </returns>
         object IEnumerator.Current
-        {
-            get { return _enumerator.Current; }
-        }
+            => _enumerator.Current;
 
         /// <summary>
         /// Advances the enumerator to the next element of the collection.
@@ -513,23 +471,13 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         /// true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
         /// </returns>
         public bool MoveNext()
-        {
-            return _enumerator.MoveNext();
-        }
+            => _enumerator.MoveNext();
 
         /// <summary>
         /// Sets the enumerator to its initial position, which is before the first element in the collection.
         /// </summary>
         public void Reset()
-        {
-            _enumerator.Reset();
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        { }
+            => _enumerator.Reset();
     }
 
     public readonly partial struct Reversed : IEnumerable<SyntaxNode>, IEquatable<Reversed>
@@ -544,29 +492,17 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         }
 
         public Enumerator GetEnumerator()
-        {
-            return new Enumerator(_node, _count);
-        }
+            => new(_node, _count);
 
         IEnumerator<SyntaxNode> IEnumerable<SyntaxNode>.GetEnumerator()
-        {
-            if (_node == null)
-            {
-                return EmptyEnumerator<SyntaxNode>.Instance;
-            }
-
-            return new EnumeratorImpl(_node, _count);
-        }
+            => _node == null
+                ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+                : new EnumeratorImpl(_node, _count);
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            if (_node == null)
-            {
-                return EmptyEnumerator<SyntaxNode>.Instance;
-            }
-
-            return new EnumeratorImpl(_node, _count);
-        }
+            => _node == null
+                ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+                : new EnumeratorImpl(_node, _count);
 
         public override int GetHashCode()
         {
@@ -581,16 +517,13 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
             return hash.CombinedHash;
         }
 
-        public override bool Equals(object obj)
-        {
-            return (obj is Reversed) && Equals((Reversed)obj);
-        }
+        public override bool Equals(object? obj)
+            => obj is Reversed reversed &&
+               Equals(reversed);
 
         public bool Equals(Reversed other)
-        {
-            return _node == other._node
-                && _count == other._count;
-        }
+            => _node == other._node &&
+               _count == other._count;
 
         public struct Enumerator
         {
@@ -610,104 +543,12 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
                 return --_childIndex >= 0;
             }
 
-            public SyntaxNode Current
-            {
-                get
-                {
-                    return ItemInternal(_node, _childIndex);
-                }
-            }
+            public readonly SyntaxNode Current => ItemInternal(_node, _childIndex);
 
             public void Reset()
             {
                 _childIndex = _count;
             }
-        }
-
-        private class EnumeratorImpl : IEnumerator<SyntaxNode>
-        {
-            private Enumerator _enumerator;
-
-            internal EnumeratorImpl(SyntaxNode node, int count)
-            {
-                _enumerator = new Enumerator(node, count);
-            }
-
-            /// <summary>
-            /// Gets the element in the collection at the current position of the enumerator.
-            /// </summary>
-            /// <returns>
-            /// The element in the collection at the current position of the enumerator.
-            ///   </returns>
-            public SyntaxNode Current
-            {
-                get { return _enumerator.Current; }
-            }
-
-            /// <summary>
-            /// Gets the element in the collection at the current position of the enumerator.
-            /// </summary>
-            /// <returns>
-            /// The element in the collection at the current position of the enumerator.
-            ///   </returns>
-            object IEnumerator.Current
-            {
-                get { return _enumerator.Current; }
-            }
-
-            /// <summary>
-            /// Advances the enumerator to the next element of the collection.
-            /// </summary>
-            /// <returns>
-            /// true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
-            /// </returns>
-            /// <exception cref="InvalidOperationException">The collection was modified after the enumerator was created. </exception>
-            public bool MoveNext()
-            {
-                return _enumerator.MoveNext();
-            }
-
-            /// <summary>
-            /// Sets the enumerator to its initial position, which is before the first element in the collection.
-            /// </summary>
-            /// <exception cref="InvalidOperationException">The collection was modified after the enumerator was created. </exception>
-            public void Reset()
-            {
-                _enumerator.Reset();
-            }
-
-            /// <summary>
-            /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-            /// </summary>
-            public void Dispose()
-            { }
-        }
-    }
-
-    internal class EmptyEnumerator<T> : IEnumerator<T>
-    {
-        public static readonly IEnumerator<T> Instance = new EmptyEnumerator<T>();
-
-        protected EmptyEnumerator()
-        {
-        }
-
-        public T Current => throw new InvalidOperationException();
-
-        object IEnumerator.Current => throw new NotImplementedException();
-
-        public void Dispose()
-        {
-        }
-
-        public bool MoveNext()
-        {
-            return false;
-        }
-
-        public void Reset()
-        {
-            throw new NotImplementedException();
         }
     }
 }

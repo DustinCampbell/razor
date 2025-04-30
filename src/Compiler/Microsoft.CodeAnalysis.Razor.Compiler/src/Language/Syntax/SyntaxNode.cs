@@ -347,10 +347,11 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
             throw new ArgumentOutOfRangeException(nameof(position));
         }
 
-        SyntaxNode curNode = this;
+        SyntaxNode? curNode = this;
 
         while (true)
         {
+            Debug.Assert(curNode != null);
             Debug.Assert(curNode.Kind is < SyntaxKind.FirstAvailableTokenKind and >= 0);
             Debug.Assert(curNode.Span.Contains(position));
 

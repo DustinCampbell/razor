@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
@@ -122,6 +122,11 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return result;
     }
 
+    /// <summary>
+    /// This works the same as GetRed, but intended to be used in lists
+    /// The only difference is that the public parent of the node is not the list, 
+    /// but the list's parent. (element's grand parent).
+    /// </summary>
     internal SyntaxNode? GetRedElement(ref SyntaxNode? element, int slot)
     {
         Debug.Assert(IsList);
@@ -139,7 +144,30 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return result;
     }
 
-    internal virtual int GetChildPosition(int index)
+    internal int GetChildIndex(int slot)
+    {
+        var index = 0;
+
+        for (var i = 0; i < slot; i++)
+        {
+            var item = Green.GetSlot(i);
+            if ( item != null)
+            {
+                if (item.IsList)
+                {
+                    index += item.SlotCount;
+                }
+                else
+                {
+                    index++;
+                }
+            }
+        }
+
+        return index;
+    }
+
+    internal int GetChildPosition(int index)
     {
         var offset = 0;
         var green = Green;
@@ -161,38 +189,26 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return Position + offset;
     }
 
-    internal SyntaxList<SyntaxToken> GetTokens()
+    internal SyntaxTokenList GetTokens()
     {
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var tokens);
+        using var tokens = new PooledArrayBuilder<SyntaxToken>();
 
-        AddTokens(this, tokens);
-
-        return tokens;
-
-        static void AddTokens(SyntaxNode current, SyntaxListBuilder<SyntaxToken> tokens)
+        foreach (var nodeOrToken in ChildNodesAndTokens())
         {
-            if (current.SlotCount == 0 && current is SyntaxToken token)
+            if (nodeOrToken.AsToken(out var token))
             {
-                // Token
                 tokens.Add(token);
-                return;
-            }
-
-            for (var i = 0; i < current.SlotCount; i++)
-            {
-                if (current.GetNodeSlot(i) is { } child)
-                {
-                    AddTokens(child, tokens);
-                }
             }
         }
+
+        return tokens.ToList();
     }
 
     /// <summary>
     /// Gets the first token of the tree rooted by this node. Skips zero-width tokens.
     /// </summary>
     /// <returns>The first token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public SyntaxToken? GetFirstToken(bool includeZeroWidth = false)
+    public SyntaxToken GetFirstToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetFirstToken(this, includeZeroWidth);
     }
@@ -201,7 +217,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Gets the last token of the tree rooted by this node. Skips zero-width tokens.
     /// </summary>
     /// <returns>The last token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public SyntaxToken? GetLastToken(bool includeZeroWidth = false)
+    public SyntaxToken GetLastToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetLastToken(this, includeZeroWidth);
     }
@@ -209,10 +225,19 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// <summary>
     /// The list of child nodes of this node, where each element is a SyntaxNode instance.
     /// </summary>
-    public ChildSyntaxList ChildNodes()
+    public IEnumerable<SyntaxNode> ChildNodes()
     {
-        return new ChildSyntaxList(this);
+        foreach (var nodeOrToken in ChildNodesAndTokens())
+        {
+            if (nodeOrToken.AsNode(out var node))
+            {
+                yield return node;
+            }
+        }
     }
+
+    public ChildSyntaxList ChildNodesAndTokens()
+        => new(this);
 
     /// <summary>
     /// Gets a list of ancestor nodes
@@ -347,17 +372,16 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
             throw new ArgumentOutOfRangeException(nameof(position));
         }
 
-        SyntaxNode? curNode = this;
+        SyntaxNodeOrToken curNodeOrToken = this;
 
         while (true)
         {
-            Debug.Assert(curNode != null);
-            Debug.Assert(curNode.Kind is < SyntaxKind.FirstAvailableTokenKind and >= 0);
-            Debug.Assert(curNode.Span.Contains(position));
+            Debug.Assert(curNodeOrToken.Kind is < SyntaxKind.FirstAvailableTokenKind and >= 0);
+            Debug.Assert(curNodeOrToken.Span.Contains(position));
 
-            if (!curNode.IsToken)
+            if (!curNodeOrToken.IsNode)
             {
-                curNode = ChildSyntaxList.ChildThatContainsPosition(curNode, position, out _);
+                curNodeOrToken = ChildSyntaxList.ChildThatContainsPosition(curNodeOrToken.AsNode()!, position, out _);
             }
             else
             {
@@ -372,7 +396,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 //
                 //  Walk backwards until we find a non-whitespace token. If we find something that isn't a newline, that is the node requested.
                 //  If we find a newline, we need to walk forwards until we find the first non-whitespace or newline token. That is the node requested.
-                var foundToken = (SyntaxToken)curNode;
+                var foundToken = (SyntaxToken)curNodeOrToken;
                 if (includeWhitespace || foundToken.Kind is not (SyntaxKind.Whitespace or SyntaxKind.NewLine))
                 {
                     return foundToken;
@@ -391,13 +415,13 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 return walkForward(originalFoundToken);
             }
 
-            bool tryWalkBackwards(SyntaxToken originalFoundToken, [NotNullWhen(true)] out SyntaxToken? foundToken)
+            bool tryWalkBackwards(SyntaxToken originalFoundToken, out SyntaxToken foundToken)
             {
                 foundToken = originalFoundToken;
                 do
                 {
                     foundToken = foundToken.GetPreviousToken(includeZeroWidth: true);
-                    if (foundToken is null or { Kind: SyntaxKind.NewLine })
+                    if (foundToken.Kind is SyntaxKind.None or SyntaxKind.NewLine)
                     {
                         return false;
                     }
@@ -420,7 +444,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 {
                     currentToken = currentToken.GetNextToken(includeZeroWidth: true);
 
-                    if (currentToken is null || currentToken.Span.End > this.Span.End)
+                    if (currentToken.Kind == SyntaxKind.None || currentToken.Span.End > this.Span.End)
                     {
                         // Walked all the way forward to the end of the root that was requested and did not find any non-whitespace tokens. The user requested
                         // something out of range.

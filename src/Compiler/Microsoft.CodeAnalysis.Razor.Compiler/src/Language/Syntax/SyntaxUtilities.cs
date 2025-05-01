@@ -4,11 +4,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class SyntaxUtilities
 {
+    public static void AddRange(ref this PooledArrayBuilder<SyntaxToken> builder, SyntaxTokenList list)
+    {
+        foreach (var token in list)
+        {
+            builder.Add(token);
+        }
+    }
+
+    public static SyntaxTokenList ToList(ref readonly this PooledArrayBuilder<SyntaxToken> builder)
+    {
+        var array = builder.ToImmutable();
+
+        return SyntaxTokenList.Create(array.AsSpan());
+    }
+
     public static MarkupTextLiteralSyntax MergeTextLiterals(params MarkupTextLiteralSyntax[] literalSyntaxes)
     {
         SyntaxNode? parent = null;
@@ -32,7 +48,7 @@ internal static class SyntaxUtilities
 
             foreach (var token in syntax.LiteralTokens)
             {
-                builder.Add(token.Green);
+                builder.Add(token.Node);
             }
         }
 

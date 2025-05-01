@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
-internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnlyList<SyntaxNode>
+internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnlyList<SyntaxNodeOrToken>
 {
     private readonly SyntaxNode? _node;
     private readonly int _count;
@@ -53,7 +53,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// <param name="index">The zero-based index of the child to get.</param>
     /// <exception cref="System.ArgumentOutOfRangeException">
     ///   <paramref name="index"/> is less than 0.-or-<paramref name="index" /> is equal to or greater than <see cref="ChildSyntaxList.Count"/>. </exception>
-    public SyntaxNode this[int index]
+    public SyntaxNodeOrToken this[int index]
     {
         get
         {
@@ -75,7 +75,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// internal indexer that does not verify index.
     /// Used when caller has already ensured that index is within bounds.
     /// </summary>
-    internal static SyntaxNode ItemInternal(SyntaxNode node, int index)
+    internal static SyntaxNodeOrToken ItemInternal(SyntaxNode node, int index)
     {
         GreenNode? greenChild;
         var green = node.Green;
@@ -128,9 +128,21 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
                 // this is our node
                 return redChild;
             }
+
+            // Must be a separator
+            // Update greenChild and position and let it be handled as a token
+            greenChild = greenChild.GetSlot(idx);
+            position = red.GetChildPosition(idx);
+        }
+        else
+        {
+            // it is a token from a token list, uncommon case
+            // update greenChild and position and let it be handled as a token
+            position += greenChild.GetSlotOffset(idx);
+            greenChild = greenChild.GetSlot(idx);
         }
 
-        return node;
+        return new(node, greenChild, position, index);
     }
 
     /// <summary>
@@ -142,7 +154,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// <remarks>
     /// Assumes that <paramref name="targetPosition"/> is within the span of <paramref name="node"/>.
     /// </remarks>
-    internal static SyntaxNode? ChildThatContainsPosition(SyntaxNode node, int targetPosition, out int index)
+    internal static SyntaxNodeOrToken ChildThatContainsPosition(SyntaxNode node, int targetPosition, out int index)
     {
         // The targetPosition must already be within this node
         Debug.Assert(node.Span.Contains(targetPosition));
@@ -184,28 +196,36 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
             {
                 return red;
             }
+
+            // Otherwise we'll have to make a token with current green and position.
         }
         else
         {
             slot = green.FindSlotIndexContainingOffset(targetPosition - position);
 
-            // Since we can't have "lists of lists", the Occupancy calculation for
-            // child elements in a list is simple.
-            index += slot;
-
             // Realize the red node (if any)
             if (red != null)
             {
-                // It is a red list of nodes
+                // It is a red list of nodes (separated or not)
                 red = red.GetNodeSlot(slot);
                 if (red != null)
                 {
                     return red;
                 }
+
+                // Must be a separator
             }
+
+            // Otheriwe we have token.
+            position += green.GetSlotOffset(slot);
+            green = green.GetSlot(slot);
+
+            // Since we can't have "lists of lists", the Occupancy calculation for
+            // child elements in a list is simple.
+            index += slot;
         }
 
-        return node;
+        return new(node, green, position, index);
     }
 
     /// <summary>
@@ -256,7 +276,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
 
     // for debugging
 #pragma warning disable IDE0051 // Remove unused private members
-    private SyntaxNode[] Nodes => [.. this];
+    private SyntaxNodeOrToken[] Nodes => [.. this];
 #pragma warning restore IDE0051 // Remove unused private members
 
     public bool Any()
@@ -267,7 +287,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// </summary>
     /// <returns>The first child in the list.</returns>
     /// <exception cref="System.InvalidOperationException">The list is empty.</exception>
-    public SyntaxNode First()
+    public SyntaxNodeOrToken First()
     {
         if (Any())
         {
@@ -282,7 +302,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
     /// </summary>
     /// <returns>The last child in the list.</returns>
     /// <exception cref="System.InvalidOperationException">The list is empty.</exception>
-    public SyntaxNode Last()
+    public SyntaxNodeOrToken Last()
     {
         if (Any())
         {
@@ -309,14 +329,14 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
             ? new(_node, _count)
             : default;
 
-    IEnumerator<SyntaxNode> IEnumerable<SyntaxNode>.GetEnumerator()
+    IEnumerator<SyntaxNodeOrToken> IEnumerable<SyntaxNodeOrToken>.GetEnumerator()
         => _node == null
-            ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+            ? SpecializedCollections.EmptyEnumerator<SyntaxNodeOrToken>()
             : new EnumeratorImpl(_node, _count);
 
     IEnumerator IEnumerable.GetEnumerator()
         => _node == null
-            ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+            ? SpecializedCollections.EmptyEnumerator<SyntaxNodeOrToken>()
             : new EnumeratorImpl(_node, _count);
 
     /// <summary>Determines whether the specified object is equal to the current instance.</summary>
@@ -394,7 +414,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
 
         /// <summary>Gets the element at the current position of the enumerator.</summary>
         /// <returns>The element in the <see cref="ChildSyntaxList" /> at the current position of the enumerator.</returns>
-        public SyntaxNode Current
+        public SyntaxNodeOrToken Current
         {
             get
             {
@@ -408,7 +428,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
             _childIndex = -1;
         }
 
-        internal bool TryMoveNextAndGetCurrent(out SyntaxNode? current)
+        internal bool TryMoveNextAndGetCurrent(out SyntaxNodeOrToken current)
         {
             if (!MoveNext())
             {
@@ -435,7 +455,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         }
     }
 
-    private sealed class EnumeratorImpl(SyntaxNode node, int count) : IEnumerator<SyntaxNode>
+    private sealed class EnumeratorImpl(SyntaxNode node, int count) : IEnumerator<SyntaxNodeOrToken>
     {
         private Enumerator _enumerator = new(node, count);
 
@@ -452,7 +472,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         /// <returns>
         /// The element in the collection at the current position of the enumerator.
         /// </returns>
-        public SyntaxNode Current
+        public SyntaxNodeOrToken Current
             => _enumerator.Current;
 
         /// <summary>
@@ -480,7 +500,7 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
             => _enumerator.Reset();
     }
 
-    public readonly partial struct Reversed : IEnumerable<SyntaxNode>, IEquatable<Reversed>
+    public readonly partial struct Reversed : IEnumerable<SyntaxNodeOrToken>, IEquatable<Reversed>
     {
         private readonly SyntaxNode _node;
         private readonly int _count;
@@ -494,14 +514,14 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
         public Enumerator GetEnumerator()
             => new(_node, _count);
 
-        IEnumerator<SyntaxNode> IEnumerable<SyntaxNode>.GetEnumerator()
+        IEnumerator<SyntaxNodeOrToken> IEnumerable<SyntaxNodeOrToken>.GetEnumerator()
             => _node == null
-                ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+                ? SpecializedCollections.EmptyEnumerator<SyntaxNodeOrToken>()
                 : new EnumeratorImpl(_node, _count);
 
         IEnumerator IEnumerable.GetEnumerator()
             => _node == null
-                ? SpecializedCollections.EmptyEnumerator<SyntaxNode>()
+                ? SpecializedCollections.EmptyEnumerator<SyntaxNodeOrToken>()
                 : new EnumeratorImpl(_node, _count);
 
         public override int GetHashCode()
@@ -543,7 +563,8 @@ internal readonly struct ChildSyntaxList : IEquatable<ChildSyntaxList>, IReadOnl
                 return --_childIndex >= 0;
             }
 
-            public readonly SyntaxNode Current => ItemInternal(_node, _childIndex);
+            public readonly SyntaxNodeOrToken Current
+                => ItemInternal(_node, _childIndex);
 
             public void Reset()
             {

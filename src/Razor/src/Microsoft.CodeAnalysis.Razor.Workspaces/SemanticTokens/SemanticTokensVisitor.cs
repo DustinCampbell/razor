@@ -544,8 +544,8 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         // LSP spec forbids multi-line tokens, so we need to split this up.
         if (range.Start.Line != range.End.Line)
         {
-            var childNodes = node.ChildNodes();
-            if (childNodes.Count == 0)
+            var childNodesAndTokens = node.ChildNodesAndTokens();
+            if (childNodesAndTokens.Count == 0)
             {
                 var charPosition = range.Start.Character;
                 var lineStartAbsoluteIndex = node.SpanStart - charPosition;

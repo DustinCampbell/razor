@@ -7,10 +7,8 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 
-
 namespace Microsoft.AspNetCore.Razor.Language.Syntax
 {
-
   internal partial class SyntaxVisitor<TResult>
   {
     /// <summary>Called when the visitor visits a RazorDocumentSyntax node.</summary>
@@ -809,7 +807,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
   internal static partial class SyntaxFactory
   {
-
     /// <summary>Creates a new RazorDocumentSyntax instance.</summary>
     public static RazorDocumentSyntax RazorDocument(RazorBlockSyntax document, SyntaxToken endOfFile)
     {
@@ -879,7 +876,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     }
 
     /// <summary>Creates a new RazorMetaCodeSyntax instance.</summary>
-    public static RazorMetaCodeSyntax RazorMetaCode(SyntaxList<SyntaxToken> metaCode, ISpanChunkGenerator chunkGenerator)
+    public static RazorMetaCodeSyntax RazorMetaCode(SyntaxTokenList metaCode, ISpanChunkGenerator chunkGenerator)
     {
       return (RazorMetaCodeSyntax)InternalSyntax.SyntaxFactory.RazorMetaCode(metaCode.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -887,7 +884,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new RazorMetaCodeSyntax instance.</summary>
     public static RazorMetaCodeSyntax RazorMetaCode(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.RazorMetaCode(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.RazorMetaCode(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new GenericBlockSyntax instance.</summary>
@@ -903,7 +900,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     }
 
     /// <summary>Creates a new UnclassifiedTextLiteralSyntax instance.</summary>
-    public static UnclassifiedTextLiteralSyntax UnclassifiedTextLiteral(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public static UnclassifiedTextLiteralSyntax UnclassifiedTextLiteral(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
       return (UnclassifiedTextLiteralSyntax)InternalSyntax.SyntaxFactory.UnclassifiedTextLiteral(literalTokens.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -911,7 +908,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new UnclassifiedTextLiteralSyntax instance.</summary>
     public static UnclassifiedTextLiteralSyntax UnclassifiedTextLiteral(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.UnclassifiedTextLiteral(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.UnclassifiedTextLiteral(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new MarkupBlockSyntax instance.</summary>
@@ -927,7 +924,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     }
 
     /// <summary>Creates a new MarkupTransitionSyntax instance.</summary>
-    public static MarkupTransitionSyntax MarkupTransition(SyntaxList<SyntaxToken> transitionTokens, ISpanChunkGenerator chunkGenerator)
+    public static MarkupTransitionSyntax MarkupTransition(SyntaxTokenList transitionTokens, ISpanChunkGenerator chunkGenerator)
     {
       return (MarkupTransitionSyntax)InternalSyntax.SyntaxFactory.MarkupTransition(transitionTokens.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -935,11 +932,11 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new MarkupTransitionSyntax instance.</summary>
     public static MarkupTransitionSyntax MarkupTransition(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.MarkupTransition(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.MarkupTransition(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new MarkupTextLiteralSyntax instance.</summary>
-    public static MarkupTextLiteralSyntax MarkupTextLiteral(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public static MarkupTextLiteralSyntax MarkupTextLiteral(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
       return (MarkupTextLiteralSyntax)InternalSyntax.SyntaxFactory.MarkupTextLiteral(literalTokens.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -947,11 +944,11 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new MarkupTextLiteralSyntax instance.</summary>
     public static MarkupTextLiteralSyntax MarkupTextLiteral(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.MarkupTextLiteral(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.MarkupTextLiteral(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new MarkupEphemeralTextLiteralSyntax instance.</summary>
-    public static MarkupEphemeralTextLiteralSyntax MarkupEphemeralTextLiteral(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public static MarkupEphemeralTextLiteralSyntax MarkupEphemeralTextLiteral(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
       return (MarkupEphemeralTextLiteralSyntax)InternalSyntax.SyntaxFactory.MarkupEphemeralTextLiteral(literalTokens.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -959,7 +956,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new MarkupEphemeralTextLiteralSyntax instance.</summary>
     public static MarkupEphemeralTextLiteralSyntax MarkupEphemeralTextLiteral(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.MarkupEphemeralTextLiteral(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.MarkupEphemeralTextLiteral(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new MarkupCommentBlockSyntax instance.</summary>
@@ -1449,7 +1446,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     }
 
     /// <summary>Creates a new CSharpStatementLiteralSyntax instance.</summary>
-    public static CSharpStatementLiteralSyntax CSharpStatementLiteral(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public static CSharpStatementLiteralSyntax CSharpStatementLiteral(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
       return (CSharpStatementLiteralSyntax)InternalSyntax.SyntaxFactory.CSharpStatementLiteral(literalTokens.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -1457,11 +1454,11 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new CSharpStatementLiteralSyntax instance.</summary>
     public static CSharpStatementLiteralSyntax CSharpStatementLiteral(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.CSharpStatementLiteral(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.CSharpStatementLiteral(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new CSharpExpressionLiteralSyntax instance.</summary>
-    public static CSharpExpressionLiteralSyntax CSharpExpressionLiteral(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public static CSharpExpressionLiteralSyntax CSharpExpressionLiteral(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
       return (CSharpExpressionLiteralSyntax)InternalSyntax.SyntaxFactory.CSharpExpressionLiteral(literalTokens.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -1469,11 +1466,11 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new CSharpExpressionLiteralSyntax instance.</summary>
     public static CSharpExpressionLiteralSyntax CSharpExpressionLiteral(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.CSharpExpressionLiteral(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.CSharpExpressionLiteral(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new CSharpEphemeralTextLiteralSyntax instance.</summary>
-    public static CSharpEphemeralTextLiteralSyntax CSharpEphemeralTextLiteral(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public static CSharpEphemeralTextLiteralSyntax CSharpEphemeralTextLiteral(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
       return (CSharpEphemeralTextLiteralSyntax)InternalSyntax.SyntaxFactory.CSharpEphemeralTextLiteral(literalTokens.Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator).CreateRed();
     }
@@ -1481,7 +1478,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     /// <summary>Creates a new CSharpEphemeralTextLiteralSyntax instance.</summary>
     public static CSharpEphemeralTextLiteralSyntax CSharpEphemeralTextLiteral(ISpanChunkGenerator chunkGenerator)
     {
-      return SyntaxFactory.CSharpEphemeralTextLiteral(default(SyntaxList<SyntaxToken>), chunkGenerator);
+      return SyntaxFactory.CSharpEphemeralTextLiteral(default(SyntaxTokenList), chunkGenerator);
     }
 
     /// <summary>Creates a new CSharpTemplateBlockSyntax instance.</summary>

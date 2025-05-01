@@ -1,45 +1,60 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
-internal class SyntaxToken : RazorSyntaxNode
+internal readonly struct SyntaxToken : IEquatable<SyntaxToken>
 {
     internal static readonly Func<SyntaxToken, bool> NonZeroWidth = t => t.Width > 0;
     internal static readonly Func<SyntaxToken, bool> Any = t => true;
 
-    internal SyntaxToken(GreenNode green, SyntaxNode parent, int position)
-        : base(green, parent, position)
+    public GreenNode? Node { get; }
+    public SyntaxNode? Parent { get; }
+
+    internal int Position { get; }
+    internal int Index { get; }
+
+    internal SyntaxToken(GreenNode? token, SyntaxNode? parent, int position, int index)
     {
+        Debug.Assert(parent == null || !parent.Green.IsList, "list cannot be a parent");
+        Debug.Assert(token == null || token.IsToken, "token must be a token");
+
+        Node = token;
+        Parent = parent;
+        Position = position;
+        Index = index;
     }
 
-    internal new InternalSyntax.SyntaxToken Green => (InternalSyntax.SyntaxToken)base.Green;
+    public SyntaxKind Kind => Node?.Kind ?? 0;
 
-    public string Content => Green.Content;
-
-    internal sealed override SyntaxNode GetCachedSlot(int index)
+    internal GreenNode RequiredNode
     {
-        throw new InvalidOperationException("Tokens can't have slots.");
+        get
+        {
+            Debug.Assert(Node != null);
+            return Node;
+        }
     }
 
-    internal sealed override SyntaxNode GetNodeSlot(int slot)
-    {
-        throw new InvalidOperationException("Tokens can't have slots.");
-    }
+    internal int Width => Node?.Width ?? 0;
 
-    public override TResult Accept<TResult>(SyntaxVisitor<TResult> visitor)
-    {
-        return visitor.VisitToken(this);
-    }
+    public int SpanStart
+        => Node != null ? Position : 0;
 
-    public override void Accept(SyntaxVisitor visitor)
-    {
-        visitor.VisitToken(this);
-    }
+    public TextSpan Span
+        => Node != null ? new(Position, Node.Width) : default;
+
+    internal int EndPosition
+        => Node != null ? Position + Node.Width : default;
+
+    public bool IsMissing => Node?.IsMissing ?? false;
+
+    public string Content => (Node as InternalSyntax.SyntaxToken)?.Content ?? string.Empty;
 
     /// <summary>
     /// Gets the token that follows this token in the syntax tree.
@@ -60,7 +75,25 @@ internal class SyntaxToken : RazorSyntaxNode
     }
 
     public override string ToString()
+        => Content;
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+        => obj is SyntaxToken other &&
+           Equals(other);
+
+    public bool Equals(SyntaxToken other)
     {
-        return Content;
+        throw new NotImplementedException();
     }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
+    public static bool operator ==(SyntaxToken left, SyntaxToken right)
+        => left.Equals(right);
+
+    public static bool operator !=(SyntaxToken left, SyntaxToken right)
+        => !left.Equals(right);
 }

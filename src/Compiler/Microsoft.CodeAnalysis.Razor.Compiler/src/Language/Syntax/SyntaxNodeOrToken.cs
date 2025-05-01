@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -20,24 +20,30 @@ internal readonly struct SyntaxNodeOrToken : IEquatable<SyntaxNodeOrToken>
 
     private readonly int _position;
 
+    private readonly int _tokenIndex;
+
     internal SyntaxNodeOrToken(SyntaxNode node)
         : this()
     {
         Debug.Assert(!node.Green.IsList, "node cannot be a list");
-        _position = node.Position;
+
         _nodeOrParent = node;
+        _position = node.Position;
+        _tokenIndex = -1;
     }
 
-    internal SyntaxNodeOrToken(SyntaxNode? parent, GreenNode? token, int position)
+    internal SyntaxNodeOrToken(SyntaxNode? parent, GreenNode? token, int position, int index)
     {
         Debug.Assert(parent == null || !parent.Green.IsList, "parent cannot be a list");
-        Debug.Assert(token != null || (parent == null && position == 0), "parts must form a token");
+        Debug.Assert(token != null || (parent == null && position == 0 & index == 0), "parts must form a token");
         Debug.Assert(token == null || token.IsToken, "token must be a token");
+        Debug.Assert(index >= 0, "index must not be negative");
         Debug.Assert(parent == null || token != null, "null token cannot have parent");
 
         _nodeOrParent = parent;
         _token = token;
         _position = position;
+        _tokenIndex = index;
     }
 
     private string GetDebuggerDisplay()
@@ -55,13 +61,42 @@ internal readonly struct SyntaxNodeOrToken : IEquatable<SyntaxNodeOrToken>
 
     public bool IsToken => !IsNode;
 
-    public bool IsNode => _nodeOrParent is null;
+    public bool IsNode => _tokenIndex < 0;
 
-    public SyntaxToken? AsToken()
-        => _token != null ? new SyntaxToken(_token, _nodeOrParent, _position) : null;
+    public SyntaxToken AsToken()
+        => _token != null ? new SyntaxToken(_token, _nodeOrParent, _position, _tokenIndex) : default;
+
+    internal bool AsToken(out SyntaxToken token)
+    {
+        if (IsToken)
+        {
+            token = AsToken();
+            return true;
+        }
+
+        token = default;
+        return false;
+    }
 
     public SyntaxNode? AsNode()
         => _token == null ? _nodeOrParent : null;
+
+    internal bool AsNode([NotNullWhen(true)] out SyntaxNode? node)
+    {
+        if (IsNode)
+        {
+            node = _nodeOrParent;
+            return node is not null;
+        }
+
+        node = null;
+        return false;
+    }
+
+    public ChildSyntaxList ChildNodesAndTokens()
+        => AsNode(out var node)
+            ? node.ChildNodesAndTokens()
+            : default;
 
     public TextSpan Span
     {
@@ -191,9 +226,16 @@ internal readonly struct SyntaxNodeOrToken : IEquatable<SyntaxNodeOrToken>
            Equals(syntaxNodeOrToken);
 
     public bool Equals(SyntaxNodeOrToken other)
-        => _nodeOrParent == other._nodeOrParent &&
-           _token == other._token &&
-           _position == other._position;
+    {
+        // index replaces position to ensure equality.  Assert if offset affects equality.
+        Debug.Assert(
+            (_nodeOrParent == other._nodeOrParent && _token == other._token && _position == other._position && _tokenIndex == other._tokenIndex) ==
+            (_nodeOrParent == other._nodeOrParent && _token == other._token && _tokenIndex == other._tokenIndex));
+
+        return _nodeOrParent == other._nodeOrParent &&
+               _token == other._token &&
+               _tokenIndex == other._tokenIndex;
+    }
 
     public override int GetHashCode()
     {
@@ -201,7 +243,7 @@ internal readonly struct SyntaxNodeOrToken : IEquatable<SyntaxNodeOrToken>
 
         hash.Add(_nodeOrParent);
         hash.Add(_token);
-        hash.Add(_position);
+        hash.Add(_tokenIndex);
 
         return hash.CombinedHash;
     }
@@ -213,11 +255,10 @@ internal readonly struct SyntaxNodeOrToken : IEquatable<SyntaxNodeOrToken>
         => !left.Equals(right);
 
     public static implicit operator SyntaxNodeOrToken(SyntaxToken token)
-        => new(token.Parent, token.Green, token.Position);
+        => new(token.Parent, token.Node, token.Position, token.Index);
 
     public static explicit operator SyntaxToken(SyntaxNodeOrToken nodeOrToken)
-        // TODO: Remove ! once SyntaxToken is a struct.
-        => nodeOrToken.AsToken()!;
+        => nodeOrToken.AsToken();
 
     public static implicit operator SyntaxNodeOrToken(SyntaxNode? node)
         => node is not null ? new(node) : default;

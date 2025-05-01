@@ -110,6 +110,14 @@ internal abstract class GreenNode
 
     internal abstract GreenNode GetSlot(int index);
 
+    internal GreenNode GetRequiredSlot(int index)
+    {
+        var node = GetSlot(index);
+        Debug.Assert(node != null);
+
+        return node;
+    }
+
     // for slot counts >= byte.MaxValue
     protected virtual int GetSlotCount()
     {
@@ -405,6 +413,33 @@ internal abstract class GreenNode
                 return InternalSyntax.SyntaxList.List(list);
         }
     }
+
+#nullable enable
+    public static GreenNode? CreateList<TFrom>(List<TFrom> list, Func<TFrom, GreenNode> select)
+    {
+        switch (list.Count)
+        {
+            case 0:
+                return null;
+            case 1:
+                return select(list[0]);
+            case 2:
+                return InternalSyntax.SyntaxList.List(select(list[0]), select(list[1]));
+            case 3:
+                return InternalSyntax.SyntaxList.List(select(list[0]), select(list[1]), select(list[2]));
+            default:
+                {
+                    var array = new ArrayElement<GreenNode>[list.Count];
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        array[i].Value = select(list[i]);
+                    }
+
+                    return InternalSyntax.SyntaxList.List(array);
+                }
+        }
+    }
+#nullable disable
 
     public SyntaxNode CreateRed()
     {

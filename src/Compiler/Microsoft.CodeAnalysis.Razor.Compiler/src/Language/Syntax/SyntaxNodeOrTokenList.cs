@@ -71,7 +71,6 @@ internal readonly partial struct SyntaxNodeOrTokenList : IEquatable<SyntaxNodeOr
 
                     return InternalSyntax.SyntaxList.List(copy).CreateRed();
                 }
-
         }
     }
 

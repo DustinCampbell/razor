@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
@@ -18,30 +19,30 @@ internal static class SyntaxNavigator
         return predicate == null || ReferenceEquals(predicate, SyntaxToken.Any) || predicate(token);
     }
 
-    internal static SyntaxToken? GetFirstToken(SyntaxNode current, bool includeZeroWidth)
+    internal static SyntaxToken GetFirstToken(SyntaxNode current, bool includeZeroWidth)
     {
         return GetFirstToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static SyntaxToken? GetLastToken(SyntaxNode current, bool includeZeroWidth)
+    internal static SyntaxToken GetLastToken(SyntaxNode current, bool includeZeroWidth)
     {
         return GetLastToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static SyntaxToken? GetPreviousToken(SyntaxToken current, bool includeZeroWidth)
+    internal static SyntaxToken GetPreviousToken(SyntaxToken current, bool includeZeroWidth)
     {
         return GetPreviousToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static SyntaxToken? GetNextToken(SyntaxToken current, bool includeZeroWidth)
+    internal static SyntaxToken GetNextToken(SyntaxToken current, bool includeZeroWidth)
     {
         return GetNextToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static SyntaxToken? GetFirstToken(SyntaxNode current, Func<SyntaxToken, bool>? predicate)
+    internal static SyntaxToken GetFirstToken(SyntaxNode current, Func<SyntaxToken, bool>? predicate)
     {
         using var stack = new PooledArrayBuilder<ChildSyntaxList.Enumerator>();
-        stack.Push(current.ChildNodes().GetEnumerator());
+        stack.Push(current.ChildNodesAndTokens().GetEnumerator());
 
         while (stack.Count > 0)
         {
@@ -53,7 +54,7 @@ internal static class SyntaxNavigator
                 if (child.IsToken)
                 {
                     var token = GetFirstToken((SyntaxToken)child, predicate);
-                    if (token != null)
+                    if (token.Kind != SyntaxKind.None)
                     {
                         return token;
                     }
@@ -64,18 +65,18 @@ internal static class SyntaxNavigator
 
                 if (!child.IsToken)
                 {
-                    stack.Push(child.ChildNodes().GetEnumerator());
+                    stack.Push(child.ChildNodesAndTokens().GetEnumerator());
                 }
             }
         }
 
-        return null;
+        return default;
     }
 
-    internal static SyntaxToken? GetLastToken(SyntaxNode current, Func<SyntaxToken, bool> predicate)
+    internal static SyntaxToken GetLastToken(SyntaxNode current, Func<SyntaxToken, bool> predicate)
     {
         using var stack = new PooledArrayBuilder<ChildSyntaxList.Reversed.Enumerator>();
-        stack.Push(current.ChildNodes().Reverse().GetEnumerator());
+        stack.Push(current.ChildNodesAndTokens().Reverse().GetEnumerator());
 
         while (stack.Count > 0)
         {
@@ -88,7 +89,7 @@ internal static class SyntaxNavigator
                 if (child.IsToken)
                 {
                     var token = GetLastToken((SyntaxToken)child, predicate);
-                    if (token != null)
+                    if (token.Kind != SyntaxKind.None)
                     {
                         return token;
                     }
@@ -99,57 +100,60 @@ internal static class SyntaxNavigator
 
                 if (!child.IsToken)
                 {
-                    stack.Push(child.ChildNodes().Reverse().GetEnumerator());
+                    stack.Push(child.ChildNodesAndTokens().Reverse().GetEnumerator());
                 }
             }
         }
 
-        return null;
+        return default;
     }
 
-    private static SyntaxToken? GetFirstToken(SyntaxToken token, Func<SyntaxToken, bool>? predicate)
+    private static SyntaxToken GetFirstToken(SyntaxToken token, Func<SyntaxToken, bool>? predicate)
     {
         if (Matches(predicate, token))
         {
             return token;
         }
 
-        return null;
+        return default;
     }
 
-    private static SyntaxToken? GetLastToken(SyntaxToken token, Func<SyntaxToken, bool> predicate)
+    private static SyntaxToken GetLastToken(SyntaxToken token, Func<SyntaxToken, bool> predicate)
     {
         if (Matches(predicate, token))
         {
             return token;
         }
 
-        return null;
+        return default;
     }
 
-    internal static SyntaxToken? GetNextToken(SyntaxNode node, Func<SyntaxToken, bool>? predicate)
+    internal static SyntaxToken GetNextToken(SyntaxNode node, Func<SyntaxToken, bool>? predicate)
     {
         while (node.Parent != null)
         {
             // walk forward in parent's child list until we find ourselves and then return the
             // next token
             var returnNext = false;
-            foreach (var child in node.Parent.ChildNodes())
+            foreach (var child in node.Parent.ChildNodesAndTokens())
             {
                 if (returnNext)
                 {
                     if (child.IsToken)
                     {
-                        var token = GetFirstToken((SyntaxToken)child, predicate);
-                        if (token != null)
+                        var token = GetFirstToken(child.AsToken(), predicate);
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
                     }
                     else
                     {
-                        var token = GetFirstToken(child, predicate);
-                        if (token != null)
+                        var childNode = child.AsNode();
+                        Debug.Assert(childNode != null);
+
+                        var token = GetFirstToken(childNode, predicate);
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
@@ -165,10 +169,10 @@ internal static class SyntaxNavigator
             node = node.Parent;
         }
 
-        return null;
+        return default;
     }
 
-    internal static SyntaxToken? GetPreviousToken(
+    internal static SyntaxToken GetPreviousToken(
         SyntaxNode node,
         Func<SyntaxToken, bool> predicate)
     {
@@ -177,22 +181,25 @@ internal static class SyntaxNavigator
             // walk forward in parent's child list until we find ourselves and then return the
             // previous token
             var returnPrevious = false;
-            foreach (var child in node.Parent.ChildNodes().Reverse())
+            foreach (var child in node.Parent.ChildNodesAndTokens().Reverse())
             {
                 if (returnPrevious)
                 {
                     if (child.IsToken)
                     {
-                        var token = GetLastToken((SyntaxToken)child, predicate);
-                        if (token != null)
+                        var token = GetLastToken(child.AsToken(), predicate);
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
                     }
                     else
                     {
-                        var token = GetLastToken(child, predicate);
-                        if (token != null)
+                        var childNode = child.AsNode();
+                        Debug.Assert(childNode != null);
+
+                        var token = GetLastToken(childNode, predicate);
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
@@ -208,38 +215,41 @@ internal static class SyntaxNavigator
             node = node.Parent;
         }
 
-        return null;
+        return default;
     }
 
-    internal static SyntaxToken? GetNextToken(SyntaxToken current, Func<SyntaxToken, bool>? predicate)
+    internal static SyntaxToken GetNextToken(SyntaxToken current, Func<SyntaxToken, bool>? predicate)
     {
         if (current.Parent != null)
         {
             // walk forward in parent's child list until we find ourself
             // and then return the next token
             var returnNext = false;
-            foreach (var child in current.Parent.ChildNodes())
+            foreach (var child in current.Parent.ChildNodesAndTokens())
             {
                 if (returnNext)
                 {
                     if (child.IsToken)
                     {
-                        var token = GetFirstToken((SyntaxToken)child, predicate);
-                        if (token != null)
+                        var token = GetFirstToken(child.AsToken(), predicate);
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
                     }
                     else
                     {
-                        var token = GetFirstToken(child, predicate);
-                        if (token != null)
+                        var childNode = child.AsNode();
+                        Debug.Assert(childNode != null);
+
+                        var token = GetFirstToken(childNode, predicate);
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
                     }
                 }
-                else if (child == current)
+                else if (child.IsToken && child.AsToken() == current)
                 {
                     returnNext = true;
                 }
@@ -249,38 +259,41 @@ internal static class SyntaxNavigator
             return GetNextToken(current.Parent, predicate);
         }
 
-        return null;
+        return default;
     }
 
-    internal static SyntaxToken? GetPreviousToken(SyntaxToken current, Func<SyntaxToken, bool> predicate)
+    internal static SyntaxToken GetPreviousToken(SyntaxToken current, Func<SyntaxToken, bool> predicate)
     {
         if (current.Parent != null)
         {
             // walk forward in parent's child list until we find ourself
             // and then return the next token
             var returnPrevious = false;
-            foreach (var child in current.Parent.ChildNodes().Reverse())
+            foreach (var child in current.Parent.ChildNodesAndTokens().Reverse())
             {
                 if (returnPrevious)
                 {
                     if (child.IsToken)
                     {
                         var token = GetLastToken((SyntaxToken)child, predicate);
-                        if (token != null)
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
                     }
                     else
                     {
-                        var token = GetLastToken(child, predicate);
-                        if (token != null)
+                        var childNode = child.AsNode();
+                        Debug.Assert(childNode != null);
+
+                        var token = GetLastToken(childNode, predicate);
+                        if (token.Kind != SyntaxKind.None)
                         {
                             return token;
                         }
                     }
                 }
-                else if (child == current)
+                else if (child.IsToken && child.AsToken() == current)
                 {
                     returnPrevious = true;
                 }
@@ -290,6 +303,6 @@ internal static class SyntaxNavigator
             return GetPreviousToken(current.Parent, predicate);
         }
 
-        return null;
+        return default;
     }
 }

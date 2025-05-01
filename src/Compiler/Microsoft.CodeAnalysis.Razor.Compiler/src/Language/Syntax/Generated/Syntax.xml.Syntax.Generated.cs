@@ -7,11 +7,8 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 
-
 namespace Microsoft.AspNetCore.Razor.Language.Syntax
 {
-
-
   internal abstract partial class RazorBlockSyntax : RazorSyntaxNode
   {
     internal RazorBlockSyntax(GreenNode green, SyntaxNode parent, int position)
@@ -30,7 +27,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
   internal sealed partial class RazorDocumentSyntax : RazorSyntaxNode
   {
     private RazorBlockSyntax _document;
-    private SyntaxToken _endOfFile;
 
     internal RazorDocumentSyntax(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
@@ -47,10 +43,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken EndOfFile 
     {
-        get
-        {
-            return GetRed(ref _endOfFile, 1);
-        }
+      get { return new SyntaxToken(((InternalSyntax.RazorDocumentSyntax)Green).EndOfFile, this, GetChildPosition(1), GetChildIndex(1)); }
     }
 
     internal override SyntaxNode GetNodeSlot(int index)
@@ -58,16 +51,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         switch (index)
         {
             case 0: return GetRedAtZero(ref _document);
-            case 1: return GetRed(ref _endOfFile, 1);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
             case 0: return _document;
-            case 1: return _endOfFile;
             default: return null;
         }
     }
@@ -112,12 +104,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
   internal sealed partial class RazorCommentBlockSyntax : RazorSyntaxNode
   {
-    private SyntaxToken _startCommentTransition;
-    private SyntaxToken _startCommentStar;
-    private SyntaxToken _comment;
-    private SyntaxToken _endCommentStar;
-    private SyntaxToken _endCommentTransition;
-
     internal RazorCommentBlockSyntax(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
     {
@@ -125,65 +111,41 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken StartCommentTransition 
     {
-        get
-        {
-            return GetRedAtZero(ref _startCommentTransition);
-        }
+      get { return new SyntaxToken(((InternalSyntax.RazorCommentBlockSyntax)Green).StartCommentTransition, this, GetChildPosition(0), GetChildIndex(0)); }
     }
 
     public SyntaxToken StartCommentStar 
     {
-        get
-        {
-            return GetRed(ref _startCommentStar, 1);
-        }
+      get { return new SyntaxToken(((InternalSyntax.RazorCommentBlockSyntax)Green).StartCommentStar, this, GetChildPosition(1), GetChildIndex(1)); }
     }
 
     public SyntaxToken Comment 
     {
-        get
-        {
-            return GetRed(ref _comment, 2);
-        }
+      get { return new SyntaxToken(((InternalSyntax.RazorCommentBlockSyntax)Green).Comment, this, GetChildPosition(2), GetChildIndex(2)); }
     }
 
     public SyntaxToken EndCommentStar 
     {
-        get
-        {
-            return GetRed(ref _endCommentStar, 3);
-        }
+      get { return new SyntaxToken(((InternalSyntax.RazorCommentBlockSyntax)Green).EndCommentStar, this, GetChildPosition(3), GetChildIndex(3)); }
     }
 
     public SyntaxToken EndCommentTransition 
     {
-        get
-        {
-            return GetRed(ref _endCommentTransition, 4);
-        }
+      get { return new SyntaxToken(((InternalSyntax.RazorCommentBlockSyntax)Green).EndCommentTransition, this, GetChildPosition(4), GetChildIndex(4)); }
     }
 
     internal override SyntaxNode GetNodeSlot(int index)
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _startCommentTransition);
-            case 1: return GetRed(ref _startCommentStar, 1);
-            case 2: return GetRed(ref _comment, 2);
-            case 3: return GetRed(ref _endCommentStar, 3);
-            case 4: return GetRed(ref _endCommentTransition, 4);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _startCommentTransition;
-            case 1: return _startCommentStar;
-            case 2: return _comment;
-            case 3: return _endCommentStar;
-            case 4: return _endCommentTransition;
             default: return null;
         }
     }
@@ -250,11 +212,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> MetaCode 
+    public SyntaxTokenList MetaCode 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _metaCode, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -264,15 +230,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _metaCode);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _metaCode;
             default: return null;
         }
     }
@@ -287,7 +252,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitRazorMetaCode(this);
     }
 
-    public RazorMetaCodeSyntax Update(SyntaxList<SyntaxToken> metaCode, ISpanChunkGenerator chunkGenerator)
+    public RazorMetaCodeSyntax Update(SyntaxTokenList metaCode, ISpanChunkGenerator chunkGenerator)
     {
         if (metaCode != MetaCode || chunkGenerator != ChunkGenerator)
         {
@@ -304,7 +269,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public RazorMetaCodeSyntax WithMetaCode(SyntaxList<SyntaxToken> metaCode)
+    public RazorMetaCodeSyntax WithMetaCode(SyntaxTokenList metaCode)
     {
         return Update(metaCode, ChunkGenerator);
     }
@@ -345,6 +310,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -403,11 +369,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> LiteralTokens 
+    public SyntaxTokenList LiteralTokens 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _literalTokens, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -417,15 +387,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _literalTokens);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _literalTokens;
             default: return null;
         }
     }
@@ -440,7 +409,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitUnclassifiedTextLiteral(this);
     }
 
-    public UnclassifiedTextLiteralSyntax Update(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public UnclassifiedTextLiteralSyntax Update(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
         if (literalTokens != LiteralTokens || chunkGenerator != ChunkGenerator)
         {
@@ -457,7 +426,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public UnclassifiedTextLiteralSyntax WithLiteralTokens(SyntaxList<SyntaxToken> literalTokens)
+    public UnclassifiedTextLiteralSyntax WithLiteralTokens(SyntaxTokenList literalTokens)
     {
         return Update(literalTokens, ChunkGenerator);
     }
@@ -506,6 +475,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -564,11 +534,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> TransitionTokens 
+    public SyntaxTokenList TransitionTokens 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _transitionTokens, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -578,15 +552,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _transitionTokens);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _transitionTokens;
             default: return null;
         }
     }
@@ -601,7 +574,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitMarkupTransition(this);
     }
 
-    public MarkupTransitionSyntax Update(SyntaxList<SyntaxToken> transitionTokens, ISpanChunkGenerator chunkGenerator)
+    public MarkupTransitionSyntax Update(SyntaxTokenList transitionTokens, ISpanChunkGenerator chunkGenerator)
     {
         if (transitionTokens != TransitionTokens || chunkGenerator != ChunkGenerator)
         {
@@ -618,7 +591,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public MarkupTransitionSyntax WithTransitionTokens(SyntaxList<SyntaxToken> transitionTokens)
+    public MarkupTransitionSyntax WithTransitionTokens(SyntaxTokenList transitionTokens)
     {
         return Update(transitionTokens, ChunkGenerator);
     }
@@ -643,11 +616,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> LiteralTokens 
+    public SyntaxTokenList LiteralTokens 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _literalTokens, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -657,15 +634,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _literalTokens);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _literalTokens;
             default: return null;
         }
     }
@@ -680,7 +656,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitMarkupTextLiteral(this);
     }
 
-    public MarkupTextLiteralSyntax Update(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public MarkupTextLiteralSyntax Update(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
         if (literalTokens != LiteralTokens || chunkGenerator != ChunkGenerator)
         {
@@ -697,7 +673,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public MarkupTextLiteralSyntax WithLiteralTokens(SyntaxList<SyntaxToken> literalTokens)
+    public MarkupTextLiteralSyntax WithLiteralTokens(SyntaxTokenList literalTokens)
     {
         return Update(literalTokens, ChunkGenerator);
     }
@@ -722,11 +698,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> LiteralTokens 
+    public SyntaxTokenList LiteralTokens 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _literalTokens, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -736,15 +716,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _literalTokens);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _literalTokens;
             default: return null;
         }
     }
@@ -759,7 +738,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitMarkupEphemeralTextLiteral(this);
     }
 
-    public MarkupEphemeralTextLiteralSyntax Update(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public MarkupEphemeralTextLiteralSyntax Update(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
         if (literalTokens != LiteralTokens || chunkGenerator != ChunkGenerator)
         {
@@ -776,7 +755,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public MarkupEphemeralTextLiteralSyntax WithLiteralTokens(SyntaxList<SyntaxToken> literalTokens)
+    public MarkupEphemeralTextLiteralSyntax WithLiteralTokens(SyntaxTokenList literalTokens)
     {
         return Update(literalTokens, ChunkGenerator);
     }
@@ -817,6 +796,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -901,6 +881,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -959,7 +940,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     private MarkupTextLiteralSyntax _namePrefix;
     private MarkupTextLiteralSyntax _name;
     private MarkupTextLiteralSyntax _nameSuffix;
-    private SyntaxToken _equalsToken;
     private MarkupTextLiteralSyntax _valuePrefix;
     private RazorBlockSyntax _value;
     private MarkupTextLiteralSyntax _valueSuffix;
@@ -995,10 +975,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken EqualsToken 
     {
-        get
-        {
-            return GetRed(ref _equalsToken, 3);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupAttributeBlockSyntax)Green).EqualsToken, this, GetChildPosition(3), GetChildIndex(3)); }
     }
 
     public MarkupTextLiteralSyntax ValuePrefix 
@@ -1032,13 +1009,13 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             case 0: return GetRedAtZero(ref _namePrefix);
             case 1: return GetRed(ref _name, 1);
             case 2: return GetRed(ref _nameSuffix, 2);
-            case 3: return GetRed(ref _equalsToken, 3);
             case 4: return GetRed(ref _valuePrefix, 4);
             case 5: return GetRed(ref _value, 5);
             case 6: return GetRed(ref _valueSuffix, 6);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -1046,7 +1023,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             case 0: return _namePrefix;
             case 1: return _name;
             case 2: return _nameSuffix;
-            case 3: return _equalsToken;
             case 4: return _valuePrefix;
             case 5: return _value;
             case 6: return _valueSuffix;
@@ -1147,6 +1123,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -1229,6 +1206,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -1312,6 +1290,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -1405,6 +1384,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -1466,12 +1446,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
   internal sealed partial class MarkupStartTagSyntax : MarkupSyntaxNode
   {
-    private SyntaxToken _openAngle;
-    private SyntaxToken _bang;
-    private SyntaxToken _name;
     private SyntaxNode _attributes;
-    private SyntaxToken _forwardSlash;
-    private SyntaxToken _closeAngle;
 
     internal MarkupStartTagSyntax(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
@@ -1480,26 +1455,24 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken OpenAngle 
     {
-        get
-        {
-            return GetRedAtZero(ref _openAngle);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupStartTagSyntax)Green).OpenAngle, this, GetChildPosition(0), GetChildIndex(0)); }
     }
 
     public SyntaxToken Bang 
     {
         get
         {
-            return GetRed(ref _bang, 1);
+            var slot = ((InternalSyntax.MarkupStartTagSyntax)Green).Bang;
+            if (slot != null)
+                return new SyntaxToken(slot, this, GetChildPosition(1), GetChildIndex(1));
+
+            return default(SyntaxToken);
         }
     }
 
     public SyntaxToken Name 
     {
-        get
-        {
-            return GetRed(ref _name, 2);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupStartTagSyntax)Green).Name, this, GetChildPosition(2), GetChildIndex(2)); }
     }
 
     public SyntaxList<RazorSyntaxNode> Attributes 
@@ -1514,16 +1487,17 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         get
         {
-            return GetRed(ref _forwardSlash, 4);
+            var slot = ((InternalSyntax.MarkupStartTagSyntax)Green).ForwardSlash;
+            if (slot != null)
+                return new SyntaxToken(slot, this, GetChildPosition(4), GetChildIndex(4));
+
+            return default(SyntaxToken);
         }
     }
 
     public SyntaxToken CloseAngle 
     {
-        get
-        {
-            return GetRed(ref _closeAngle, 5);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupStartTagSyntax)Green).CloseAngle, this, GetChildPosition(5), GetChildIndex(5)); }
     }
 
     public ISpanChunkGenerator ChunkGenerator { get { return ((InternalSyntax.MarkupStartTagSyntax)Green).ChunkGenerator; } }
@@ -1532,25 +1506,16 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _openAngle);
-            case 1: return GetRed(ref _bang, 1);
-            case 2: return GetRed(ref _name, 2);
             case 3: return GetRed(ref _attributes, 3);
-            case 4: return GetRed(ref _forwardSlash, 4);
-            case 5: return GetRed(ref _closeAngle, 5);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _openAngle;
-            case 1: return _bang;
-            case 2: return _name;
             case 3: return _attributes;
-            case 4: return _forwardSlash;
-            case 5: return _closeAngle;
             default: return null;
         }
     }
@@ -1625,12 +1590,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
   internal sealed partial class MarkupEndTagSyntax : MarkupSyntaxNode
   {
-    private SyntaxToken _openAngle;
-    private SyntaxToken _forwardSlash;
-    private SyntaxToken _bang;
-    private SyntaxToken _name;
     private MarkupMiscAttributeContentSyntax _miscAttributeContent;
-    private SyntaxToken _closeAngle;
 
     internal MarkupEndTagSyntax(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
@@ -1639,34 +1599,29 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken OpenAngle 
     {
-        get
-        {
-            return GetRedAtZero(ref _openAngle);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupEndTagSyntax)Green).OpenAngle, this, GetChildPosition(0), GetChildIndex(0)); }
     }
 
     public SyntaxToken ForwardSlash 
     {
-        get
-        {
-            return GetRed(ref _forwardSlash, 1);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupEndTagSyntax)Green).ForwardSlash, this, GetChildPosition(1), GetChildIndex(1)); }
     }
 
     public SyntaxToken Bang 
     {
         get
         {
-            return GetRed(ref _bang, 2);
+            var slot = ((InternalSyntax.MarkupEndTagSyntax)Green).Bang;
+            if (slot != null)
+                return new SyntaxToken(slot, this, GetChildPosition(2), GetChildIndex(2));
+
+            return default(SyntaxToken);
         }
     }
 
     public SyntaxToken Name 
     {
-        get
-        {
-            return GetRed(ref _name, 3);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupEndTagSyntax)Green).Name, this, GetChildPosition(3), GetChildIndex(3)); }
     }
 
     public MarkupMiscAttributeContentSyntax MiscAttributeContent 
@@ -1679,10 +1634,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken CloseAngle 
     {
-        get
-        {
-            return GetRed(ref _closeAngle, 5);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupEndTagSyntax)Green).CloseAngle, this, GetChildPosition(5), GetChildIndex(5)); }
     }
 
     public ISpanChunkGenerator ChunkGenerator { get { return ((InternalSyntax.MarkupEndTagSyntax)Green).ChunkGenerator; } }
@@ -1691,25 +1643,16 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _openAngle);
-            case 1: return GetRed(ref _forwardSlash, 1);
-            case 2: return GetRed(ref _bang, 2);
-            case 3: return GetRed(ref _name, 3);
             case 4: return GetRed(ref _miscAttributeContent, 4);
-            case 5: return GetRed(ref _closeAngle, 5);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _openAngle;
-            case 1: return _forwardSlash;
-            case 2: return _bang;
-            case 3: return _name;
             case 4: return _miscAttributeContent;
-            case 5: return _closeAngle;
             default: return null;
         }
     }
@@ -1828,6 +1771,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -1894,12 +1838,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
   internal sealed partial class MarkupTagHelperStartTagSyntax : MarkupSyntaxNode
   {
-    private SyntaxToken _openAngle;
-    private SyntaxToken _bang;
-    private SyntaxToken _name;
     private SyntaxNode _attributes;
-    private SyntaxToken _forwardSlash;
-    private SyntaxToken _closeAngle;
 
     internal MarkupTagHelperStartTagSyntax(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
@@ -1908,26 +1847,24 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken OpenAngle 
     {
-        get
-        {
-            return GetRedAtZero(ref _openAngle);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperStartTagSyntax)Green).OpenAngle, this, GetChildPosition(0), GetChildIndex(0)); }
     }
 
     public SyntaxToken Bang 
     {
         get
         {
-            return GetRed(ref _bang, 1);
+            var slot = ((InternalSyntax.MarkupTagHelperStartTagSyntax)Green).Bang;
+            if (slot != null)
+                return new SyntaxToken(slot, this, GetChildPosition(1), GetChildIndex(1));
+
+            return default(SyntaxToken);
         }
     }
 
     public SyntaxToken Name 
     {
-        get
-        {
-            return GetRed(ref _name, 2);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperStartTagSyntax)Green).Name, this, GetChildPosition(2), GetChildIndex(2)); }
     }
 
     public SyntaxList<RazorSyntaxNode> Attributes 
@@ -1942,16 +1879,17 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         get
         {
-            return GetRed(ref _forwardSlash, 4);
+            var slot = ((InternalSyntax.MarkupTagHelperStartTagSyntax)Green).ForwardSlash;
+            if (slot != null)
+                return new SyntaxToken(slot, this, GetChildPosition(4), GetChildIndex(4));
+
+            return default(SyntaxToken);
         }
     }
 
     public SyntaxToken CloseAngle 
     {
-        get
-        {
-            return GetRed(ref _closeAngle, 5);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperStartTagSyntax)Green).CloseAngle, this, GetChildPosition(5), GetChildIndex(5)); }
     }
 
     public ISpanChunkGenerator ChunkGenerator { get { return ((InternalSyntax.MarkupTagHelperStartTagSyntax)Green).ChunkGenerator; } }
@@ -1960,25 +1898,16 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _openAngle);
-            case 1: return GetRed(ref _bang, 1);
-            case 2: return GetRed(ref _name, 2);
             case 3: return GetRed(ref _attributes, 3);
-            case 4: return GetRed(ref _forwardSlash, 4);
-            case 5: return GetRed(ref _closeAngle, 5);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _openAngle;
-            case 1: return _bang;
-            case 2: return _name;
             case 3: return _attributes;
-            case 4: return _forwardSlash;
-            case 5: return _closeAngle;
             default: return null;
         }
     }
@@ -2053,12 +1982,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
   internal sealed partial class MarkupTagHelperEndTagSyntax : MarkupSyntaxNode
   {
-    private SyntaxToken _openAngle;
-    private SyntaxToken _forwardSlash;
-    private SyntaxToken _bang;
-    private SyntaxToken _name;
     private MarkupMiscAttributeContentSyntax _miscAttributeContent;
-    private SyntaxToken _closeAngle;
 
     internal MarkupTagHelperEndTagSyntax(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
@@ -2067,34 +1991,29 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken OpenAngle 
     {
-        get
-        {
-            return GetRedAtZero(ref _openAngle);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperEndTagSyntax)Green).OpenAngle, this, GetChildPosition(0), GetChildIndex(0)); }
     }
 
     public SyntaxToken ForwardSlash 
     {
-        get
-        {
-            return GetRed(ref _forwardSlash, 1);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperEndTagSyntax)Green).ForwardSlash, this, GetChildPosition(1), GetChildIndex(1)); }
     }
 
     public SyntaxToken Bang 
     {
         get
         {
-            return GetRed(ref _bang, 2);
+            var slot = ((InternalSyntax.MarkupTagHelperEndTagSyntax)Green).Bang;
+            if (slot != null)
+                return new SyntaxToken(slot, this, GetChildPosition(2), GetChildIndex(2));
+
+            return default(SyntaxToken);
         }
     }
 
     public SyntaxToken Name 
     {
-        get
-        {
-            return GetRed(ref _name, 3);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperEndTagSyntax)Green).Name, this, GetChildPosition(3), GetChildIndex(3)); }
     }
 
     public MarkupMiscAttributeContentSyntax MiscAttributeContent 
@@ -2107,10 +2026,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken CloseAngle 
     {
-        get
-        {
-            return GetRed(ref _closeAngle, 5);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperEndTagSyntax)Green).CloseAngle, this, GetChildPosition(5), GetChildIndex(5)); }
     }
 
     public ISpanChunkGenerator ChunkGenerator { get { return ((InternalSyntax.MarkupTagHelperEndTagSyntax)Green).ChunkGenerator; } }
@@ -2119,25 +2035,16 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _openAngle);
-            case 1: return GetRed(ref _forwardSlash, 1);
-            case 2: return GetRed(ref _bang, 2);
-            case 3: return GetRed(ref _name, 3);
             case 4: return GetRed(ref _miscAttributeContent, 4);
-            case 5: return GetRed(ref _closeAngle, 5);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _openAngle;
-            case 1: return _forwardSlash;
-            case 2: return _bang;
-            case 3: return _name;
             case 4: return _miscAttributeContent;
-            case 5: return _closeAngle;
             default: return null;
         }
     }
@@ -2216,7 +2123,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     private MarkupTextLiteralSyntax _namePrefix;
     private MarkupTextLiteralSyntax _name;
     private MarkupTextLiteralSyntax _nameSuffix;
-    private SyntaxToken _equalsToken;
     private MarkupTextLiteralSyntax _valuePrefix;
     private MarkupTagHelperAttributeValueSyntax _value;
     private MarkupTextLiteralSyntax _valueSuffix;
@@ -2252,10 +2158,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken EqualsToken 
     {
-        get
-        {
-            return GetRed(ref _equalsToken, 3);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperAttributeSyntax)Green).EqualsToken, this, GetChildPosition(3), GetChildIndex(3)); }
     }
 
     public MarkupTextLiteralSyntax ValuePrefix 
@@ -2289,13 +2192,13 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             case 0: return GetRedAtZero(ref _namePrefix);
             case 1: return GetRed(ref _name, 1);
             case 2: return GetRed(ref _nameSuffix, 2);
-            case 3: return GetRed(ref _equalsToken, 3);
             case 4: return GetRed(ref _valuePrefix, 4);
             case 5: return GetRed(ref _value, 5);
             case 6: return GetRed(ref _valueSuffix, 6);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -2303,7 +2206,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             case 0: return _namePrefix;
             case 1: return _name;
             case 2: return _nameSuffix;
-            case 3: return _equalsToken;
             case 4: return _valuePrefix;
             case 5: return _value;
             case 6: return _valueSuffix;
@@ -2419,6 +2321,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -2497,6 +2400,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -2554,7 +2458,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     private RazorMetaCodeSyntax _colon;
     private MarkupTextLiteralSyntax _parameterName;
     private MarkupTextLiteralSyntax _nameSuffix;
-    private SyntaxToken _equalsToken;
     private MarkupTextLiteralSyntax _valuePrefix;
     private MarkupTagHelperAttributeValueSyntax _value;
     private MarkupTextLiteralSyntax _valueSuffix;
@@ -2614,10 +2517,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken EqualsToken 
     {
-        get
-        {
-            return GetRed(ref _equalsToken, 6);
-        }
+      get { return new SyntaxToken(((InternalSyntax.MarkupTagHelperDirectiveAttributeSyntax)Green).EqualsToken, this, GetChildPosition(6), GetChildIndex(6)); }
     }
 
     public MarkupTextLiteralSyntax ValuePrefix 
@@ -2654,13 +2554,13 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             case 3: return GetRed(ref _colon, 3);
             case 4: return GetRed(ref _parameterName, 4);
             case 5: return GetRed(ref _nameSuffix, 5);
-            case 6: return GetRed(ref _equalsToken, 6);
             case 7: return GetRed(ref _valuePrefix, 7);
             case 8: return GetRed(ref _value, 8);
             case 9: return GetRed(ref _valueSuffix, 9);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -2671,7 +2571,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             case 3: return _colon;
             case 4: return _parameterName;
             case 5: return _nameSuffix;
-            case 6: return _equalsToken;
             case 7: return _valuePrefix;
             case 8: return _value;
             case 9: return _valueSuffix;
@@ -2837,6 +2736,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -2946,6 +2846,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -2997,8 +2898,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
   internal sealed partial class CSharpTransitionSyntax : CSharpSyntaxNode
   {
-    private SyntaxToken _transition;
-
     internal CSharpTransitionSyntax(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
     {
@@ -3006,10 +2905,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
 
     public SyntaxToken Transition 
     {
-        get
-        {
-            return GetRedAtZero(ref _transition);
-        }
+      get { return new SyntaxToken(((InternalSyntax.CSharpTransitionSyntax)Green).Transition, this, GetChildPosition(0), GetChildIndex(0)); }
     }
 
     public ISpanChunkGenerator ChunkGenerator { get { return ((InternalSyntax.CSharpTransitionSyntax)Green).ChunkGenerator; } }
@@ -3018,15 +2914,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _transition);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _transition;
             default: return null;
         }
     }
@@ -3078,11 +2973,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> LiteralTokens 
+    public SyntaxTokenList LiteralTokens 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _literalTokens, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -3092,15 +2991,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _literalTokens);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _literalTokens;
             default: return null;
         }
     }
@@ -3115,7 +3013,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitCSharpStatementLiteral(this);
     }
 
-    public CSharpStatementLiteralSyntax Update(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public CSharpStatementLiteralSyntax Update(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
         if (literalTokens != LiteralTokens || chunkGenerator != ChunkGenerator)
         {
@@ -3132,7 +3030,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public CSharpStatementLiteralSyntax WithLiteralTokens(SyntaxList<SyntaxToken> literalTokens)
+    public CSharpStatementLiteralSyntax WithLiteralTokens(SyntaxTokenList literalTokens)
     {
         return Update(literalTokens, ChunkGenerator);
     }
@@ -3157,11 +3055,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> LiteralTokens 
+    public SyntaxTokenList LiteralTokens 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _literalTokens, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -3171,15 +3073,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _literalTokens);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _literalTokens;
             default: return null;
         }
     }
@@ -3194,7 +3095,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitCSharpExpressionLiteral(this);
     }
 
-    public CSharpExpressionLiteralSyntax Update(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public CSharpExpressionLiteralSyntax Update(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
         if (literalTokens != LiteralTokens || chunkGenerator != ChunkGenerator)
         {
@@ -3211,7 +3112,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public CSharpExpressionLiteralSyntax WithLiteralTokens(SyntaxList<SyntaxToken> literalTokens)
+    public CSharpExpressionLiteralSyntax WithLiteralTokens(SyntaxTokenList literalTokens)
     {
         return Update(literalTokens, ChunkGenerator);
     }
@@ -3236,11 +3137,15 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
     }
 
-    public SyntaxList<SyntaxToken> LiteralTokens 
+    public SyntaxTokenList LiteralTokens 
     {
         get
         {
-            return new SyntaxList<SyntaxToken>(GetRed(ref _literalTokens, 0));
+            var slot = Green.GetSlot(0);
+            if (slot != null)
+                return new SyntaxTokenList(this, slot, GetChildPosition(0), GetChildIndex(0));
+
+            return default(SyntaxTokenList);
         }
     }
 
@@ -3250,15 +3155,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
     {
         switch (index)
         {
-            case 0: return GetRedAtZero(ref _literalTokens);
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
         {
-            case 0: return _literalTokens;
             default: return null;
         }
     }
@@ -3273,7 +3177,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         visitor.VisitCSharpEphemeralTextLiteral(this);
     }
 
-    public CSharpEphemeralTextLiteralSyntax Update(SyntaxList<SyntaxToken> literalTokens, ISpanChunkGenerator chunkGenerator)
+    public CSharpEphemeralTextLiteralSyntax Update(SyntaxTokenList literalTokens, ISpanChunkGenerator chunkGenerator)
     {
         if (literalTokens != LiteralTokens || chunkGenerator != ChunkGenerator)
         {
@@ -3290,7 +3194,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
         return this;
     }
 
-    public CSharpEphemeralTextLiteralSyntax WithLiteralTokens(SyntaxList<SyntaxToken> literalTokens)
+    public CSharpEphemeralTextLiteralSyntax WithLiteralTokens(SyntaxTokenList literalTokens)
     {
         return Update(literalTokens, ChunkGenerator);
     }
@@ -3331,6 +3235,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -3431,6 +3336,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -3526,6 +3432,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -3630,6 +3537,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -3725,6 +3633,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -3829,6 +3738,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -3904,6 +3814,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -3986,6 +3897,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)
@@ -4071,6 +3983,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax
             default: return null;
         }
     }
+
     internal override SyntaxNode GetCachedSlot(int index)
     {
         switch (index)

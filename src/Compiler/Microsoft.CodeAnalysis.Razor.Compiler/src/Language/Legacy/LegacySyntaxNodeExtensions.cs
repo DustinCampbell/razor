@@ -143,10 +143,7 @@ internal static partial class LegacySyntaxNodeExtensions
     [Obsolete("Use FindToken or FindInnermostNode instead", error: false)]
     public static SyntaxNode? LocateOwner(this SyntaxNode node, SourceChange change)
     {
-        if (node is null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
+        ArgHelper.ThrowIfNull(node);
 
         if (change.Span.AbsoluteIndex < node.Position)
         {
@@ -174,7 +171,7 @@ internal static partial class LegacySyntaxNodeExtensions
             MarkupEndTagSyntax endTag => LocateOwnerForSyntaxList(endTag.LegacyChildren, change),
             MarkupTagHelperStartTagSyntax startTagHelper => LocateOwnerForSyntaxList(startTagHelper.LegacyChildren, change),
             MarkupTagHelperEndTagSyntax endTagHelper => LocateOwnerForSyntaxList(endTagHelper.LegacyChildren, change),
-            _ => LocateOwnerForChildSyntaxList(node.ChildNodes(), change)
+            _ => LocateOwnerForChildSyntaxList(node.ChildNodesAndTokens(), change)
         };
 
         static SyntaxNode? LocateOwnerForSyntaxList(in SyntaxList<RazorSyntaxNode> list, SourceChange change)
@@ -194,9 +191,13 @@ internal static partial class LegacySyntaxNodeExtensions
         {
             foreach (var child in list)
             {
-                if (child.LocateOwner(change) is { } owner)
+                if (child.IsNode && child.AsNode()!.LocateOwner(change) is { } nodeOwner)
                 {
-                    return owner;
+                    return nodeOwner;
+                }
+                else if (child.IsToken && child.AsToken().Parent?.LocateOwner(change) is { } tokenOwner)
+                {
+                    return tokenOwner;
                 }
             }
 

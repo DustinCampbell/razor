@@ -5,14 +5,29 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.PooledObjects;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class SyntaxNodeExtensions
 {
+#nullable enable
+    public static TRoot ReplaceToken<TRoot>(this TRoot root, SyntaxToken oldToken, SyntaxToken newToken)
+        where TRoot : SyntaxNode
+    {
+
+    }
+
+    private sealed class TokenReplacer<TRoot>(TRoot root, SyntaxToken oldToken, SyntaxToken newToken) : SyntaxRewriter
+        where TRoot : SyntaxNode
+    {
+        public override SyntaxNode VisitToken(SyntaxToken token)
+        {
+            
+        }
+    }
+#nullable disable
+
     public static TNode WithAnnotations<TNode>(this TNode node, params SyntaxAnnotation[] annotations) where TNode : SyntaxNode
     {
         return (TNode)node.Green.SetAnnotations(annotations).CreateRed(node.Parent, node.Position);
@@ -66,39 +81,7 @@ internal static class SyntaxNodeExtensions
     }
 
     public static SourceLocation GetSourceLocation(this SyntaxNode node, RazorSourceDocument source)
-    {
-        try
-        {
-            if (source.Text.Length == 0)
-            {
-                // Just a marker symbol
-                return new SourceLocation(source.FilePath, 0, 0, 0);
-            }
-            if (node.Position == source.Text.Length)
-            {
-                // E.g. Marker symbol at the end of the document
-                var lastPosition = source.Text.Length - 1;
-                var endsWithLineBreak = SyntaxFacts.IsNewLine(source.Text[lastPosition]);
-                var lastLocation = source.Text.Lines.GetLinePosition(lastPosition);
-                return new SourceLocation(
-                    source.FilePath, // GetLocation prefers RelativePath but we want FilePath.
-                    lastPosition + 1,
-                    lastLocation.Line + (endsWithLineBreak ? 1 : 0),
-                    endsWithLineBreak ? 0 : lastLocation.Character + 1);
-            }
-
-            var location = source.Text.Lines.GetLinePosition(node.Position);
-            return new SourceLocation(
-                source.FilePath, // GetLocation prefers RelativePath but we want FilePath.
-                node.Position,
-                location);
-        }
-        catch (IndexOutOfRangeException)
-        {
-            Debug.Assert(false, "Node position should stay within document length.");
-            return new SourceLocation(source.FilePath, node.Position, 0, 0);
-        }
-    }
+        => ((SyntaxNodeOrToken)node).GetSourceLocation(source);
 
     public static SourceSpan GetSourceSpan(this SyntaxNode node, RazorSourceDocument source)
     {

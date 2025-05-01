@@ -226,8 +226,8 @@ internal class ExtractToComponentCodeActionProvider() : IRazorCodeActionProvider
         if (commonAncestor != startNode &&
             commonAncestor != endNode)
         {
-            SyntaxNode? modifiedStart = null, modifiedEnd = null;
-            foreach (var child in commonAncestor.ChildNodes())
+            AspNetCore.Razor.Language.Syntax.SyntaxNodeOrToken? modifiedStart = null, modifiedEnd = null;
+            foreach (var child in commonAncestor.ChildNodesAndTokens())
             {
                 if (child.Span.Contains(startNode.Span))
                 {
@@ -246,9 +246,9 @@ internal class ExtractToComponentCodeActionProvider() : IRazorCodeActionProvider
 
             // There's a start and end node that are siblings and will work for start/end
             // of extraction into the new component.
-            if (modifiedStart is not null && modifiedEnd is not null)
+            if (modifiedStart is { } start && modifiedEnd is { } end)
             {
-                return TextSpan.FromBounds(modifiedStart.Span.Start, modifiedEnd.Span.End);
+                return TextSpan.FromBounds(start.Span.Start, end.Span.End);
             }
         }
 

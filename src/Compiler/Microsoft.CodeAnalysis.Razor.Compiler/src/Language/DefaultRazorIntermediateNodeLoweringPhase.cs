@@ -492,41 +492,28 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             return node.GetSourceSpan(SourceDocument);
         }
 
-        protected static SyntaxList<SyntaxToken> MergeLiterals(
-            SyntaxList<SyntaxToken>? literal1,
-            SyntaxList<SyntaxToken>? literal2,
-            SyntaxList<SyntaxToken>? literal3 = null,
-            SyntaxList<SyntaxToken>? literal4 = null,
-            SyntaxList<SyntaxToken>? literal5 = null)
+        protected static SyntaxTokenList MergeLiterals(params ReadOnlySpan<SyntaxTokenList?> literals)
         {
-            using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+            var capacity = 0;
 
-            if (literal1 is { } tokens1)
+            foreach (var literal in literals)
             {
-                builder.AddRange(tokens1);
+                capacity += literal?.Count ?? 0;
             }
 
-            if (literal2 is { } tokens2)
+            using var builder = new PooledArrayBuilder<SyntaxToken>(capacity);
+
+            foreach (var literal in literals)
             {
-                builder.AddRange(tokens2);
+                if (literal is SyntaxTokenList list)
+                {
+                    builder.AddRange(list);
+                }
             }
 
-            if (literal3 is { } tokens3)
-            {
-                builder.AddRange(tokens3);
-            }
+            var tokens = builder.ToImmutable();
 
-            if (literal4 is { } tokens4)
-            {
-                builder.AddRange(tokens4);
-            }
-
-            if (literal5 is { } tokens5)
-            {
-                builder.AddRange(tokens5);
-            }
-
-            return builder.ToList();
+            return SyntaxTokenList.Create(tokens.AsSpan());
         }
 
 #nullable enable
@@ -539,27 +526,27 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             private readonly SyntaxNode _node;
             private readonly int _start;
 
-            private ChildSyntaxList _childNodes;
+            private ImmutableArray<SyntaxNode> _childNodes;
 
             public ChildNodesHelper(SyntaxNode node)
                 : this(node, childNodes: default, start: 0)
             {
             }
 
-            private ChildNodesHelper(SyntaxNode node, ChildSyntaxList childNodes, int start)
+            private ChildNodesHelper(SyntaxNode node, ImmutableArray<SyntaxNode> childNodes, int start)
             {
                 _node = node;
                 _childNodes = childNodes;
                 _start = start;
             }
 
-            private ChildSyntaxList ChildNodes
+            private ImmutableArray<SyntaxNode> ChildNodes
             {
                 get
                 {
-                    if (_childNodes == default)
+                    if (_childNodes.IsDefault)
                     {
-                        _childNodes = _node.ChildNodes();
+                        _childNodes = [.. _node.ChildNodes()];
                     }
 
                     return _childNodes;
@@ -567,7 +554,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
 
             public int Count
-                => ChildNodes.Count;
+                => ChildNodes.Length - _start;
 
             public SyntaxNode this[int index]
                 => ChildNodes[_start + index];
@@ -592,11 +579,11 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
                 using var builder = new PooledArrayBuilder<TNode>(Count);
 
-                var childNodes = ChildNodes;
+                var childNodesSpan = ChildNodes.AsSpan()[_start..];
 
-                for (var i = _start; i < childNodes.Count; i++)
+                foreach (var childNode in childNodesSpan)
                 {
-                    if (childNodes[i] is not TNode node)
+                    if (childNode is not TNode node)
                     {
                         result = default;
                         return false;
@@ -649,7 +636,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 node.NamePrefix?.LiteralTokens,
                 node.Name.LiteralTokens,
                 node.NameSuffix?.LiteralTokens,
-                node.EqualsToken != null ? new SyntaxList<SyntaxToken>(node.EqualsToken) : default,
+                [node.EqualsToken],
                 node.ValuePrefix?.LiteralTokens);
             var prefix = (MarkupTextLiteralSyntax)SyntaxFactory.MarkupTextLiteral(prefixTokens, chunkGenerator: null).Green.CreateRed(node, node.NamePrefix?.Position ?? node.Name.Position);
 
@@ -668,7 +655,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
                     if (children.TryCast<MarkupLiteralAttributeValueSyntax>(out var attributeLiteralArray))
                     {
-                        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                        using var builder = new PooledArrayBuilder<SyntaxToken>();
 
                         foreach (var literal in attributeLiteralArray)
                         {
@@ -964,8 +951,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             if (node.LiteralTokens.Count == 1)
             {
                 var token = node.LiteralTokens[0];
-                if (token != null &&
-                    token.Kind == SyntaxKind.Marker &&
+                if (token.Kind == SyntaxKind.Marker &&
                     token.Content.Length == 0)
                 {
                     // We don't want to create IR nodes for marker tokens.
@@ -1006,7 +992,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
         private void VisitHtmlContent(SyntaxNode node)
         {
-            if (node == null || (node is SyntaxToken token && token.IsMissing))
+            if (node == null)
             {
                 return;
             }
@@ -1227,7 +1213,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
             if (children.TryCast<MarkupLiteralAttributeValueSyntax>(out var attributeLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var builder = new PooledArrayBuilder<SyntaxToken>();
 
                 foreach (var literal in attributeLiteralArray)
                 {
@@ -1240,7 +1226,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<MarkupTextLiteralSyntax>(out var markupLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var builder = new PooledArrayBuilder<SyntaxToken>();
 
                 foreach (var literal in markupLiteralArray)
                 {
@@ -1252,7 +1238,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<CSharpExpressionLiteralSyntax>(out var expressionLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var builder = new PooledArrayBuilder<SyntaxToken>();
 
                 SpanEditHandler editHandler = null;
                 ISpanChunkGenerator generator = null;
@@ -1331,7 +1317,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 Source = BuildSourceSpanFromNode(node),
 
                 // Could be empty while the tag is being typed in.
-                TagName = node.StartTag?.Name?.Content ?? node.EndTag?.Name?.Content ?? string.Empty,
+                TagName = node.StartTag?.Name.Content ?? node.EndTag?.Name.Content ?? string.Empty,
             };
 
             if (node.StartTag != null && node.EndTag != null && node.StartTag.IsVoidElement())
@@ -1431,7 +1417,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 node.NamePrefix?.LiteralTokens,
                 node.Name.LiteralTokens,
                 node.NameSuffix?.LiteralTokens,
-                node.EqualsToken == null ? new SyntaxList<SyntaxToken>() : new SyntaxList<SyntaxToken>(node.EqualsToken),
+                [node.EqualsToken],
                 node.ValuePrefix?.LiteralTokens);
             var prefix = (MarkupTextLiteralSyntax)SyntaxFactory.MarkupTextLiteral(prefixTokens, chunkGenerator: null).Green.CreateRed(node, node.NamePrefix?.Position ?? node.Name.Position);
 
@@ -1558,8 +1544,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             if (node.LiteralTokens.Count == 1)
             {
                 var token = node.LiteralTokens[0];
-                if (token != null &&
-                    token.Kind == SyntaxKind.Marker &&
+                if (token.Kind == SyntaxKind.Marker &&
                     token.Content.Length == 0)
                 {
                     // We don't want to create IR nodes for marker tokens.
@@ -1571,7 +1556,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             var source = BuildSourceSpanFromNode(node);
             var currentChildren = _builder.Current.Children;
             if (currentChildren.Count > 0 &&
-                currentChildren[currentChildren.Count - 1] is HtmlContentIntermediateNode existingHtmlContent)
+                currentChildren[^1] is HtmlContentIntermediateNode existingHtmlContent)
             {
                 if (existingHtmlContent.Source == null && source == null)
                 {
@@ -1864,8 +1849,8 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
             if (node.StartTag != null && node.EndTag != null)
             {
-                var startTagName = node.StartTag.Name?.Content;
-                var endTagName = node.EndTag.Name?.Content;
+                var startTagName = node.StartTag.Name.Content;
+                var endTagName = node.EndTag.Name.Content;
                 if (!string.Equals(startTagName, endTagName, StringComparison.Ordinal))
                 {
                     // This is most likely a case mismatch in start and end tags. Otherwise the parser wouldn't have grouped them together.
@@ -2197,7 +2182,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
             if (children.TryCast<MarkupLiteralAttributeValueSyntax>(out var attributeLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var valueTokens);
+                using var valueTokens = new PooledArrayBuilder<SyntaxToken>();
 
                 foreach (var literal in attributeLiteralArray)
                 {
@@ -2210,7 +2195,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<MarkupTextLiteralSyntax>(out var markupLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var builder = new PooledArrayBuilder<SyntaxToken>();
 
                 foreach (var literal in markupLiteralArray)
                 {
@@ -2222,7 +2207,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<CSharpExpressionLiteralSyntax>(out var expressionLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var builder = new PooledArrayBuilder<SyntaxToken>();
 
                 ISpanChunkGenerator generator = null;
                 SpanEditHandler editHandler = null;

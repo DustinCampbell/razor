@@ -92,7 +92,7 @@ internal abstract partial class SyntaxNode
 
         public bool IsNotEmpty { get { return _stackPtr >= 0; } }
 
-        public bool TryGetNextInSpan(in TextSpan span, out SyntaxNode value)
+        public bool TryGetNextInSpan(in TextSpan span, out SyntaxNodeOrToken value)
         {
             while (_stack[_stackPtr].TryMoveNextAndGetCurrent(out value))
             {

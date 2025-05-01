@@ -45,19 +45,31 @@ internal class SyntaxListBuilder(int initialCapacity)
         AddInternal(item.Green);
     }
 
-    internal void AddInternal(GreenNode item)
+    internal void AddInternal(GreenNode? item)
     {
         if (item == null)
         {
-            throw new ArgumentNullException(nameof(item));
+            return;
         }
 
-        if (Count >= _nodes.Length)
+        if (item.IsList)
         {
-            Grow(Count == 0 ? 8 : _nodes.Length * 2);
-        }
+            var slotCount = item.SlotCount;
 
-        _nodes[Count++].Value = item;
+            // Necessary, but not sufficient (e.g. for nested lists).
+            EnsureAdditionalCapacity(slotCount);
+
+            for (var i = 0; i < slotCount; i++)
+            {
+                AddInternal(item.GetSlot(i));
+            }
+        }
+        else
+        {
+            EnsureAdditionalCapacity(1);
+
+            _nodes[Count++].Value = item;
+        }
     }
 
     public void AddRange(SyntaxNode[] items)
@@ -126,6 +138,27 @@ internal class SyntaxListBuilder(int initialCapacity)
     public void AddRange<TNode>(SyntaxList<TNode> list, int offset, int count) where TNode : SyntaxNode
     {
         AddRange(new SyntaxList<SyntaxNode>(list.Node), offset, count);
+    }
+
+    private void EnsureAdditionalCapacity(int additionalCount)
+    {
+        var currentSize = _nodes.Length;
+        var requiredSize = Count + additionalCount;
+
+        if (requiredSize <= currentSize)
+        {
+            return;
+        }
+
+        var newSize = requiredSize < 8
+            ? 8
+            : requiredSize >= (int.MaxValue / 2)
+                ? int.MaxValue
+                : Math.Max(requiredSize, currentSize * 2); // Size will be *at least* double.
+
+        Debug.Assert(newSize >= requiredSize);
+
+        Array.Resize(ref _nodes, newSize);
     }
 
     private void Grow(int newSize)

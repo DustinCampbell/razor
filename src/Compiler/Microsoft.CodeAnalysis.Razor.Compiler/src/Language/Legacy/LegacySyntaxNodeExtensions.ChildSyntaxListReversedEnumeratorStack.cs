@@ -38,7 +38,7 @@ internal static partial class LegacySyntaxNodeExtensions
             var current = node;
             do
             {
-                var children = current.ChildNodes();
+                var children = current.ChildNodesAndTokens();
                 if (children.Count == 0)
                 {
                     break;
@@ -51,7 +51,16 @@ internal static partial class LegacySyntaxNodeExtensions
 
                 _stack[_stackPtr] = children.Reverse().GetEnumerator();
 
-                current = children.Last();
+                // Find right-most node.
+                current = null;
+                foreach (var child in children.Reverse())
+                {
+                    if (child.AsNode(out var childNode))
+                    {
+                        current = childNode;
+                        break;
+                    }
+                }
             }
             while (current is not null);
         }
@@ -66,14 +75,18 @@ internal static partial class LegacySyntaxNodeExtensions
 
             ref var enumerator = ref _stack[_stackPtr];
 
-            if (!enumerator.MoveNext())
+            node = null;
+
+            while (enumerator.MoveNext())
             {
-                node = null;
-                return false;
+                if (enumerator.Current.AsNode(out var currentNode))
+                {
+                    node = currentNode;
+                    break;
+                }
             }
 
-            node = enumerator.Current;
-            return true;
+            return node is not null;
         }
 
         public bool TryGetNextNode([NotNullWhen(true)] out SyntaxNode? node)

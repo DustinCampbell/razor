@@ -60,11 +60,13 @@ internal abstract class AbstractRazorCompletionFactsService(ImmutableArray<IRazo
         if (originalNode.SpanStart == requestIndex
             // allow zero-length tokens for cases when cursor is at EOF,
             // e.g. see https://github.com/dotnet/razor/issues/9955
-            && originalNode.GetFirstOldToken(includeZeroWidth: true) is { } startToken
-            && startToken.GetPreviousOldToken() is { } previousToken)
+            && originalNode.GetFirstToken(includeZeroWidth: true) is { Kind: not SyntaxKind.None } startToken
+            && startToken.GetPreviousToken() is { Kind: not SyntaxKind.None } previousToken)
         {
             Debug.Assert(previousToken.Span.End == requestIndex);
             Debug.Assert(previousToken.Kind != SyntaxKind.Marker);
+
+            Debug.Assert(previousToken.Parent is not null);
             return previousToken.Parent;
         }
 

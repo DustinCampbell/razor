@@ -18,7 +18,7 @@ internal static class TagHelperBlockRewriter
         MarkupEndTagSyntax endTag,
         TagHelperBinding bindingResult)
     {
-        var childSpan = startTag.GetLastOldToken()?.Parent;
+        var childSpan = startTag.GetLastToken().Parent;
 
         // Self-closing tags are always valid despite descriptors[X].TagStructure.
         if (childSpan?.GetContent().EndsWith("/>", StringComparison.Ordinal) ?? false)
@@ -244,7 +244,7 @@ internal static class TagHelperBlockRewriter
         }
         else
         {
-            var lastToken = attributeBlock.ValuePrefix.GetLastOldToken();
+            var lastToken = attributeBlock.ValuePrefix.GetLastToken();
             switch (lastToken.Kind)
             {
                 case SyntaxKind.DoubleQuote:

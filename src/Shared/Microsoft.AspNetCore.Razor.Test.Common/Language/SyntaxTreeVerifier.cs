@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Text;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
@@ -45,22 +43,22 @@ internal class SyntaxTreeVerifier
         }
 
         var root = syntaxTree.Root;
-        var lastToken = root.GetLastOldToken(includeZeroWidth: true);
-        var firstToken = root.GetFirstOldToken(includeZeroWidth: true);
+        var lastToken = root.GetLastToken(includeZeroWidth: true);
+        var firstToken = root.GetFirstToken(includeZeroWidth: true);
         Assert.Equal(SyntaxKind.EndOfFile, lastToken.Kind);
-        Assert.Null(lastToken.GetNextOldToken(includeZeroWidth: true));
-        Assert.Null(lastToken.GetNextOldToken(includeZeroWidth: false));
-        Assert.Null(firstToken.GetPreviousOldToken(includeZeroWidth: true));
-        Assert.Null(firstToken.GetPreviousOldToken(includeZeroWidth: false));
+        Assert.Equal(default, lastToken.GetNextToken(includeZeroWidth: true));
+        Assert.Equal(default, lastToken.GetNextToken(includeZeroWidth: false));
+        Assert.Equal(default, firstToken.GetPreviousToken(includeZeroWidth: true));
+        Assert.Equal(default, firstToken.GetPreviousToken(includeZeroWidth: false));
 
-        Assert.Same(tokens[0], firstToken);
-        Assert.Same(tokens[^1], lastToken);
+        Assert.Equal(tokens[0], firstToken);
+        Assert.Equal(tokens[^1], lastToken);
 
         if (tokens.Count == 1)
         {
-            Assert.Same(lastToken, firstToken);
-            Assert.Null(lastToken.GetPreviousOldToken(includeZeroWidth: true));
-            Assert.Null(lastToken.GetPreviousOldToken(includeZeroWidth: false));
+            Assert.Equal(lastToken, firstToken);
+            Assert.Equal(default, lastToken.GetPreviousToken(includeZeroWidth: true));
+            Assert.Equal(default, lastToken.GetPreviousToken(includeZeroWidth: false));
             return;
         }
 
@@ -69,18 +67,18 @@ internal class SyntaxTreeVerifier
             var previousTokenIndex = i - 1;
             var previous = tokens[previousTokenIndex];
             var current = tokens[i];
-            Assert.Same(previous.GetNextOldToken(includeZeroWidth: true), current);
-            Assert.Same(current.GetPreviousOldToken(includeZeroWidth: true), previous);
-            validateNonZeroWidth(previous.GetNextOldToken(includeZeroWidth: false), previousTokenIndex, countUp: true, in tokens);
-            validateNonZeroWidth(previous.GetPreviousOldToken(includeZeroWidth: false), previousTokenIndex, countUp: false, in tokens);
+            Assert.Equal(previous.GetNextToken(includeZeroWidth: true), current);
+            Assert.Equal(current.GetPreviousToken(includeZeroWidth: true), previous);
+            validateNonZeroWidth(previous.GetNextToken(includeZeroWidth: false), previousTokenIndex, countUp: true, in tokens);
+            validateNonZeroWidth(previous.GetPreviousToken(includeZeroWidth: false), previousTokenIndex, countUp: false, in tokens);
         }
 
-        validateNonZeroWidth(lastToken.GetPreviousOldToken(includeZeroWidth: false), tokens.Count - 1, countUp: false, in tokens);
+        validateNonZeroWidth(lastToken.GetPreviousToken(includeZeroWidth: false), tokens.Count - 1, countUp: false, in tokens);
 
-        void validateNonZeroWidth(OldSyntaxToken foundNonZeroWidthToken, int originalTokenIndex, bool countUp, in PooledArrayBuilder<OldSyntaxToken> tokens)
+        void validateNonZeroWidth(SyntaxToken foundNonZeroWidthToken, int originalTokenIndex, bool countUp, in PooledArrayBuilder<SyntaxToken> tokens)
         {
             var (targetIndex, increment) = countUp ? (tokens.Count, 1) : (-1, -1);
-            if (foundNonZeroWidthToken == null)
+            if (foundNonZeroWidthToken == default)
             {
                 for (var i = originalTokenIndex + increment; i != targetIndex; i += increment)
                 {
@@ -101,7 +99,7 @@ internal class SyntaxTreeVerifier
                     continue;
                 }
 
-                Assert.Same(foundNonZeroWidthToken, token);
+                Assert.Equal(foundNonZeroWidthToken, token);
                 return;
             }
 
@@ -114,7 +112,7 @@ internal class SyntaxTreeVerifier
         private readonly RazorSourceDocument _source;
         private SourceLocation _currentLocation;
 #pragma warning disable CA1805
-        internal PooledArrayBuilder<OldSyntaxToken> AllTokens = new();
+        internal PooledArrayBuilder<SyntaxToken> AllTokens = new();
 #pragma warning restore CA1805
 
         public Verifier(RazorSourceDocument source)
@@ -127,7 +125,7 @@ internal class SyntaxTreeVerifier
         {
             if (token != null)
             {
-                AllTokens.Add(token);
+                AllTokens.Add(token.AsToken());
                 if (!token.IsMissing && token.Kind != SyntaxKind.Marker)
                 {
                     var start = token.GetSourceLocation(_source);

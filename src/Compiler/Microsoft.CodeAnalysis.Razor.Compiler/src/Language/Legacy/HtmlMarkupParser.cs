@@ -2285,18 +2285,20 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
 
         // Find the last token of this node and return its immediate non-list parent.
         var red = node.CreateRed();
-        Syntax.SyntaxNode? last = red.GetLastOldToken();
-        if (last == null)
+        var last = red.GetLastToken();
+        if (last.Kind == SyntaxKind.None)
         {
             return null;
         }
 
-        while (last.Green.IsToken || last.Green.IsList)
+        var parent = last.Parent;
+
+        while (parent?.Green.IsToken == true || parent?.Green.IsList == true)
         {
-            last = last.Parent;
+            parent = parent.Parent;
         }
 
-        return last.Green;
+        return parent?.Green;
     }
 
     private static bool IsVoidElement(string? tagName)

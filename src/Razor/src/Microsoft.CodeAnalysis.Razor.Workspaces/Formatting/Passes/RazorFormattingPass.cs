@@ -446,7 +446,7 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
                 didFormat = true;
             }
             else if (codeRange.End.Line == closeBraceRange.Start.Line &&
-                codeNode.GetLastOldToken(includeZeroWidth: false) is not { Kind: SyntaxKind.NewLine })
+                codeNode.GetLastToken(includeZeroWidth: false) is not { Kind: SyntaxKind.NewLine })
             {
                 // Add a Newline between the content and the "}" if one doesn't already exist, and make sure it lines
                 // up with the start of the line that the open brace is on, as though it had been through the Html formatter.

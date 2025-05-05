@@ -13,6 +13,14 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class SyntaxNodeExtensions
 {
+#nullable enable
+    public static SyntaxToken AsToken(this SyntaxNode node)
+    {
+        Debug.Assert(node.IsToken);
+        return new(node.Parent, node.Green, node.Position, index: 0);
+    }
+#nullable disable
+
     public static TNode WithAnnotations<TNode>(this TNode node, params SyntaxAnnotation[] annotations) where TNode : SyntaxNode
     {
         return (TNode)node.Green.SetAnnotations(annotations).CreateRed(node.Parent, node.Position);

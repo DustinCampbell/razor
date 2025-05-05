@@ -139,6 +139,29 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return result;
     }
 
+    internal int GetChildIndex(int slot)
+    {
+        var index = 0;
+
+        for (var i = 0; i < slot; i++)
+        {
+            var item = Green.GetSlot(i);
+            if (item != null)
+            {
+                if (item.IsList)
+                {
+                    index += item.SlotCount;
+                }
+                else
+                {
+                    index++;
+                }
+            }
+        }
+
+        return index;
+    }
+
     internal virtual int GetChildPosition(int index)
     {
         var offset = 0;
@@ -186,6 +209,24 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Gets the first token of the tree rooted by this node. Skips zero-width tokens.
+    /// </summary>
+    /// <returns>The first token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
+    public SyntaxToken GetFirstToken(bool includeZeroWidth = false)
+    {
+        return SyntaxNavigator.GetFirstToken(this, includeZeroWidth);
+    }
+
+    /// <summary>
+    /// Gets the last token of the tree rooted by this node. Skips zero-width tokens.
+    /// </summary>
+    /// <returns>The last token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
+    public SyntaxToken GetLastToken(bool includeZeroWidth = false)
+    {
+        return SyntaxNavigator.GetLastToken(this, includeZeroWidth);
     }
 
     /// <summary>

@@ -18,27 +18,27 @@ internal static class SyntaxNavigator
         return predicate == null || ReferenceEquals(predicate, OldSyntaxToken.Any) || predicate(token);
     }
 
-    internal static OldSyntaxToken? GetFirstToken(SyntaxNode current, bool includeZeroWidth)
+    internal static OldSyntaxToken? GetFirstOldToken(SyntaxNode current, bool includeZeroWidth)
     {
-        return GetFirstToken(current, GetPredicateFunction(includeZeroWidth));
+        return GetFirstOldToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static OldSyntaxToken? GetLastToken(SyntaxNode current, bool includeZeroWidth)
+    internal static OldSyntaxToken? GetLastOldToken(SyntaxNode current, bool includeZeroWidth)
     {
-        return GetLastToken(current, GetPredicateFunction(includeZeroWidth));
+        return GetLastOldToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static OldSyntaxToken? GetPreviousToken(OldSyntaxToken current, bool includeZeroWidth)
+    internal static OldSyntaxToken? GetPreviousOldToken(OldSyntaxToken current, bool includeZeroWidth)
     {
-        return GetPreviousToken(current, GetPredicateFunction(includeZeroWidth));
+        return GetPreviousOldToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static OldSyntaxToken? GetNextToken(OldSyntaxToken current, bool includeZeroWidth)
+    internal static OldSyntaxToken? GetNextOldToken(OldSyntaxToken current, bool includeZeroWidth)
     {
-        return GetNextToken(current, GetPredicateFunction(includeZeroWidth));
+        return GetNextOldToken(current, GetPredicateFunction(includeZeroWidth));
     }
 
-    internal static OldSyntaxToken? GetFirstToken(SyntaxNode current, Func<OldSyntaxToken, bool>? predicate)
+    internal static OldSyntaxToken? GetFirstOldToken(SyntaxNode current, Func<OldSyntaxToken, bool>? predicate)
     {
         using var stack = new PooledArrayBuilder<ChildSyntaxList.Enumerator>();
         stack.Push(current.ChildNodesAndOldTokens().GetEnumerator());
@@ -52,7 +52,7 @@ internal static class SyntaxNavigator
 
                 if (child.IsToken)
                 {
-                    var token = GetFirstToken((OldSyntaxToken)child, predicate);
+                    var token = GetFirstOldToken((OldSyntaxToken)child, predicate);
                     if (token != null)
                     {
                         return token;
@@ -72,7 +72,7 @@ internal static class SyntaxNavigator
         return null;
     }
 
-    internal static OldSyntaxToken? GetLastToken(SyntaxNode current, Func<OldSyntaxToken, bool> predicate)
+    internal static OldSyntaxToken? GetLastOldToken(SyntaxNode current, Func<OldSyntaxToken, bool> predicate)
     {
         using var stack = new PooledArrayBuilder<ChildSyntaxList.Reversed.Enumerator>();
         stack.Push(current.ChildNodesAndOldTokens().Reverse().GetEnumerator());
@@ -87,7 +87,7 @@ internal static class SyntaxNavigator
 
                 if (child.IsToken)
                 {
-                    var token = GetLastToken((OldSyntaxToken)child, predicate);
+                    var token = GetLastOldToken((OldSyntaxToken)child, predicate);
                     if (token != null)
                     {
                         return token;
@@ -107,7 +107,7 @@ internal static class SyntaxNavigator
         return null;
     }
 
-    private static OldSyntaxToken? GetFirstToken(OldSyntaxToken token, Func<OldSyntaxToken, bool>? predicate)
+    private static OldSyntaxToken? GetFirstOldToken(OldSyntaxToken token, Func<OldSyntaxToken, bool>? predicate)
     {
         if (Matches(predicate, token))
         {
@@ -117,7 +117,7 @@ internal static class SyntaxNavigator
         return null;
     }
 
-    private static OldSyntaxToken? GetLastToken(OldSyntaxToken token, Func<OldSyntaxToken, bool> predicate)
+    private static OldSyntaxToken? GetLastOldToken(OldSyntaxToken token, Func<OldSyntaxToken, bool> predicate)
     {
         if (Matches(predicate, token))
         {
@@ -127,7 +127,7 @@ internal static class SyntaxNavigator
         return null;
     }
 
-    internal static OldSyntaxToken? GetNextToken(SyntaxNode node, Func<OldSyntaxToken, bool>? predicate)
+    internal static OldSyntaxToken? GetNextOldToken(SyntaxNode node, Func<OldSyntaxToken, bool>? predicate)
     {
         while (node.Parent != null)
         {
@@ -140,7 +140,7 @@ internal static class SyntaxNavigator
                 {
                     if (child.IsToken)
                     {
-                        var token = GetFirstToken((OldSyntaxToken)child, predicate);
+                        var token = GetFirstOldToken((OldSyntaxToken)child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -148,7 +148,7 @@ internal static class SyntaxNavigator
                     }
                     else
                     {
-                        var token = GetFirstToken(child, predicate);
+                        var token = GetFirstOldToken(child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -168,7 +168,7 @@ internal static class SyntaxNavigator
         return null;
     }
 
-    internal static OldSyntaxToken? GetPreviousToken(
+    internal static OldSyntaxToken? GetPreviousOldToken(
         SyntaxNode node,
         Func<OldSyntaxToken, bool> predicate)
     {
@@ -183,7 +183,7 @@ internal static class SyntaxNavigator
                 {
                     if (child.IsToken)
                     {
-                        var token = GetLastToken((OldSyntaxToken)child, predicate);
+                        var token = GetLastOldToken((OldSyntaxToken)child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -191,7 +191,7 @@ internal static class SyntaxNavigator
                     }
                     else
                     {
-                        var token = GetLastToken(child, predicate);
+                        var token = GetLastOldToken(child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -211,7 +211,7 @@ internal static class SyntaxNavigator
         return null;
     }
 
-    internal static OldSyntaxToken? GetNextToken(OldSyntaxToken current, Func<OldSyntaxToken, bool>? predicate)
+    internal static OldSyntaxToken? GetNextOldToken(OldSyntaxToken current, Func<OldSyntaxToken, bool>? predicate)
     {
         if (current.Parent != null)
         {
@@ -224,7 +224,7 @@ internal static class SyntaxNavigator
                 {
                     if (child.IsToken)
                     {
-                        var token = GetFirstToken((OldSyntaxToken)child, predicate);
+                        var token = GetFirstOldToken((OldSyntaxToken)child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -232,7 +232,7 @@ internal static class SyntaxNavigator
                     }
                     else
                     {
-                        var token = GetFirstToken(child, predicate);
+                        var token = GetFirstOldToken(child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -246,13 +246,13 @@ internal static class SyntaxNavigator
             }
 
             // otherwise get next token from the parent's parent, and so on
-            return GetNextToken(current.Parent, predicate);
+            return GetNextOldToken(current.Parent, predicate);
         }
 
         return null;
     }
 
-    internal static OldSyntaxToken? GetPreviousToken(OldSyntaxToken current, Func<OldSyntaxToken, bool> predicate)
+    internal static OldSyntaxToken? GetPreviousOldToken(OldSyntaxToken current, Func<OldSyntaxToken, bool> predicate)
     {
         if (current.Parent != null)
         {
@@ -265,7 +265,7 @@ internal static class SyntaxNavigator
                 {
                     if (child.IsToken)
                     {
-                        var token = GetLastToken((OldSyntaxToken)child, predicate);
+                        var token = GetLastOldToken((OldSyntaxToken)child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -273,7 +273,7 @@ internal static class SyntaxNavigator
                     }
                     else
                     {
-                        var token = GetLastToken(child, predicate);
+                        var token = GetLastOldToken(child, predicate);
                         if (token != null)
                         {
                             return token;
@@ -287,7 +287,7 @@ internal static class SyntaxNavigator
             }
 
             // otherwise get next token from the parent's parent, and so on
-            return GetPreviousToken(current.Parent, predicate);
+            return GetPreviousOldToken(current.Parent, predicate);
         }
 
         return null;

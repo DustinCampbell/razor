@@ -60,8 +60,8 @@ internal abstract class AbstractRazorCompletionFactsService(ImmutableArray<IRazo
         if (originalNode.SpanStart == requestIndex
             // allow zero-length tokens for cases when cursor is at EOF,
             // e.g. see https://github.com/dotnet/razor/issues/9955
-            && originalNode.GetFirstToken(includeZeroWidth: true) is { } startToken
-            && startToken.GetPreviousToken() is { } previousToken)
+            && originalNode.GetFirstOldToken(includeZeroWidth: true) is { } startToken
+            && startToken.GetPreviousOldToken() is { } previousToken)
         {
             Debug.Assert(previousToken.Span.End == requestIndex);
             Debug.Assert(previousToken.Kind != SyntaxKind.Marker);
@@ -72,7 +72,7 @@ internal abstract class AbstractRazorCompletionFactsService(ImmutableArray<IRazo
         // to see if we're on the closing slash or angle bracket of a start or end tag
         if (HtmlFacts.TryGetElementInfo(originalNode, containingTagNameToken: out _, attributeNodes: out _, closingForwardSlashOrCloseAngleToken: out var closingForwardSlashOrCloseAngleToken)
             && closingForwardSlashOrCloseAngleToken.SpanStart == requestIndex
-            && closingForwardSlashOrCloseAngleToken.GetPreviousToken() is { } previousToken2)
+            && closingForwardSlashOrCloseAngleToken.GetPreviousOldToken() is { } previousToken2)
         {
             Debug.Assert(previousToken2.Span.End == requestIndex);
             return previousToken2.Parent;

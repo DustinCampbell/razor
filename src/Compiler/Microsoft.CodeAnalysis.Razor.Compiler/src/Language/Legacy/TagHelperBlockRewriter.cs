@@ -18,7 +18,7 @@ internal static class TagHelperBlockRewriter
         MarkupEndTagSyntax endTag,
         TagHelperBinding bindingResult)
     {
-        var childSpan = startTag.GetLastToken()?.Parent;
+        var childSpan = startTag.GetLastOldToken()?.Parent;
 
         // Self-closing tags are always valid despite descriptors[X].TagStructure.
         if (childSpan?.GetContent().EndsWith("/>", StringComparison.Ordinal) ?? false)
@@ -244,7 +244,7 @@ internal static class TagHelperBlockRewriter
         }
         else
         {
-            var lastToken = attributeBlock.ValuePrefix.GetLastToken();
+            var lastToken = attributeBlock.ValuePrefix.GetLastOldToken();
             switch (lastToken.Kind)
             {
                 case SyntaxKind.DoubleQuote:
@@ -616,7 +616,7 @@ internal static class TagHelperBlockRewriter
                 // This ensures that, when we create tracking spans and write out the final C# code, the `@` is not treated as a separate, separable
                 // token from the content that follows it.
                 var firstChild = rewrittenBody.Children[0];
-                var firstToken = firstChild.GetFirstToken();
+                var firstToken = firstChild.GetFirstOldToken();
                 var newFirstToken = SyntaxFactory.Token(firstToken.Kind, node.Transition.Transition.Content + firstToken.Content).WithAnnotations(firstToken.GetAnnotations());
 
                 var newFirstChild = firstChild.ReplaceNode(firstToken, newFirstToken);

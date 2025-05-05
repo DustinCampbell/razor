@@ -45,18 +45,18 @@ internal class OldSyntaxToken : RazorSyntaxNode
     /// Gets the token that follows this token in the syntax tree.
     /// </summary>
     /// <returns>The token that follows this token in the syntax tree.</returns>
-    public OldSyntaxToken GetNextToken(bool includeZeroWidth = false)
+    public OldSyntaxToken GetNextOldToken(bool includeZeroWidth = false)
     {
-        return SyntaxNavigator.GetNextToken(this, includeZeroWidth);
+        return SyntaxNavigator.GetNextOldToken(this, includeZeroWidth);
     }
 
     /// <summary>
     /// Gets the token that precedes this token in the syntax tree.
     /// </summary>
     /// <returns>The previous token that precedes this token in the syntax tree.</returns>
-    public OldSyntaxToken GetPreviousToken(bool includeZeroWidth = false)
+    public OldSyntaxToken GetPreviousOldToken(bool includeZeroWidth = false)
     {
-        return SyntaxNavigator.GetPreviousToken(this, includeZeroWidth);
+        return SyntaxNavigator.GetPreviousOldToken(this, includeZeroWidth);
     }
 
     public override string ToString()

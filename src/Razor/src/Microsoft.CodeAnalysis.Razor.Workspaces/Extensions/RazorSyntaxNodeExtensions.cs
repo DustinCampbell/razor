@@ -229,7 +229,7 @@ internal static class RazorSyntaxNodeExtensions
         // of the EOF token)
         if (token.Kind == SyntaxKind.EndOfFile && node.Span.Contains(index - 1))
         {
-            token = token.GetPreviousToken(includeWhitespace);
+            token = token.GetPreviousOldToken(includeWhitespace);
         }
 
         var foundPosition = token.Position;
@@ -238,7 +238,7 @@ internal static class RazorSyntaxNodeExtensions
         {
             while (true)
             {
-                var previousToken = token.GetPreviousToken(includeWhitespace);
+                var previousToken = token.GetPreviousOldToken(includeWhitespace);
 
                 if (previousToken is null ||
                     previousToken.Kind != SyntaxKind.Marker ||

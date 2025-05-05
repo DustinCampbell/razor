@@ -35,7 +35,7 @@ internal class MarkupTransitionCompletionItemProvider : IRazorCompletionItemProv
         // one token.
         if (owner is RazorMetaCodeSyntax { SpanStart: var spanStart, MetaCode: [var metaCodeToken, ..] } && spanStart == context.AbsoluteIndex)
         {
-            var previousToken = metaCodeToken.GetPreviousToken();
+            var previousToken = metaCodeToken.GetPreviousOldToken();
             owner = previousToken.Parent;
         }
 

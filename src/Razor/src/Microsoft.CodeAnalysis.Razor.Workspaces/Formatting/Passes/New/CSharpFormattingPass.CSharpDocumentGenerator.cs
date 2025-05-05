@@ -341,7 +341,7 @@ internal partial class CSharpFormattingPass
                 //
                 // The final quirk is that the node in question can span multiple lines, but the transition can only
                 // possibly be on the last line.
-                if (lastToken.GetNextToken() is { Kind: SyntaxKind.Transition } token &&
+                if (lastToken.GetNextOldToken() is { Kind: SyntaxKind.Transition } token &&
                     GetLineNumber(token) == GetLineNumber(_currentToken))
                 {
                     // We can't use node.Span because it can contain newlines from the line before.

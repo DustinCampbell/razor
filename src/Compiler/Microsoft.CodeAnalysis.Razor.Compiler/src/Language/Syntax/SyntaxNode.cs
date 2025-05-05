@@ -192,18 +192,18 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Gets the first token of the tree rooted by this node. Skips zero-width tokens.
     /// </summary>
     /// <returns>The first token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public OldSyntaxToken? GetFirstToken(bool includeZeroWidth = false)
+    public OldSyntaxToken? GetFirstOldToken(bool includeZeroWidth = false)
     {
-        return SyntaxNavigator.GetFirstToken(this, includeZeroWidth);
+        return SyntaxNavigator.GetFirstOldToken(this, includeZeroWidth);
     }
 
     /// <summary>
     /// Gets the last token of the tree rooted by this node. Skips zero-width tokens.
     /// </summary>
     /// <returns>The last token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public OldSyntaxToken? GetLastToken(bool includeZeroWidth = false)
+    public OldSyntaxToken? GetLastOldToken(bool includeZeroWidth = false)
     {
-        return SyntaxNavigator.GetLastToken(this, includeZeroWidth);
+        return SyntaxNavigator.GetLastOldToken(this, includeZeroWidth);
     }
 
     /// <summary>
@@ -395,7 +395,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 foundToken = originalFoundToken;
                 do
                 {
-                    foundToken = foundToken.GetPreviousToken(includeZeroWidth: true);
+                    foundToken = foundToken.GetPreviousOldToken(includeZeroWidth: true);
                     if (foundToken is null or { Kind: SyntaxKind.NewLine })
                     {
                         return false;
@@ -417,7 +417,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 var currentToken = originalFoundToken;
                 do
                 {
-                    currentToken = currentToken.GetNextToken(includeZeroWidth: true);
+                    currentToken = currentToken.GetNextOldToken(includeZeroWidth: true);
 
                     if (currentToken is null || currentToken.Span.End > this.Span.End)
                     {

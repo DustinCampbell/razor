@@ -45,13 +45,13 @@ internal class SyntaxTreeVerifier
         }
 
         var root = syntaxTree.Root;
-        var lastToken = root.GetLastToken(includeZeroWidth: true);
-        var firstToken = root.GetFirstToken(includeZeroWidth: true);
+        var lastToken = root.GetLastOldToken(includeZeroWidth: true);
+        var firstToken = root.GetFirstOldToken(includeZeroWidth: true);
         Assert.Equal(SyntaxKind.EndOfFile, lastToken.Kind);
-        Assert.Null(lastToken.GetNextToken(includeZeroWidth: true));
-        Assert.Null(lastToken.GetNextToken(includeZeroWidth: false));
-        Assert.Null(firstToken.GetPreviousToken(includeZeroWidth: true));
-        Assert.Null(firstToken.GetPreviousToken(includeZeroWidth: false));
+        Assert.Null(lastToken.GetNextOldToken(includeZeroWidth: true));
+        Assert.Null(lastToken.GetNextOldToken(includeZeroWidth: false));
+        Assert.Null(firstToken.GetPreviousOldToken(includeZeroWidth: true));
+        Assert.Null(firstToken.GetPreviousOldToken(includeZeroWidth: false));
 
         Assert.Same(tokens[0], firstToken);
         Assert.Same(tokens[^1], lastToken);
@@ -59,8 +59,8 @@ internal class SyntaxTreeVerifier
         if (tokens.Count == 1)
         {
             Assert.Same(lastToken, firstToken);
-            Assert.Null(lastToken.GetPreviousToken(includeZeroWidth: true));
-            Assert.Null(lastToken.GetPreviousToken(includeZeroWidth: false));
+            Assert.Null(lastToken.GetPreviousOldToken(includeZeroWidth: true));
+            Assert.Null(lastToken.GetPreviousOldToken(includeZeroWidth: false));
             return;
         }
 
@@ -69,13 +69,13 @@ internal class SyntaxTreeVerifier
             var previousTokenIndex = i - 1;
             var previous = tokens[previousTokenIndex];
             var current = tokens[i];
-            Assert.Same(previous.GetNextToken(includeZeroWidth: true), current);
-            Assert.Same(current.GetPreviousToken(includeZeroWidth: true), previous);
-            validateNonZeroWidth(previous.GetNextToken(includeZeroWidth: false), previousTokenIndex, countUp: true, in tokens);
-            validateNonZeroWidth(previous.GetPreviousToken(includeZeroWidth: false), previousTokenIndex, countUp: false, in tokens);
+            Assert.Same(previous.GetNextOldToken(includeZeroWidth: true), current);
+            Assert.Same(current.GetPreviousOldToken(includeZeroWidth: true), previous);
+            validateNonZeroWidth(previous.GetNextOldToken(includeZeroWidth: false), previousTokenIndex, countUp: true, in tokens);
+            validateNonZeroWidth(previous.GetPreviousOldToken(includeZeroWidth: false), previousTokenIndex, countUp: false, in tokens);
         }
 
-        validateNonZeroWidth(lastToken.GetPreviousToken(includeZeroWidth: false), tokens.Count - 1, countUp: false, in tokens);
+        validateNonZeroWidth(lastToken.GetPreviousOldToken(includeZeroWidth: false), tokens.Count - 1, countUp: false, in tokens);
 
         void validateNonZeroWidth(OldSyntaxToken foundNonZeroWidthToken, int originalTokenIndex, bool countUp, in PooledArrayBuilder<OldSyntaxToken> tokens)
         {

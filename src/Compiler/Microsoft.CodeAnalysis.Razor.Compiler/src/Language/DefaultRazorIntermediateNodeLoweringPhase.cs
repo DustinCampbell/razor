@@ -492,14 +492,14 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             return node.GetSourceSpan(SourceDocument);
         }
 
-        protected static SyntaxList<SyntaxToken> MergeLiterals(
-            SyntaxList<SyntaxToken>? literal1,
-            SyntaxList<SyntaxToken>? literal2,
-            SyntaxList<SyntaxToken>? literal3 = null,
-            SyntaxList<SyntaxToken>? literal4 = null,
-            SyntaxList<SyntaxToken>? literal5 = null)
+        protected static SyntaxList<OldSyntaxToken> MergeLiterals(
+            SyntaxList<OldSyntaxToken>? literal1,
+            SyntaxList<OldSyntaxToken>? literal2,
+            SyntaxList<OldSyntaxToken>? literal3 = null,
+            SyntaxList<OldSyntaxToken>? literal4 = null,
+            SyntaxList<OldSyntaxToken>? literal5 = null)
         {
-            using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+            using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
 
             if (literal1 is { } tokens1)
             {
@@ -610,7 +610,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 node.NamePrefix?.LiteralTokens,
                 node.Name.LiteralTokens,
                 node.NameSuffix?.LiteralTokens,
-                node.EqualsToken != null ? new SyntaxList<SyntaxToken>(node.EqualsToken) : default,
+                node.EqualsToken != null ? new SyntaxList<OldSyntaxToken>(node.EqualsToken) : default,
                 node.ValuePrefix?.LiteralTokens);
             var prefix = (MarkupTextLiteralSyntax)SyntaxFactory.MarkupTextLiteral(prefixTokens, chunkGenerator: null).Green.CreateRed(node, node.NamePrefix?.Position ?? node.Name.Position);
 
@@ -629,7 +629,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
                     if (children.TryCast<MarkupLiteralAttributeValueSyntax>(out var attributeLiteralArray))
                     {
-                        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
 
                         foreach (var literal in attributeLiteralArray)
                         {
@@ -967,7 +967,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
         private void VisitHtmlContent(SyntaxNode node)
         {
-            if (node == null || (node is SyntaxToken token && token.IsMissing))
+            if (node == null || (node is OldSyntaxToken token && token.IsMissing))
             {
                 return;
             }
@@ -1188,7 +1188,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
             if (children.TryCast<MarkupLiteralAttributeValueSyntax>(out var attributeLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
 
                 foreach (var literal in attributeLiteralArray)
                 {
@@ -1201,7 +1201,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<MarkupTextLiteralSyntax>(out var markupLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
 
                 foreach (var literal in markupLiteralArray)
                 {
@@ -1213,7 +1213,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<CSharpExpressionLiteralSyntax>(out var expressionLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
 
                 SpanEditHandler editHandler = null;
                 ISpanChunkGenerator generator = null;
@@ -1392,7 +1392,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 node.NamePrefix?.LiteralTokens,
                 node.Name.LiteralTokens,
                 node.NameSuffix?.LiteralTokens,
-                node.EqualsToken == null ? new SyntaxList<SyntaxToken>() : new SyntaxList<SyntaxToken>(node.EqualsToken),
+                node.EqualsToken == null ? new SyntaxList<OldSyntaxToken>() : new SyntaxList<OldSyntaxToken>(node.EqualsToken),
                 node.ValuePrefix?.LiteralTokens);
             var prefix = (MarkupTextLiteralSyntax)SyntaxFactory.MarkupTextLiteral(prefixTokens, chunkGenerator: null).Green.CreateRed(node, node.NamePrefix?.Position ?? node.Name.Position);
 
@@ -2158,7 +2158,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
 
             if (children.TryCast<MarkupLiteralAttributeValueSyntax>(out var attributeLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var valueTokens);
+                using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var valueTokens);
 
                 foreach (var literal in attributeLiteralArray)
                 {
@@ -2171,7 +2171,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<MarkupTextLiteralSyntax>(out var markupLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
 
                 foreach (var literal in markupLiteralArray)
                 {
@@ -2183,7 +2183,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else if (children.TryCast<CSharpExpressionLiteralSyntax>(out var expressionLiteralArray))
             {
-                using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+                using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
 
                 ISpanChunkGenerator generator = null;
                 SpanEditHandler editHandler = null;

@@ -7,12 +7,12 @@ using System;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
-internal class SyntaxToken : RazorSyntaxNode
+internal class OldSyntaxToken : RazorSyntaxNode
 {
-    internal static readonly Func<SyntaxToken, bool> NonZeroWidth = t => t.Width > 0;
-    internal static readonly Func<SyntaxToken, bool> Any = t => true;
+    internal static readonly Func<OldSyntaxToken, bool> NonZeroWidth = t => t.Width > 0;
+    internal static readonly Func<OldSyntaxToken, bool> Any = t => true;
 
-    internal SyntaxToken(GreenNode green, SyntaxNode parent, int position)
+    internal OldSyntaxToken(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
     {
     }
@@ -33,7 +33,7 @@ internal class SyntaxToken : RazorSyntaxNode
 
     public override TResult Accept<TResult>(SyntaxVisitor<TResult> visitor)
     {
-        return visitor.VisitToken(this);
+        return visitor.VisitOldToken(this);
     }
 
     public override void Accept(SyntaxVisitor visitor)
@@ -45,7 +45,7 @@ internal class SyntaxToken : RazorSyntaxNode
     /// Gets the token that follows this token in the syntax tree.
     /// </summary>
     /// <returns>The token that follows this token in the syntax tree.</returns>
-    public SyntaxToken GetNextToken(bool includeZeroWidth = false)
+    public OldSyntaxToken GetNextToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetNextToken(this, includeZeroWidth);
     }
@@ -54,7 +54,7 @@ internal class SyntaxToken : RazorSyntaxNode
     /// Gets the token that precedes this token in the syntax tree.
     /// </summary>
     /// <returns>The previous token that precedes this token in the syntax tree.</returns>
-    public SyntaxToken GetPreviousToken(bool includeZeroWidth = false)
+    public OldSyntaxToken GetPreviousToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetPreviousToken(this, includeZeroWidth);
     }

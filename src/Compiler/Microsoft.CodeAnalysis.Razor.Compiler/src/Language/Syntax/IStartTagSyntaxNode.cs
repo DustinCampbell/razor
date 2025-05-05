@@ -8,7 +8,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 internal interface IStartTagSyntaxNode
 {
     SyntaxList<RazorSyntaxNode> Attributes { get; }
-    SyntaxToken Name { get; }
+    OldSyntaxToken Name { get; }
     TextSpan Span { get; }
     int SpanStart { get; }
     SyntaxNode? Parent { get; }

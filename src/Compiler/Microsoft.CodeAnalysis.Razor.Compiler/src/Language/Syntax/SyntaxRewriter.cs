@@ -54,7 +54,7 @@ internal abstract partial class SyntaxRewriter : SyntaxVisitor<SyntaxNode>
         return list;
     }
 
-    public override SyntaxNode VisitToken(SyntaxToken token)
+    public override SyntaxNode VisitOldToken(OldSyntaxToken token)
     {
         return token;
     }

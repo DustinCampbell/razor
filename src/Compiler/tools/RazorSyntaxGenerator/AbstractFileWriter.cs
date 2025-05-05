@@ -226,6 +226,11 @@ internal abstract class AbstractFileWriter
                 : "SyntaxNode";
         }
 
+        if (!green && field.Type == "SyntaxToken")
+        {
+            return "OldSyntaxToken";
+        }
+
         return field.Type;
     }
 

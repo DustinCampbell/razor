@@ -45,16 +45,16 @@ internal static class SyntaxUtilities
     internal static SyntaxNode GetStartTagLegacyChildren(
         SyntaxNode @this,
         SyntaxList<RazorSyntaxNode> attributes,
-        SyntaxToken openAngle,
-        SyntaxToken bang,
-        SyntaxToken name,
-        SyntaxToken forwardSlash,
-        SyntaxToken closeAngle)
+        OldSyntaxToken openAngle,
+        OldSyntaxToken bang,
+        OldSyntaxToken name,
+        OldSyntaxToken forwardSlash,
+        OldSyntaxToken closeAngle)
     {
         // This method returns the children of this start tag in legacy format.
         // This is needed to generate the same classified spans as the legacy syntax tree.
         using var _1 = SyntaxListBuilderPool.GetPooledBuilder(out var builder);
-        using var _2 = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var tokens);
+        using var _2 = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var tokens);
 
         SpanEditHandler? acceptsAnyHandler = null;
         var containsAttributesContent = false;
@@ -118,17 +118,17 @@ internal static class SyntaxUtilities
 
     internal static SyntaxNode GetEndTagLegacyChildren(
         SyntaxNode @this,
-        SyntaxToken openAngle,
-        SyntaxToken forwardSlash,
-        SyntaxToken bang,
-        SyntaxToken name,
+        OldSyntaxToken openAngle,
+        OldSyntaxToken forwardSlash,
+        OldSyntaxToken bang,
+        OldSyntaxToken name,
         MarkupMiscAttributeContentSyntax miscAttributeContent,
-        SyntaxToken closeAngle)
+        OldSyntaxToken closeAngle)
     {
         // This method returns the children of this end tag in legacy format.
         // This is needed to generate the same classified spans as the legacy syntax tree.
         using var _1 = SyntaxListBuilderPool.GetPooledBuilder(out var builder);
-        using var _2 = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var tokens);
+        using var _2 = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var tokens);
 
         var editHandler = @this.GetEditHandler();
         var chunkGenerator = @this.GetChunkGenerator();
@@ -270,9 +270,9 @@ internal static class SyntaxUtilities
         ISpanChunkGenerator chunkGenerator,
         bool includeEditHandler = false)
     {
-        var tokens = node.DescendantNodes().OfType<SyntaxToken>().Where(t => !t.IsMissing).ToArray();
+        var tokens = node.DescendantNodes().OfType<OldSyntaxToken>().Where(t => !t.IsMissing).ToArray();
 
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
         builder.AddRange(tokens, 0, tokens.Length);
         var transitionTokens = builder.ToList();
 

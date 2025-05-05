@@ -54,7 +54,7 @@ internal class WhitespaceRewriter : SyntaxRewriter
         {
             var containsNonWhitespace = literal.DescendantNodes()
                 .Where(n => n.IsToken)
-                .Cast<SyntaxToken>()
+                .Cast<OldSyntaxToken>()
                 .Any(t => !string.IsNullOrWhiteSpace(t.Content));
 
             if (!containsNonWhitespace)

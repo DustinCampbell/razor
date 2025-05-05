@@ -70,7 +70,7 @@ internal class ClassifiedSpanVisitor : SyntaxWalker
             if (comment.IsMissing)
             {
                     // We need to generate a classified span at this position. So insert a marker in its place.
-                    comment = (SyntaxToken)SyntaxFactory.Token(SyntaxKind.Marker, string.Empty).Green.CreateRed(razorCommentSyntax, razorCommentSyntax.StartCommentStar.EndPosition);
+                    comment = (OldSyntaxToken)SyntaxFactory.Token(SyntaxKind.Marker, string.Empty).Green.CreateRed(razorCommentSyntax, razorCommentSyntax.StartCommentStar.EndPosition);
             }
             WriteSpan(comment, SpanKindInternal.Comment, AcceptedCharactersInternal.Any);
 
@@ -192,7 +192,7 @@ internal class ClassifiedSpanVisitor : SyntaxWalker
     {
         WriteBlock(node, BlockKindInternal.Markup, n =>
         {
-            var equalsSyntax = SyntaxFactory.MarkupTextLiteral(new SyntaxList<SyntaxToken>(node.EqualsToken), chunkGenerator: null);
+            var equalsSyntax = SyntaxFactory.MarkupTextLiteral(new SyntaxList<OldSyntaxToken>(node.EqualsToken), chunkGenerator: null);
             var mergedAttributePrefix = SyntaxUtilities.MergeTextLiterals(node.NamePrefix, node.Name, node.NameSuffix, equalsSyntax, node.ValuePrefix);
             Visit(mergedAttributePrefix);
             Visit(node.Value);

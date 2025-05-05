@@ -1007,11 +1007,11 @@ internal class SourceWriter : AbstractFileWriter
                             //else
                             //{
                             WriteComment(field.PropertyComment);
-                            Write($"public {OverrideOrNewModifier(field)}{field.Type} {field.Name} ");
+                            Write($"public {OverrideOrNewModifier(field)}{GetRedPropertyType(field)} {field.Name} ");
 
                             if (IsNodeList(field.Type))
                             {
-                                WriteLine($" => new {field.Type}(GetRed(ref {GetFieldName(field)}, {i}));");
+                                WriteLine($"=> new {GetRedPropertyType(field)}(GetRed(ref {GetFieldName(field)}, {i}));");
                             }
                             else if (IsSeparatedNodeList(field.Type))
                             {
@@ -1153,8 +1153,9 @@ internal class SourceWriter : AbstractFileWriter
 
     private static string GetRedFieldType(Field field)
     {
-        //return field.Type == "SyntaxList<SyntaxToken>" ? "SyntaxTokenList" : field.Type;
-        return field.Type;
+        return field.Type == "SyntaxList<SyntaxToken>"
+            ? "SyntaxList<OldSyntaxToken>" // SyntaxTokenList
+            : field.Type;
     }
 
     private static string GetChildIndex(int i)
@@ -1347,6 +1348,11 @@ internal class SourceWriter : AbstractFileWriter
     {
         var argType = GetElementType(field.Type);
 
+        if (argType == "SyntaxToken")
+        {
+            argType = "OldSyntaxToken";
+        }
+
         var isNew = false;
         if (IsOverride(field))
         {
@@ -1365,6 +1371,11 @@ internal class SourceWriter : AbstractFileWriter
     private void WriteRedNestedListHelperMethods(Node node, Field field, Node referencedNode, Field referencedNodeField)
     {
         var argType = GetElementType(referencedNodeField.Type);
+
+        if (argType == "SyntaxToken")
+        {
+            argType = "OldSyntaxToken";
+        }
 
         var isNew = false;
         if (IsOverride(field))
@@ -1438,7 +1449,7 @@ internal class SourceWriter : AbstractFileWriter
                                 }
                                 else if (f.Type == "SyntaxToken")
                                 {
-                                    return $"({f.Type})VisitToken(node.{f.Name})";
+                                    return $"(OldSyntaxToken)VisitOldToken(node.{f.Name})";
                                 }
                                 else
                                 {
@@ -1711,8 +1722,17 @@ internal class SourceWriter : AbstractFileWriter
 
     private static string GetRedPropertyType(Field field)
     {
-        //if (field.Type == "SyntaxList<SyntaxToken>")
-        //    return "SyntaxTokenList";
+        if (field.Type == "SyntaxToken")
+        {
+            return "OldSyntaxToken";
+        }
+
+        if (field.Type == "SyntaxList<SyntaxToken>")
+        {
+            //return "SyntaxTokenList";
+            return "SyntaxList<OldSyntaxToken>";
+        }
+
         return field.Type;
     }
 

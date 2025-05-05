@@ -37,7 +37,7 @@ public class RazorIndentationFactsTest(ITestOutputHelper testOutput) : ToolingTe
     public void IsCSharpOpenCurlyBrace_SpanWithLeftBrace_ReturnTrue()
     {
         // Arrange
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
         builder.Add(SyntaxFactory.Token(SyntaxKind.LeftBrace, "{"));
         var child = SyntaxFactory.RazorMetaCode(builder.ToList(), chunkGenerator: null);
 
@@ -57,7 +57,7 @@ public class RazorIndentationFactsTest(ITestOutputHelper testOutput) : ToolingTe
     {
         // Arrange
         var symbolType = (SyntaxKind)symbolTypeObject;
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
         builder.Add(SyntaxFactory.Token(symbolType, content));
         var child = SyntaxFactory.MarkupTextLiteral(builder.ToList(), chunkGenerator: null);
 
@@ -72,7 +72,7 @@ public class RazorIndentationFactsTest(ITestOutputHelper testOutput) : ToolingTe
     public void IsCSharpOpenCurlyBrace_MultipleSymbols_ReturnFalse()
     {
         // Arrange
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
         builder.Add(SyntaxFactory.Token(SyntaxKind.Identifier, "hello"));
         builder.Add(SyntaxFactory.Token(SyntaxKind.Comma, ","));
         var child = SyntaxFactory.MarkupTextLiteral(builder.ToList(), chunkGenerator: null);
@@ -88,7 +88,7 @@ public class RazorIndentationFactsTest(ITestOutputHelper testOutput) : ToolingTe
     public void IsCSharpOpenCurlyBrace_SpanWithHtmlSymbol_ReturnFalse()
     {
         // Arrange
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var builder);
+        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
         builder.Add(SyntaxFactory.Token(SyntaxKind.Text, "hello"));
         var child = SyntaxFactory.MarkupTextLiteral(builder.ToList(), chunkGenerator: null);
 

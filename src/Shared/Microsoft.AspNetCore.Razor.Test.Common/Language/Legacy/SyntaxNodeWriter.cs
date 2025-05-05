@@ -19,19 +19,19 @@ internal class SyntaxNodeWriter(TextWriter writer, bool validateSpanEditHandlers
 
     public override SyntaxNode Visit(SyntaxNode node)
     {
-        if (node is SyntaxToken token)
+        if (node is OldSyntaxToken token)
         {
-            return VisitToken(token);
+            return VisitOldToken(token);
         }
 
         WriteNode(node);
         return node;
     }
 
-    public override SyntaxNode VisitToken(SyntaxToken token)
+    public override SyntaxNode VisitOldToken(OldSyntaxToken token)
     {
         WriteToken(token);
-        return base.VisitToken(token);
+        return base.VisitOldToken(token);
     }
 
     private void WriteNode(SyntaxNode node)
@@ -157,7 +157,7 @@ internal class SyntaxNodeWriter(TextWriter writer, bool validateSpanEditHandlers
         Write(info.Bound ? "Bound" : "Unbound");
     }
 
-    private void WriteToken(SyntaxToken token)
+    private void WriteToken(OldSyntaxToken token)
     {
         WriteIndent();
         var content = token.IsMissing ? "<Missing>" : token.Content;

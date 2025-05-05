@@ -5,12 +5,12 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class RazorSyntaxTokenExtensions
 {
-    public static bool IsWhitespace(this SyntaxToken token)
+    public static bool IsWhitespace(this OldSyntaxToken token)
         => token.Kind is SyntaxKind.Whitespace or SyntaxKind.NewLine;
 
-    public static bool IsSpace(this SyntaxToken token)
+    public static bool IsSpace(this OldSyntaxToken token)
         => token.Kind == SyntaxKind.Whitespace && token.Content == " ";
 
-    public static bool IsTab(this SyntaxToken token)
+    public static bool IsTab(this OldSyntaxToken token)
         => token.Kind == SyntaxKind.Whitespace && token.Content == "\t";
 }

@@ -143,9 +143,9 @@ internal static class HtmlFacts
 
     public static bool TryGetElementInfo(
         SyntaxNode element,
-        [NotNullWhen(true)] out SyntaxToken? containingTagNameToken,
+        [NotNullWhen(true)] out OldSyntaxToken? containingTagNameToken,
         out SyntaxList<RazorSyntaxNode> attributeNodes,
-        [NotNullWhen(true)] out SyntaxToken? closingForwardSlashOrCloseAngleToken)
+        [NotNullWhen(true)] out OldSyntaxToken? closingForwardSlashOrCloseAngleToken)
     {
         switch (element)
         {
@@ -179,7 +179,7 @@ internal static class HtmlFacts
 
     public static bool TryGetAttributeInfo(
         SyntaxNode attribute,
-        [NotNullWhen(true)] out SyntaxToken? containingTagNameToken,
+        [NotNullWhen(true)] out OldSyntaxToken? containingTagNameToken,
         out TextSpan? prefixLocation,
         out string? selectedAttributeName,
         out TextSpan? selectedAttributeNameLocation,

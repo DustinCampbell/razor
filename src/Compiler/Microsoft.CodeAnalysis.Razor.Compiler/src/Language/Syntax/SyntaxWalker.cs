@@ -9,8 +9,8 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 /// <summary>
 /// Represents a <see cref="SyntaxVisitor"/> that descends an entire <see cref="SyntaxNode"/> graph
-/// visiting each SyntaxNode and its child SyntaxNodes and <see cref="SyntaxToken"/>s in depth-first order.
-/// An optional range can be passed in which reduces the <see cref="SyntaxNode"/>s and <see cref="SyntaxToken"/>s
+/// visiting each SyntaxNode and its child SyntaxNodes and <see cref="OldSyntaxToken"/>s in depth-first order.
+/// An optional range can be passed in which reduces the <see cref="SyntaxNode"/>s and <see cref="OldSyntaxToken"/>s
 /// visited to those overlapping with the given range.
 /// </summary>
 internal abstract class SyntaxWalker : SyntaxVisitor

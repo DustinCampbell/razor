@@ -161,17 +161,17 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return Position + offset;
     }
 
-    internal SyntaxList<SyntaxToken> GetTokens()
+    internal SyntaxList<OldSyntaxToken> GetTokens()
     {
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<SyntaxToken>(out var tokens);
+        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var tokens);
 
         AddTokens(this, tokens);
 
         return tokens;
 
-        static void AddTokens(SyntaxNode current, SyntaxListBuilder<SyntaxToken> tokens)
+        static void AddTokens(SyntaxNode current, SyntaxListBuilder<OldSyntaxToken> tokens)
         {
-            if (current.SlotCount == 0 && current is SyntaxToken token)
+            if (current.SlotCount == 0 && current is OldSyntaxToken token)
             {
                 // Token
                 tokens.Add(token);
@@ -192,7 +192,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Gets the first token of the tree rooted by this node. Skips zero-width tokens.
     /// </summary>
     /// <returns>The first token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public SyntaxToken? GetFirstToken(bool includeZeroWidth = false)
+    public OldSyntaxToken? GetFirstToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetFirstToken(this, includeZeroWidth);
     }
@@ -201,7 +201,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Gets the last token of the tree rooted by this node. Skips zero-width tokens.
     /// </summary>
     /// <returns>The last token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public SyntaxToken? GetLastToken(bool includeZeroWidth = false)
+    public OldSyntaxToken? GetLastToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetLastToken(this, includeZeroWidth);
     }
@@ -335,7 +335,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Thrown when requested position is out of range of the root token requested. This includes the whitespace scanning: calling FindToken(0, false)
     /// on a whitespace token will throw.
     /// </exception>
-    public SyntaxToken FindToken(int position, bool includeWhitespace = false)
+    public OldSyntaxToken FindToken(int position, bool includeWhitespace = false)
     {
         if (position == EndPosition && this is RazorDocumentSyntax document)
         {
@@ -371,7 +371,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 //
                 //  Walk backwards until we find a non-whitespace token. If we find something that isn't a newline, that is the node requested.
                 //  If we find a newline, we need to walk forwards until we find the first non-whitespace or newline token. That is the node requested.
-                var foundToken = (SyntaxToken)curNode;
+                var foundToken = (OldSyntaxToken)curNode;
                 if (includeWhitespace || foundToken.Kind is not (SyntaxKind.Whitespace or SyntaxKind.NewLine))
                 {
                     return foundToken;
@@ -390,7 +390,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 return walkForward(originalFoundToken);
             }
 
-            bool tryWalkBackwards(SyntaxToken originalFoundToken, [NotNullWhen(true)] out SyntaxToken? foundToken)
+            bool tryWalkBackwards(OldSyntaxToken originalFoundToken, [NotNullWhen(true)] out OldSyntaxToken? foundToken)
             {
                 foundToken = originalFoundToken;
                 do
@@ -412,7 +412,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 return true;
             }
 
-            SyntaxToken walkForward(SyntaxToken originalFoundToken)
+            OldSyntaxToken walkForward(OldSyntaxToken originalFoundToken)
             {
                 var currentToken = originalFoundToken;
                 do

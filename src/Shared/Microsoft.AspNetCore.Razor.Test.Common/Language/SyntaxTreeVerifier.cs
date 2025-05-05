@@ -77,7 +77,7 @@ internal class SyntaxTreeVerifier
 
         validateNonZeroWidth(lastToken.GetPreviousToken(includeZeroWidth: false), tokens.Count - 1, countUp: false, in tokens);
 
-        void validateNonZeroWidth(SyntaxToken foundNonZeroWidthToken, int originalTokenIndex, bool countUp, in PooledArrayBuilder<SyntaxToken> tokens)
+        void validateNonZeroWidth(OldSyntaxToken foundNonZeroWidthToken, int originalTokenIndex, bool countUp, in PooledArrayBuilder<OldSyntaxToken> tokens)
         {
             var (targetIndex, increment) = countUp ? (tokens.Count, 1) : (-1, -1);
             if (foundNonZeroWidthToken == null)
@@ -114,7 +114,7 @@ internal class SyntaxTreeVerifier
         private readonly RazorSourceDocument _source;
         private SourceLocation _currentLocation;
 #pragma warning disable CA1805
-        internal PooledArrayBuilder<SyntaxToken> AllTokens = new();
+        internal PooledArrayBuilder<OldSyntaxToken> AllTokens = new();
 #pragma warning restore CA1805
 
         public Verifier(RazorSourceDocument source)
@@ -123,7 +123,7 @@ internal class SyntaxTreeVerifier
             _source = source;
         }
 
-        public override void VisitToken(SyntaxToken token)
+        public override void VisitToken(OldSyntaxToken token)
         {
             if (token != null)
             {

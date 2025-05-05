@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxToken;
+using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.OldSyntaxToken;
 
 namespace Microsoft.CodeAnalysis.Razor.LinkedEditingRange;
 

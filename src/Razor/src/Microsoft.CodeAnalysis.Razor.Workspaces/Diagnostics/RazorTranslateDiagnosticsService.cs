@@ -302,7 +302,7 @@ internal class RazorTranslateDiagnosticsService(IDocumentMappingService document
             }
 
             var bodyElement = element
-                .ChildNodes()
+                .ChildNodesAndOldTokens()
                 .SingleOrDefault(static c => c is MarkupElementSyntax tag && tag.StartTag?.Name.Content == "body") as MarkupElementSyntax;
 
             return bodyElement is not null &&

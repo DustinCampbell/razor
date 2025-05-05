@@ -38,7 +38,7 @@ internal abstract class SyntaxWalker : SyntaxVisitor
 
     public override void DefaultVisit(SyntaxNode node)
     {
-        var children = node.ChildNodes();
+        var children = node.ChildNodesAndOldTokens();
         for (var i = 0; i < children.Count; i++)
         {
             var child = children[i];

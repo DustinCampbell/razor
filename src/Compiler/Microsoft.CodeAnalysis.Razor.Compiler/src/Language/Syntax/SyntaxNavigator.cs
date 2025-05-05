@@ -41,7 +41,7 @@ internal static class SyntaxNavigator
     internal static OldSyntaxToken? GetFirstToken(SyntaxNode current, Func<OldSyntaxToken, bool>? predicate)
     {
         using var stack = new PooledArrayBuilder<ChildSyntaxList.Enumerator>();
-        stack.Push(current.ChildNodes().GetEnumerator());
+        stack.Push(current.ChildNodesAndOldTokens().GetEnumerator());
 
         while (stack.Count > 0)
         {
@@ -64,7 +64,7 @@ internal static class SyntaxNavigator
 
                 if (!child.IsToken)
                 {
-                    stack.Push(child.ChildNodes().GetEnumerator());
+                    stack.Push(child.ChildNodesAndOldTokens().GetEnumerator());
                 }
             }
         }
@@ -75,7 +75,7 @@ internal static class SyntaxNavigator
     internal static OldSyntaxToken? GetLastToken(SyntaxNode current, Func<OldSyntaxToken, bool> predicate)
     {
         using var stack = new PooledArrayBuilder<ChildSyntaxList.Reversed.Enumerator>();
-        stack.Push(current.ChildNodes().Reverse().GetEnumerator());
+        stack.Push(current.ChildNodesAndOldTokens().Reverse().GetEnumerator());
 
         while (stack.Count > 0)
         {
@@ -99,7 +99,7 @@ internal static class SyntaxNavigator
 
                 if (!child.IsToken)
                 {
-                    stack.Push(child.ChildNodes().Reverse().GetEnumerator());
+                    stack.Push(child.ChildNodesAndOldTokens().Reverse().GetEnumerator());
                 }
             }
         }
@@ -134,7 +134,7 @@ internal static class SyntaxNavigator
             // walk forward in parent's child list until we find ourselves and then return the
             // next token
             var returnNext = false;
-            foreach (var child in node.Parent.ChildNodes())
+            foreach (var child in node.Parent.ChildNodesAndOldTokens())
             {
                 if (returnNext)
                 {
@@ -177,7 +177,7 @@ internal static class SyntaxNavigator
             // walk forward in parent's child list until we find ourselves and then return the
             // previous token
             var returnPrevious = false;
-            foreach (var child in node.Parent.ChildNodes().Reverse())
+            foreach (var child in node.Parent.ChildNodesAndOldTokens().Reverse())
             {
                 if (returnPrevious)
                 {
@@ -218,7 +218,7 @@ internal static class SyntaxNavigator
             // walk forward in parent's child list until we find ourself
             // and then return the next token
             var returnNext = false;
-            foreach (var child in current.Parent.ChildNodes())
+            foreach (var child in current.Parent.ChildNodesAndOldTokens())
             {
                 if (returnNext)
                 {
@@ -259,7 +259,7 @@ internal static class SyntaxNavigator
             // walk forward in parent's child list until we find ourself
             // and then return the next token
             var returnPrevious = false;
-            foreach (var child in current.Parent.ChildNodes().Reverse())
+            foreach (var child in current.Parent.ChildNodesAndOldTokens().Reverse())
             {
                 if (returnPrevious)
                 {

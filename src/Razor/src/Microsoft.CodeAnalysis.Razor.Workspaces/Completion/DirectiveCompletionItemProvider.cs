@@ -88,7 +88,7 @@ internal class DirectiveCompletionItemProvider : IRazorCompletionItemProvider
             return false;
         }
 
-        if (owner.ChildNodes().Any(n => !n.IsToken || !IsDirectiveCompletableToken((AspNetCore.Razor.Language.Syntax.OldSyntaxToken)n)))
+        if (owner.ChildNodesAndOldTokens().Any(n => !n.IsToken || !IsDirectiveCompletableToken((AspNetCore.Razor.Language.Syntax.OldSyntaxToken)n)))
         {
             // Implicit expression contains invalid directive tokens
             return false;

@@ -346,6 +346,32 @@ internal partial struct PooledArrayBuilder<T> : IDisposable
         }
     }
 
+    public readonly bool Contains(T item, IEqualityComparer<T>? equalityComparer = null)
+        => IndexOf(item, equalityComparer) >= 0;
+
+    public readonly int IndexOf(T item, IEqualityComparer<T>? equalityComparer = null)
+    {
+        equalityComparer ??= EqualityComparer<T>.Default;
+
+        if (TryGetBuilder(out var builder))
+        {
+            return builder.IndexOf(item, 0, builder.Count, equalityComparer);
+        }
+
+        var index = 0;
+        foreach (var element in this)
+        {
+            if (equalityComparer.Equals(item, element))
+            {
+                return index;
+            }
+
+            index++;
+        }
+
+        return -1;
+    }
+
     public readonly Enumerator GetEnumerator()
         => new(in this);
 

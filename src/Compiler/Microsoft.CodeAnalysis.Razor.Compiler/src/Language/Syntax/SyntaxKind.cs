@@ -7,6 +7,8 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 internal enum SyntaxKind : byte
 {
+    None = 0,
+
     #region Nodes
     // Common
     RazorDocument,
@@ -58,7 +60,6 @@ internal enum SyntaxKind : byte
 
     #region Tokens
     // Common
-    None,
     Marker,
     List,
     Whitespace,

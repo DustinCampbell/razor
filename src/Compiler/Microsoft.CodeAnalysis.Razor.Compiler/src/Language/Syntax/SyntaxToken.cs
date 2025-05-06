@@ -45,6 +45,15 @@ internal readonly struct SyntaxToken : IEquatable<SyntaxToken>
 
     public SyntaxKind Kind => Node?.Kind ?? 0;
 
+    internal GreenNode RequiredNode
+    {
+        get
+        {
+            Debug.Assert(Node != null);
+            return Node;
+        }
+    }
+
     internal int Width => Node?.Width ?? 0;
 
     public int SpanStart

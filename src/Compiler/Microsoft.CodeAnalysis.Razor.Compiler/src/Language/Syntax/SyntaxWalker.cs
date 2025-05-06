@@ -38,14 +38,18 @@ internal abstract class SyntaxWalker : SyntaxVisitor
 
     public override void DefaultVisit(SyntaxNode node)
     {
-        var children = node.ChildNodesAndOldTokens();
-        for (var i = 0; i < children.Count; i++)
+        foreach (var child in node.ChildNodesAndOldTokens())
         {
-            var child = children[i];
-
-            if (_range is null || _range.Value.OverlapsWith(node.Span))
+            if (_range is null || _range.Value.OverlapsWith(child.Span))
             {
-                Visit(child);
+                if (!child.IsToken)
+                {
+                    Visit(child);
+                }
+                else if (child.IsToken)
+                {
+                    VisitToken(child.AsToken());
+                }
             }
         }
     }

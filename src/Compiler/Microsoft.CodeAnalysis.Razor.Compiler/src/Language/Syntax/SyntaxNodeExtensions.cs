@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,20 +11,19 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class SyntaxNodeExtensions
 {
-#nullable enable
     public static SyntaxToken AsToken(this SyntaxNode node)
     {
         Debug.Assert(node.IsToken);
         return new(node.Parent, node.Green, node.Position, index: 0);
     }
-#nullable disable
 
-    public static TNode WithAnnotations<TNode>(this TNode node, params SyntaxAnnotation[] annotations) where TNode : SyntaxNode
+    public static TNode WithAnnotations<TNode>(this TNode node, params SyntaxAnnotation[] annotations)
+        where TNode : SyntaxNode
     {
         return (TNode)node.Green.SetAnnotations(annotations).CreateRed(node.Parent, node.Position);
     }
 
-    public static object GetAnnotationValue<TNode>(this TNode node, string key) where TNode : SyntaxNode
+    public static object? GetAnnotationValue<TNode>(this TNode node, string key) where TNode : SyntaxNode
     {
         if (!node.ContainsAnnotations)
         {
@@ -45,12 +42,14 @@ internal static class SyntaxNodeExtensions
         return null;
     }
 
-    public static TNode WithDiagnostics<TNode>(this TNode node, params RazorDiagnostic[] diagnostics) where TNode : SyntaxNode
+    public static TNode WithDiagnostics<TNode>(this TNode node, params RazorDiagnostic[] diagnostics)
+        where TNode : SyntaxNode
     {
         return (TNode)node.Green.SetDiagnostics(diagnostics).CreateRed(node.Parent, node.Position);
     }
 
-    public static TNode AppendDiagnostic<TNode>(this TNode node, params ReadOnlySpan<RazorDiagnostic> diagnostics) where TNode : SyntaxNode
+    public static TNode AppendDiagnostic<TNode>(this TNode node, params ReadOnlySpan<RazorDiagnostic> diagnostics)
+        where TNode : SyntaxNode
     {
         RazorDiagnostic[] allDiagnostics = [
             .. node.GetDiagnostics(),
@@ -231,6 +230,18 @@ internal static class SyntaxNodeExtensions
                 _diagnostics.AddRange(diagnostics);
 
                 base.Visit(node);
+            }
+        }
+
+        public override void VisitToken(SyntaxToken token)
+        {
+            if (token.ContainsDiagnostics)
+            {
+                var diagnostics = token.GetDiagnostics();
+
+                _diagnostics.AddRange(diagnostics);
+
+                base.VisitToken(token);
             }
         }
     }

@@ -118,7 +118,7 @@ internal class SyntaxSerializer
 
         public override SyntaxNode VisitOldToken(OldSyntaxToken token)
         {
-            WriteToken(token);
+            WriteOldToken(token);
             return base.VisitOldToken(token);
         }
 
@@ -242,7 +242,7 @@ internal class SyntaxSerializer
             Write(info.Bound ? "Bound" : "Unbound");
         }
 
-        private void WriteToken(OldSyntaxToken token)
+        private void WriteOldToken(OldSyntaxToken token)
         {
             WriteIndent();
             var content = token.IsMissing ? "<Missing>" : token.Content;

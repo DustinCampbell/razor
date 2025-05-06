@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
@@ -96,7 +97,7 @@ internal class RazorSyntaxTreePartialParser
 
     private void ReplaceLastChangeOwner(SyntaxNode editedNode)
     {
-        ModifiedSyntaxTreeRoot = ModifiedSyntaxTreeRoot.ReplaceNode(_lastChangeOwner, editedNode);
+        ModifiedSyntaxTreeRoot = ModifiedSyntaxTreeRoot.ReplaceNode(_lastChangeOwner.AssumeNotNull(), editedNode);
         foreach (var node in ModifiedSyntaxTreeRoot.DescendantNodes())
         {
             if (node.Green == editedNode.Green)

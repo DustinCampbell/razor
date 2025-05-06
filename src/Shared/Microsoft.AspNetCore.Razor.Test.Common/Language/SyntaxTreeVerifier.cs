@@ -121,11 +121,11 @@ internal class SyntaxTreeVerifier
             _source = source;
         }
 
-        public override void VisitToken(OldSyntaxToken token)
+        public override void VisitToken(SyntaxToken token)
         {
-            if (token != null)
+            if (token.Kind != SyntaxKind.None)
             {
-                AllTokens.Add(token.AsToken());
+                AllTokens.Add(token);
                 if (!token.IsMissing && token.Kind != SyntaxKind.Marker)
                 {
                     var start = token.GetSourceLocation(_source);

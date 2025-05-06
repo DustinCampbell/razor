@@ -22,7 +22,7 @@ internal abstract partial class SyntaxVisitor<TResult>
             return node.Accept(this);
         }
 
-        return default(TResult);
+        return default;
     }
 
     public virtual TResult VisitOldToken(OldSyntaxToken token)
@@ -30,9 +30,14 @@ internal abstract partial class SyntaxVisitor<TResult>
         return DefaultVisit(token);
     }
 
+    public virtual TResult VisitToken(SyntaxToken token)
+    {
+        return default;
+    }
+
     protected virtual TResult DefaultVisit(SyntaxNode node)
     {
-        return default(TResult);
+        return default;
     }
 }
 
@@ -50,9 +55,8 @@ internal abstract partial class SyntaxVisitor
         }
     }
 
-    public virtual void VisitToken(OldSyntaxToken token)
+    public virtual void VisitToken(SyntaxToken token)
     {
-        DefaultVisit(token);
     }
 
     public virtual void DefaultVisit(SyntaxNode node)

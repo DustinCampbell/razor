@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -57,6 +58,10 @@ internal readonly struct SyntaxToken : IEquatable<SyntaxToken>
 
     public bool IsMissing
         => Node?.IsMissing ?? false;
+
+    public bool ContainsDiagnostics => Node?.ContainsDiagnostics ?? false;
+
+    public string Content => Node != null ? ((InternalSyntax.SyntaxToken)Node).Content : string.Empty;
 
     public string Text => ToString();
 
@@ -155,5 +160,24 @@ internal readonly struct SyntaxToken : IEquatable<SyntaxToken>
         }
 
         return SyntaxNavigator.GetPreviousToken(this, predicate);
+    }
+
+    /// <summary>
+    /// Gets a list of all the diagnostics associated with this token and any related trivia.
+    /// This method does not filter diagnostics based on #pragmas and compiler options
+    /// like nowarn, warnaserror etc.
+    /// </summary>
+    public IEnumerable<RazorDiagnostic> GetDiagnostics()
+    {
+        if (Node == null)
+        {
+            return SpecializedCollections.EmptyEnumerable<RazorDiagnostic>();
+        }
+
+        var diagnostics = Node.GetDiagnostics();
+
+        return diagnostics.Length == 0
+            ? SpecializedCollections.EmptyEnumerable<RazorDiagnostic>()
+            : diagnostics;
     }
 }

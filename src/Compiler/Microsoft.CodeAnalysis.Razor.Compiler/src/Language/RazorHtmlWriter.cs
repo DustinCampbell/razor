@@ -182,13 +182,13 @@ internal class RazorHtmlWriter : SyntaxWalker, IDisposable
         WriteNode(node, isHtml: true, _baseVisitUnclassifiedTextLiteral);
     }
 
-    public override void VisitToken(OldSyntaxToken token)
+    public override void VisitToken(SyntaxToken token)
     {
         base.VisitToken(token);
         WriteToken(token);
     }
 
-    private void WriteToken(OldSyntaxToken token)
+    private void WriteToken(SyntaxToken token)
     {
         var content = token.Content;
         if (_isHtml)

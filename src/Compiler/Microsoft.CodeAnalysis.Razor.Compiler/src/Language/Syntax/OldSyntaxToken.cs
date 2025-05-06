@@ -33,12 +33,12 @@ internal class OldSyntaxToken : RazorSyntaxNode
 
     public override TResult Accept<TResult>(SyntaxVisitor<TResult> visitor)
     {
-        return visitor.VisitOldToken(this);
+        return visitor.VisitToken(this.AsToken());
     }
 
     public override void Accept(SyntaxVisitor visitor)
     {
-        visitor.VisitToken(this);
+        visitor.VisitToken(this.AsToken());
     }
 
     /// <summary>

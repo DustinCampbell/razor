@@ -5,8 +5,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Razor.Language.Syntax.InternalSyntax;
+using Microsoft.AspNetCore.Razor.Language.Syntax;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Xunit;
+using InternalSyntax = Microsoft.AspNetCore.Razor.Language.Syntax.InternalSyntax;
 
 namespace Microsoft.AspNetCore.Razor.Language.Legacy;
 
@@ -443,20 +445,17 @@ public class ImplicitExpressionEditHandlerTest
         Assert.True(result);
     }
 
-    private static Syntax.MarkupTextLiteralSyntax GetSyntaxNode(SourceLocation start, string content)
+    private static MarkupTextLiteralSyntax GetSyntaxNode(SourceLocation start, string content)
     {
-        var builder = SyntaxListBuilder<SyntaxToken>.Create();
-        var tokens = NativeCSharpLanguageCharacteristics.Instance.TokenizeString(content).ToArray();
-        foreach (var token in tokens)
-        {
-            builder.Add(token);
-        }
-        var node = SyntaxFactory.MarkupTextLiteral(builder.ToList(), SpanChunkGenerator.Null).CreateRed(parent: null, position: start.AbsoluteIndex);
+        using var builder = new PooledArrayBuilder<GreenNode>();
+        builder.AddRange(NativeCSharpLanguageCharacteristics.Instance.TokenizeString(content));
 
-        return (Syntax.MarkupTextLiteralSyntax)node;
+        return (MarkupTextLiteralSyntax)InternalSyntax.SyntaxFactory
+            .MarkupTextLiteral(builder.ToList().Node.ToGreenList<InternalSyntax.SyntaxToken>(), SpanChunkGenerator.Null)
+            .CreateRed(parent: null, position: start.AbsoluteIndex);
     }
 
-    private static IReadOnlyList<Syntax.OldSyntaxToken> GetTokens(SourceLocation start, string content)
+    private static SyntaxTokenList GetTokens(SourceLocation start, string content)
     {
         var parent = GetSyntaxNode(start, content);
         return parent.LiteralTokens;

@@ -164,12 +164,9 @@ internal class ImplicitExpressionEditHandler : SpanEditHandler
             return false;
         }
 
-        var tokens = target.DescendantNodes().Where(n => n.IsToken).Cast<OldSyntaxToken>().ToArray();
-        for (var i = 0; i < tokens.Length; i++)
+        foreach (var token in target.DescendantTokens())
         {
-            var token = tokens[i];
-
-            if (token == null)
+            if (token == default)
             {
                 break;
             }
@@ -236,7 +233,7 @@ internal class ImplicitExpressionEditHandler : SpanEditHandler
         var changeStart = change.Span.AbsoluteIndex;
         var changeLength = change.Span.Length;
         var changeEnd = changeStart + changeLength;
-        var tokens = target.DescendantNodes().Where(n => n.IsToken).Cast<OldSyntaxToken>().ToArray();
+        var tokens = target.DescendantTokens();
         if (!IsInsideParenthesis(changeStart, tokens) || !IsInsideParenthesis(changeEnd, tokens))
         {
             // Either the start or end of the delete does not fall inside of parenthesis, unacceptable inner deletion.
@@ -269,7 +266,7 @@ internal class ImplicitExpressionEditHandler : SpanEditHandler
             return false;
         }
 
-        var tokens = target.DescendantNodes().Where(n => n.IsToken).Cast<OldSyntaxToken>().ToArray();
+        var tokens = target.DescendantTokens();
         if (IsInsideParenthesis(change.Span.AbsoluteIndex, tokens))
         {
             return true;
@@ -279,13 +276,12 @@ internal class ImplicitExpressionEditHandler : SpanEditHandler
     }
 
     // Internal for testing
-    internal static bool IsInsideParenthesis(int position, IReadOnlyList<OldSyntaxToken> tokens)
+    internal static bool IsInsideParenthesis(int position, IEnumerable<SyntaxToken> tokens)
     {
         var balanceCount = 0;
         var foundInsertionPoint = false;
-        for (var i = 0; i < tokens.Count; i++)
+        foreach (var currentToken in tokens)
         {
-            var currentToken = tokens[i];
             if (ContainsPosition(position, currentToken))
             {
                 if (balanceCount == 0)
@@ -317,7 +313,7 @@ internal class ImplicitExpressionEditHandler : SpanEditHandler
     }
 
     // Internal for testing
-    internal static bool ContainsPosition(int position, OldSyntaxToken currentToken)
+    internal static bool ContainsPosition(int position, SyntaxToken currentToken)
     {
         var tokenStart = currentToken.Position;
         if (tokenStart == position)
@@ -337,7 +333,7 @@ internal class ImplicitExpressionEditHandler : SpanEditHandler
     }
 
     // Internal for testing
-    internal static bool TryUpdateBalanceCount(OldSyntaxToken token, ref int count)
+    internal static bool TryUpdateBalanceCount(SyntaxToken token, ref int count)
     {
         var updatedCount = count;
         if (token.Kind == SyntaxKind.LeftParenthesis)

@@ -13,9 +13,9 @@ internal static partial class LegacySyntaxNodeExtensions
 {
     private class SpanData
     {
-        public SyntaxNode? Previous;
+        public SyntaxNodeOrToken Previous;
         public bool PreviousComputed;
-        public SyntaxNode? Next;
+        public SyntaxNodeOrToken Next;
         public bool NextComputed;
     }
 
@@ -85,6 +85,8 @@ internal static partial class LegacySyntaxNodeExtensions
         };
 
     public static SpanEditHandler? GetEditHandler(this SyntaxNode node) => node.GetAnnotationValue(SyntaxConstants.EditHandlerKind) as SpanEditHandler;
+
+    public static SpanEditHandler? GetEditHandler(this SyntaxToken token) => token.GetAnnotationValue(SyntaxConstants.EditHandlerKind) as SpanEditHandler;
 
     public static TNode WithEditHandler<TNode>(this TNode node, SpanEditHandler? editHandler) where TNode : SyntaxNode
     {
@@ -174,7 +176,7 @@ internal static partial class LegacySyntaxNodeExtensions
             MarkupEndTagSyntax endTag => LocateOwnerForSyntaxList(endTag.LegacyChildren, change),
             MarkupTagHelperStartTagSyntax startTagHelper => LocateOwnerForSyntaxList(startTagHelper.LegacyChildren, change),
             MarkupTagHelperEndTagSyntax endTagHelper => LocateOwnerForSyntaxList(endTagHelper.LegacyChildren, change),
-            _ => LocateOwnerForChildSyntaxList(node.ChildNodesAndOldTokens(), change)
+            _ => LocateOwnerForChildSyntaxList(node.ChildNodesAndTokens(), change)
         };
 
         static SyntaxNode? LocateOwnerForSyntaxList(in SyntaxList<RazorSyntaxNode> list, SourceChange change)
@@ -194,7 +196,7 @@ internal static partial class LegacySyntaxNodeExtensions
         {
             foreach (var child in list)
             {
-                if (child.LocateOwner(change) is { } owner)
+                if (child.AsNode(out var node) && node.LocateOwner(change) is { } owner)
                 {
                     return owner;
                 }
@@ -214,13 +216,8 @@ internal static partial class LegacySyntaxNodeExtensions
         return s_transitionSpanKinds.Contains(node.Kind);
     }
 
-    public static bool IsMetaCodeSpanKind(this SyntaxNode node)
+    public static bool IsMetaCodeSpanKind(this SyntaxNodeOrToken node)
     {
-        if (node is null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
-
         return s_metaCodeSpanKinds.Contains(node.Kind);
     }
 
@@ -264,16 +261,19 @@ internal static partial class LegacySyntaxNodeExtensions
         return s_noneSpanKinds.Contains(node.Kind);
     }
 
+    public static bool IsSpanKind(this SyntaxNodeOrToken node)
+        => s_allSpanKinds.Contains(node.Kind);
+
     public static bool IsSpanKind(this SyntaxNode node)
         => s_allSpanKinds.Contains(node.Kind);
 
-    private static IEnumerable<SyntaxNode> FlattenSpansInReverse(this SyntaxNode node)
+    private static IEnumerable<SyntaxNodeOrToken> FlattenSpansInReverse(this SyntaxNode node)
     {
         using var stack = new ChildSyntaxListReversedEnumeratorStack(node);
 
-        while (stack.TryGetNextNode(out var nextNode))
+        while (stack.TryGetNextNodeOrToken(out var nextNode))
         {
-            if (nextNode is MarkupStartTagSyntax startTag)
+            if (nextNode.AsNode() is MarkupStartTagSyntax startTag)
             {
                 var children = startTag.LegacyChildren;
 
@@ -286,7 +286,7 @@ internal static partial class LegacySyntaxNodeExtensions
                     }
                 }
             }
-            else if (nextNode is MarkupEndTagSyntax endTag)
+            else if (nextNode.AsNode() is MarkupEndTagSyntax endTag)
             {
                 var children = endTag.LegacyChildren;
 
@@ -342,7 +342,7 @@ internal static partial class LegacySyntaxNodeExtensions
         }
     }
 
-    public static SyntaxNode? PreviousSpan(this SyntaxNode node)
+    public static SyntaxNodeOrToken PreviousSpan(this SyntaxNode node)
     {
         if (node is null)
         {
@@ -382,7 +382,7 @@ internal static partial class LegacySyntaxNodeExtensions
         }
     }
 
-    public static SyntaxNode? NextSpan(this SyntaxNode node)
+    public static SyntaxNodeOrToken NextSpan(this SyntaxNode node)
     {
         if (node is null)
         {

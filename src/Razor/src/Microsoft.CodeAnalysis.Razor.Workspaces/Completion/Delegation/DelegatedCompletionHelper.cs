@@ -215,7 +215,7 @@ internal static class DelegatedCompletionHelper
 
         var token = tree.Root.FindToken(absoluteIndex, includeWhitespace: false);
         if (token.Kind == SyntaxKind.EndOfFile &&
-            token.GetPreviousOldToken()?.Parent is { } parent &&
+            token.GetPreviousToken().Parent is { } parent &&
             parent.FirstAncestorOrSelf<SyntaxNode>(RazorSyntaxFacts.IsAnyStartTag) is not null)
         {
             // If we're at the end of the file, we check if the previous token is part of a start tag, because the parser

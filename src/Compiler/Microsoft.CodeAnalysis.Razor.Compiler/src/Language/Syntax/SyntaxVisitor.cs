@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 /// <summary>
@@ -15,27 +13,17 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 /// </typeparam>
 internal abstract partial class SyntaxVisitor<TResult>
 {
-    public virtual TResult Visit(SyntaxNode node)
+    public virtual TResult? Visit(SyntaxNode? node)
     {
         if (node != null)
         {
-            return node.Accept(this);
+            return ((RazorSyntaxNode)node).Accept(this);
         }
 
         return default;
     }
 
-    public virtual TResult VisitOldToken(OldSyntaxToken token)
-    {
-        return DefaultVisit(token);
-    }
-
-    public virtual TResult VisitToken(SyntaxToken token)
-    {
-        return default;
-    }
-
-    protected virtual TResult DefaultVisit(SyntaxNode node)
+    protected virtual TResult? DefaultVisit(SyntaxNode node)
     {
         return default;
     }
@@ -47,16 +35,12 @@ internal abstract partial class SyntaxVisitor<TResult>
 /// </summary>
 internal abstract partial class SyntaxVisitor
 {
-    public virtual void Visit(SyntaxNode node)
+    public virtual void Visit(SyntaxNode? node)
     {
         if (node != null)
         {
-            node.Accept(this);
+            ((RazorSyntaxNode)node).Accept(this);
         }
-    }
-
-    public virtual void VisitToken(SyntaxToken token)
-    {
     }
 
     public virtual void DefaultVisit(SyntaxNode node)

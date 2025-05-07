@@ -1,31 +1,34 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class GreenNodeExtensions
 {
-    internal static InternalSyntax.SyntaxList<T> ToGreenList<T>(this SyntaxNode node) where T : GreenNode
+    internal static InternalSyntax.SyntaxList<T> ToGreenList<T>(this SyntaxNode? node)
+        where T : GreenNode
     {
         return node != null ?
             ToGreenList<T>(node.Green) :
-            default(InternalSyntax.SyntaxList<T>);
+            default;
     }
 
-    internal static InternalSyntax.SyntaxList<T> ToGreenList<T>(this GreenNode node) where T : GreenNode
+    internal static InternalSyntax.SyntaxList<T> ToGreenList<T>(this GreenNode? node)
+        where T : GreenNode
     {
         return new InternalSyntax.SyntaxList<T>(node);
     }
 
-    public static TNode WithAnnotationsGreen<TNode>(this TNode node, params SyntaxAnnotation[] annotations) where TNode : GreenNode
+    public static TNode WithAnnotationsGreen<TNode>(this TNode node, params SyntaxAnnotation[] annotations)
+        where TNode : GreenNode
     {
-        var newAnnotations = new List<SyntaxAnnotation>();
+        using var newAnnotations = new PooledArrayBuilder<SyntaxAnnotation>();
+
         foreach (var candidate in annotations)
         {
             if (!newAnnotations.Contains(candidate))
@@ -37,22 +40,41 @@ internal static class GreenNodeExtensions
         if (newAnnotations.Count == 0)
         {
             var existingAnnotations = node.GetAnnotations();
-            if (existingAnnotations == null || existingAnnotations.Length == 0)
-            {
-                return node;
-            }
-            else
-            {
-                return (TNode)node.SetAnnotations(null);
-            }
+            return existingAnnotations != null && existingAnnotations.Length != 0
+                ? (TNode)node.SetAnnotations(null)
+                : node;
         }
-        else
-        {
-            return (TNode)node.SetAnnotations(newAnnotations.ToArray());
-        }
+
+        return (TNode)node.SetAnnotations(newAnnotations.ToArray());
     }
 
-    public static TNode WithDiagnosticsGreen<TNode>(this TNode node, RazorDiagnostic[] diagnostics)
+    public static TNode WithAdditionalAnnotationsGreen<TNode>(this TNode node, IEnumerable<SyntaxAnnotation>? annotations)
+        where TNode : GreenNode
+    {
+        var existingAnnotations = node.GetAnnotations();
+
+        if (annotations == null)
+        {
+            return node;
+        }
+
+        using var newAnnotations = new PooledArrayBuilder<SyntaxAnnotation>();
+        newAnnotations.AddRange(existingAnnotations);
+
+        foreach (var candidate in annotations)
+        {
+            if (!newAnnotations.Contains(candidate))
+            {
+                newAnnotations.Add(candidate);
+            }
+        }
+
+        return newAnnotations.Count != existingAnnotations.Length
+            ? (TNode)node.SetAnnotations(newAnnotations.ToArray())
+            : node;
+    }
+
+    public static TNode WithDiagnosticsGreen<TNode>(this TNode node, RazorDiagnostic[]? diagnostics)
         where TNode : GreenNode
     {
         return (TNode)node.SetDiagnostics(diagnostics);

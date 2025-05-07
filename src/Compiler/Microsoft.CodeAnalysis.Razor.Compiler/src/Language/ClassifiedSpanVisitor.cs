@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -69,9 +70,10 @@ internal class ClassifiedSpanVisitor : SyntaxWalker
             var comment = razorCommentSyntax.Comment;
             if (comment.IsMissing)
             {
-                    // We need to generate a classified span at this position. So insert a marker in its place.
-                    comment = (OldSyntaxToken)SyntaxFactory.Token(SyntaxKind.Marker, string.Empty).Green.CreateRed(razorCommentSyntax, razorCommentSyntax.StartCommentStar.EndPosition);
+                // We need to generate a classified span at this position. So insert a marker in its place.
+                comment = new(razorCommentSyntax, Syntax.InternalSyntax.SyntaxFactory.Token(SyntaxKind.Marker, string.Empty), razorCommentSyntax.StartCommentStar.EndPosition, index: 0);
             }
+
             WriteSpan(comment, SpanKindInternal.Comment, AcceptedCharactersInternal.Any);
 
             WriteSpan(razorCommentSyntax.EndCommentStar, SpanKindInternal.MetaCode, AcceptedCharactersInternal.None);
@@ -192,7 +194,7 @@ internal class ClassifiedSpanVisitor : SyntaxWalker
     {
         WriteBlock(node, BlockKindInternal.Markup, n =>
         {
-            var equalsSyntax = SyntaxFactory.MarkupTextLiteral(new SyntaxList<OldSyntaxToken>(node.EqualsToken), chunkGenerator: null);
+            var equalsSyntax = SyntaxFactory.MarkupTextLiteral([node.EqualsToken], chunkGenerator: null);
             var mergedAttributePrefix = SyntaxUtilities.MergeTextLiterals(node.NamePrefix, node.Name, node.NameSuffix, equalsSyntax, node.ValuePrefix);
             Visit(mergedAttributePrefix);
             Visit(node.Value);
@@ -317,12 +319,39 @@ internal class ClassifiedSpanVisitor : SyntaxWalker
         _currentBlockKind = previousKind;
     }
 
+    private void WriteSpan(SyntaxToken token, SpanKindInternal kind, AcceptedCharactersInternal? acceptedCharacters = null)
+    {
+        if (token.IsMissing)
+        {
+            return;
+        }
+
+        Debug.Assert(_currentBlock != null);
+
+        var spanSource = token.GetSourceSpan(_source);
+        var blockSource = _currentBlock.GetSourceSpan(_source);
+        if (!acceptedCharacters.HasValue)
+        {
+            acceptedCharacters = AcceptedCharactersInternal.Any;
+            var context = token.GetEditHandler();
+            if (context != null)
+            {
+                acceptedCharacters = context.AcceptedCharacters;
+            }
+        }
+
+        var span = new ClassifiedSpanInternal(spanSource, blockSource, kind, _currentBlockKind, acceptedCharacters.Value);
+        _spans.Add(span);
+    }
+
     private void WriteSpan(SyntaxNode node, SpanKindInternal kind, AcceptedCharactersInternal? acceptedCharacters = null)
     {
         if (node.IsMissing)
         {
             return;
         }
+
+        Debug.Assert(_currentBlock != null);
 
         var spanSource = node.GetSourceSpan(_source);
         var blockSource = _currentBlock.GetSourceSpan(_source);

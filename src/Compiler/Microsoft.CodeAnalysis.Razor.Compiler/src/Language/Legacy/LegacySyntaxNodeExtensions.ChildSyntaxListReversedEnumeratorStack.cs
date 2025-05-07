@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.Extensions.ObjectPool;
@@ -22,7 +22,7 @@ internal static partial class LegacySyntaxNodeExtensions
 
         private static readonly ObjectPool<ChildSyntaxList.Reversed.Enumerator[]> s_stackPool = DefaultPool.Create(Policy.Instance);
 
-        private ChildSyntaxList.Reversed.Enumerator[] _stack;
+        private ChildSyntaxList.Reversed.Enumerator[]? _stack;
         private int _stackPtr;
 
         public ChildSyntaxListReversedEnumeratorStack(SyntaxNode node)
@@ -33,12 +33,14 @@ internal static partial class LegacySyntaxNodeExtensions
             PushRightmostChildren(node);
         }
 
-        private void PushRightmostChildren(SyntaxNode node)
+        private void PushRightmostChildren(SyntaxNodeOrToken nodeOrToken)
         {
-            var current = node;
-            do
+            Debug.Assert(_stack != null);
+
+            SyntaxNodeOrToken current = nodeOrToken;
+            while (true)
             {
-                var children = current.ChildNodesAndOldTokens();
+                var children = current.ChildNodesAndTokens();
                 if (children.Count == 0)
                 {
                     break;
@@ -53,52 +55,57 @@ internal static partial class LegacySyntaxNodeExtensions
 
                 current = children.Last();
             }
-            while (current is not null);
         }
 
-        private bool TryMoveNextAndGetCurrent([NotNullWhen(true)] out SyntaxNode? node)
+        private readonly bool TryMoveNextAndGetCurrent(out SyntaxNodeOrToken nodeOrToken)
         {
             if (_stackPtr < 0)
             {
-                node = null;
+                nodeOrToken = default;
                 return false;
             }
+
+            Debug.Assert(_stack != null);
 
             ref var enumerator = ref _stack[_stackPtr];
 
             if (!enumerator.MoveNext())
             {
-                node = null;
+                nodeOrToken = default;
                 return false;
             }
 
-            node = enumerator.Current;
+            nodeOrToken = enumerator.Current;
             return true;
         }
 
-        public bool TryGetNextNode([NotNullWhen(true)] out SyntaxNode? node)
+        public bool TryGetNextNodeOrToken(out SyntaxNodeOrToken nodeOrToken)
         {
-            while (!TryMoveNextAndGetCurrent(out node))
+            while (!TryMoveNextAndGetCurrent(out nodeOrToken))
             {
                 _stackPtr--;
 
                 if (_stackPtr < 0)
                 {
-                    node = null;
+                    nodeOrToken = default;
                     return false;
                 }
             }
 
-            PushRightmostChildren(node);
+            PushRightmostChildren(nodeOrToken);
             return true;
         }
 
-        public bool IsEmpty
+        public readonly bool IsEmpty
             => _stackPtr < 0;
 
         public void Dispose()
         {
-            s_stackPool.Return(_stack);
+            if (_stack != null)
+            {
+                s_stackPool.Return(_stack);
+                _stack = null;
+            }
         }
     }
 }

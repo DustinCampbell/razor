@@ -1765,7 +1765,7 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
 
         if (typeAttribute != null)
         {
-            var contentValues = typeAttribute.Value.CreateRed().DescendantNodes().Where(n => n.IsToken).Cast<Syntax.OldSyntaxToken>();
+            var contentValues = typeAttribute.Value.CreateRed().DescendantTokens();
 
             var scriptType = string.Concat(contentValues.Select(t => t.Content)).Trim();
 

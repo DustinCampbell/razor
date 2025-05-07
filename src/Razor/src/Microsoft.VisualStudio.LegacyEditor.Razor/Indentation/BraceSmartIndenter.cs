@@ -267,11 +267,10 @@ internal class BraceSmartIndenter : IDisposable
     {
         // We only support whitespace based content. Any non-whitespace content is an unknown to us
         // in regards to indentation.
-        var children = owner.ChildNodesAndOldTokens();
-        for (var i = 0; i < children.Count; i++)
+        foreach (var child in owner.ChildNodesAndTokens())
         {
-            if (children[i] is not OldSyntaxToken token ||
-                !string.IsNullOrWhiteSpace(token.Content))
+            if (!child.IsToken ||
+                !string.IsNullOrWhiteSpace(child.AsToken().Content))
             {
                 return true;
             }
@@ -284,15 +283,15 @@ internal class BraceSmartIndenter : IDisposable
     internal static bool IsUnlinkedSpan([NotNullWhen(false)] SyntaxNode? owner)
     {
         return owner is null ||
-               owner.NextSpan() is null ||
-               owner.PreviousSpan() is null;
+               owner.NextSpan() == default ||
+               owner.PreviousSpan() == default;
     }
 
     // Internal for testing
     internal static bool SurroundedByInvalidContent(SyntaxNode owner)
     {
-        return !(owner.NextSpan()?.IsMetaCodeSpanKind() ?? false) ||
-               !(owner.PreviousSpan()?.IsMetaCodeSpanKind() ?? false);
+        return !owner.NextSpan().IsMetaCodeSpanKind() ||
+               !owner.PreviousSpan().IsMetaCodeSpanKind();
     }
 
     internal static bool BeforeClosingBrace(int linePosition, ITextSnapshotLine lineSnapshot)

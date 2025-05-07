@@ -65,8 +65,8 @@ internal abstract class AbstractRazorCompletionFactsService(ImmutableArray<IRazo
         {
             Debug.Assert(previousToken.Span.End == requestIndex);
             Debug.Assert(previousToken.Kind != SyntaxKind.Marker);
-
             Debug.Assert(previousToken.Parent is not null);
+
             return previousToken.Parent;
         }
 
@@ -74,9 +74,11 @@ internal abstract class AbstractRazorCompletionFactsService(ImmutableArray<IRazo
         // to see if we're on the closing slash or angle bracket of a start or end tag
         if (HtmlFacts.TryGetElementInfo(originalNode, containingTagNameToken: out _, attributeNodes: out _, closingForwardSlashOrCloseAngleToken: out var closingForwardSlashOrCloseAngleToken)
             && closingForwardSlashOrCloseAngleToken.SpanStart == requestIndex
-            && closingForwardSlashOrCloseAngleToken.GetPreviousOldToken() is { } previousToken2)
+            && closingForwardSlashOrCloseAngleToken.GetPreviousToken() is { Kind: not SyntaxKind.None } previousToken2)
         {
             Debug.Assert(previousToken2.Span.End == requestIndex);
+            Debug.Assert(previousToken2.Parent is not null);
+
             return previousToken2.Parent;
         }
 

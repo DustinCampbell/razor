@@ -27,6 +27,6 @@ internal partial class MarkupEndTagSyntax
 
     public string GetTagNameWithOptionalBang()
     {
-        return Name.IsMissing ? string.Empty : Bang?.Content + Name.Content;
+        return Name.IsMissing ? string.Empty : Bang.Content + Name.Content;
     }
 }

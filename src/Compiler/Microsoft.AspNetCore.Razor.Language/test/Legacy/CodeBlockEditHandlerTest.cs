@@ -6,6 +6,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language.Test.Legacy;
@@ -16,7 +17,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableReplacement_AcceptableReplacement_ReturnsTrue()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(0, 5), "H3ll0");
 
         // Act
@@ -30,7 +31,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableReplacement_AcceptableReplacement_WithMarkup_ReturnsTrue()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello <div>@world</div>.");
+        var span = GetSpan("Hello <div>@world</div>.");
         var change = new SourceChange(new SourceSpan(0, 5), "H3ll0");
 
         // Act
@@ -44,7 +45,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableReplacement_ChangeModifiesInvalidContent_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(6, 1), "!");
 
         // Act
@@ -58,7 +59,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableReplacement_ChangeAddsOpenAngle_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello <div></div>.");
+        var span = GetSpan("Hello <div></div>.");
         var change = new SourceChange(new SourceSpan(6, 1), "<");
 
         // Act
@@ -72,7 +73,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableReplacement_ChangeToComment_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello @");
+        var span = GetSpan("Hello @");
         var change = new SourceChange(new SourceSpan(6, 1), "@*");
 
         // Act
@@ -86,7 +87,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableReplacement_ChangeContainsInvalidContent_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(0, 0), "{");
 
         // Act
@@ -100,7 +101,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableReplacement_NotReplace_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(0, 5), string.Empty);
 
         // Act
@@ -114,7 +115,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableDeletion_ValidChange_ReturnsTrue()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(0, 5), string.Empty);
 
         // Act
@@ -128,7 +129,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableDeletion_InvalidChange_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(5, 3), string.Empty);
 
         // Act
@@ -142,7 +143,7 @@ public class CodeBlockEditHandlerTest
     public void IsAcceptableDeletion_NotDelete_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "world");
+        var span = GetSpan("world");
         var change = new SourceChange(new SourceSpan(0, 0), "hello");
 
         // Act
@@ -156,7 +157,7 @@ public class CodeBlockEditHandlerTest
     public void ModifiesInvalidContent_ValidContent_ReturnsFalse()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(0, 5), string.Empty);
 
         // Act
@@ -170,7 +171,7 @@ public class CodeBlockEditHandlerTest
     public void ModifiesInvalidContent_InvalidContent_ReturnsTrue()
     {
         // Arrange
-        var span = GetSpan(SourceLocation.Zero, "Hello {world}.");
+        var span = GetSpan("Hello {world}.");
         var change = new SourceChange(new SourceSpan(5, 7), string.Empty);
 
         // Act
@@ -279,17 +280,15 @@ public class CodeBlockEditHandlerTest
         Assert.False(result);
     }
 
-    private static SyntaxNode GetSpan(SourceLocation start, string content)
+    private static CSharpStatementLiteralSyntax GetSpan(string content)
     {
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
+        using var builder = new PooledArrayBuilder<SyntaxToken>();
 
-        var tokens = NativeCSharpLanguageCharacteristics.Instance.TokenizeString(content).ToArray();
-        foreach (var token in tokens)
+        foreach (var token in NativeCSharpLanguageCharacteristics.Instance.TokenizeString(content))
         {
-            builder.Add((OldSyntaxToken)token.CreateRed());
+            builder.Add(new(parent: null, token, position: 0, index: 0));
         }
-        var node = SyntaxFactory.CSharpStatementLiteral(builder.ToList(), SpanChunkGenerator.Null);
 
-        return node;
+        return SyntaxFactory.CSharpStatementLiteral(builder.ToList(), SpanChunkGenerator.Null);
     }
 }

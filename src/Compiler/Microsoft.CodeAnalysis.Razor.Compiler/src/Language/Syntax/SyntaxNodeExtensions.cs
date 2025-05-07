@@ -11,12 +11,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class SyntaxNodeExtensions
 {
-    public static SyntaxToken AsToken(this SyntaxNode node)
-    {
-        Debug.Assert(node.IsToken);
-        return new(node.Parent, node.Green, node.Position, index: 0);
-    }
-
     public static TNode WithAnnotations<TNode>(this TNode node, params SyntaxAnnotation[] annotations)
         where TNode : SyntaxNode
     {
@@ -126,12 +120,13 @@ internal static class SyntaxNodeExtensions
     /// node potentially rewritten with replaced descendants.</param>
     public static TRoot ReplaceSyntax<TRoot>(
         this TRoot root,
-        IEnumerable<SyntaxNode> nodes,
-        Func<SyntaxNode, SyntaxNode, SyntaxNode> computeReplacementNode)
+        IEnumerable<SyntaxNode>? nodes = null,
+        Func<SyntaxNode, SyntaxNode, SyntaxNode>? computeReplacementNode = null,
+        IEnumerable<SyntaxToken>? tokens = null,
+        Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
         where TRoot : SyntaxNode
     {
-        return (TRoot)root.ReplaceCore(
-            nodes: nodes, computeReplacementNode: computeReplacementNode);
+        return (TRoot)root.ReplaceCore(nodes, computeReplacementNode, tokens, computeReplacementToken);
     }
 
     /// <summary>
@@ -144,11 +139,14 @@ internal static class SyntaxNodeExtensions
     /// <param name="computeReplacementNode">A function that computes a replacement node for the
     /// argument nodes. The first argument is the original node. The second argument is the same
     /// node potentially rewritten with replaced descendants.</param>
-    public static TRoot ReplaceNodes<TRoot, TNode>(this TRoot root, IEnumerable<TNode> nodes, Func<TNode, TNode, SyntaxNode> computeReplacementNode)
+    public static TRoot ReplaceNodes<TRoot, TNode>(
+        this TRoot root,
+        IEnumerable<TNode> nodes,
+        Func<TNode, TNode, SyntaxNode> computeReplacementNode)
         where TRoot : SyntaxNode
         where TNode : SyntaxNode
     {
-        return (TRoot)root.ReplaceCore(nodes: nodes, computeReplacementNode: computeReplacementNode);
+        return (TRoot)root.ReplaceCore(nodes, computeReplacementNode);
     }
 
     /// <summary>
@@ -166,7 +164,7 @@ internal static class SyntaxNodeExtensions
             return root;
         }
 
-        return (TRoot)root.ReplaceCore(nodes: new[] { oldNode }, computeReplacementNode: (o, r) => newNode);
+        return (TRoot)root.ReplaceCore(nodes: [oldNode], computeReplacementNode: (o, r) => newNode);
     }
 
     /// <summary>
@@ -208,7 +206,78 @@ internal static class SyntaxNodeExtensions
         return (TRoot)root.InsertNodesInListCore(nodeInList, newNodes, insertBefore: false);
     }
 
-    public static string GetContent<TNode>(this TNode node) where TNode : SyntaxNode
+    /// <summary>
+    /// Creates a new tree of nodes with the specified old node replaced with a new node.
+    /// </summary>
+    /// <typeparam name="TRoot">The type of the root node.</typeparam>
+    /// <param name="root">The root node of the tree of nodes.</param>
+    /// <param name="tokens">The token to be replaced; descendants of the root node.</param>
+    /// <param name="computeReplacementToken">A function that computes a replacement token for
+    /// the argument tokens. The first argument is the original token. The second argument is
+    /// the same token potentially rewritten with replaced trivia.</param>
+    public static TRoot ReplaceTokens<TRoot>(
+        this TRoot root,
+        IEnumerable<SyntaxToken> tokens,
+        Func<SyntaxToken, SyntaxToken, SyntaxToken> computeReplacementToken)
+        where TRoot : SyntaxNode
+    {
+        return (TRoot)root.ReplaceCore<SyntaxNode>(tokens: tokens, computeReplacementToken: computeReplacementToken);
+    }
+
+    /// <summary>
+    /// Creates a new tree of nodes with the specified old token replaced with new tokens.
+    /// </summary>
+    /// <typeparam name="TRoot">The type of the root node.</typeparam>
+    /// <param name="root">The root of the tree of nodes.</param>
+    /// <param name="tokenInList">The token to be replaced; a descendant of the root node and an element of a list member.</param>
+    /// <param name="newTokens">A sequence of tokens to use in the tree in place of the specified token.</param>
+    public static TRoot ReplaceToken<TRoot>(this TRoot root, SyntaxToken tokenInList, IEnumerable<SyntaxToken> newTokens)
+        where TRoot : SyntaxNode
+    {
+        return (TRoot)root.ReplaceTokenInListCore(tokenInList, newTokens);
+    }
+    /// <summary>
+    /// Creates a new tree of nodes with the specified old token replaced with a new token.
+    /// </summary>
+    /// <typeparam name="TRoot">The type of the root node.</typeparam>
+    /// <param name="root">The root node of the tree of nodes.</param>
+    /// <param name="oldToken">The token to be replaced.</param>
+    /// <param name="newToken">The new token to use in the new tree in place of the old
+    /// token.</param>
+    public static TRoot ReplaceToken<TRoot>(this TRoot root, SyntaxToken oldToken, SyntaxToken newToken)
+        where TRoot : SyntaxNode
+    {
+        return (TRoot)root.ReplaceCore<SyntaxNode>(tokens: [oldToken], computeReplacementToken: (o, r) => newToken);
+    }
+
+    /// <summary>
+    /// Creates a new tree of nodes with new tokens inserted before the specified token.
+    /// </summary>
+    /// <typeparam name="TRoot">The type of the root node.</typeparam>
+    /// <param name="root">The root of the tree of nodes.</param>
+    /// <param name="tokenInList">The token to insert before; a descendant of the root node and an element of a list member.</param>
+    /// <param name="newTokens">A sequence of tokens to insert into the tree immediately before the specified token.</param>
+    public static TRoot InsertTokensBefore<TRoot>(this TRoot root, SyntaxToken tokenInList, IEnumerable<SyntaxToken> newTokens)
+        where TRoot : SyntaxNode
+    {
+        return (TRoot)root.InsertTokensInListCore(tokenInList, newTokens, insertBefore: true);
+    }
+
+    /// <summary>
+    /// Creates a new tree of nodes with new tokens inserted after the specified token.
+    /// </summary>
+    /// <typeparam name="TRoot">The type of the root node.</typeparam>
+    /// <param name="root">The root of the tree of nodes.</param>
+    /// <param name="tokenInList">The token to insert after; a descendant of the root node and an element of a list member.</param>
+    /// <param name="newTokens">A sequence of tokens to insert into the tree immediately after the specified token.</param>
+    public static TRoot InsertTokensAfter<TRoot>(this TRoot root, SyntaxToken tokenInList, IEnumerable<SyntaxToken> newTokens)
+        where TRoot : SyntaxNode
+    {
+        return (TRoot)root.InsertTokensInListCore(tokenInList, newTokens, insertBefore: false);
+    }
+
+    public static string GetContent<TNode>(this TNode node)
+        where TNode : SyntaxNode
     {
         using var _ = StringBuilderPool.GetPooledObject(out var builder);
         using var writer = new System.IO.StringWriter(builder);
@@ -221,7 +290,7 @@ internal static class SyntaxNodeExtensions
     {
         private readonly List<RazorDiagnostic> _diagnostics = diagnostics ?? [];
 
-        public override void Visit(SyntaxNode node)
+        public override void Visit(SyntaxNode? node)
         {
             if (node?.ContainsDiagnostics == true)
             {

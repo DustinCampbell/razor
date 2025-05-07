@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
@@ -143,43 +142,43 @@ internal static class HtmlFacts
 
     public static bool TryGetElementInfo(
         SyntaxNode element,
-        [NotNullWhen(true)] out OldSyntaxToken? containingTagNameToken,
+        out SyntaxToken containingTagNameToken,
         out SyntaxList<RazorSyntaxNode> attributeNodes,
-        [NotNullWhen(true)] out OldSyntaxToken? closingForwardSlashOrCloseAngleToken)
+        out SyntaxToken closingForwardSlashOrCloseAngleToken)
     {
         switch (element)
         {
             case MarkupStartTagSyntax startTag:
                 containingTagNameToken = startTag.Name;
                 attributeNodes = startTag.Attributes;
-                closingForwardSlashOrCloseAngleToken = startTag.ForwardSlash ?? startTag.CloseAngle;
+                closingForwardSlashOrCloseAngleToken = startTag.ForwardSlash != default ? startTag.ForwardSlash : startTag.CloseAngle;
                 return true;
             case MarkupEndTagSyntax { Parent: MarkupElementSyntax parent } endTag:
                 containingTagNameToken = endTag.Name;
                 attributeNodes = parent.StartTag?.Attributes ?? new SyntaxList<RazorSyntaxNode>();
-                closingForwardSlashOrCloseAngleToken = endTag.ForwardSlash ?? endTag.CloseAngle;
+                closingForwardSlashOrCloseAngleToken = endTag.ForwardSlash != default ? endTag.ForwardSlash : endTag.CloseAngle;
                 return true;
             case MarkupTagHelperStartTagSyntax startTagHelper:
                 containingTagNameToken = startTagHelper.Name;
                 attributeNodes = startTagHelper.Attributes;
-                closingForwardSlashOrCloseAngleToken = startTagHelper.ForwardSlash ?? startTagHelper.CloseAngle;
+                closingForwardSlashOrCloseAngleToken = startTagHelper.ForwardSlash != default ? startTagHelper.ForwardSlash : startTagHelper.CloseAngle;
                 return true;
             case MarkupTagHelperEndTagSyntax { Parent: MarkupTagHelperElementSyntax parent } endTagHelper:
                 containingTagNameToken = endTagHelper.Name;
                 attributeNodes = parent.StartTag?.Attributes ?? new SyntaxList<RazorSyntaxNode>();
-                closingForwardSlashOrCloseAngleToken = endTagHelper.ForwardSlash ?? endTagHelper.CloseAngle;
+                closingForwardSlashOrCloseAngleToken = endTagHelper.ForwardSlash != default ? endTagHelper.ForwardSlash : endTagHelper.CloseAngle;
                 return true;
             default:
-                containingTagNameToken = null;
+                containingTagNameToken = default;
                 attributeNodes = default;
-                closingForwardSlashOrCloseAngleToken = null;
+                closingForwardSlashOrCloseAngleToken = default;
                 return false;
         }
     }
 
     public static bool TryGetAttributeInfo(
         SyntaxNode attribute,
-        [NotNullWhen(true)] out OldSyntaxToken? containingTagNameToken,
+        out SyntaxToken containingTagNameToken,
         out TextSpan? prefixLocation,
         out string? selectedAttributeName,
         out TextSpan? selectedAttributeNameLocation,
@@ -187,7 +186,7 @@ internal static class HtmlFacts
     {
         if (!TryGetElementInfo(attribute.Parent, out containingTagNameToken, out attributeNodes, closingForwardSlashOrCloseAngleToken: out _))
         {
-            containingTagNameToken = null;
+            containingTagNameToken = default;
             prefixLocation = null;
             selectedAttributeName = null;
             selectedAttributeNameLocation = null;

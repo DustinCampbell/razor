@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
@@ -11,27 +9,23 @@ using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
-internal class SyntaxNodeWriter(TextWriter writer, bool validateSpanEditHandlers) : SyntaxRewriter
+internal class SyntaxNodeWriter(TextWriter writer, bool validateSpanEditHandlers) : SyntaxWalker
 {
     private bool _visitedRoot;
 
     public int Depth { get; set; }
 
-    public override SyntaxNode Visit(SyntaxNode node)
+    public override void Visit(SyntaxNode? node)
     {
-        if (node is OldSyntaxToken token)
+        if (node != null)
         {
-            return VisitOldToken(token);
+            WriteNode(node);
         }
-
-        WriteNode(node);
-        return node;
     }
 
-    public override SyntaxNode VisitOldToken(OldSyntaxToken token)
+    public override void VisitToken(SyntaxToken token)
     {
         WriteToken(token);
-        return base.VisitOldToken(token);
     }
 
     private void WriteNode(SyntaxNode node)
@@ -131,12 +125,19 @@ internal class SyntaxNodeWriter(TextWriter writer, bool validateSpanEditHandlers
 
     private void WriteTagHelperElement(MarkupTagHelperElementSyntax node)
     {
+        var tagHelperInfo = node.TagHelperInfo;
+        if (tagHelperInfo is null)
+        {
+            return;
+        }
+
         // Write tag name
         WriteSeparator();
-        Write($"{node.TagHelperInfo.TagName}[{node.TagHelperInfo.TagMode}]");
+
+        Write($"{tagHelperInfo.TagName}[{tagHelperInfo.TagMode}]");
 
         // Write descriptors
-        foreach (var descriptor in node.TagHelperInfo.BindingResult.Descriptors)
+        foreach (var descriptor in tagHelperInfo.BindingResult.Descriptors)
         {
             WriteSeparator();
 
@@ -157,7 +158,7 @@ internal class SyntaxNodeWriter(TextWriter writer, bool validateSpanEditHandlers
         Write(info.Bound ? "Bound" : "Unbound");
     }
 
-    private void WriteToken(OldSyntaxToken token)
+    private void WriteToken(SyntaxToken token)
     {
         WriteIndent();
         var content = token.IsMissing ? "<Missing>" : token.Content;

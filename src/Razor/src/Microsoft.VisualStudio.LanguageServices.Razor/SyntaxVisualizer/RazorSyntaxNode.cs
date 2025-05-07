@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.Razor.SyntaxVisualizer;
 /// </summary>
 internal class RazorSyntaxNode : IEnumerable<RazorSyntaxNode>
 {
-    private readonly SyntaxNode _node;
+    private readonly SyntaxNodeOrToken _node;
 
     public int SpanStart => _node.SpanStart;
 
@@ -25,16 +25,16 @@ internal class RazorSyntaxNode : IEnumerable<RazorSyntaxNode>
 
     public RazorSyntaxNodeList Children { get; }
 
-    public RazorSyntaxNode(SyntaxNode node)
+    public RazorSyntaxNode(SyntaxNodeOrToken node)
     {
         _node = node;
-        Children = new RazorSyntaxNodeList(_node.ChildNodesAndOldTokens());
+        Children = new RazorSyntaxNodeList(_node.ChildNodesAndTokens());
     }
 
     public RazorSyntaxNode(RazorSyntaxTree tree)
     {
         _node = tree.Root;
-        Children = new RazorSyntaxNodeList(_node.ChildNodesAndOldTokens());
+        Children = new RazorSyntaxNodeList(_node.ChildNodesAndTokens());
     }
 
     public IEnumerator<RazorSyntaxNode> GetEnumerator()

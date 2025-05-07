@@ -86,7 +86,7 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         else
         {
             AddSemanticRange(node.OpenAngle, tokenTypes.MarkupTagDelimiter);
-            if (node.Bang != null)
+            if (node.Bang != default)
             {
                 AddSemanticRange(node.Bang, tokenTypes.RazorTransition);
             }
@@ -94,7 +94,7 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
             AddSemanticRange(node.Name, tokenTypes.MarkupElement);
 
             Visit(node.Attributes);
-            if (node.ForwardSlash != null)
+            if (node.ForwardSlash != default)
             {
                 AddSemanticRange(node.ForwardSlash, tokenTypes.MarkupTagDelimiter);
             }
@@ -114,12 +114,12 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         else
         {
             AddSemanticRange(node.OpenAngle, tokenTypes.MarkupTagDelimiter);
-            if (node.Bang != null)
+            if (node.Bang != default)
             {
                 AddSemanticRange(node.Bang, tokenTypes.RazorTransition);
             }
 
-            if (node.ForwardSlash != null)
+            if (node.ForwardSlash != default)
             {
                 AddSemanticRange(node.ForwardSlash, tokenTypes.MarkupTagDelimiter);
             }
@@ -279,7 +279,7 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         var tokenTypes = _semanticTokensLegend.TokenTypes;
 
         AddSemanticRange(node.OpenAngle, tokenTypes.MarkupTagDelimiter);
-        if (node.Bang != null)
+        if (node.Bang != default)
         {
             AddSemanticRange(node.Bang, tokenTypes.RazorTransition);
         }
@@ -296,7 +296,7 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
 
         Visit(node.Attributes);
 
-        if (node.ForwardSlash != null)
+        if (node.ForwardSlash != default)
         {
             AddSemanticRange(node.ForwardSlash, tokenTypes.MarkupTagDelimiter);
         }
@@ -311,7 +311,7 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         AddSemanticRange(node.OpenAngle, tokenTypes.MarkupTagDelimiter);
         AddSemanticRange(node.ForwardSlash, tokenTypes.MarkupTagDelimiter);
 
-        if (node.Bang != null)
+        if (node.Bang != default)
         {
             AddSemanticRange(node.Bang, tokenTypes.RazorTransition);
         }
@@ -522,6 +522,22 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         return false;
     }
 
+    private void AddSemanticRange(SyntaxToken token, int semanticKind)
+    {
+        if (token == default || token.Width == 0)
+        {
+            return;
+        }
+
+        if (!token.IsWhitespace())
+        {
+            var lineSpan = token.GetLinePositionSpan(_razorCodeDocument.Source);
+            var tokenModifier = _addRazorCodeModifier ? _semanticTokensLegend.TokenModifiers.RazorCodeModifier : 0;
+
+            AddSemanticRange(lineSpan, semanticKind, tokenModifier, fromRazor: true);
+        }
+    }
+
     private void AddSemanticRange(SyntaxNode node, int semanticKind)
     {
         if (node is null)
@@ -544,20 +560,20 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
         // LSP spec forbids multi-line tokens, so we need to split this up.
         if (range.Start.Line != range.End.Line)
         {
-            var childNodes = node.ChildNodesAndOldTokens();
+            var childNodes = node.ChildNodesAndTokens();
             if (childNodes.Count == 0)
             {
                 var charPosition = range.Start.Character;
                 var lineStartAbsoluteIndex = node.SpanStart - charPosition;
-                for (var lineNumber = range.Start.Line; lineNumber <= range.End.Line; lineNumber++)
+                for (var line = range.Start.Line; line <= range.End.Line; line++)
                 {
-                    var originalCharPosition = charPosition;
+                    var startChar = charPosition;
                     // NOTE: We don't report tokens for newlines so need to account for them.
-                    var lineLength = source.Text.Lines[lineNumber].SpanIncludingLineBreak.Length;
+                    var lineLength = source.Text.Lines[line].SpanIncludingLineBreak.Length;
 
                     // For the last line, we end where the syntax tree tells us to. For all other lines, we end at the
                     // last non-newline character
-                    var endChar = lineNumber == range.End.Line
+                    var endChar = line == range.End.Line
                        ? range.End.Character
                        : GetLastNonWhitespaceCharacterOffset(source, lineStartAbsoluteIndex, lineLength);
 
@@ -571,50 +587,30 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
                         continue;
                     }
 
-                    var semantic = new SemanticRange(semanticKind, lineNumber, originalCharPosition, lineNumber, endChar, tokenModifier, fromRazor: true);
-                    AddRange(semantic);
+                    var lineSpan = new LinePositionSpan(start: new(line, startChar), end: new(line, endChar));
+
+                    AddSemanticRange(lineSpan, semanticKind, tokenModifier, fromRazor: true);
                 }
             }
             else
             {
                 // We have to iterate over the individual nodes because this node might consist of multiple lines
                 // ie: "\r\ntext\r\n" would be parsed as one node containing three elements (newline, "text", newline).
-                foreach (var token in node.ChildNodesAndOldTokens())
+                foreach (var child in node.ChildNodes())
                 {
                     // We skip whitespace to avoid "multiline" ranges for "/r/n", where the /n is interpreted as being on a new line.
                     // This also stops us from returning data for " ", which seems like a nice side-effect as it's not likely to have any colorization anyway.
-                    if (!token.ContainsOnlyWhitespace())
+                    if (!child.ContainsOnlyWhitespace())
                     {
-                        var lineSpan = token.GetLinePositionSpan(source);
-                        var semantic = new SemanticRange(semanticKind, lineSpan.Start.Line, lineSpan.Start.Character, lineSpan.End.Line, lineSpan.End.Character, tokenModifier, fromRazor: true);
-                        AddRange(semantic);
+                        var lineSpan = child.GetLinePositionSpan(source);
+                        AddSemanticRange(lineSpan, semanticKind, tokenModifier, fromRazor: true);
                     }
                 }
             }
         }
         else
         {
-            var semanticRange = new SemanticRange(semanticKind, range.Start.Line, range.Start.Character, range.End.Line, range.End.Character, tokenModifier, fromRazor: true);
-            AddRange(semanticRange);
-        }
-
-        void AddRange(SemanticRange semanticRange)
-        {
-            // If the end is before the start, well that's no good!
-            if (semanticRange.EndLine < semanticRange.StartLine)
-            {
-                return;
-            }
-
-            // If the end is before the start, that's still no good, but I'm separating out this check
-            // to make it clear that it also checks for equality: No point classifying 0-length ranges.
-            if (semanticRange.EndLine == semanticRange.StartLine &&
-                semanticRange.EndCharacter <= semanticRange.StartCharacter)
-            {
-                return;
-            }
-
-            _semanticRanges.Add(semanticRange);
+            AddSemanticRange(range, semanticKind, tokenModifier, fromRazor: true);
         }
 
         static int GetLastNonWhitespaceCharacterOffset(RazorSourceDocument source, int lineStartAbsoluteIndex, int lineLength)
@@ -632,6 +628,17 @@ internal sealed class SemanticTokensVisitor : SyntaxWalker
                 ? lineLength - 1
                 : lineLength;
         }
+    }
+
+    private void AddSemanticRange(LinePositionSpan span, int kind, int tokenModifier, bool fromRazor)
+    {
+        // If the end is before the start, well that's no good!
+        if (span.End < span.Start)
+        {
+            return;
+        }
+
+        _semanticRanges.Add(new(kind, span, tokenModifier, fromRazor));
     }
 
     private BackgroundColorDisposable ColorCSharpBackground()

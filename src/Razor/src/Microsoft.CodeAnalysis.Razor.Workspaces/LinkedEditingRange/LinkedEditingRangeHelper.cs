@@ -2,12 +2,11 @@
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.OldSyntaxToken;
+using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxToken;
 
 namespace Microsoft.CodeAnalysis.Razor.LinkedEditingRange;
 
@@ -44,8 +43,8 @@ internal static class LinkedEditingRangeHelper
     private static bool TryGetNearestMarkupNameTokens(
         RazorSyntaxTree syntaxTree,
         SourceLocation location,
-        [NotNullWhen(true)] out RazorSyntaxToken? startTagNameToken,
-        [NotNullWhen(true)] out RazorSyntaxToken? endTagNameToken)
+        out RazorSyntaxToken startTagNameToken,
+        out RazorSyntaxToken endTagNameToken)
     {
         var owner = syntaxTree.Root.FindInnermostNode(location.AbsoluteIndex);
         var element = owner?.FirstAncestorOrSelf<MarkupSyntaxNode>(
@@ -53,8 +52,8 @@ internal static class LinkedEditingRangeHelper
 
         if (element is null)
         {
-            startTagNameToken = null;
-            endTagNameToken = null;
+            startTagNameToken = default;
+            endTagNameToken = default;
             return false;
         }
 
@@ -62,14 +61,16 @@ internal static class LinkedEditingRangeHelper
         {
             // Tag helper
             case MarkupTagHelperElementSyntax markupTagHelperElement:
-                startTagNameToken = markupTagHelperElement.StartTag?.Name;
-                endTagNameToken = markupTagHelperElement.EndTag?.Name;
-                return startTagNameToken is not null && endTagNameToken is not null;
+                startTagNameToken = markupTagHelperElement.StartTag?.Name ?? default;
+                endTagNameToken = markupTagHelperElement.EndTag?.Name ?? default;
+
+                return startTagNameToken != default && endTagNameToken != default;
             // HTML
             case MarkupElementSyntax markupElement:
-                startTagNameToken = markupElement.StartTag?.Name;
-                endTagNameToken = markupElement.EndTag?.Name;
-                return startTagNameToken is not null && endTagNameToken is not null;
+                startTagNameToken = markupElement.StartTag?.Name ?? default;
+                endTagNameToken = markupElement.EndTag?.Name ?? default;
+
+                return startTagNameToken != default && endTagNameToken != default;
             default:
                 throw new InvalidOperationException("Element is expected to be a MarkupTagHelperElement or MarkupElement.");
         }

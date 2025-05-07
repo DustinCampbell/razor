@@ -302,7 +302,7 @@ internal class RazorTranslateDiagnosticsService(IDocumentMappingService document
             }
 
             var bodyElement = element
-                .ChildNodesAndOldTokens()
+                .ChildNodes()
                 .SingleOrDefault(static c => c is MarkupElementSyntax tag && tag.StartTag?.Name.Content == "body") as MarkupElementSyntax;
 
             return bodyElement is not null &&
@@ -329,7 +329,7 @@ internal class RazorTranslateDiagnosticsService(IDocumentMappingService document
                 return false;
             }
 
-            var haveBang = startNode.Bang is not null && endNode.Bang is not null;
+            var haveBang = startNode.Bang != default && endNode.Bang != default;
             var namesEquivalent = startNode.Name.Content == endNode.Name.Content;
 
             return haveBang && namesEquivalent;
@@ -419,11 +419,9 @@ internal class RazorTranslateDiagnosticsService(IDocumentMappingService document
         static bool CheckIfAttributeContainsNonMarkupNodes(RazorSyntaxNode attributeNode)
         {
             // Only allow markup, generic & (non-razor comment) token nodes
-            var containsNonMarkupNodes = attributeNode.DescendantNodes()
-                .Any(static n => !(n is MarkupBlockSyntax ||
-                    n is MarkupSyntaxNode ||
-                    n is GenericBlockSyntax ||
-                    (n is SyntaxNode sn && sn.IsToken && sn.Kind != SyntaxKind.RazorCommentTransition)));
+            var containsNonMarkupNodes = attributeNode.DescendantNodesAndTokens()
+                .Any(static n => !(n.AsNode() is MarkupBlockSyntax or MarkupSyntaxNode or GenericBlockSyntax ||
+                    (n.AsToken().Kind != SyntaxKind.RazorCommentTransition)));
 
             return containsNonMarkupNodes;
         }

@@ -161,7 +161,7 @@ internal static class TagHelperParseTreeRewriter
             var body = VisitList(node.Body);
 
             // Visit end tag.
-            var endTag = (MarkupEndTagSyntax)Visit(node.EndTag);
+            var endTag = (MarkupEndTagSyntax?)Visit(node.EndTag);
             if (endTag != null)
             {
                 var tagName = endTag.GetTagNameWithOptionalBang();
@@ -304,7 +304,7 @@ internal static class TagHelperParseTreeRewriter
             rewritten = null;
             var tagName = endTag.GetTagNameWithOptionalBang();
             // Could not determine tag name, it can't be a TagHelper, continue on and track the element.
-            if (string.IsNullOrEmpty(tagName) || tagName.StartsWith("!", StringComparison.Ordinal))
+            if (string.IsNullOrEmpty(tagName) || tagName.StartsWith('!'))
             {
                 return false;
             }

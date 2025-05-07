@@ -1,10 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
 
@@ -14,11 +13,15 @@ internal static class SyntaxReplacer
 {
     internal static SyntaxNode Replace<TNode>(
         SyntaxNode root,
-        IEnumerable<TNode> nodes = null,
-        Func<TNode, TNode, SyntaxNode> computeReplacementNode = null)
+        IEnumerable<TNode>? nodes = null,
+        Func<TNode, TNode, SyntaxNode>? computeReplacementNode = null,
+        IEnumerable<SyntaxToken>? tokens = null,
+        Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
         where TNode : SyntaxNode
     {
-        var replacer = new Replacer<TNode>(nodes, computeReplacementNode);
+        var replacer = new Replacer<TNode>(
+            nodes, computeReplacementNode,
+            tokens, computeReplacementToken);
 
         if (replacer.HasWork)
         {
@@ -40,50 +43,69 @@ internal static class SyntaxReplacer
         return new NodeListEditor(nodeInList, nodesToInsert, insertBefore ? ListEditKind.InsertBefore : ListEditKind.InsertAfter).Visit(root);
     }
 
-    private class Replacer<TNode> : SyntaxRewriter where TNode : SyntaxNode
+    internal static SyntaxNode ReplaceTokenInList(SyntaxNode root, SyntaxToken originalToken, IEnumerable<SyntaxToken> newTokens)
     {
-        private readonly Func<TNode, TNode, SyntaxNode> _computeReplacementNode;
-        private readonly HashSet<SyntaxNode> _nodeSet;
-        private readonly HashSet<TextSpan> _spanSet;
-        private readonly TextSpan _totalSpan;
+        return new TokenListEditor(originalToken, newTokens, ListEditKind.Replace).Visit(root);
+    }
 
-        public Replacer(IEnumerable<TNode> nodes, Func<TNode, TNode, SyntaxNode> computeReplacementNode)
+    internal static SyntaxNode InsertTokenInList(SyntaxNode root, SyntaxToken tokenInList, IEnumerable<SyntaxToken> nodesToInsert, bool insertBefore)
+    {
+        return new TokenListEditor(tokenInList, nodesToInsert, insertBefore ? ListEditKind.InsertBefore : ListEditKind.InsertAfter).Visit(root);
+    }
+
+    private sealed class Replacer<TNode> : SyntaxRewriter
+        where TNode : SyntaxNode
+    {
+        private static readonly HashSet<SyntaxNode> s_noNodes = [];
+        private static readonly HashSet<SyntaxToken> s_noTokens = [];
+
+        private readonly Func<TNode, TNode, SyntaxNode>? _computeReplacementNode;
+        private readonly Func<SyntaxToken, SyntaxToken, SyntaxToken>? _computeReplacementToken;
+
+        private readonly HashSet<SyntaxNode> _nodeSet;
+        private readonly HashSet<SyntaxToken> _tokenSet;
+        private readonly HashSet<TextSpan> _spanSet;
+
+        private TextSpan _totalSpan;
+
+        public Replacer(
+            IEnumerable<TNode>? nodes,
+            Func<TNode, TNode, SyntaxNode>? computeReplacementNode,
+            IEnumerable<SyntaxToken>? tokens,
+            Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken)
         {
             _computeReplacementNode = computeReplacementNode;
-            _nodeSet = nodes != null ? new HashSet<SyntaxNode>(nodes) : new HashSet<SyntaxNode>();
-            _spanSet = new HashSet<TextSpan>(_nodeSet.Select(n => n.Span));
-            _totalSpan = ComputeTotalSpan(_spanSet);
+            _computeReplacementToken = computeReplacementToken;
+
+            _nodeSet = nodes != null ? [.. nodes] : s_noNodes;
+            _tokenSet = tokens != null ? [.. tokens] : s_noTokens;
+
+            _spanSet = [];
+
+            CalculateVisitationCriteria();
         }
 
-        public bool HasWork => _nodeSet.Count > 0;
+        public bool HasWork => _nodeSet.Count + _tokenSet.Count > 0;
 
-        public override SyntaxNode Visit(SyntaxNode node)
+        private void CalculateVisitationCriteria()
         {
-            var rewritten = node;
+            _spanSet.Clear();
 
-            if (node != null)
+            foreach (var node in _nodeSet)
             {
-                if (ShouldVisit(node.Span))
-                {
-                    rewritten = base.Visit(node);
-                }
-
-                if (_nodeSet.Contains(node) && _computeReplacementNode != null)
-                {
-                    rewritten = _computeReplacementNode((TNode)node, (TNode)rewritten);
-                }
+                _spanSet.Add(node.Span);
             }
 
-            return rewritten;
-        }
+            foreach (var token in _tokenSet)
+            {
+                _spanSet.Add(token.Span);
+            }
 
-        private static TextSpan ComputeTotalSpan(IEnumerable<TextSpan> spans)
-        {
             var first = true;
             var start = 0;
             var end = 0;
 
-            foreach (var span in spans)
+            foreach (var span in _spanSet)
             {
                 if (first)
                 {
@@ -98,7 +120,7 @@ internal static class SyntaxReplacer
                 }
             }
 
-            return new TextSpan(start, end - start);
+            _totalSpan = new TextSpan(start, end - start);
         }
 
         private bool ShouldVisit(TextSpan span)
@@ -123,45 +145,95 @@ internal static class SyntaxReplacer
 
             return false;
         }
+
+        [return: NotNullIfNotNull(nameof(node))]
+        public override SyntaxNode? Visit(SyntaxNode? node)
+        {
+            if (node is null)
+            {
+                return node;
+            }
+
+            var isReplacedNode = _nodeSet.Remove(node);
+
+            if (isReplacedNode)
+            {
+                // If node is in _nodeSet, then it contributed to the calculation of _spanSet.
+                // We are currently processing that node, so it no longer needs to contribute
+                // to _spanSet and affect determination of inward visitation. This is done before
+                // calling ShouldVisit to avoid walking into the node if there aren't any remaining
+                // spans inside it representing items to replace.
+                CalculateVisitationCriteria();
+            }
+
+            var rewritten = node;
+
+            if (ShouldVisit(node.Span))
+            {
+                rewritten = base.Visit(node);
+            }
+
+            if (isReplacedNode && _computeReplacementNode != null)
+            {
+                rewritten = _computeReplacementNode((TNode)node, (TNode)rewritten);
+            }
+
+            return rewritten;
+        }
+
+        public override SyntaxToken VisitToken(SyntaxToken token)
+        {
+            var isReplacedToken = _tokenSet.Remove(token);
+
+            if (isReplacedToken)
+            {
+                // If token is in _tokenSet, then it contributed to the calculation of _spanSet.
+                // We are currently processing that token, so it no longer needs to contribute
+                // to _spanSet and affect determination of inward visitation. This is done before
+                // calling ShouldVisit to avoid walking into the token if there aren't any remaining
+                // spans inside it representing items to replace.
+                CalculateVisitationCriteria();
+            }
+
+            var rewritten = token;
+
+            if (ShouldVisit(token.Span))
+            {
+                rewritten = base.VisitToken(token);
+            }
+
+            if (isReplacedToken && _computeReplacementToken != null)
+            {
+                rewritten = _computeReplacementToken(token, rewritten);
+            }
+
+            return rewritten;
+        }
     }
 
-    private class NodeListEditor : SyntaxRewriter
+    private enum ListEditKind
     {
-        private readonly TextSpan _elementSpan;
-        private readonly SyntaxNode _originalNode;
-        private readonly IEnumerable<SyntaxNode> _newNodes;
-        private readonly ListEditKind _editKind;
+        InsertBefore,
+        InsertAfter,
+        Replace
+    }
 
-        public NodeListEditor(
-            SyntaxNode originalNode,
-            IEnumerable<SyntaxNode> replacementNodes,
-            ListEditKind editKind)
-        {
-            _elementSpan = originalNode.Span;
-            _originalNode = originalNode;
-            _newNodes = replacementNodes;
-            _editKind = editKind;
-        }
+    private abstract class BaseListEditor(TextSpan elementSpan, ListEditKind editKind) : SyntaxRewriter
+    {
+        private readonly TextSpan _elementSpan = elementSpan;
+
+        protected readonly ListEditKind EditKind = editKind;
 
         private bool ShouldVisit(TextSpan span)
         {
-            if (span.IntersectsWith(_elementSpan))
-            {
-                // node's full span intersects with at least one node to be replaced
-                // so we need to visit node's children to find it.
-                return true;
-            }
-
-            return false;
+            // node's span intersects with at least one node to be replaced
+            // so we need to visit node's children to find it.
+            return span.IntersectsWith(_elementSpan);
         }
 
-        public override SyntaxNode Visit(SyntaxNode node)
+        [return: NotNullIfNotNull(nameof(node))]
+        public override SyntaxNode? Visit(SyntaxNode? node)
         {
-            if (node == _originalNode)
-            {
-                throw new InvalidOperationException("Expecting a list");
-            }
-
             var rewritten = node;
 
             if (node != null)
@@ -175,17 +247,50 @@ internal static class SyntaxReplacer
             return rewritten;
         }
 
+        public override SyntaxToken VisitToken(SyntaxToken token)
+        {
+            var rewritten = token;
+
+            if (ShouldVisit(token.Span))
+            {
+                rewritten = base.VisitToken(token);
+            }
+
+            return rewritten;
+        }
+    }
+
+    private sealed class NodeListEditor(
+        SyntaxNode originalNode,
+        IEnumerable<SyntaxNode> replacementNodes,
+        ListEditKind editKind)
+        : BaseListEditor(originalNode.Span, editKind)
+    {
+        private readonly SyntaxNode _originalNode = originalNode;
+        private readonly IEnumerable<SyntaxNode> _newNodes = replacementNodes;
+
+        [return: NotNullIfNotNull(nameof(node))]
+        public override SyntaxNode? Visit(SyntaxNode? node)
+        {
+            if (node == _originalNode)
+            {
+                throw new InvalidOperationException("Expecting a list");
+            }
+
+            return base.Visit(node);
+        }
+
         public override SyntaxList<TNode> VisitList<TNode>(SyntaxList<TNode> list)
         {
-            if (_originalNode is TNode)
+            if (_originalNode is TNode originalNode)
             {
-                var index = list.IndexOf((TNode)_originalNode);
+                var index = list.IndexOf(originalNode);
                 if (index >= 0 && index < list.Count)
                 {
-                    switch (_editKind)
+                    switch (EditKind)
                     {
                         case ListEditKind.Replace:
-                            return list.ReplaceRange((TNode)_originalNode, _newNodes.Cast<TNode>());
+                            return list.ReplaceRange(originalNode, _newNodes.Cast<TNode>());
 
                         case ListEditKind.InsertAfter:
                             return list.InsertRange(index + 1, _newNodes.Cast<TNode>());
@@ -196,14 +301,48 @@ internal static class SyntaxReplacer
                 }
             }
 
-            return base.VisitList<TNode>(list);
+            return base.VisitList(list);
         }
     }
 
-    private enum ListEditKind
+    private sealed class TokenListEditor(
+        SyntaxToken originalToken,
+        IEnumerable<SyntaxToken> newTokens,
+        ListEditKind editKind)
+        : BaseListEditor(originalToken.Span, editKind)
     {
-        InsertBefore,
-        InsertAfter,
-        Replace
+        private readonly SyntaxToken _originalToken = originalToken;
+        private readonly IEnumerable<SyntaxToken> _newTokens = newTokens;
+
+        public override SyntaxToken VisitToken(SyntaxToken token)
+        {
+            if (token == _originalToken)
+            {
+                throw new InvalidOperationException("Expecting a list");
+            }
+
+            return base.VisitToken(token);
+        }
+
+        public override SyntaxTokenList VisitList(SyntaxTokenList list)
+        {
+            var index = list.IndexOf(_originalToken);
+            if (index >= 0 && index < list.Count)
+            {
+                switch (EditKind)
+                {
+                    case ListEditKind.Replace:
+                        return list.ReplaceRange(_originalToken, _newTokens);
+
+                    case ListEditKind.InsertAfter:
+                        return list.InsertRange(index + 1, _newTokens);
+
+                    case ListEditKind.InsertBefore:
+                        return list.InsertRange(index, _newTokens);
+                }
+            }
+
+            return base.VisitList(list);
+        }
     }
 }

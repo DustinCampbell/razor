@@ -52,7 +52,7 @@ internal class CloseTextTagOnAutoInsertProvider : IOnAutoInsertProvider
 
         var owner = syntaxTree.Root.FindToken(absoluteIndex - 1);
         // Make sure the end </text> tag doesn't already exist
-        if (owner?.Parent is MarkupStartTagSyntax
+        if (owner.Parent is MarkupStartTagSyntax
             {
                 IsMarkupTransition: true,
                 Parent: MarkupElementSyntax { EndTag: null }

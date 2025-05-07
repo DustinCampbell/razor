@@ -6,34 +6,35 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.CodeAnalysis.Razor.SemanticTokens;
 
-internal readonly struct SemanticRange : IComparable<SemanticRange>
+internal readonly struct SemanticRange(
+    int kind,
+    int startLine,
+    int startCharacter,
+    int endLine,
+    int endCharacter,
+    int modifier,
+    bool fromRazor) : IComparable<SemanticRange>
 {
-    public SemanticRange(int kind, int startLine, int startCharacter, int endLine, int endCharacter, int modifier, bool fromRazor)
-    {
-        Kind = kind;
-        StartLine = startLine;
-        StartCharacter = startCharacter;
-        EndLine = endLine;
-        EndCharacter = endCharacter;
-        Modifier = modifier;
-        FromRazor = fromRazor;
-    }
+    public int Kind { get; } = kind;
 
-    public int Kind { get; }
+    public int StartLine { get; } = startLine;
+    public int EndLine { get; } = endLine;
+    public int StartCharacter { get; } = startCharacter;
+    public int EndCharacter { get; } = endCharacter;
 
-    public int StartLine { get; }
-    public int EndLine { get; }
-    public int StartCharacter { get; }
-    public int EndCharacter { get; }
-
-    public int Modifier { get; }
+    public int Modifier { get; } = modifier;
 
     /// <summary>
     /// If we produce a token, and a delegated server produces a token, we want to prefer ours, so we use this flag to help our
     /// sort algorithm, that way we can avoid the perf hit of actually finding duplicates, and just take the first instance that
     /// covers a range.
     /// </summary>
-    public bool FromRazor { get; }
+    public bool FromRazor { get; } = fromRazor;
+
+    public SemanticRange(int kind, LinePositionSpan span, int modifier, bool fromRazor)
+        : this(kind, span.Start.Line, span.Start.Character, span.End.Line, span.End.Character, modifier, fromRazor)
+    {
+    }
 
     public LinePositionSpan AsLinePositionSpan()
         => new(new(StartLine, StartCharacter), new(EndLine, EndCharacter));

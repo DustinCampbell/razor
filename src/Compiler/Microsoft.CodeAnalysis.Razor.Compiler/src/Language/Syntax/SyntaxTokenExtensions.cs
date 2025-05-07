@@ -9,6 +9,29 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static class SyntaxTokenExtensions
 {
+    public static SyntaxToken WithAnnotations(this SyntaxToken token, params SyntaxAnnotation[] annotations)
+    {
+        return new(parent: null, token.RequiredNode.SetAnnotations(annotations), position: 0, index: 0);
+    }
+
+    public static object? GetAnnotationValue(this SyntaxToken token, string key)
+    {
+        if (!token.ContainsAnnotations)
+        {
+            return null;
+        }
+
+        var annotations = token.GetAnnotations();
+        foreach (var annotation in annotations)
+        {
+            if (annotation.Kind == key)
+            {
+                return annotation.Data;
+            }
+        }
+
+        return null;
+    }
 
     public static SourceLocation GetSourceLocation(this SyntaxToken token, RazorSourceDocument source)
     {

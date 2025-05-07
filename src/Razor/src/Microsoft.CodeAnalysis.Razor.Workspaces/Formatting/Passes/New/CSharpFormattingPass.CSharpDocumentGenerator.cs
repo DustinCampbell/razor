@@ -6,13 +6,14 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.Razor.Workspaces;
 using Microsoft.CodeAnalysis.Text;
 using RazorSyntaxNode = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxNode;
-using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.OldSyntaxToken;
+using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxToken;
 
 namespace Microsoft.CodeAnalysis.Razor.Formatting.New;
 
@@ -129,9 +130,9 @@ internal partial class CSharpFormattingPass
             private TextLine _currentLine;
             private int _currentFirstNonWhitespacePosition;
 
-            // These are set in GetCSharpDocumentContents so will never be observably null
-            private RazorSyntaxToken _currentToken = null!;
-            private RazorSyntaxToken _previousCurrentToken = null!;
+            // These are set in GetCSharpDocumentContents so will never observably be set to their default values.
+            private RazorSyntaxToken _currentToken;
+            private RazorSyntaxToken _previousCurrentToken;
 
             /// <summary>
             /// The line number of the last line of the current element, if we're inside one.
@@ -169,7 +170,7 @@ internal partial class CSharpFormattingPass
                         _currentToken = root.FindToken(firstNonWhitespacePosition);
 
                         var length = _builder.Length;
-                        _lineInfoBuilder.Add(Visit(_currentToken.Parent));
+                        _lineInfoBuilder.Add(Visit(_currentToken.Parent.AssumeNotNull()));
                         Debug.Assert(_builder.Length > length, "Didn't output any generated code!");
 
                         // If there are C# mappings on this line, we want to output additional lines that represent the C# blocks.
@@ -341,7 +342,7 @@ internal partial class CSharpFormattingPass
                 //
                 // The final quirk is that the node in question can span multiple lines, but the transition can only
                 // possibly be on the last line.
-                if (lastToken.GetNextOldToken() is { Kind: SyntaxKind.Transition } token &&
+                if (lastToken.GetNextToken() is { Kind: SyntaxKind.Transition } token &&
                     GetLineNumber(token) == GetLineNumber(_currentToken))
                 {
                     // We can't use node.Span because it can contain newlines from the line before.
@@ -641,7 +642,7 @@ internal partial class CSharpFormattingPass
                 return EmitCurrentLineAsComment();
             }
 
-            private LineInfo VisitCodeOrFunctionsDirective(RazorSyntaxNode openBrace)
+            private LineInfo VisitCodeOrFunctionsDirective(RazorSyntaxToken openBrace)
             {
                 // If the open brace is on the same line as the directive, then we need to ensure the contents are indented
                 if (GetLineNumber(openBrace) == GetLineNumber(_currentToken))
@@ -701,6 +702,9 @@ internal partial class CSharpFormattingPass
                     originOffset: attribute.SpanStart - _currentToken.Position,
                     formattedOffset: 0);
             }
+
+            private int GetLineNumber(RazorSyntaxToken token)
+                => _sourceText.Lines.GetLineFromPosition(token.Position).LineNumber;
 
             private int GetLineNumber(RazorSyntaxNode node)
                 => _sourceText.Lines.GetLineFromPosition(node.Position).LineNumber;

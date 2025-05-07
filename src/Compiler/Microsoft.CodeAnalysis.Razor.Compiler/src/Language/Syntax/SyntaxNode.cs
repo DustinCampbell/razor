@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis.Text;
 
@@ -41,10 +42,6 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     public bool ContainsAnnotations => Green.ContainsAnnotations;
 
     internal string SerializedValue => SyntaxSerializer.Serialize(this);
-
-    public abstract TResult Accept<TResult>(SyntaxVisitor<TResult> visitor);
-
-    public abstract void Accept(SyntaxVisitor visitor);
 
     internal abstract SyntaxNode? GetNodeSlot(int index);
 
@@ -184,33 +181,6 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return Position + offset;
     }
 
-    internal SyntaxList<OldSyntaxToken> GetTokens()
-    {
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var tokens);
-
-        AddTokens(this, tokens);
-
-        return tokens;
-
-        static void AddTokens(SyntaxNode current, SyntaxListBuilder<OldSyntaxToken> tokens)
-        {
-            if (current.SlotCount == 0 && current is OldSyntaxToken token)
-            {
-                // Token
-                tokens.Add(token);
-                return;
-            }
-
-            for (var i = 0; i < current.SlotCount; i++)
-            {
-                if (current.GetNodeSlot(i) is { } child)
-                {
-                    AddTokens(child, tokens);
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// Gets the first token of the tree rooted by this node. Skips zero-width tokens.
     /// </summary>
@@ -230,29 +200,53 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     }
 
     /// <summary>
-    /// Gets the first token of the tree rooted by this node. Skips zero-width tokens.
-    /// </summary>
-    /// <returns>The first token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public OldSyntaxToken? GetFirstOldToken(bool includeZeroWidth = false)
-    {
-        return SyntaxNavigator.GetFirstOldToken(this, includeZeroWidth);
-    }
-
-    /// <summary>
-    /// Gets the last token of the tree rooted by this node. Skips zero-width tokens.
-    /// </summary>
-    /// <returns>The last token or <c>default(SyntaxToken)</c> if it doesn't exist.</returns>
-    public OldSyntaxToken? GetLastOldToken(bool includeZeroWidth = false)
-    {
-        return SyntaxNavigator.GetLastOldToken(this, includeZeroWidth);
-    }
-
-    /// <summary>
     /// The list of child nodes of this node, where each element is a SyntaxNode instance.
     /// </summary>
-    public ChildSyntaxList ChildNodesAndOldTokens()
+    public ChildSyntaxList ChildNodesAndTokens()
     {
         return new ChildSyntaxList(this);
+    }
+
+    public virtual SyntaxNodeOrToken ChildThatContainsPosition(int position)
+    {
+        //PERF: it is very important to keep this method fast.
+
+        if (!Span.Contains(position))
+        {
+            throw new ArgumentOutOfRangeException(nameof(position));
+        }
+
+        SyntaxNodeOrToken childNodeOrToken = ChildSyntaxList.ChildThatContainsPosition(this, position);
+        Debug.Assert(childNodeOrToken.Span.Contains(position), "ChildThatContainsPosition's return value does not contain the requested position.");
+        return childNodeOrToken;
+    }
+
+    /// <summary>
+    /// Gets a list of the child nodes in prefix document order.
+    /// </summary>
+    public IEnumerable<SyntaxNode> ChildNodes()
+    {
+        foreach (var nodeOrToken in this.ChildNodesAndTokens())
+        {
+            if (nodeOrToken.AsNode(out var node))
+            {
+                yield return node;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets a list of the direct child tokens of this node.
+    /// </summary>
+    public IEnumerable<SyntaxToken> ChildTokens()
+    {
+        foreach (var nodeOrToken in ChildNodesAndTokens())
+        {
+            if (nodeOrToken.IsToken)
+            {
+                yield return nodeOrToken.AsToken();
+            }
+        }
     }
 
     /// <summary>
@@ -311,12 +305,68 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return DescendantNodesImpl(Span, descendIntoChildren, includeSelf: true);
     }
 
+    /// <summary>
+    /// Gets a list of descendant nodes and tokens in prefix document order.
+    /// </summary>
+    /// <param name="descendIntoChildren">An optional function that determines if the search descends into the argument node's children.</param>
+    public IEnumerable<SyntaxNodeOrToken> DescendantNodesAndTokens(Func<SyntaxNode, bool>? descendIntoChildren = null)
+    {
+        return DescendantNodesAndTokensImpl(Span, descendIntoChildren, includeSelf: false);
+    }
+
+    /// <summary>
+    /// Gets a list of the descendant nodes and tokens in prefix document order.
+    /// </summary>
+    /// <param name="span">The span the node's full span must intersect.</param>
+    /// <param name="descendIntoChildren">An optional function that determines if the search descends into the argument node's children.</param>
+    public IEnumerable<SyntaxNodeOrToken> DescendantNodesAndTokens(TextSpan span, Func<SyntaxNode, bool>? descendIntoChildren = null)
+    {
+        return DescendantNodesAndTokensImpl(span, descendIntoChildren, includeSelf: false);
+    }
+
+    /// <summary>
+    /// Gets a list of descendant nodes and tokens (including this node) in prefix document order.
+    /// </summary>
+    /// <param name="descendIntoChildren">An optional function that determines if the search descends into the argument node's children.</param>
+    public IEnumerable<SyntaxNodeOrToken> DescendantNodesAndTokensAndSelf(Func<SyntaxNode, bool>? descendIntoChildren = null)
+    {
+        return DescendantNodesAndTokensImpl(this.Span, descendIntoChildren, includeSelf: true);
+    }
+
+    /// <summary>
+    /// Gets a list of the descendant nodes and tokens (including this node) in prefix document order.
+    /// </summary>
+    /// <param name="span">The span the node's full span must intersect.</param>
+    /// <param name="descendIntoChildren">An optional function that determines if the search descends into the argument node's children.</param>
+    public IEnumerable<SyntaxNodeOrToken> DescendantNodesAndTokensAndSelf(TextSpan span, Func<SyntaxNode, bool>? descendIntoChildren = null)
+    {
+        return DescendantNodesAndTokensImpl(span, descendIntoChildren, includeSelf: true);
+    }
+
+    /// <summary>
+    /// Gets a list of all the tokens in the span of this node.
+    /// </summary>
+    public IEnumerable<SyntaxToken> DescendantTokens(Func<SyntaxNode, bool>? descendIntoChildren = null)
+    {
+        return DescendantNodesAndTokens(descendIntoChildren).Where(sn => sn.IsToken).Select(sn => sn.AsToken());
+    }
+
+    /// <summary>
+    /// Gets a list of all the tokens in the full span of this node.
+    /// </summary>
+    public IEnumerable<SyntaxToken> DescendantTokens(TextSpan span, Func<SyntaxNode, bool>? descendIntoChildren = null)
+    {
+        return DescendantNodesAndTokens(span, descendIntoChildren).Where(sn => sn.IsToken).Select(sn => sn.AsToken());
+    }
+
     protected internal SyntaxNode ReplaceCore<TNode>(
         IEnumerable<TNode>? nodes = null,
-        Func<TNode, TNode, SyntaxNode>? computeReplacementNode = null)
+        Func<TNode, TNode, SyntaxNode>? computeReplacementNode = null,
+        IEnumerable<SyntaxToken>? tokens = null,
+        Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
         where TNode : SyntaxNode
     {
-        return SyntaxReplacer.Replace(this, nodes, computeReplacementNode);
+        return SyntaxReplacer.Replace(this, nodes, computeReplacementNode, tokens, computeReplacementToken);
     }
 
     protected internal SyntaxNode ReplaceNodeInListCore(SyntaxNode originalNode, IEnumerable<SyntaxNode> replacementNodes)
@@ -329,6 +379,16 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return SyntaxReplacer.InsertNodeInList(this, nodeInList, nodesToInsert, insertBefore);
     }
 
+    protected internal SyntaxNode ReplaceTokenInListCore(SyntaxToken originalToken, IEnumerable<SyntaxToken> replacementTokens)
+    {
+        return SyntaxReplacer.ReplaceTokenInList(this, originalToken, replacementTokens);
+    }
+
+    protected internal SyntaxNode InsertTokensInListCore(SyntaxToken tokenInList, IEnumerable<SyntaxToken> tokensToInsert, bool insertBefore)
+    {
+        return SyntaxReplacer.InsertTokenInList(this, tokenInList, tokensToInsert, insertBefore);
+    }
+
     public RazorDiagnostic[] GetDiagnostics()
     {
         return Green.GetDiagnostics();
@@ -337,6 +397,35 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     public SyntaxAnnotation[] GetAnnotations()
     {
         return Green.GetAnnotations();
+    }
+
+    /// <summary>
+    /// Copies all SyntaxAnnotations, if any, from this SyntaxNode instance and attaches them to a new instance based on <paramref name="node" />.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If no annotations are copied, just returns <paramref name="node" />.
+    /// </para>
+    /// <para>
+    /// It can also be used manually to preserve annotations in a more complex tree
+    /// modification, even if the type of a node changes.
+    /// </para>
+    /// </remarks>
+    [return: NotNullIfNotNull(nameof(node))]
+    public T? CopyAnnotationsTo<T>(T? node)
+        where T : SyntaxNode
+    {
+        if (node == null)
+        {
+            return null;
+        }
+
+        var annotations = Green.GetAnnotations();
+        if (annotations?.Length > 0)
+        {
+            return (T)node.Green.WithAdditionalAnnotationsGreen(annotations).CreateRed();
+        }
+        return node;
     }
 
     public bool IsEquivalentTo(SyntaxNode other)
@@ -376,7 +465,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Thrown when requested position is out of range of the root token requested. This includes the whitespace scanning: calling FindToken(0, false)
     /// on a whitespace token will throw.
     /// </exception>
-    public OldSyntaxToken FindToken(int position, bool includeWhitespace = false)
+    public SyntaxToken FindToken(int position, bool includeWhitespace = false)
     {
         if (position == EndPosition && this is RazorDocumentSyntax document)
         {
@@ -388,16 +477,18 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
             throw new ArgumentOutOfRangeException(nameof(position));
         }
 
-        SyntaxNode curNode = this;
+        SyntaxNodeOrToken curNode = this;
 
         while (true)
         {
             Debug.Assert(curNode.Kind is < SyntaxKind.FirstAvailableTokenKind and >= 0);
             Debug.Assert(curNode.Span.Contains(position));
 
-            if (!curNode.IsToken)
+            var node = curNode.AsNode();
+
+            if (node != null)
             {
-                curNode = ChildSyntaxList.ChildThatContainsPosition(curNode, position, out _);
+                curNode = node.ChildThatContainsPosition(position);
             }
             else
             {
@@ -412,7 +503,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 //
                 //  Walk backwards until we find a non-whitespace token. If we find something that isn't a newline, that is the node requested.
                 //  If we find a newline, we need to walk forwards until we find the first non-whitespace or newline token. That is the node requested.
-                var foundToken = (OldSyntaxToken)curNode;
+                var foundToken = curNode.AsToken();
                 if (includeWhitespace || foundToken.Kind is not (SyntaxKind.Whitespace or SyntaxKind.NewLine))
                 {
                     return foundToken;
@@ -431,13 +522,13 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 return walkForward(originalFoundToken);
             }
 
-            bool tryWalkBackwards(OldSyntaxToken originalFoundToken, [NotNullWhen(true)] out OldSyntaxToken? foundToken)
+            bool tryWalkBackwards(SyntaxToken originalFoundToken, out SyntaxToken foundToken)
             {
                 foundToken = originalFoundToken;
                 do
                 {
-                    foundToken = foundToken.GetPreviousOldToken(includeZeroWidth: true);
-                    if (foundToken is null or { Kind: SyntaxKind.NewLine })
+                    foundToken = foundToken.GetPreviousToken(includeZeroWidth: true);
+                    if (foundToken.Kind is SyntaxKind.None or SyntaxKind.NewLine)
                     {
                         return false;
                     }
@@ -453,14 +544,14 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
                 return true;
             }
 
-            OldSyntaxToken walkForward(OldSyntaxToken originalFoundToken)
+            SyntaxToken walkForward(SyntaxToken originalFoundToken)
             {
                 var currentToken = originalFoundToken;
                 do
                 {
-                    currentToken = currentToken.GetNextOldToken(includeZeroWidth: true);
+                    currentToken = currentToken.GetNextToken(includeZeroWidth: true);
 
-                    if (currentToken is null || currentToken.Span.End > this.Span.End)
+                    if (currentToken.Kind == SyntaxKind.None || currentToken.Span.End > this.Span.End)
                     {
                         // Walked all the way forward to the end of the root that was requested and did not find any non-whitespace tokens. The user requested
                         // something out of range.

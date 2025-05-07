@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
@@ -14,7 +15,8 @@ internal static class SyntaxUtilities
         SyntaxNode? parent = null;
         var position = 0;
         var seenFirstLiteral = false;
-        var builder = InternalSyntax.SyntaxListBuilder.Create();
+
+        using var builder = new PooledArrayBuilder<SyntaxToken>();
 
         foreach (var syntax in literalSyntaxes)
         {
@@ -32,12 +34,12 @@ internal static class SyntaxUtilities
 
             foreach (var token in syntax.LiteralTokens)
             {
-                builder.Add(token.Green);
+                builder.Add(token);
             }
         }
 
         var mergedLiteralSyntax = InternalSyntax.SyntaxFactory.MarkupTextLiteral(
-            builder.ToList<InternalSyntax.SyntaxToken>(), chunkGenerator: null);
+            builder.ToList().Node.ToGreenList<InternalSyntax.SyntaxToken>(), chunkGenerator: null);
 
         return (MarkupTextLiteralSyntax)mergedLiteralSyntax.CreateRed(parent, position);
     }
@@ -45,16 +47,18 @@ internal static class SyntaxUtilities
     internal static SyntaxNode GetStartTagLegacyChildren(
         SyntaxNode @this,
         SyntaxList<RazorSyntaxNode> attributes,
-        OldSyntaxToken openAngle,
-        OldSyntaxToken bang,
-        OldSyntaxToken name,
-        OldSyntaxToken forwardSlash,
-        OldSyntaxToken closeAngle)
+        SyntaxToken openAngle,
+        SyntaxToken bang,
+        SyntaxToken name,
+        SyntaxToken forwardSlash,
+        SyntaxToken closeAngle)
     {
         // This method returns the children of this start tag in legacy format.
         // This is needed to generate the same classified spans as the legacy syntax tree.
-        using var _1 = SyntaxListBuilderPool.GetPooledBuilder(out var builder);
-        using var _2 = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var tokens);
+        using var _ = SyntaxListBuilderPool.GetPooledBuilder(out var builder);
+        using var tokenBuilder = new PooledArrayBuilder<SyntaxToken>();
+
+        ref var tokens = ref tokenBuilder.AsRef();
 
         SpanEditHandler? acceptsAnyHandler = null;
         var containsAttributesContent = false;
@@ -80,7 +84,7 @@ internal static class SyntaxUtilities
             tokens.Add(openAngle);
         }
 
-        if (bang != null)
+        if (bang != default)
         {
             builder.Add(SyntaxFactory.MarkupTextLiteral(tokens.Consume(), chunkGenerator).WithEditHandler(acceptsAnyHandler));
 
@@ -98,7 +102,7 @@ internal static class SyntaxUtilities
 
         builder.AddRange(attributes);
 
-        if (forwardSlash != null)
+        if (forwardSlash != default)
         {
             tokens.Add(forwardSlash);
         }
@@ -118,17 +122,19 @@ internal static class SyntaxUtilities
 
     internal static SyntaxNode GetEndTagLegacyChildren(
         SyntaxNode @this,
-        OldSyntaxToken openAngle,
-        OldSyntaxToken forwardSlash,
-        OldSyntaxToken bang,
-        OldSyntaxToken name,
+        SyntaxToken openAngle,
+        SyntaxToken forwardSlash,
+        SyntaxToken bang,
+        SyntaxToken name,
         MarkupMiscAttributeContentSyntax miscAttributeContent,
-        OldSyntaxToken closeAngle)
+        SyntaxToken closeAngle)
     {
         // This method returns the children of this end tag in legacy format.
         // This is needed to generate the same classified spans as the legacy syntax tree.
         using var _1 = SyntaxListBuilderPool.GetPooledBuilder(out var builder);
-        using var _2 = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var tokens);
+        using var tokenBuilder = new PooledArrayBuilder<SyntaxToken>();
+
+        ref var tokens = ref tokenBuilder.AsRef();
 
         var editHandler = @this.GetEditHandler();
         var chunkGenerator = @this.GetChunkGenerator();
@@ -143,7 +149,7 @@ internal static class SyntaxUtilities
             tokens.Add(forwardSlash);
         }
 
-        if (bang != null)
+        if (bang != default)
         {
             SpanEditHandler? acceptsAnyHandler = null;
             SpanEditHandler? acceptsNoneHandler = null;
@@ -270,10 +276,9 @@ internal static class SyntaxUtilities
         ISpanChunkGenerator chunkGenerator,
         bool includeEditHandler = false)
     {
-        var tokens = node.DescendantNodes().OfType<OldSyntaxToken>().Where(t => !t.IsMissing).ToArray();
+        using var builder = new PooledArrayBuilder<SyntaxToken>();
 
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
-        builder.AddRange(tokens, 0, tokens.Length);
+        builder.AddRange(node.DescendantTokens().Where(static t => !t.IsMissing));
         var transitionTokens = builder.ToList();
 
         var markupTransition = SyntaxFactory

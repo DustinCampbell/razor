@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language.Test;
@@ -63,13 +64,13 @@ public class DirectiveTokenEditHandlerTest
 
     private static CSharpStatementLiteralSyntax GetSyntaxNode(DirectiveTokenEditHandler editHandler, string content)
     {
-        using var _ = SyntaxListBuilderPool.GetPooledBuilder<OldSyntaxToken>(out var builder);
+        using var builder = new PooledArrayBuilder<SyntaxToken>();
 
-        var tokens = NativeCSharpLanguageCharacteristics.Instance.TokenizeString(content).ToArray();
-        foreach (var token in tokens)
+        foreach (var token in NativeCSharpLanguageCharacteristics.Instance.TokenizeString(content))
         {
-            builder.Add((OldSyntaxToken)token.CreateRed());
+            builder.Add(new(parent: null, token, position: 0, index: 0));
         }
+
         var node = SyntaxFactory.CSharpStatementLiteral(builder.ToList(), SpanChunkGenerator.Null);
 
         return node.WithEditHandler(editHandler);

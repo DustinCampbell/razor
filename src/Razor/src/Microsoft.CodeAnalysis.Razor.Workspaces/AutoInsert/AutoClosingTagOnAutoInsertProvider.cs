@@ -94,7 +94,7 @@ internal class AutoClosingTagOnAutoInsertProvider : IOnAutoInsertProvider
 
         if (closeAngle.Parent is MarkupStartTagSyntax
             {
-                ForwardSlash: null,
+                ForwardSlash.IsMissing: true,
                 Parent: MarkupElementSyntax htmlElement
             } startTag)
         {
@@ -114,7 +114,7 @@ internal class AutoClosingTagOnAutoInsertProvider : IOnAutoInsertProvider
 
         if (closeAngle.Parent is MarkupTagHelperStartTagSyntax
             {
-                ForwardSlash: null,
+                ForwardSlash.IsMissing: true,
                 Parent: MarkupTagHelperElementSyntax { TagHelperInfo.BindingResult: var binding } tagHelperElement
             } startTagHelper)
         {

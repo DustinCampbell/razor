@@ -329,7 +329,7 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
         // @attribute [Obsolete("old")]
         //
         // The CSharpCodeBlockSyntax covers everything from the end of "attribute" to the end of the line
-        if (IsSingleLineDirective(node, out var children) || node.IsUsingDirective(out children))
+        if (IsSingleLineDirective(node, out var children))
         {
             // Shrink any block of C# that only has whitespace down to a single space.
             // In the @attribute case above this would only be the whitespace between the directive and code
@@ -338,7 +338,20 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
             {
                 if (child.ContainsOnlyWhitespace(includingNewLines: false))
                 {
-                    ShrinkToSingleSpace(child, ref changes);
+                    ShrinkToSingleSpace(child.Span, ref changes);
+                }
+            }
+        }
+        else if (node.IsUsingDirective(out var childTokens))
+        {
+            // Shrink any block of C# that only has whitespace down to a single space.
+            // In the @attribute case above this would only be the whitespace between the directive and code
+            // but for @inject its also between the type and the field name.
+            foreach (var token in childTokens)
+            {
+                if (token.Kind == SyntaxKind.Whitespace)
+                {
+                    ShrinkToSingleSpace(token.Span, ref changes);
                 }
             }
         }
@@ -362,7 +375,7 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
     {
         if (node.ContainsOnlyWhitespace(includingNewLines: false) && !forceNewLine)
         {
-            ShrinkToSingleSpace(node, ref changes);
+            ShrinkToSingleSpace(node.Span, ref changes);
         }
         else
         {
@@ -375,12 +388,12 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
         }
     }
 
-    private static void ShrinkToSingleSpace(RazorSyntaxNode node, ref PooledArrayBuilder<TextChange> changes)
+    private static void ShrinkToSingleSpace(TextSpan span, ref PooledArrayBuilder<TextChange> changes)
     {
         // If there is anything other than one single space then we replace with one space between directive and brace.
         //
         // ie, "@code     {" will become "@code {"
-        changes.Add(new TextChange(node.Span, " "));
+        changes.Add(new TextChange(span, " "));
     }
 
     private bool FormatBlock(FormattingContext context, RazorSourceDocument source, RazorSyntaxNode? directiveNode, RazorSyntaxNode openBraceNode, RazorSyntaxNode codeNode, RazorSyntaxNode closeBraceNode, ref PooledArrayBuilder<TextChange> changes)
@@ -499,10 +512,9 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
 
             static int GetLeadingWhitespaceLength(RazorSyntaxNode node, FormattingContext context)
             {
-                var tokens = node.GetTokens();
                 var whitespaceLength = 0;
 
-                foreach (var token in tokens)
+                foreach (var token in node.DescendantTokens())
                 {
                     if (token.IsWhitespace())
                     {
@@ -531,12 +543,10 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
 
             static int GetTrailingWhitespaceLength(RazorSyntaxNode node, FormattingContext context)
             {
-                var tokens = node.GetTokens();
                 var whitespaceLength = 0;
 
-                for (var i = tokens.Count - 1; i >= 0; i--)
+                foreach (var token in node.DescendantTokens().Reverse())
                 {
-                    var token = tokens[i];
                     if (token.IsWhitespace())
                     {
                         if (token.Kind == SyntaxKind.NewLine)
@@ -549,7 +559,7 @@ internal sealed class RazorFormattingPass(LanguageServerFeatureOptions languageS
                         }
                         else if (token.IsTab())
                         {
-                            whitespaceLength += (int)context.Options.TabSize;
+                            whitespaceLength += context.Options.TabSize;
                         }
                     }
                     else

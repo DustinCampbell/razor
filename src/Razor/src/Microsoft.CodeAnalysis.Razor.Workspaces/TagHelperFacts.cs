@@ -224,13 +224,13 @@ internal static class TagHelperFacts
             if (ancestor is MarkupElementSyntax element)
             {
                 // It's possible for start tag to be null in malformed cases.
-                var name = element.StartTag?.Name?.Content ?? string.Empty;
+                var name = element.StartTag?.Name.Content ?? string.Empty;
                 return (name, ancestorIsTagHelper: false);
             }
             else if (ancestor is MarkupTagHelperElementSyntax tagHelperElement)
             {
                 // It's possible for start tag to be null in malformed cases.
-                var name = tagHelperElement.StartTag?.Name?.Content ?? string.Empty;
+                var name = tagHelperElement.StartTag?.Name.Content ?? string.Empty;
                 return (name, ancestorIsTagHelper: true);
             }
         }

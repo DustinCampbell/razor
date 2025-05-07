@@ -471,6 +471,20 @@ internal abstract class AbstractFileWriter
                 return false;
         }
     }
+    protected List<Kind> GetKindsOfFieldOrNearestParent(TreeType treeType, Field field)
+    {
+        while ((field.Kinds is null || field.Kinds.Count == 0) && IsOverride(field))
+        {
+            treeType = GetTreeType(treeType.Base);
+            field = (treeType switch
+            {
+                Node node => node.Fields,
+                AbstractNode abstractNode => abstractNode.Fields,
+                _ => throw new InvalidOperationException("Unexpected node type.")
+            }).Single(f => f.Name == field.Name);
+        }
 
+        return field.Kinds.Distinct().ToList();
+    }
     #endregion Node helpers
 }

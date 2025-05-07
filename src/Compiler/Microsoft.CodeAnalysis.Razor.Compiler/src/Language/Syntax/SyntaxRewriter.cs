@@ -1,25 +1,27 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
-internal abstract partial class SyntaxRewriter : SyntaxVisitor<SyntaxNode>
+internal abstract partial class SyntaxRewriter : SyntaxVisitor<SyntaxNode?>
 {
     private int _recursionDepth;
 
-    public override SyntaxNode Visit(SyntaxNode node)
+    [return: NotNullIfNotNull(nameof(node))]
+    public override SyntaxNode? Visit(SyntaxNode? node)
     {
         if (node != null)
         {
             _recursionDepth++;
             StackGuard.EnsureSufficientExecutionStack(_recursionDepth);
 
-            var result = node.Accept(this);
+            var result = ((RazorSyntaxNode)node).Accept(this);
 
             _recursionDepth--;
-            return result;
+            return result.AssumeNotNull();
         }
         else
         {
@@ -27,40 +29,101 @@ internal abstract partial class SyntaxRewriter : SyntaxVisitor<SyntaxNode>
         }
     }
 
-    public virtual SyntaxList<TNode> VisitList<TNode>(SyntaxList<TNode> list) where TNode : SyntaxNode
+    public virtual SyntaxToken VisitToken(SyntaxToken token)
     {
-        SyntaxListBuilder alternate = null;
-        for (int i = 0, n = list.Count; i < n; i++)
+        return token;
+    }
+
+    public virtual SyntaxTokenList VisitList(SyntaxTokenList list)
+    {
+        var builder = PooledArrayBuilder<SyntaxToken>.Empty;
+        var updating = false;
+
+        var count = list.Count;
+        var index = -1;
+
+        foreach (var item in list)
         {
-            var item = list[i];
-            var visited = VisitListElement(item);
-            if (item != visited && alternate == null)
+            index++;
+
+            var visited = VisitToken(item);
+
+            if (item != visited && !updating)
             {
-                alternate = new SyntaxListBuilder(n);
-                alternate.AddRange(list, 0, i);
+                builder = new PooledArrayBuilder<SyntaxToken>(count);
+
+                for (var i = 0; i < index; i++)
+                {
+                    builder.Add(list[i]);
+                }
+
+                updating = true;
             }
 
-            if (alternate != null && visited != null)
+            if (updating && visited.Kind != SyntaxKind.None)
             {
-                alternate.Add(visited);
+                builder.Add(visited);
             }
         }
 
-        if (alternate != null)
+        if (updating)
         {
-            return alternate.ToList();
+            var result = builder.ToList();
+            builder.Dispose();
+
+            return result;
         }
 
         return list;
     }
 
-    public override SyntaxNode VisitOldToken(OldSyntaxToken token)
+    public virtual SyntaxList<TNode> VisitList<TNode>(SyntaxList<TNode> list)
+        where TNode : SyntaxNode
     {
-        return token;
+        var builder = PooledArrayBuilder<TNode>.Empty;
+        var updating = false;
+
+        var count = list.Count;
+        var index = -1;
+
+        foreach (var item in list)
+        {
+            index++;
+
+            var visited = VisitListElement(item);
+
+            if (item != visited && !updating)
+            {
+                builder = new PooledArrayBuilder<TNode>(count);
+
+                for (var i = 0; i < index; i++)
+                {
+                    builder.Add(list[i]);
+                }
+
+                updating = true;
+            }
+
+            if (updating && visited != null && visited.Kind != SyntaxKind.None)
+            {
+                builder.Add(visited);
+            }
+        }
+
+        if (updating)
+        {
+            var result = builder.ToList();
+            builder.Dispose();
+
+            return result;
+        }
+
+        return list;
     }
 
-    public virtual TNode VisitListElement<TNode>(TNode node) where TNode : SyntaxNode
+    public virtual TNode? VisitListElement<TNode>(TNode? node)
+        where TNode : SyntaxNode
     {
-        return (TNode)(SyntaxNode)Visit(node);
+        return (TNode?)Visit(node);
     }
 }

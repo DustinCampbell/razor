@@ -25,6 +25,17 @@ internal class SyntaxSerializer
         }
     }
 
+    internal static string Serialize(SyntaxToken token)
+    {
+        using (var writer = new StringWriter())
+        {
+            var walker = new Walker(writer);
+            walker.VisitToken(token);
+
+            return writer.ToString();
+        }
+    }
+
     private class Walker : SyntaxWalker
     {
         private readonly SyntaxWriter _visitor;
@@ -38,58 +49,31 @@ internal class SyntaxSerializer
 
         public TextWriter Writer { get; }
 
-        public override SyntaxNode Visit(SyntaxNode node)
+        public override void Visit(SyntaxNode node)
         {
             if (node == null)
             {
-                return node;
+                return;
             }
 
             if (node.IsList)
             {
-                return base.DefaultVisit(node);
+                base.DefaultVisit(node);
+                return;
             }
 
             _visitor.Visit(node);
             _writer.WriteLine();
 
-            if (!node.IsToken)
-            {
-                _visitor.Depth++;
-                node = base.DefaultVisit(node);
-                _visitor.Depth--;
-            }
-
-            return node;
+            _visitor.Depth++;
+            base.DefaultVisit(node);
+            _visitor.Depth--;
         }
-    }
 
-    private class SyntaxWalker : SyntaxRewriter
-    {
-        private readonly List<SyntaxNode> _ancestors = new List<SyntaxNode>();
-
-        protected IReadOnlyList<SyntaxNode> Ancestors => _ancestors;
-
-        protected SyntaxNode Parent => _ancestors.Count > 0 ? _ancestors[0] : null;
-
-        protected override SyntaxNode DefaultVisit(SyntaxNode node)
+        public override void VisitToken(SyntaxToken token)
         {
-            _ancestors.Insert(0, node);
-
-            try
-            {
-                for (var i = 0; i < node.SlotCount; i++)
-                {
-                    var child = node.GetNodeSlot(i);
-                    Visit(child);
-                }
-            }
-            finally
-            {
-                _ancestors.RemoveAt(0);
-            }
-
-            return node;
+            _visitor.VisitToken(token);
+            _writer.WriteLine();
         }
     }
 
@@ -107,19 +91,14 @@ internal class SyntaxSerializer
 
         public override SyntaxNode Visit(SyntaxNode node)
         {
-            if (node is OldSyntaxToken token)
-            {
-                return VisitOldToken(token);
-            }
-
             WriteNode(node);
             return node;
         }
 
-        public override SyntaxNode VisitOldToken(OldSyntaxToken token)
+        public override SyntaxToken VisitToken(SyntaxToken token)
         {
-            WriteOldToken(token);
-            return base.VisitOldToken(token);
+            WriteToken(token);
+            return base.VisitToken(token);
         }
 
         private void WriteNode(SyntaxNode node)
@@ -242,7 +221,7 @@ internal class SyntaxSerializer
             Write(info.Bound ? "Bound" : "Unbound");
         }
 
-        private void WriteOldToken(OldSyntaxToken token)
+        private void WriteToken(SyntaxToken token)
         {
             WriteIndent();
             var content = token.IsMissing ? "<Missing>" : token.Content;

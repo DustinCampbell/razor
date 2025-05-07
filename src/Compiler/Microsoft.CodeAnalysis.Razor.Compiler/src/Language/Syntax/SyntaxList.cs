@@ -10,17 +10,7 @@ internal abstract class SyntaxList : SyntaxNode
     {
     }
 
-    public override TResult Accept<TResult>(SyntaxVisitor<TResult> visitor)
-    {
-        return visitor.Visit(this);
-    }
-
-    public override void Accept(SyntaxVisitor visitor)
-    {
-        visitor.Visit(this);
-    }
-
-    internal class WithTwoChildren : SyntaxList
+    internal sealed class WithTwoChildren : SyntaxList
     {
         private SyntaxNode? _child0;
         private SyntaxNode? _child1;
@@ -47,7 +37,7 @@ internal abstract class SyntaxList : SyntaxNode
             };
     }
 
-    internal class WithThreeChildren : SyntaxList
+    internal sealed class WithThreeChildren : SyntaxList
     {
         private SyntaxNode? _child0;
         private SyntaxNode? _child1;
@@ -77,7 +67,7 @@ internal abstract class SyntaxList : SyntaxNode
             };
     }
 
-    internal class WithManyChildren : SyntaxList
+    internal sealed class WithManyChildren : SyntaxList
     {
         private readonly ArrayElement<SyntaxNode?>[] _children;
 

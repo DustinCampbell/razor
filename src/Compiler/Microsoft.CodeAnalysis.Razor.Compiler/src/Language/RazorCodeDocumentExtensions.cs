@@ -473,13 +473,14 @@ public static class RazorCodeDocumentExtensions
 
         public override void VisitRazorDirective(RazorDirectiveSyntax node)
         {
-            if (node != null && node.DirectiveDescriptor == NamespaceDirective.Directive)
+            if (node != null && node.DirectiveDescriptor == NamespaceDirective.Directive &&
+                node.Body?.ChildNodesAndTokens() is { Count: >= 2 } children &&
+                children[1].AsNode() is CSharpCodeBlockSyntax csharpCodeBlock &&
+                csharpCodeBlock.ChildNodesAndTokens() is { Count: >= 2 } innerChildren &&
+                innerChildren[1].AsNode() is CSharpSyntaxNode @namespace)
             {
-                if (node.Body?.ChildNodesAndOldTokens() is [_, CSharpCodeBlockSyntax { Children: [_, CSharpSyntaxNode @namespace, ..] }])
-                {
-                    LastNamespaceContent = @namespace.GetContent();
-                    LastNamespaceLocation = @namespace.GetSourceSpan(_source);
-                }
+                LastNamespaceContent = @namespace.GetContent();
+                LastNamespaceLocation = @namespace.GetSourceSpan(_source);
             }
 
             base.VisitRazorDirective(node);

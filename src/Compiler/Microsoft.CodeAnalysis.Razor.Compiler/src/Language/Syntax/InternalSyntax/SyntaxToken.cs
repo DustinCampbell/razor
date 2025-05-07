@@ -3,7 +3,6 @@
 
 #nullable disable
 
-using System;
 using System.IO;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax.InternalSyntax;
@@ -26,7 +25,7 @@ internal class SyntaxToken : RazorSyntaxNode
 
     internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
     {
-        return new Syntax.OldSyntaxToken(this, parent, position);
+        return Assumed.Unreachable<SyntaxNode>();
     }
 
     protected override void WriteTokenTo(TextWriter writer)
@@ -51,7 +50,7 @@ internal class SyntaxToken : RazorSyntaxNode
 
     internal sealed override GreenNode GetSlot(int index)
     {
-        throw new InvalidOperationException("Tokens don't have slots.");
+        return Assumed.Unreachable<GreenNode>();
     }
 
     public override TResult Accept<TResult>(SyntaxVisitor<TResult> visitor)
@@ -91,7 +90,7 @@ internal class SyntaxToken : RazorSyntaxNode
         return new MissingToken(kind, diagnostics);
     }
 
-    private class MissingToken : SyntaxToken
+    private sealed class MissingToken : SyntaxToken
     {
         internal MissingToken(SyntaxKind kind, RazorDiagnostic[] diagnostics)
             : base(kind, string.Empty, diagnostics)

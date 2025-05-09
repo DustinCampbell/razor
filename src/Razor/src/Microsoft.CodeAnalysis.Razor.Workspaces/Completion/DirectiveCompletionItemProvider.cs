@@ -88,7 +88,7 @@ internal class DirectiveCompletionItemProvider : IRazorCompletionItemProvider
             return false;
         }
 
-        if (owner.ChildNodes().Any(n => !n.IsToken || !IsDirectiveCompletableToken((AspNetCore.Razor.Language.Syntax.SyntaxToken)n)))
+        if (owner.ChildNodes().Any(n => !n.IsToken || !IsDirectiveCompletableToken((AspNetCore.Razor.Language.Syntax.OldSyntaxToken)n)))
         {
             // Implicit expression contains invalid directive tokens
             return false;
@@ -180,7 +180,7 @@ internal class DirectiveCompletionItemProvider : IRazorCompletionItemProvider
     }
 
     // Internal for testing
-    internal static bool IsDirectiveCompletableToken(AspNetCore.Razor.Language.Syntax.SyntaxToken token)
+    internal static bool IsDirectiveCompletableToken(AspNetCore.Razor.Language.Syntax.OldSyntaxToken token)
     {
         return token is { Kind: SyntaxKind.Identifier or SyntaxKind.Marker or SyntaxKind.Keyword }
                      or { Kind: SyntaxKind.Transition, Parent.Kind: SyntaxKind.CSharpTransition };

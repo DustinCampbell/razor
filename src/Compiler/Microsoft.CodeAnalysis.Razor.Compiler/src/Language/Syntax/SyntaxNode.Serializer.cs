@@ -24,7 +24,7 @@ internal abstract partial class SyntaxNode
             return builder.ToString();
         }
 
-        internal static string Serialize(SyntaxToken token)
+        internal static string Serialize(OldSyntaxToken token)
         {
             using var _ = StringBuilderPool.GetPooledObject(out var builder);
             var serializer = new Serializer(builder);

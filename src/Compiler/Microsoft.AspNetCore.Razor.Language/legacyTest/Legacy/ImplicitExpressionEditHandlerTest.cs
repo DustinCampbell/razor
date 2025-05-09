@@ -456,7 +456,7 @@ public class ImplicitExpressionEditHandlerTest
         return (Syntax.MarkupTextLiteralSyntax)node;
     }
 
-    private static IReadOnlyList<Syntax.SyntaxToken> GetTokens(SourceLocation start, string content)
+    private static IReadOnlyList<Syntax.OldSyntaxToken> GetTokens(SourceLocation start, string content)
     {
         var parent = GetSyntaxNode(start, content);
         return parent.LiteralTokens;

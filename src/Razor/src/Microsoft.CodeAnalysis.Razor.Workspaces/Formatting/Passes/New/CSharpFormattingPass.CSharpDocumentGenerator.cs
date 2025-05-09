@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.Razor.Workspaces;
 using Microsoft.CodeAnalysis.Text;
 using RazorSyntaxNode = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxNode;
-using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxToken;
+using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.OldSyntaxToken;
 
 namespace Microsoft.CodeAnalysis.Razor.Formatting.New;
 

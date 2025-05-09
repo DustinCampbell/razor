@@ -64,12 +64,12 @@ public class DirectiveTokenEditHandlerTest
 
     private static CSharpStatementLiteralSyntax GetSyntaxNode(DirectiveTokenEditHandler editHandler, string content)
     {
-        using PooledArrayBuilder<SyntaxToken> builder = [];
+        using PooledArrayBuilder<OldSyntaxToken> builder = [];
 
         var tokens = NativeCSharpLanguageCharacteristics.Instance.TokenizeString(content).ToArray();
         foreach (var token in tokens)
         {
-            builder.Add((SyntaxToken)token.CreateRed());
+            builder.Add((OldSyntaxToken)token.CreateRed());
         }
 
         var node = SyntaxFactory.CSharpStatementLiteral(builder.ToList(), SpanChunkGenerator.Null);

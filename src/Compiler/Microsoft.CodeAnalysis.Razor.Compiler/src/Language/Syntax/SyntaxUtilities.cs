@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -15,7 +15,7 @@ internal static class SyntaxUtilities
         var position = 0;
         var seenFirstLiteral = false;
 
-        using PooledArrayBuilder<SyntaxToken> builder = [];
+        using PooledArrayBuilder<OldSyntaxToken> builder = [];
 
         foreach (var literal in literals)
         {
@@ -132,11 +132,11 @@ internal static class SyntaxUtilities
     internal static SyntaxList<RazorSyntaxNode> GetRewrittenMarkupNodeChildren(
         MarkupSyntaxNode node, ISpanChunkGenerator chunkGenerator, bool includeEditHandler = false)
     {
-        using PooledArrayBuilder<SyntaxToken> builder = [];
+        using PooledArrayBuilder<OldSyntaxToken> builder = [];
 
         foreach (var descendantNode in node.DescendantNodes())
         {
-            if (descendantNode is SyntaxToken { IsMissing: false } token)
+            if (descendantNode is OldSyntaxToken { IsMissing: false } token)
             {
                 builder.Add(token);
             }

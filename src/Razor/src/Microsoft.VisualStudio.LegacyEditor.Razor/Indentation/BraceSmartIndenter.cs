@@ -270,7 +270,7 @@ internal class BraceSmartIndenter : IDisposable
         var children = owner.ChildNodes();
         for (var i = 0; i < children.Count; i++)
         {
-            if (children[i] is not SyntaxToken token ||
+            if (children[i] is not OldSyntaxToken token ||
                 !string.IsNullOrWhiteSpace(token.Content))
             {
                 return true;

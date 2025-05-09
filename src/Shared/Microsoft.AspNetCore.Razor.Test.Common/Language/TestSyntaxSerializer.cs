@@ -25,7 +25,7 @@ internal sealed class TestSyntaxSerializer : SyntaxSerializer
         return node switch
         {
             RazorSyntaxNode syntaxNode => Serialize(syntaxNode, allowSpanEditHandlers),
-            SyntaxToken token => Serialize(token, allowSpanEditHandlers),
+            OldSyntaxToken token => Serialize(token, allowSpanEditHandlers),
             _ => Assumed.Unreachable<string>()
         };
     }
@@ -39,7 +39,7 @@ internal sealed class TestSyntaxSerializer : SyntaxSerializer
         return builder.ToString();
     }
 
-    public static string Serialize(SyntaxToken token, bool allowSpanEditHandlers = false)
+    public static string Serialize(OldSyntaxToken token, bool allowSpanEditHandlers = false)
     {
         using var _ = StringBuilderPool.GetPooledObject(out var builder);
         var serializer = new TestSyntaxSerializer(builder, allowSpanEditHandlers);

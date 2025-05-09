@@ -27,7 +27,7 @@ internal abstract partial class BaseMarkupEndTagSyntax
         // This is needed to generate the same classified spans as the legacy syntax tree.
 
         using PooledArrayBuilder<SyntaxNode> builder = [];
-        using PooledArrayBuilder<SyntaxToken> tokensBuilder = [];
+        using PooledArrayBuilder<OldSyntaxToken> tokensBuilder = [];
 
         // Take a ref to tokensBuilder here to avoid calling AsRef() multiple times below
         // for each call to ToListAndClear().
@@ -90,7 +90,7 @@ internal abstract partial class BaseMarkupEndTagSyntax
 
 
         static MarkupTextLiteralSyntax MarkupTextLiteral(
-            SyntaxList<SyntaxToken> tokens, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
+            SyntaxList<OldSyntaxToken> tokens, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
         {
             var node = SyntaxFactory.MarkupTextLiteral(tokens, chunkGenerator);
 
@@ -103,7 +103,7 @@ internal abstract partial class BaseMarkupEndTagSyntax
         }
 
         static RazorMetaCodeSyntax RazorMetaCode(
-            SyntaxToken token, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
+            OldSyntaxToken token, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
         {
             var node = SyntaxFactory.RazorMetaCode(token, chunkGenerator);
 

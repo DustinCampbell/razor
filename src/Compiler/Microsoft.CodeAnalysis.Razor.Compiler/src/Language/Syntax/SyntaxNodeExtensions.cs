@@ -121,8 +121,8 @@ internal static class SyntaxNodeExtensions
         this TRoot root,
         IEnumerable<SyntaxNode> nodes,
         Func<SyntaxNode, SyntaxNode, SyntaxNode> computeReplacementNode,
-        IEnumerable<SyntaxToken> tokens,
-        Func<SyntaxToken, SyntaxToken, SyntaxToken> computeReplacementToken)
+        IEnumerable<OldSyntaxToken> tokens,
+        Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken> computeReplacementToken)
         where TRoot : SyntaxNode
     {
         return (TRoot)root.ReplaceCore(
@@ -187,7 +187,7 @@ internal static class SyntaxNodeExtensions
     /// <param name="computeReplacementToken">A function that computes a replacement token for
     /// the argument tokens. The first argument is the original token. The second argument is
     /// the same token potentially rewritten with replaced trivia.</param>
-    public static TRoot ReplaceTokens<TRoot>(this TRoot root, IEnumerable<SyntaxToken> tokens, Func<SyntaxToken, SyntaxToken, SyntaxToken> computeReplacementToken)
+    public static TRoot ReplaceTokens<TRoot>(this TRoot root, IEnumerable<OldSyntaxToken> tokens, Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken> computeReplacementToken)
         where TRoot : SyntaxNode
     {
         return (TRoot)root.ReplaceCore<SyntaxNode>(tokens: tokens, computeReplacementToken: computeReplacementToken);
@@ -201,7 +201,7 @@ internal static class SyntaxNodeExtensions
     /// <param name="oldToken">The token to be replaced.</param>
     /// <param name="newToken">The new token to use in the new tree in place of the old
     /// token.</param>
-    public static TRoot ReplaceToken<TRoot>(this TRoot root, SyntaxToken oldToken, SyntaxToken newToken)
+    public static TRoot ReplaceToken<TRoot>(this TRoot root, OldSyntaxToken oldToken, OldSyntaxToken newToken)
         where TRoot : SyntaxNode
     {
         return (TRoot)root.ReplaceCore<SyntaxNode>(tokens: [oldToken], computeReplacementToken: (o, r) => newToken);
@@ -258,7 +258,7 @@ internal static class SyntaxNodeExtensions
             }
         }
 
-        public override void VisitToken(SyntaxToken token)
+        public override void VisitToken(OldSyntaxToken token)
         {
             if (token.ContainsDiagnostics == true)
             {

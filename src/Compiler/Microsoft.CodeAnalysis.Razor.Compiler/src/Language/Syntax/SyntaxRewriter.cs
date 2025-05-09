@@ -33,7 +33,7 @@ internal abstract partial class SyntaxRewriter : SyntaxVisitor<SyntaxNode>
         }
     }
 
-    public virtual SyntaxToken VisitToken(SyntaxToken token)
+    public virtual OldSyntaxToken VisitToken(OldSyntaxToken token)
     {
         return token;
     }
@@ -85,7 +85,7 @@ internal abstract partial class SyntaxRewriter : SyntaxVisitor<SyntaxNode>
         return (TNode?)Visit(node);
     }
 
-    public virtual SyntaxList<SyntaxToken> VisitList(SyntaxList<SyntaxToken> list)
+    public virtual SyntaxList<OldSyntaxToken> VisitList(SyntaxList<OldSyntaxToken> list)
     {
         var count = list.Count;
         if (count == 0)
@@ -93,7 +93,7 @@ internal abstract partial class SyntaxRewriter : SyntaxVisitor<SyntaxNode>
             return list;
         }
 
-        using PooledArrayBuilder<SyntaxToken> builder = [];
+        using PooledArrayBuilder<OldSyntaxToken> builder = [];
 
         var isUpdating = false;
 

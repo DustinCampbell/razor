@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
-internal class SyntaxToken : SyntaxNode
+internal class OldSyntaxToken : SyntaxNode
 {
-    internal static readonly Func<SyntaxToken, bool> NonZeroWidth = t => t.Width > 0;
-    internal static readonly Func<SyntaxToken, bool> Any = t => true;
+    internal static readonly Func<OldSyntaxToken, bool> NonZeroWidth = t => t.Width > 0;
+    internal static readonly Func<OldSyntaxToken, bool> Any = t => true;
 
-    internal SyntaxToken(GreenNode green, SyntaxNode parent, int position)
+    internal OldSyntaxToken(GreenNode green, SyntaxNode parent, int position)
         : base(green, parent, position)
     {
     }
@@ -35,8 +35,8 @@ internal class SyntaxToken : SyntaxNode
     protected internal override SyntaxNode ReplaceCore<TNode>(
         IEnumerable<TNode>? nodes = null,
         Func<TNode, TNode, SyntaxNode>? computeReplacementNode = null,
-        IEnumerable<SyntaxToken>? tokens = null,
-        Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
+        IEnumerable<OldSyntaxToken>? tokens = null,
+        Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken>? computeReplacementToken = null)
         => Assumed.Unreachable<SyntaxNode>();
 
     protected internal override SyntaxNode ReplaceNodeInListCore(SyntaxNode originalNode, IEnumerable<SyntaxNode> replacementNodes)
@@ -45,17 +45,17 @@ internal class SyntaxToken : SyntaxNode
     protected internal override SyntaxNode InsertNodesInListCore(SyntaxNode nodeInList, IEnumerable<SyntaxNode> nodesToInsert, bool insertBefore)
         => Assumed.Unreachable<SyntaxNode>();
 
-    protected internal override SyntaxNode ReplaceTokenInListCore(SyntaxToken originalToken, IEnumerable<SyntaxToken> newTokens)
+    protected internal override SyntaxNode ReplaceTokenInListCore(OldSyntaxToken originalToken, IEnumerable<OldSyntaxToken> newTokens)
         => Assumed.Unreachable<SyntaxNode>();
 
-    protected internal override SyntaxNode InsertTokensInListCore(SyntaxToken originalToken, IEnumerable<SyntaxToken> newTokens, bool insertBefore)
+    protected internal override SyntaxNode InsertTokensInListCore(OldSyntaxToken originalToken, IEnumerable<OldSyntaxToken> newTokens, bool insertBefore)
         => Assumed.Unreachable<SyntaxNode>();
 
     /// <summary>
     /// Gets the token that follows this token in the syntax tree.
     /// </summary>
     /// <returns>The token that follows this token in the syntax tree.</returns>
-    public SyntaxToken? GetNextToken(bool includeZeroWidth = false)
+    public OldSyntaxToken? GetNextToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetNextToken(this, includeZeroWidth);
     }
@@ -64,7 +64,7 @@ internal class SyntaxToken : SyntaxNode
     /// Gets the token that precedes this token in the syntax tree.
     /// </summary>
     /// <returns>The previous token that precedes this token in the syntax tree.</returns>
-    public SyntaxToken? GetPreviousToken(bool includeZeroWidth = false)
+    public OldSyntaxToken? GetPreviousToken(bool includeZeroWidth = false)
     {
         return SyntaxNavigator.GetPreviousToken(this, includeZeroWidth);
     }

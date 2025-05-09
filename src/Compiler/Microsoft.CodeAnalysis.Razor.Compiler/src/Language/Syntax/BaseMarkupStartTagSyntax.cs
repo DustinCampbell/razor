@@ -28,7 +28,7 @@ internal abstract partial class BaseMarkupStartTagSyntax
     private SyntaxNode ComputeStartTagLegacyChildren()
     {
         using PooledArrayBuilder<SyntaxNode> builder = [];
-        using PooledArrayBuilder<SyntaxToken> tokensBuilder = [];
+        using PooledArrayBuilder<OldSyntaxToken> tokensBuilder = [];
 
         // Take a ref to tokensBuilder here to avoid calling AsRef() multiple times below
         // for each call to ToListAndClear().
@@ -106,7 +106,7 @@ internal abstract partial class BaseMarkupStartTagSyntax
             .AssumeNotNull($"ToListNode should not return null since builder was not empty.");
 
         static MarkupTextLiteralSyntax MarkupTextLiteral(
-            SyntaxList<SyntaxToken> tokens, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
+            SyntaxList<OldSyntaxToken> tokens, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
         {
             var node = SyntaxFactory.MarkupTextLiteral(tokens, chunkGenerator);
 
@@ -119,7 +119,7 @@ internal abstract partial class BaseMarkupStartTagSyntax
         }
 
         static RazorMetaCodeSyntax RazorMetaCode(
-            SyntaxToken token, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
+            OldSyntaxToken token, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
         {
             var node = SyntaxFactory.RazorMetaCode(token, chunkGenerator);
 

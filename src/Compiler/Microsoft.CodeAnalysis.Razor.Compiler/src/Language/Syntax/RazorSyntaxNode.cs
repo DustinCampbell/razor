@@ -22,8 +22,8 @@ internal abstract partial class RazorSyntaxNode : SyntaxNode
     protected internal override SyntaxNode ReplaceCore<TNode>(
         IEnumerable<TNode>? nodes = null,
         Func<TNode, TNode, SyntaxNode>? computeReplacementNode = null,
-        IEnumerable<SyntaxToken>? tokens = null,
-        Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
+        IEnumerable<OldSyntaxToken>? tokens = null,
+        Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken>? computeReplacementToken = null)
         => SyntaxReplacer.Replace(this, nodes, computeReplacementNode, tokens, computeReplacementToken);
 
     protected internal override SyntaxNode ReplaceNodeInListCore(SyntaxNode originalNode, IEnumerable<SyntaxNode> replacementNodes)
@@ -32,9 +32,9 @@ internal abstract partial class RazorSyntaxNode : SyntaxNode
     protected internal override SyntaxNode InsertNodesInListCore(SyntaxNode nodeInList, IEnumerable<SyntaxNode> nodesToInsert, bool insertBefore)
         => SyntaxReplacer.InsertNodeInList(this, nodeInList, nodesToInsert, insertBefore);
 
-    protected internal override SyntaxNode ReplaceTokenInListCore(SyntaxToken originalToken, IEnumerable<SyntaxToken> newTokens)
+    protected internal override SyntaxNode ReplaceTokenInListCore(OldSyntaxToken originalToken, IEnumerable<OldSyntaxToken> newTokens)
         => SyntaxReplacer.ReplaceTokenInList(this, originalToken, newTokens);
 
-    protected internal override SyntaxNode InsertTokensInListCore(SyntaxToken originalToken, IEnumerable<SyntaxToken> newTokens, bool insertBefore)
+    protected internal override SyntaxNode InsertTokensInListCore(OldSyntaxToken originalToken, IEnumerable<OldSyntaxToken> newTokens, bool insertBefore)
         => SyntaxReplacer.InsertTokenInList(this, originalToken, newTokens, insertBefore);
 }

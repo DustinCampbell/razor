@@ -15,8 +15,8 @@ internal static class SyntaxReplacer
         SyntaxNode root,
         IEnumerable<TNode>? nodes = null,
         Func<TNode, TNode, SyntaxNode>? computeReplacementNode = null,
-        IEnumerable<SyntaxToken>? tokens = null,
-        Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
+        IEnumerable<OldSyntaxToken>? tokens = null,
+        Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken>? computeReplacementToken = null)
         where TNode : SyntaxNode
     {
         var replacer = new Replacer<TNode>(nodes, computeReplacementNode, tokens, computeReplacementToken);
@@ -31,12 +31,12 @@ internal static class SyntaxReplacer
         }
     }
 
-    internal static SyntaxToken Replace(
-        SyntaxToken root,
+    internal static OldSyntaxToken Replace(
+        OldSyntaxToken root,
         IEnumerable<SyntaxNode>? nodes = null,
         Func<SyntaxNode, SyntaxNode, SyntaxNode>? computeReplacementNode = null,
-        IEnumerable<SyntaxToken>? tokens = null,
-        Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
+        IEnumerable<OldSyntaxToken>? tokens = null,
+        Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken>? computeReplacementToken = null)
     {
         var replacer = new Replacer<SyntaxNode>(nodes, computeReplacementNode, tokens, computeReplacementToken);
 
@@ -53,13 +53,13 @@ internal static class SyntaxReplacer
     private sealed class Replacer<TNode> : SyntaxRewriter where TNode : SyntaxNode
     {
         private static readonly HashSet<SyntaxNode> s_noNodes = [];
-        private static readonly HashSet<SyntaxToken> s_noTokens = [];
+        private static readonly HashSet<OldSyntaxToken> s_noTokens = [];
 
         private readonly Func<TNode, TNode, SyntaxNode>? _computeReplacementNode;
-        private readonly Func<SyntaxToken, SyntaxToken, SyntaxToken>? _computeReplacementToken;
+        private readonly Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken>? _computeReplacementToken;
 
         private readonly HashSet<SyntaxNode> _nodeSet;
-        private readonly HashSet<SyntaxToken> _tokenSet;
+        private readonly HashSet<OldSyntaxToken> _tokenSet;
         private readonly HashSet<TextSpan> _spanSet;
 
         private TextSpan _totalSpan;
@@ -67,8 +67,8 @@ internal static class SyntaxReplacer
         public Replacer(
             IEnumerable<TNode>? nodes = null,
             Func<TNode, TNode, SyntaxNode>? computeReplacementNode = null,
-            IEnumerable<SyntaxToken>? tokens = null,
-            Func<SyntaxToken, SyntaxToken, SyntaxToken>? computeReplacementToken = null)
+            IEnumerable<OldSyntaxToken>? tokens = null,
+            Func<OldSyntaxToken, OldSyntaxToken, OldSyntaxToken>? computeReplacementToken = null)
         {
             _computeReplacementNode = computeReplacementNode;
             _computeReplacementToken = computeReplacementToken;
@@ -173,7 +173,7 @@ internal static class SyntaxReplacer
             return rewritten;
         }
 
-        public override SyntaxToken VisitToken(SyntaxToken token)
+        public override OldSyntaxToken VisitToken(OldSyntaxToken token)
         {
             var rewritten = token;
             var isReplacedToken = _tokenSet.Remove(token);
@@ -207,12 +207,12 @@ internal static class SyntaxReplacer
         return new NodeListEditor(nodeInList, nodesToInsert, insertBefore ? ListEditKind.InsertBefore : ListEditKind.InsertAfter).Visit(root);
     }
 
-    public static SyntaxNode ReplaceTokenInList(SyntaxNode root, SyntaxToken tokenInList, IEnumerable<SyntaxToken> newTokens)
+    public static SyntaxNode ReplaceTokenInList(SyntaxNode root, OldSyntaxToken tokenInList, IEnumerable<OldSyntaxToken> newTokens)
     {
         return new TokenListEditor(tokenInList, newTokens, ListEditKind.Replace).Visit(root);
     }
 
-    public static SyntaxNode InsertTokenInList(SyntaxNode root, SyntaxToken tokenInList, IEnumerable<SyntaxToken> newTokens, bool insertBefore)
+    public static SyntaxNode InsertTokenInList(SyntaxNode root, OldSyntaxToken tokenInList, IEnumerable<OldSyntaxToken> newTokens, bool insertBefore)
     {
         return new TokenListEditor(tokenInList, newTokens, insertBefore ? ListEditKind.InsertBefore : ListEditKind.InsertAfter).Visit(root);
     }
@@ -318,12 +318,12 @@ internal static class SyntaxReplacer
 
     private class TokenListEditor : BaseListEditor
     {
-        private readonly SyntaxToken _originalToken;
-        private readonly IEnumerable<SyntaxToken> _newTokens;
+        private readonly OldSyntaxToken _originalToken;
+        private readonly IEnumerable<OldSyntaxToken> _newTokens;
 
         public TokenListEditor(
-            SyntaxToken originalToken,
-            IEnumerable<SyntaxToken> newTokens,
+            OldSyntaxToken originalToken,
+            IEnumerable<OldSyntaxToken> newTokens,
             ListEditKind editKind)
             : base(originalToken.Span, editKind)
         {
@@ -331,7 +331,7 @@ internal static class SyntaxReplacer
             _newTokens = newTokens;
         }
 
-        public override SyntaxToken VisitToken(SyntaxToken token)
+        public override OldSyntaxToken VisitToken(OldSyntaxToken token)
         {
             if (token == _originalToken)
             {
@@ -341,7 +341,7 @@ internal static class SyntaxReplacer
             return base.VisitToken(token);
         }
 
-        public override SyntaxList<SyntaxToken> VisitList(SyntaxList<SyntaxToken> list)
+        public override SyntaxList<OldSyntaxToken> VisitList(SyntaxList<OldSyntaxToken> list)
         {
             var index = list.IndexOf(_originalToken);
             if (index >= 0 && index < list.Count)

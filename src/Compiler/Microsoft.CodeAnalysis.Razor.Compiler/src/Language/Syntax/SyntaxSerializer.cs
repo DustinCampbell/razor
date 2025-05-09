@@ -35,7 +35,7 @@ internal abstract class SyntaxSerializer(StringBuilder builder) : SyntaxWalker
         DecreaseIndent();
     }
 
-    public sealed override void VisitToken(SyntaxToken token)
+    public sealed override void VisitToken(OldSyntaxToken token)
     {
         WriteToken(token);
         Builder.AppendLine();
@@ -149,7 +149,7 @@ internal abstract class SyntaxSerializer(StringBuilder builder) : SyntaxWalker
         WriteValue($"{Separator}{info.Name}{Separator}{info.AttributeStructure}{Separator}{(info.Bound ? "Bound" : "Unbound")}");
     }
 
-    private void WriteToken(SyntaxToken token)
+    private void WriteToken(OldSyntaxToken token)
     {
         WriteIndent();
 

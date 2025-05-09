@@ -69,7 +69,7 @@ internal static class SyntaxListExtensions
         return brace != null;
     }
 
-    internal static bool TryGetOpenBraceToken(this SyntaxList<RazorSyntaxNode> children, [NotNullWhen(true)] out SyntaxToken? brace)
+    internal static bool TryGetOpenBraceToken(this SyntaxList<RazorSyntaxNode> children, [NotNullWhen(true)] out OldSyntaxToken? brace)
     {
         brace = null;
 
@@ -85,7 +85,7 @@ internal static class SyntaxListExtensions
         return brace != null;
     }
 
-    internal static bool TryGetCloseBraceToken(this SyntaxList<RazorSyntaxNode> children, [NotNullWhen(true)] out SyntaxToken? brace)
+    internal static bool TryGetCloseBraceToken(this SyntaxList<RazorSyntaxNode> children, [NotNullWhen(true)] out OldSyntaxToken? brace)
     {
         brace = null;
 

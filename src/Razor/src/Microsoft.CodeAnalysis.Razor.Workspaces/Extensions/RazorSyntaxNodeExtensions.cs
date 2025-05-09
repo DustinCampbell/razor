@@ -75,7 +75,7 @@ internal static class RazorSyntaxNodeExtensions
         return false;
     }
 
-    internal static bool IsCodeDirective(this SyntaxNode node, [NotNullWhen(true)] out SyntaxToken? openBraceToken)
+    internal static bool IsCodeDirective(this SyntaxNode node, [NotNullWhen(true)] out OldSyntaxToken? openBraceToken)
     {
         if (IsDirective(node, ComponentCodeDirective.Directive, out var body) &&
             body.CSharpCode is { Children: { Count: > 0 } children } &&
@@ -89,7 +89,7 @@ internal static class RazorSyntaxNodeExtensions
         return false;
     }
 
-    internal static bool IsFunctionsDirective(this SyntaxNode node, [NotNullWhen(true)] out SyntaxToken? openBraceToken)
+    internal static bool IsFunctionsDirective(this SyntaxNode node, [NotNullWhen(true)] out OldSyntaxToken? openBraceToken)
     {
         if (IsDirective(node, FunctionsDirective.Directive, out var body) &&
             body.CSharpCode is { Children: { Count: > 0 } children } &&
@@ -423,7 +423,7 @@ internal static class RazorSyntaxNodeExtensions
     {
         var tokens = node.GetTokens();
 
-        SyntaxToken? firstToken = null;
+        OldSyntaxToken? firstToken = null;
         foreach (var token in tokens)
         {
             if (!token.IsWhitespace())
@@ -433,7 +433,7 @@ internal static class RazorSyntaxNodeExtensions
             }
         }
 
-        SyntaxToken? lastToken = null;
+        OldSyntaxToken? lastToken = null;
         for (var i = tokens.Count - 1; i >= 0; i--)
         {
             var token = tokens[i];

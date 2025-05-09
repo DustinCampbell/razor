@@ -15,7 +15,7 @@ using Microsoft.CodeAnalysis.Razor.ProjectSystem;
 using Microsoft.CodeAnalysis.Razor.Workspaces;
 using RazorSyntaxKind = Microsoft.AspNetCore.Razor.Language.SyntaxKind;
 using RazorSyntaxNode = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxNode;
-using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.SyntaxToken;
+using RazorSyntaxToken = Microsoft.AspNetCore.Razor.Language.Syntax.OldSyntaxToken;
 
 namespace Microsoft.CodeAnalysis.Razor.GoToDefinition;
 

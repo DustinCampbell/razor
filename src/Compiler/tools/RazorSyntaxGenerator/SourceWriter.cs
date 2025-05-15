@@ -1473,7 +1473,6 @@ internal class SourceWriter : AbstractFileWriter
                 WriteRedFactory(node);
                 WriteRedFactoryWithNoAutoCreatableTokens(node);
                 WriteRedMinimalFactory(node);
-                WriteRedMinimalFactory(node, withStringNames: true);
                 WriteKindConverters(node);
             }
         }
@@ -1833,7 +1832,7 @@ internal class SourceWriter : AbstractFileWriter
     }
 
     // creates a factory with only the required arguments (everything else is defaulted)
-    private void WriteRedMinimalFactory(Node node, bool withStringNames = false)
+    private void WriteRedMinimalFactory(Node node)
     {
         var optionalCount = OptionalFactoryArgumentCount(node);
         if (optionalCount == 0)
@@ -1842,11 +1841,6 @@ internal class SourceWriter : AbstractFileWriter
         }
 
         var minimalFactoryfields = new HashSet<Field>(DetermineMinimalFactoryFields(node));
-
-        if (withStringNames && !minimalFactoryfields.Any(f => IsRequiredFactoryField(node, f) && CanAutoConvertFromString(f)))
-        {
-            return; // no string-name overload necessary
-        }
 
         WriteLine();
 
@@ -1860,11 +1854,6 @@ internal class SourceWriter : AbstractFileWriter
 
                 if (IsRequiredFactoryField(node, f))
                 {
-                    if (withStringNames && CanAutoConvertFromString(f))
-                    {
-                        type = "string";
-                    }
-
                     return $"{type} {GetParameterName(f)}";
                 }
                 else
@@ -1886,14 +1875,7 @@ internal class SourceWriter : AbstractFileWriter
                     {
                         if (IsRequiredFactoryField(node, f))
                         {
-                            if (withStringNames && CanAutoConvertFromString(f))
-                            {
-                                return $"{GetStringConverterMethod(f)}({GetParameterName(f)})";
-                            }
-                            else
-                            {
-                                return GetParameterName(f);
-                            }
+                            return GetParameterName(f);
                         }
                         else
                         {
@@ -1911,37 +1893,6 @@ internal class SourceWriter : AbstractFileWriter
                     return GetDefaultValue(node, f);
                 }));
             WriteLine(");");
-        }
-    }
-
-    private static bool CanAutoConvertFromString(Field field)
-    {
-        return IsIdentifierToken(field) || IsIdentifierNameSyntax(field);
-    }
-
-    private static bool IsIdentifierToken(Field field)
-    {
-        return field.Type == "SyntaxToken" && field.Kinds != null && field.Kinds.Count == 1 && field.Kinds[0].Name == "IdentifierToken";
-    }
-
-    private static bool IsIdentifierNameSyntax(Field field)
-    {
-        return field.Type == "IdentifierNameSyntax";
-    }
-
-    private static string GetStringConverterMethod(Field field)
-    {
-        if (IsIdentifierToken(field))
-        {
-            return "SyntaxFactory.Identifier";
-        }
-        else if (IsIdentifierNameSyntax(field))
-        {
-            return "SyntaxFactory.IdentifierName";
-        }
-        else
-        {
-            throw new NotSupportedException();
         }
     }
 

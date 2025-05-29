@@ -6,6 +6,7 @@ namespace Razor.Diagnostics.Analyzers;
 internal static class WellKnownTypeNames
 {
     public const string PooledArrayBuilderExtensions = "Microsoft.AspNetCore.Razor.PooledObjects.PooledArrayBuilderExtensions";
+    public const string PooledHashSetExtensions = "Microsoft.AspNetCore.Razor.PooledObjects.PooledHashSetExtensions";
 
     public const string IRemoteJsonService = "Microsoft.CodeAnalysis.Razor.Remote.IRemoteJsonService";
     public const string RazorPinnedSolutionInfoWrapper = "Microsoft.CodeAnalysis.ExternalAccess.Razor.RazorPinnedSolutionInfoWrapper";

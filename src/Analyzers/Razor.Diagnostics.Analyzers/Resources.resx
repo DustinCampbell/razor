@@ -130,12 +130,24 @@
     <value>Instance of PooledArrayBuilder&lt;T&gt;.AsRef() must be a 'using' variable.</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
+  <data name="PooledHashSetAsRefDescription" xml:space="preserve">
+    <value>Instance of PooledHashSet&lt;T&gt;.AsRef() must be a 'using' variable.</value>
+    <comment>An optional longer localizable description of the diagnostic.</comment>
+  </data>
   <data name="PooledArrayBuilderAsRefMessage" xml:space="preserve">
     <value>Instance of PooledArrayBuilder&lt;T&gt;.AsRef() must be a 'using' variable</value>
     <comment>The format-able message the diagnostic displays.</comment>
   </data>
+  <data name="PooledHashSetAsRefMessage" xml:space="preserve">
+    <value>Instance of PooledHashSet&lt;T&gt;.AsRef() must be a 'using' variable</value>
+    <comment>The format-able message the diagnostic displays.</comment>
+  </data>
   <data name="PooledArrayBuilderAsRefTitle" xml:space="preserve">
     <value>Instance of PooledArrayBuilder&lt;T&gt;.AsRef() must be a 'using' variable</value>
+    <comment>The title of the diagnostic.</comment>
+  </data>
+  <data name="PooledHashSetAsRefTitle" xml:space="preserve">
+    <value>Instance of PooledHashSet&lt;T&gt;.AsRef() must be a 'using' variable</value>
     <comment>The title of the diagnostic.</comment>
   </data>
 </root>

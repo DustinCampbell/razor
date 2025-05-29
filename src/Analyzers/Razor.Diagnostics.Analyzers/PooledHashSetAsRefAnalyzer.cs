@@ -10,20 +10,20 @@ using static Razor.Diagnostics.Analyzers.Resources;
 namespace Razor.Diagnostics.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class PooledArrayBuilderAsRefAnalyzer : AbstractAsRefAnalyzer
+public class PooledHashSetAsRefAnalyzer : AbstractAsRefAnalyzer
 {
     internal static readonly DiagnosticDescriptor Rule = new(
-        DiagnosticIds.PooledArrayBuilderAsRef,
-        CreateLocalizableResourceString(nameof(PooledArrayBuilderAsRefTitle)),
-        CreateLocalizableResourceString(nameof(PooledArrayBuilderAsRefMessage)),
+        DiagnosticIds.PooledHashSetAsRef,
+        CreateLocalizableResourceString(nameof(PooledHashSetAsRefTitle)),
+        CreateLocalizableResourceString(nameof(PooledHashSetAsRefMessage)),
         DiagnosticCategory.Reliability,
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: CreateLocalizableResourceString(nameof(PooledArrayBuilderAsRefDescription)));
+        description: CreateLocalizableResourceString(nameof(PooledHashSetAsRefDescription)));
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [Rule];
 
-    protected override string ExtensionsTypeName => WellKnownTypeNames.PooledArrayBuilderExtensions;
+    protected override string ExtensionsTypeName => WellKnownTypeNames.PooledHashSetExtensions;
 
     protected override Diagnostic CreateDiagnostic(IInvocationOperation invocation)
         => invocation.CreateDiagnostic(Rule);

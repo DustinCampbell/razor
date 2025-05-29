@@ -29,18 +29,12 @@ public abstract partial class TagHelperObjectBuilder<T>
 
         _isBuilt = true;
 
-        var diagnostics = new PooledHashSet<RazorDiagnostic>();
-        try
-        {
-            CollectDiagnostics(ref diagnostics);
-            diagnostics.UnionWith(_diagnostics);
+        using var diagnostics = new PooledHashSet<RazorDiagnostic>();
 
-            return BuildCore(diagnostics.ToImmutableArray());
-        }
-        finally
-        {
-            diagnostics.ClearAndFree();
-        }
+        CollectDiagnostics(ref diagnostics.AsRef());
+        diagnostics.UnionWith(_diagnostics);
+
+        return BuildCore(diagnostics.ToImmutableArray());
     }
 
     private protected abstract T BuildCore(ImmutableArray<RazorDiagnostic> diagnostics);

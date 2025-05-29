@@ -28,17 +28,11 @@ public static class IntermediateNodeExtensions
     {
         ArgHelper.ThrowIfNull(node);
 
-        var diagnostics = new PooledHashSet<RazorDiagnostic>();
-        try
-        {
-            CollectDiagnostics(node, ref diagnostics);
+        using var diagnostics = new PooledHashSet<RazorDiagnostic>();
 
-            return diagnostics.OrderByAsArray(static d => d.Span.AbsoluteIndex);
-        }
-        finally
-        {
-            diagnostics.ClearAndFree();
-        }
+        CollectDiagnostics(node, ref diagnostics.AsRef());
+
+        return diagnostics.OrderByAsArray(static d => d.Span.AbsoluteIndex);
 
         static void CollectDiagnostics(IntermediateNode node, ref PooledHashSet<RazorDiagnostic> diagnostics)
         {

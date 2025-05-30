@@ -13,6 +13,38 @@ internal abstract class SyntaxList : SyntaxNode
     {
     }
 
+    public static SyntaxList<TNode> Create<TNode>(ReadOnlySpan<TNode> nodes)
+        where TNode : SyntaxNode
+    {
+        if (nodes.Length == 0)
+        {
+            return default;
+        }
+
+        return new SyntaxList<TNode>(CreateGreenNode(nodes).CreateRed());
+
+        static GreenNode CreateGreenNode(ReadOnlySpan<TNode> nodes)
+        {
+            switch (nodes.Length)
+            {
+                case 1: return nodes[0].Green;
+                case 2: return InternalSyntax.SyntaxList.List(nodes[0].Green, nodes[1].Green);
+                case 3: return InternalSyntax.SyntaxList.List(nodes[0].Green, nodes[1].Green, nodes[2].Green);
+
+                default:
+                    {
+                        var copy = new ArrayElement<GreenNode>[nodes.Length];
+
+                        for (int i = 0, n = nodes.Length; i < n; i++)
+                        {
+                            copy[i].Value = nodes[i].Green;
+                        }
+
+                        return InternalSyntax.SyntaxList.List(copy);
+                    }
+            }
+        }
+    }
 
     // For debugging
 #pragma warning disable IDE0051 // Remove unused private members

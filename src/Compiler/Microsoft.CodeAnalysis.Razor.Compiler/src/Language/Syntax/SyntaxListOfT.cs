@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
+[CollectionBuilder(typeof(SyntaxList), methodName: nameof(SyntaxList.Create))]
 internal readonly struct SyntaxList<TNode>(SyntaxNode? node) : IReadOnlyList<TNode>, IEquatable<SyntaxList<TNode>>
     where TNode : SyntaxNode
 {

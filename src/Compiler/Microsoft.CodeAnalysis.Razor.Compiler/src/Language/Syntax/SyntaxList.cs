@@ -8,7 +8,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal abstract class SyntaxList : SyntaxNode
 {
-    protected SyntaxList(InternalSyntax.SyntaxList green, SyntaxNode parent, int position)
+    protected SyntaxList(InternalSyntax.SyntaxList green, SyntaxNode? parent, int position)
         : base(green, parent, position)
     {
     }
@@ -75,7 +75,7 @@ internal abstract class SyntaxList : SyntaxNode
         private SyntaxNode? _child0;
         private SyntaxNode? _child1;
 
-        internal WithTwoChildren(InternalSyntax.SyntaxList green, SyntaxNode parent, int position)
+        internal WithTwoChildren(InternalSyntax.SyntaxList green, SyntaxNode? parent, int position)
             : base(green, parent, position)
         {
         }
@@ -103,7 +103,7 @@ internal abstract class SyntaxList : SyntaxNode
         private SyntaxNode? _child1;
         private SyntaxNode? _child2;
 
-        internal WithThreeChildren(InternalSyntax.SyntaxList green, SyntaxNode parent, int position)
+        internal WithThreeChildren(InternalSyntax.SyntaxList green, SyntaxNode? parent, int position)
             : base(green, parent, position)
         {
         }
@@ -131,7 +131,7 @@ internal abstract class SyntaxList : SyntaxNode
     {
         private readonly ArrayElement<SyntaxNode?>[] _children;
 
-        internal WithManyChildren(InternalSyntax.SyntaxList green, SyntaxNode parent, int position)
+        internal WithManyChildren(InternalSyntax.SyntaxList green, SyntaxNode? parent, int position)
             : base(green, parent, position)
         {
             _children = new ArrayElement<SyntaxNode?>[green.SlotCount];

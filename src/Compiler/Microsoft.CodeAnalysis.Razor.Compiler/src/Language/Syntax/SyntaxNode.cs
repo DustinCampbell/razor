@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -12,10 +13,10 @@ using Microsoft.CodeAnalysis.Text;
 namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 [DebuggerDisplay("{GetDebuggerDisplay(), nq}")]
-internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, int position)
+internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode? parent, int position)
 {
     internal GreenNode Green { get; } = green;
-    public SyntaxNode Parent { get; } = parent;
+    public SyntaxNode? Parent { get; } = parent;
     public int Position { get; } = position;
 
     public int EndPosition => Position + Width;
@@ -124,7 +125,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
 
         if (result == null)
         {
-            var green = Green.GetSlot(slot);
+            var green = Green.GetRequiredSlot(slot);
             // passing list's parent
             Interlocked.CompareExchange(ref element, green.CreateRed(Parent, GetChildPosition(slot)), null);
             result = element;
@@ -399,7 +400,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return Green.GetAnnotations();
     }
 
-    public bool IsEquivalentTo(SyntaxNode other)
+    public bool IsEquivalentTo([NotNullWhen(true)] SyntaxNode? other)
     {
         if (this == other)
         {

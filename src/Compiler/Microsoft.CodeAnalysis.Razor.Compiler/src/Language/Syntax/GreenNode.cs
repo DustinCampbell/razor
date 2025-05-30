@@ -1,10 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -36,12 +35,12 @@ internal abstract class GreenNode
         _width = width;
     }
 
-    protected GreenNode(SyntaxKind kind, RazorDiagnostic[] diagnostics, SyntaxAnnotation[] annotations)
+    protected GreenNode(SyntaxKind kind, RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations)
         : this(kind, 0, diagnostics, annotations)
     {
     }
 
-    protected GreenNode(SyntaxKind kind, int width, RazorDiagnostic[] diagnostics, SyntaxAnnotation[] annotations)
+    protected GreenNode(SyntaxKind kind, int width, RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations)
         : this(kind, width)
     {
         if (diagnostics?.Length > 0)
@@ -54,9 +53,9 @@ internal abstract class GreenNode
         {
             foreach (var annotation in annotations)
             {
-                if (annotation == null)
+                if (annotation is null)
                 {
-                    throw new ArgumentException("Annotation cannot be null", nameof(annotations));
+                    ThrowHelper.ThrowArgumentException(nameof(annotation), "Annotation cannot be null");
                 }
             }
 
@@ -106,7 +105,14 @@ internal abstract class GreenNode
         }
     }
 
-    internal abstract GreenNode GetSlot(int index);
+    internal abstract GreenNode? GetSlot(int index);
+
+    internal GreenNode GetRequiredSlot(int index)
+    {
+        var node = GetSlot(index);
+        Debug.Assert(node != null);
+        return node;
+    }
 
     // for slot counts >= byte.MaxValue
     protected virtual int GetSlotCount()
@@ -186,7 +192,7 @@ internal abstract class GreenNode
     #endregion
 
     #region Diagnostics
-    internal abstract GreenNode SetDiagnostics(RazorDiagnostic[] diagnostics);
+    internal abstract GreenNode SetDiagnostics(RazorDiagnostic[]? diagnostics);
 
     internal RazorDiagnostic[] GetDiagnostics()
     {
@@ -203,7 +209,7 @@ internal abstract class GreenNode
     #endregion
 
     #region Annotations
-    internal abstract GreenNode SetAnnotations(SyntaxAnnotation[] annotations);
+    internal abstract GreenNode SetAnnotations(SyntaxAnnotation[]? annotations);
 
     internal SyntaxAnnotation[] GetAnnotations()
     {
@@ -276,7 +282,7 @@ internal abstract class GreenNode
     #endregion
 
     #region Equivalence
-    public virtual bool IsEquivalentTo(GreenNode other)
+    public virtual bool IsEquivalentTo([NotNullWhen(true)] GreenNode? other)
     {
         if (this == other)
         {
@@ -300,12 +306,12 @@ internal abstract class GreenNode
             // child if necessary.
             if (node1.IsList && node1.SlotCount == 1)
             {
-                node1 = node1.GetSlot(0);
+                node1 = node1.GetRequiredSlot(0);
             }
 
             if (node2.IsList && node2.SlotCount == 1)
             {
-                node2 = node2.GetSlot(0);
+                node2 = node2.GetRequiredSlot(0);
             }
 
             if (node1.Kind != node2.Kind)
@@ -345,7 +351,7 @@ internal abstract class GreenNode
         return CreateRed(null, 0);
     }
 
-    internal abstract SyntaxNode CreateRed(SyntaxNode parent, int position);
+    internal abstract SyntaxNode CreateRed(SyntaxNode? parent, int position);
     #endregion
 
     public abstract TResult Accept<TResult>(InternalSyntax.SyntaxVisitor<TResult> visitor);

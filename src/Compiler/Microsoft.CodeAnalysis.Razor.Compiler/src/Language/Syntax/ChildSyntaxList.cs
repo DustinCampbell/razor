@@ -81,7 +81,7 @@ internal readonly partial struct ChildSyntaxList : IEquatable<ChildSyntaxList>, 
     /// </summary>
     internal static SyntaxNodeOrToken ItemInternal(SyntaxNode node, int index)
     {
-        GreenNode greenChild;
+        GreenNode? greenChild;
         var green = node.Green;
         var idx = index;
         var slotIndex = 0;
@@ -239,7 +239,7 @@ internal readonly partial struct ChildSyntaxList : IEquatable<ChildSyntaxList>, 
     /// </summary>
     internal static SyntaxNode? ItemInternalAsNode(SyntaxNode node, int index)
     {
-        GreenNode greenChild;
+        GreenNode? greenChild;
         var green = node.Green;
         var idx = index;
         var slotIndex = 0;

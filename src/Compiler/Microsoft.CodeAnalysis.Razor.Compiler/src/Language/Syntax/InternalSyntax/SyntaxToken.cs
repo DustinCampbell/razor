@@ -1,9 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Microsoft.AspNetCore.Razor.Language.Syntax.InternalSyntax;
@@ -13,8 +12,8 @@ internal class SyntaxToken : RazorSyntaxNode
     internal SyntaxToken(
         SyntaxKind kind,
         string content,
-        RazorDiagnostic[] diagnostics,
-        SyntaxAnnotation[] annotations = null)
+        RazorDiagnostic[]? diagnostics,
+        SyntaxAnnotation[]? annotations = null)
         : base(kind, content.Length, diagnostics, annotations)
     {
         Content = content;
@@ -24,7 +23,7 @@ internal class SyntaxToken : RazorSyntaxNode
 
     internal override bool IsToken => true;
 
-    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    internal override SyntaxNode CreateRed(SyntaxNode? parent, int position)
     {
         return Assumed.Unreachable<SyntaxNode>();
     }
@@ -34,12 +33,12 @@ internal class SyntaxToken : RazorSyntaxNode
         writer.Write(Content);
     }
 
-    internal override GreenNode SetDiagnostics(RazorDiagnostic[] diagnostics)
+    internal override GreenNode SetDiagnostics(RazorDiagnostic[]? diagnostics)
     {
         return new SyntaxToken(Kind, Content, diagnostics, GetAnnotations());
     }
 
-    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
     {
         return new SyntaxToken(Kind, Content, GetDiagnostics(), annotations);
     }
@@ -64,7 +63,7 @@ internal class SyntaxToken : RazorSyntaxNode
         visitor.VisitToken(this);
     }
 
-    public override bool IsEquivalentTo(GreenNode other)
+    public override bool IsEquivalentTo([NotNullWhen(true)] GreenNode? other)
     {
         if (!base.IsEquivalentTo(other))
         {

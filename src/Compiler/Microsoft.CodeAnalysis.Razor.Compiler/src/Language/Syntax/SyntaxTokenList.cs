@@ -70,8 +70,8 @@ internal readonly partial struct SyntaxTokenList : IEquatable<SyntaxTokenList>, 
         {
             0 => null,
             1 => tokens[0].Node,
-            2 => InternalSyntax.SyntaxList.List(tokens[0].Node, tokens[1].Node),
-            3 => InternalSyntax.SyntaxList.List(tokens[0].Node, tokens[1].Node, tokens[2].Node),
+            2 => InternalSyntax.SyntaxList.List(tokens[0].RequiredNode, tokens[1].RequiredNode),
+            3 => InternalSyntax.SyntaxList.List(tokens[0].RequiredNode, tokens[1].RequiredNode, tokens[2].RequiredNode),
             _ => BuildAsArray(tokens)
         };
 

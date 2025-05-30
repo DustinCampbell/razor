@@ -100,6 +100,7 @@ internal readonly partial struct SyntaxTokenList : IEquatable<SyntaxTokenList>, 
 
         return builder.ToList().Node;
     }
+
     /// <summary>
     /// The number of nodes in the list.
     /// </summary>

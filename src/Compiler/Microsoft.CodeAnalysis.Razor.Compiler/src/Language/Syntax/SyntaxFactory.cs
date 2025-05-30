@@ -41,4 +41,20 @@ internal static partial class SyntaxFactory
 
     public static RazorMetaCodeSyntax RazorMetaCode(SyntaxToken token, ISpanChunkGenerator? chunkGenerator)
         => RazorMetaCode(new SyntaxTokenList(token), chunkGenerator);
+
+    public static SyntaxList<TNode> List<TNode>()
+        where TNode : SyntaxNode
+        => default;
+
+    public static SyntaxList<TNode> List<TNode>(TNode node)
+        where TNode : SyntaxNode
+        => new(node);
+
+    public static SyntaxList<TNode> List<TNode>(params ReadOnlySpan<TNode> nodes)
+        where TNode : SyntaxNode
+        => new(nodes);
+
+    public static SyntaxList<TNode> List<TNode>(IEnumerable<TNode> nodes)
+        where TNode : SyntaxNode
+        => new(nodes);
 }

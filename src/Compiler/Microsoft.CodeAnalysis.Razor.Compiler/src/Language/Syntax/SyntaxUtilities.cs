@@ -153,6 +153,6 @@ internal static class SyntaxUtilities
             markupTransition = markupTransition.WithEditHandler(editHandler);
         }
 
-        return new(markupTransition);
+        return SyntaxFactory.List(markupTransition);
     }
 }

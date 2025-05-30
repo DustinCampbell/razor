@@ -15,7 +15,69 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 internal readonly partial struct SyntaxList<TNode>(SyntaxNode? node) : IReadOnlyList<TNode>, IEquatable<SyntaxList<TNode>>
     where TNode : SyntaxNode
 {
+    public static SyntaxList<TNode> Empty => default;
+
     internal SyntaxNode? Node { get; } = node;
+
+    public SyntaxList(TNode? node)
+        : this((SyntaxNode?)node)
+    {
+    }
+
+    public SyntaxList(params ReadOnlySpan<TNode> nodes)
+        : this(CreateNodeFromSpan(nodes))
+    {
+    }
+
+    public SyntaxList(IEnumerable<TNode> nodes)
+        : this(CreateNode(nodes))
+    {
+    }
+
+    private static SyntaxNode? CreateNodeFromSpan(ReadOnlySpan<TNode> nodes)
+    {
+        if (nodes.Length == 0)
+        {
+            return null;
+        }
+
+        return CreateGreenNode(nodes).CreateRed();
+
+        static GreenNode CreateGreenNode(ReadOnlySpan<TNode> nodes)
+        {
+            switch (nodes.Length)
+            {
+                case 1: return nodes[0].Green;
+                case 2: return InternalSyntax.SyntaxList.List(nodes[0].Green, nodes[1].Green);
+                case 3: return InternalSyntax.SyntaxList.List(nodes[0].Green, nodes[1].Green, nodes[2].Green);
+
+                default:
+                    {
+                        var copy = new ArrayElement<GreenNode>[nodes.Length];
+
+                        for (int i = 0, n = nodes.Length; i < n; i++)
+                        {
+                            copy[i].Value = nodes[i].Green;
+                        }
+
+                        return InternalSyntax.SyntaxList.List(copy);
+                    }
+            }
+        }
+    }
+
+    private static SyntaxNode? CreateNode(IEnumerable<TNode> nodes)
+    {
+        if (nodes == null)
+        {
+            return null;
+        }
+
+        using var builder = new PooledArrayBuilder<TNode>();
+        builder.AddRange(nodes);
+
+        return builder.ToListNode();
+    }
 
     /// <summary>
     /// The number of nodes in the list.

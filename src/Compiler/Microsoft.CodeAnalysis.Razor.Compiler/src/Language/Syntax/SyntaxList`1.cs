@@ -17,12 +17,6 @@ internal readonly partial struct SyntaxList<TNode>(SyntaxNode? node) : IReadOnly
 {
     internal SyntaxNode? Node { get; } = node;
 
-    public static SyntaxList<TNode> Create(SyntaxNode node, SyntaxNode parent, int position)
-        => new(node.Green.CreateRed(parent, position));
-
-    public static SyntaxList<TNode> Create(SyntaxNode node, SyntaxNode parent)
-        => new(node.Green.CreateRed(parent, parent.Position));
-
     /// <summary>
     /// The number of nodes in the list.
     /// </summary>

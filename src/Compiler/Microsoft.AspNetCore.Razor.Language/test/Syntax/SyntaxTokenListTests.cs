@@ -274,17 +274,19 @@ public class SyntaxTokenListTests
     [Fact]
     public void Replace()
     {
+        // Note: The tokens in each slot in the first list match the
+        // widths of the tokens in the same slots of the second list.
         SyntaxTokenList list1 = [
+            SyntaxFactory.Token(SyntaxKind.Comma),
             SyntaxFactory.Token(SyntaxKind.Arrow),
-            SyntaxFactory.Token(SyntaxKind.OpenAngle),
             SyntaxFactory.Token(SyntaxKind.LeftParenthesis),
             SyntaxFactory.Token(SyntaxKind.RightParenthesis)];
 
         SyntaxTokenList list2 = [
             SyntaxFactory.Token(SyntaxKind.Minus),
             SyntaxFactory.Token(SyntaxKind.Decrement),
-            SyntaxFactory.Token(SyntaxKind.MinusAssign),
-            SyntaxFactory.Token(SyntaxKind.NotEqual)];
+            SyntaxFactory.Token(SyntaxKind.Assign),
+            SyntaxFactory.Token(SyntaxKind.Plus)];
 
         var newList = list1;
         Assert.Equal(list1, newList);

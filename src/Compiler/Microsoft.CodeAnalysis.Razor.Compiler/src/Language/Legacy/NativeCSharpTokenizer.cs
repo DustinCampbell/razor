@@ -118,7 +118,7 @@ internal class NativeCSharpTokenizer : CSharpTokenizer
                 { '&', CreateTwoCharOperatorHandler(SyntaxKind.And, '=', SyntaxKind.AndAssign, '&', SyntaxKind.DoubleAnd) },
                 { '|', CreateTwoCharOperatorHandler(SyntaxKind.Or, '=', SyntaxKind.OrAssign, '|', SyntaxKind.DoubleOr) },
                 { '+', CreateTwoCharOperatorHandler(SyntaxKind.Plus, '=', SyntaxKind.PlusAssign, '+', SyntaxKind.Increment) },
-                { '=', CreateTwoCharOperatorHandler(SyntaxKind.Assign, '=', SyntaxKind.Equals, '>', SyntaxKind.GreaterThanEqual) },
+                { '=', CreateTwoCharOperatorHandler(SyntaxKind.Assign, '=', SyntaxKind.Equals, '>', SyntaxKind.EqualsGreaterThan) },
                 { '!', CreateTwoCharOperatorHandler(SyntaxKind.Not, '=', SyntaxKind.NotEqual) },
                 { '%', CreateTwoCharOperatorHandler(SyntaxKind.Modulo, '=', SyntaxKind.ModuloAssign) },
                 { '*', CreateTwoCharOperatorHandler(SyntaxKind.Star, '=', SyntaxKind.MultiplyAssign) },

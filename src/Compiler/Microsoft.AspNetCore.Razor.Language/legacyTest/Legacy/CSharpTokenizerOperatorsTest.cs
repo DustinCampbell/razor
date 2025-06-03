@@ -159,7 +159,7 @@ public class CSharpTokenizerOperatorsTest : CSharpTokenizerTestBase
     [Fact]
     public void EqualGreaterThan_Is_Recognized()
     {
-        TestSingleToken("=>", SyntaxKind.GreaterThanEqual);
+        TestSingleToken("=>", SyntaxKind.EqualsGreaterThan);
     }
 
     [Fact]

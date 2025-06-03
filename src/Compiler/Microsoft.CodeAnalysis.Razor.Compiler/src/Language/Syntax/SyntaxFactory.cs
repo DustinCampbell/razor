@@ -9,6 +9,11 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 
 internal static partial class SyntaxFactory
 {
+    public static SyntaxToken Token(SyntaxKind kind)
+    {
+        return new SyntaxToken(parent: null, InternalSyntax.SyntaxFactory.Token(kind), position: 0, index: 0);
+    }
+
     public static SyntaxToken Token(SyntaxKind kind, params RazorDiagnostic[] diagnostics)
     {
         return Token(kind, content: string.Empty, diagnostics: diagnostics);

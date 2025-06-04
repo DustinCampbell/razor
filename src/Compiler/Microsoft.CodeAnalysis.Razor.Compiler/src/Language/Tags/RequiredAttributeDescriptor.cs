@@ -19,13 +19,8 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public bool CaseSensitive => _flags.IsFlagSet(RequiredAttributeFlags.CaseSensitive);
     public bool IsDirectiveAttribute => _flags.IsFlagSet(RequiredAttributeFlags.IsDirectiveAttribute);
 
-    public NameComparisonMode NameComparison
-        => _flags.IsFlagSet(RequiredAttributeFlags.IsNamePrefixMatch)
-            ? NameComparisonMode.PrefixMatch
-            : NameComparisonMode.FullMatch;
-
-    public ValueComparisonMode ValueComparison
-        => (ValueComparisonMode)((byte)(_flags & RequiredAttributeFlags.ValueComparisonMask) >> 3);
+    public NameComparisonMode NameComparison => _flags.GetNameComparison();
+    public ValueComparisonMode ValueComparison => _flags.GetValueComparison();
 
     internal RequiredAttributeDescriptor(
         RequiredAttributeFlags flags,

@@ -37,18 +37,14 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
     public NameComparisonMode NameComparisonMode
     {
-        get => _flags.IsFlagSet(RequiredAttributeFlags.IsNamePrefixMatch) ? NameComparisonMode.PrefixMatch : NameComparisonMode.FullMatch;
-        set => _flags.UpdateFlag(RequiredAttributeFlags.IsNamePrefixMatch, value == NameComparisonMode.PrefixMatch);
+        get => _flags.GetNameComparison();
+        set => _flags.SetNameComparison(value);
     }
 
     public ValueComparisonMode ValueComparisonMode
     {
-        get => (ValueComparisonMode)((byte)(_flags & RequiredAttributeFlags.ValueComparisonMask) >> 3);
-        set
-        {
-            _flags.ClearFlag(RequiredAttributeFlags.ValueComparisonMask);
-            _flags.SetFlag((RequiredAttributeFlags)((byte)value << 3));
-        }
+        get => _flags.GetValueComparison();
+        set => _flags.SetValueComparison(value);
     }
 
     private protected override RequiredAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)

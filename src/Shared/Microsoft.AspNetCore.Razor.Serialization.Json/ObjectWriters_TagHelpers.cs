@@ -80,7 +80,6 @@ internal static partial class ObjectWriters
                 writer.Write(nameof(value.Flags), (byte)value.Flags);
                 writer.Write(nameof(value.Name), value.Name);
                 writer.WriteIfNotNull(nameof(value.Value), value.Value);
-                writer.WriteIfNotZero(nameof(value.ValueComparison), (int)value.ValueComparison);
                 writer.WriteIfNotNull(nameof(value.DisplayName), value.DisplayName);
 
                 writer.WriteArrayIfNotDefaultOrEmpty(nameof(value.Diagnostics), value.Diagnostics, Write);

@@ -8,12 +8,17 @@ namespace Microsoft.AspNetCore.Razor.Language;
 [Flags]
 internal enum RequiredAttributeFlags : byte
 {
-    CaseSensitive = 0x01,
-    IsDirectiveAttribute = 0x02,
+    CaseSensitive = 1 << 0,
+    IsDirectiveAttribute = 1 << 1,
 
     /// <summary>
     ///  <see cref="RequiredAttributeDescriptor.NameComparisonMode.PrefixMatch"/> if set;
     ///  otherwise, <see cref="RequiredAttributeDescriptor.NameComparisonMode.FullMatch"/>.
     /// </summary>
-    IsNamePrefixMatch = 0x04,
+    IsNamePrefixMatch = 1 << 2,
+
+    /// <summary>
+    ///  Mask for extracting the <see cref="RequiredAttributeDescriptor.ValueComparisonMode"/> value.
+    /// </summary>
+    ValueComparisonMask = (1 << 3) | (1 << 4)
 }

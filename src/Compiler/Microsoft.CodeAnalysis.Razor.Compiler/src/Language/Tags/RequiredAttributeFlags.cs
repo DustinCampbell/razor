@@ -12,13 +12,13 @@ internal enum RequiredAttributeFlags : byte
     IsDirectiveAttribute = 1 << 1,
 
     /// <summary>
-    ///  <see cref="RequiredAttributeDescriptor.NameComparisonMode.PrefixMatch"/> if set;
-    ///  otherwise, <see cref="RequiredAttributeDescriptor.NameComparisonMode.FullMatch"/>.
+    ///  <see cref="RequiredAttributeNameComparison.PrefixMatch"/> if set;
+    ///  otherwise, <see cref="RequiredAttributeNameComparison.FullMatch"/>.
     /// </summary>
     IsNamePrefixMatch = 1 << 2,
 
     /// <summary>
-    ///  Mask for extracting the <see cref="RequiredAttributeDescriptor.ValueComparisonMode"/> value.
+    ///  Mask for extracting the <see cref="RequiredAttributeValueComparison"/> value.
     /// </summary>
     ValueComparisonMask = (1 << 3) | (1 << 4)
 }

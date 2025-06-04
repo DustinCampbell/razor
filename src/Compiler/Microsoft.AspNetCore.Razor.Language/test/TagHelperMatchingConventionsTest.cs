@@ -33,7 +33,7 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("route-")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.PrefixMatch),
+                            .NameComparisonMode(RequiredAttributeNameComparison.PrefixMatch),
                         "ROUTE-area",
                         "manage",
                         true
@@ -41,7 +41,7 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("route-")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.PrefixMatch),
+                            .NameComparisonMode(RequiredAttributeNameComparison.PrefixMatch),
                         "routearea",
                         "manage",
                         false
@@ -49,7 +49,7 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("route-")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.PrefixMatch),
+                            .NameComparisonMode(RequiredAttributeNameComparison.PrefixMatch),
                         "route-",
                         "manage",
                         false
@@ -57,7 +57,7 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("key")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch),
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch),
                         "KeY",
                         "value",
                         true
@@ -65,7 +65,7 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("key")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch),
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch),
                         "keys",
                         "value",
                         false
@@ -73,9 +73,9 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("key")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch)
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch)
                             .Value("value")
-                            .ValueComparisonMode(RequiredAttributeDescriptor.ValueComparisonMode.FullMatch),
+                            .ValueComparisonMode(RequiredAttributeValueComparison.FullMatch),
                         "key",
                         "value",
                         true
@@ -83,9 +83,9 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("key")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch)
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch)
                             .Value("value")
-                            .ValueComparisonMode(RequiredAttributeDescriptor.ValueComparisonMode.FullMatch),
+                            .ValueComparisonMode(RequiredAttributeValueComparison.FullMatch),
                         "key",
                         "Value",
                         false
@@ -93,9 +93,9 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("class")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch)
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch)
                             .Value("btn")
-                            .ValueComparisonMode(RequiredAttributeDescriptor.ValueComparisonMode.PrefixMatch),
+                            .ValueComparisonMode(RequiredAttributeValueComparison.PrefixMatch),
                         "class",
                         "btn btn-success",
                         true
@@ -103,9 +103,9 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("class")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch)
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch)
                             .Value("btn")
-                            .ValueComparisonMode(RequiredAttributeDescriptor.ValueComparisonMode.PrefixMatch),
+                            .ValueComparisonMode(RequiredAttributeValueComparison.PrefixMatch),
                         "class",
                         "BTN btn-success",
                         false
@@ -113,9 +113,9 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("href")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch)
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch)
                             .Value("#navigate")
-                            .ValueComparisonMode(RequiredAttributeDescriptor.ValueComparisonMode.SuffixMatch),
+                            .ValueComparisonMode(RequiredAttributeValueComparison.SuffixMatch),
                         "href",
                         "/home/index#navigate",
                         true
@@ -123,9 +123,9 @@ public class TagHelperMatchingConventionsTest
                     {
                         builder => builder
                             .Name("href")
-                            .NameComparisonMode(RequiredAttributeDescriptor.NameComparisonMode.FullMatch)
+                            .NameComparisonMode(RequiredAttributeNameComparison.FullMatch)
                             .Value("#navigate")
-                            .ValueComparisonMode(RequiredAttributeDescriptor.ValueComparisonMode.SuffixMatch),
+                            .ValueComparisonMode(RequiredAttributeValueComparison.SuffixMatch),
                         "href",
                         "/home/index#NAVigate",
                         false

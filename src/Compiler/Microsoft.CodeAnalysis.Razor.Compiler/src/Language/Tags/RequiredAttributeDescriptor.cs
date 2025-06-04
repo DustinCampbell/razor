@@ -19,8 +19,8 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public bool CaseSensitive => _flags.IsFlagSet(RequiredAttributeFlags.CaseSensitive);
     public bool IsDirectiveAttribute => _flags.IsFlagSet(RequiredAttributeFlags.IsDirectiveAttribute);
 
-    public NameComparisonMode NameComparison => _flags.GetNameComparison();
-    public ValueComparisonMode ValueComparison => _flags.GetValueComparison();
+    public RequiredAttributeNameComparison NameComparison => _flags.GetNameComparison();
+    public RequiredAttributeValueComparison ValueComparison => _flags.GetValueComparison();
 
     internal RequiredAttributeDescriptor(
         RequiredAttributeFlags flags,
@@ -48,47 +48,5 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public override string ToString()
     {
         return DisplayName ?? base.ToString()!;
-    }
-
-    /// <summary>
-    /// Acceptable <see cref="Name"/> comparison modes.
-    /// </summary>
-    public enum NameComparisonMode
-    {
-        /// <summary>
-        /// HTML attribute name case insensitively matches <see cref="Name"/>.
-        /// </summary>
-        FullMatch,
-
-        /// <summary>
-        /// HTML attribute name case insensitively starts with <see cref="Name"/>.
-        /// </summary>
-        PrefixMatch,
-    }
-
-    /// <summary>
-    /// Acceptable <see cref="Value"/> comparison modes.
-    /// </summary>
-    public enum ValueComparisonMode
-    {
-        /// <summary>
-        /// HTML attribute value always matches <see cref="Value"/>.
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// HTML attribute value case sensitively matches <see cref="Value"/>.
-        /// </summary>
-        FullMatch,
-
-        /// <summary>
-        /// HTML attribute value case sensitively starts with <see cref="Value"/>.
-        /// </summary>
-        PrefixMatch,
-
-        /// <summary>
-        /// HTML attribute value case sensitively ends with <see cref="Value"/>.
-        /// </summary>
-        SuffixMatch,
     }
 }

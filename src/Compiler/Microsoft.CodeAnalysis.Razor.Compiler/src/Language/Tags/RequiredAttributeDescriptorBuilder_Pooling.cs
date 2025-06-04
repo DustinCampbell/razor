@@ -25,9 +25,9 @@ public partial class RequiredAttributeDescriptorBuilder
         _flags = 0;
 
         Name = null;
-        NameComparisonMode = default;
+        NameComparison = default;
         Value = null;
-        ValueComparisonMode = default;
+        ValueComparison = default;
     }
 
     private sealed class Policy : PooledBuilderPolicy<RequiredAttributeDescriptorBuilder>

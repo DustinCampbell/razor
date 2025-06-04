@@ -23,14 +23,14 @@ public static class TestRequiredAttributeDescriptorBuilderExtensions
 
     public static RequiredAttributeDescriptorBuilder NameComparisonMode(
         this RequiredAttributeDescriptorBuilder builder,
-        RequiredAttributeDescriptor.NameComparisonMode nameComparison)
+        RequiredAttributeNameComparison nameComparison)
     {
         if (builder == null)
         {
             throw new ArgumentNullException(nameof(builder));
         }
 
-        builder.NameComparisonMode = nameComparison;
+        builder.NameComparison = nameComparison;
 
         return builder;
     }
@@ -49,14 +49,14 @@ public static class TestRequiredAttributeDescriptorBuilderExtensions
 
     public static RequiredAttributeDescriptorBuilder ValueComparisonMode(
         this RequiredAttributeDescriptorBuilder builder,
-        RequiredAttributeDescriptor.ValueComparisonMode valueComparison)
+        RequiredAttributeValueComparison valueComparison)
     {
         if (builder == null)
         {
             throw new ArgumentNullException(nameof(builder));
         }
 
-        builder.ValueComparisonMode = valueComparison;
+        builder.ValueComparison = valueComparison;
 
         return builder;
     }

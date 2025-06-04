@@ -5,7 +5,6 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
-using static Microsoft.AspNetCore.Razor.Language.RequiredAttributeDescriptor;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -35,13 +34,13 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
         set => _flags.UpdateFlag(RequiredAttributeFlags.IsDirectiveAttribute, value);
     }
 
-    public NameComparisonMode NameComparisonMode
+    public RequiredAttributeNameComparison NameComparison
     {
         get => _flags.GetNameComparison();
         set => _flags.SetNameComparison(value);
     }
 
-    public ValueComparisonMode ValueComparisonMode
+    public RequiredAttributeValueComparison ValueComparison
     {
         get => _flags.GetValueComparison();
         set => _flags.SetValueComparison(value);
@@ -68,7 +67,7 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
     private string GetDisplayName()
     {
-        return (NameComparisonMode == NameComparisonMode.PrefixMatch ? string.Concat(Name, "...") : Name) ?? string.Empty;
+        return (NameComparison == RequiredAttributeNameComparison.PrefixMatch ? string.Concat(Name, "...") : Name) ?? string.Empty;
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

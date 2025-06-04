@@ -48,6 +48,8 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
     private protected override RequiredAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        Assumed.NotNull(Name, $"{nameof(Name)} must be set before calling Build().");
+
         var flags = _flags;
 
         if (CaseSensitive)
@@ -57,12 +59,7 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
         var displayName = GetDisplayName();
 
-        return new RequiredAttributeDescriptor(
-            flags,
-            Name ?? string.Empty,
-            Value,
-            displayName,
-            diagnostics);
+        return new RequiredAttributeDescriptor(flags, Name, Value, displayName, diagnostics);
     }
 
     private string GetDisplayName()

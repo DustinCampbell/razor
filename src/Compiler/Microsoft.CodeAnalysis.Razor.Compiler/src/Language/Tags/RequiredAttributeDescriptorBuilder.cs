@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -15,7 +14,6 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
     [AllowNull]
     private TagMatchingRuleDescriptorBuilder _parent;
     private RequiredAttributeFlags _flags;
-    private MetadataHolder _metadata;
 
     private RequiredAttributeDescriptorBuilder()
     {
@@ -39,14 +37,9 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
     internal bool CaseSensitive => _parent.CaseSensitive;
 
-    public IDictionary<string, string?> Metadata => _metadata.MetadataDictionary;
-
-    public void SetMetadata(MetadataCollection metadata) => _metadata.SetMetadataCollection(metadata);
-
     private protected override RequiredAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
         var displayName = GetDisplayName();
-        var metadata = _metadata.GetMetadataCollection();
 
         return new RequiredAttributeDescriptor(
             _flags,
@@ -56,8 +49,7 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
             Value,
             ValueComparisonMode,
             displayName,
-            diagnostics,
-            metadata);
+            diagnostics);
     }
 
     private string GetDisplayName()

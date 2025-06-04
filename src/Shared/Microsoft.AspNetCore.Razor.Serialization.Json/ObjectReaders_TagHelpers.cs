@@ -137,14 +137,13 @@ internal static partial class ObjectReaders
                 var valueComparison = (ValueComparisonMode)reader.ReadInt32OrZero(nameof(RequiredAttributeDescriptor.ValueComparison));
                 var displayName = reader.ReadNonNullString(nameof(RequiredAttributeDescriptor.DisplayName));
 
-                var metadata = ReadMetadata(reader, nameof(RequiredAttributeDescriptor.Metadata));
                 var diagnostics = reader.ReadImmutableArrayOrEmpty(nameof(RequiredAttributeDescriptor.Diagnostics), ReadDiagnostic);
 
                 return new RequiredAttributeDescriptor(
                     flags, Cached(name)!, nameComparison,
                     caseSensitive,
                     Cached(value), valueComparison,
-                    Cached(displayName), diagnostics, metadata);
+                    Cached(displayName), diagnostics);
             }
         }
 
@@ -193,7 +192,7 @@ internal static partial class ObjectReaders
                 var documentationObject = ReadDocumentationObject(reader, nameof(BoundAttributeParameterDescriptor.Documentation));
                 var caseSensitive = reader.ReadBooleanOrTrue(nameof(BoundAttributeParameterDescriptor.CaseSensitive));
 
-                var metadata = ReadMetadata(reader, nameof(RequiredAttributeDescriptor.Metadata));
+                var metadata = ReadMetadata(reader, nameof(BoundAttributeParameterDescriptor.Metadata));
                 var diagnostics = reader.ReadImmutableArrayOrEmpty(nameof(BoundAttributeParameterDescriptor.Diagnostics), ReadDiagnostic);
 
                 return new BoundAttributeParameterDescriptor(

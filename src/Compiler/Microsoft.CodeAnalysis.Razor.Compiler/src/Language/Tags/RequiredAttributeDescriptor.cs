@@ -19,8 +19,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public string DisplayName { get; }
     public bool CaseSensitive { get; }
 
-    public MetadataCollection Metadata { get; }
-
     internal RequiredAttributeDescriptor(
         RequiredAttributeFlags flags,
         string name,
@@ -29,8 +27,7 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         string? value,
         ValueComparisonMode valueComparison,
         string displayName,
-        ImmutableArray<RazorDiagnostic> diagnostics,
-        MetadataCollection metadata)
+        ImmutableArray<RazorDiagnostic> diagnostics)
         : base(diagnostics)
     {
         _flags = flags;
@@ -41,7 +38,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         Value = value;
         ValueComparison = valueComparison;
         DisplayName = displayName;
-        Metadata = metadata ?? MetadataCollection.Empty;
     }
 
     private protected override void BuildChecksum(in Checksum.Builder builder)
@@ -53,7 +49,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         builder.AppendData((int)ValueComparison);
         builder.AppendData(DisplayName);
         builder.AppendData(CaseSensitive);
-        builder.AppendData(Metadata.Checksum);
     }
 
     public override string ToString()

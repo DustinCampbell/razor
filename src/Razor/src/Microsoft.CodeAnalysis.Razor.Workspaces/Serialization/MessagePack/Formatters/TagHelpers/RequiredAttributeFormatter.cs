@@ -19,12 +19,11 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
 
     public override RequiredAttributeDescriptor Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(8);
+        reader.ReadArrayHeaderAndVerify(7);
 
         var flags = (RequiredAttributeFlags)reader.ReadByte();
         var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var nameComparison = (NameComparisonMode)reader.ReadInt32();
-        var caseSensitive = reader.ReadBoolean();
         var value = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var valueComparison = (ValueComparisonMode)reader.ReadInt32();
         var displayName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
@@ -33,19 +32,17 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
 
         return new RequiredAttributeDescriptor(
             flags, name!, nameComparison,
-            caseSensitive,
             value, valueComparison,
             displayName, diagnostics);
     }
 
     public override void Serialize(ref MessagePackWriter writer, RequiredAttributeDescriptor value, SerializerCachingOptions options)
     {
-        writer.WriteArrayHeader(8);
+        writer.WriteArrayHeader(7);
 
         writer.Write((byte)value.Flags);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Name, options);
         writer.Write((int)value.NameComparison);
-        writer.Write(value.CaseSensitive);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Value, options);
         writer.Write((int)value.ValueComparison);
         CachedStringFormatter.Instance.Serialize(ref writer, value.DisplayName, options);
@@ -55,12 +52,11 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
 
     public override void Skim(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(8);
+        reader.ReadArrayHeaderAndVerify(7);
 
         reader.Skip(); // Flags
         CachedStringFormatter.Instance.Skim(ref reader, options); // Name
         reader.Skip(); // NameComparison
-        reader.Skip(); // CaseSensitive
         CachedStringFormatter.Instance.Skim(ref reader, options); // Value
         reader.Skip(); // ValueComparison
         CachedStringFormatter.Instance.Skim(ref reader, options); // DisplayName

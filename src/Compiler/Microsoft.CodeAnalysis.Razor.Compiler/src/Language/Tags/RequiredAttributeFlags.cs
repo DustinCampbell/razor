@@ -8,5 +8,6 @@ namespace Microsoft.AspNetCore.Razor.Language;
 [Flags]
 internal enum RequiredAttributeFlags : byte
 {
-    IsDirectiveAttribute = 0x01,
+    CaseSensitive = 0x01,
+    IsDirectiveAttribute = 0x02,
 }

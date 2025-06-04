@@ -17,13 +17,14 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public string? Value { get; }
     public ValueComparisonMode ValueComparison { get; }
     public string DisplayName { get; }
-    public bool CaseSensitive { get; }
+
+    public bool CaseSensitive => _flags.IsFlagSet(RequiredAttributeFlags.CaseSensitive);
+    public bool IsDirectiveAttribute => _flags.IsFlagSet(RequiredAttributeFlags.IsDirectiveAttribute);
 
     internal RequiredAttributeDescriptor(
         RequiredAttributeFlags flags,
         string name,
         NameComparisonMode nameComparison,
-        bool caseSensitive,
         string? value,
         ValueComparisonMode valueComparison,
         string displayName,
@@ -34,7 +35,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
 
         Name = name;
         NameComparison = nameComparison;
-        CaseSensitive = caseSensitive;
         Value = value;
         ValueComparison = valueComparison;
         DisplayName = displayName;
@@ -48,7 +48,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         builder.AppendData(Value);
         builder.AppendData((int)ValueComparison);
         builder.AppendData(DisplayName);
-        builder.AppendData(CaseSensitive);
     }
 
     public override string ToString()

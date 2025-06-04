@@ -39,13 +39,19 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
     private protected override RequiredAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var flags = _flags;
+
+        if (CaseSensitive)
+        {
+            flags.SetFlag(RequiredAttributeFlags.CaseSensitive);
+        }
+
         var displayName = GetDisplayName();
 
         return new RequiredAttributeDescriptor(
-            _flags,
+            flags,
             Name ?? string.Empty,
             NameComparisonMode,
-            CaseSensitive,
             Value,
             ValueComparisonMode,
             displayName,

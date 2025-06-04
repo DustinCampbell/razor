@@ -132,7 +132,6 @@ internal static partial class ObjectReaders
                 var flags = (RequiredAttributeFlags)reader.ReadInt32(nameof(RequiredAttributeDescriptor.Flags));
                 var name = reader.ReadString(nameof(RequiredAttributeDescriptor.Name));
                 var nameComparison = (NameComparisonMode)reader.ReadInt32OrZero(nameof(RequiredAttributeDescriptor.NameComparison));
-                var caseSensitive = reader.ReadBooleanOrTrue(nameof(RequiredAttributeDescriptor.CaseSensitive));
                 var value = reader.ReadStringOrNull(nameof(RequiredAttributeDescriptor.Value));
                 var valueComparison = (ValueComparisonMode)reader.ReadInt32OrZero(nameof(RequiredAttributeDescriptor.ValueComparison));
                 var displayName = reader.ReadNonNullString(nameof(RequiredAttributeDescriptor.DisplayName));
@@ -141,7 +140,6 @@ internal static partial class ObjectReaders
 
                 return new RequiredAttributeDescriptor(
                     flags, Cached(name)!, nameComparison,
-                    caseSensitive,
                     Cached(value), valueComparison,
                     Cached(displayName), diagnostics);
             }

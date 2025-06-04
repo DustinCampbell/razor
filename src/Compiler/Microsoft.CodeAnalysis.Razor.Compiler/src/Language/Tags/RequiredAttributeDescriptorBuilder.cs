@@ -25,9 +25,10 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
     }
 
     public string? Name { get; set; }
-    public NameComparisonMode NameComparisonMode { get; set; }
     public string? Value { get; set; }
     public ValueComparisonMode ValueComparisonMode { get; set; }
+
+    internal bool CaseSensitive => _parent.CaseSensitive;
 
     public bool IsDirectiveAttribute
     {
@@ -35,7 +36,11 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
         set => _flags.UpdateFlag(RequiredAttributeFlags.IsDirectiveAttribute, value);
     }
 
-    internal bool CaseSensitive => _parent.CaseSensitive;
+    public NameComparisonMode NameComparisonMode
+    {
+        get => _flags.IsFlagSet(RequiredAttributeFlags.IsNamePrefixMatch) ? NameComparisonMode.PrefixMatch : NameComparisonMode.FullMatch;
+        set => _flags.UpdateFlag(RequiredAttributeFlags.IsNamePrefixMatch, value == NameComparisonMode.PrefixMatch);
+    }
 
     private protected override RequiredAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
@@ -51,7 +56,6 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
         return new RequiredAttributeDescriptor(
             flags,
             Name ?? string.Empty,
-            NameComparisonMode,
             Value,
             ValueComparisonMode,
             displayName,

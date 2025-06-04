@@ -10,4 +10,10 @@ internal enum RequiredAttributeFlags : byte
 {
     CaseSensitive = 0x01,
     IsDirectiveAttribute = 0x02,
+
+    /// <summary>
+    ///  <see cref="RequiredAttributeDescriptor.NameComparisonMode.PrefixMatch"/> if set;
+    ///  otherwise, <see cref="RequiredAttributeDescriptor.NameComparisonMode.FullMatch"/>.
+    /// </summary>
+    IsNamePrefixMatch = 0x04,
 }

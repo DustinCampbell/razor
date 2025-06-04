@@ -79,7 +79,6 @@ internal static partial class ObjectWriters
             {
                 writer.Write(nameof(value.Flags), (byte)value.Flags);
                 writer.Write(nameof(value.Name), value.Name);
-                writer.WriteIfNotZero(nameof(value.NameComparison), (int)value.NameComparison);
                 writer.WriteIfNotNull(nameof(value.Value), value.Value);
                 writer.WriteIfNotZero(nameof(value.ValueComparison), (int)value.ValueComparison);
                 writer.WriteIfNotNull(nameof(value.DisplayName), value.DisplayName);

@@ -13,7 +13,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     internal RequiredAttributeFlags Flags => _flags;
 
     public string Name { get; }
-    public NameComparisonMode NameComparison { get; }
     public string? Value { get; }
     public ValueComparisonMode ValueComparison { get; }
     public string DisplayName { get; }
@@ -21,10 +20,14 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public bool CaseSensitive => _flags.IsFlagSet(RequiredAttributeFlags.CaseSensitive);
     public bool IsDirectiveAttribute => _flags.IsFlagSet(RequiredAttributeFlags.IsDirectiveAttribute);
 
+    public NameComparisonMode NameComparison
+        => _flags.IsFlagSet(RequiredAttributeFlags.IsNamePrefixMatch)
+            ? NameComparisonMode.PrefixMatch
+            : NameComparisonMode.FullMatch;
+
     internal RequiredAttributeDescriptor(
         RequiredAttributeFlags flags,
         string name,
-        NameComparisonMode nameComparison,
         string? value,
         ValueComparisonMode valueComparison,
         string displayName,
@@ -34,7 +37,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         _flags = flags;
 
         Name = name;
-        NameComparison = nameComparison;
         Value = value;
         ValueComparison = valueComparison;
         DisplayName = displayName;
@@ -44,7 +46,6 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     {
         builder.AppendData((byte)_flags);
         builder.AppendData(Name);
-        builder.AppendData((int)NameComparison);
         builder.AppendData(Value);
         builder.AppendData((int)ValueComparison);
         builder.AppendData(DisplayName);

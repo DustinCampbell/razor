@@ -8,6 +8,10 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttributeDescriptor>
 {
+    private readonly RequiredAttributeFlags _flags;
+
+    internal RequiredAttributeFlags Flags => _flags;
+
     public string Name { get; }
     public NameComparisonMode NameComparison { get; }
     public string? Value { get; }
@@ -18,6 +22,7 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public MetadataCollection Metadata { get; }
 
     internal RequiredAttributeDescriptor(
+        RequiredAttributeFlags flags,
         string name,
         NameComparisonMode nameComparison,
         bool caseSensitive,
@@ -28,6 +33,8 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         MetadataCollection metadata)
         : base(diagnostics)
     {
+        _flags = flags;
+
         Name = name;
         NameComparison = nameComparison;
         CaseSensitive = caseSensitive;
@@ -39,6 +46,7 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
 
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
+        builder.AppendData((byte)_flags);
         builder.AppendData(Name);
         builder.AppendData((int)NameComparison);
         builder.AppendData(Value);

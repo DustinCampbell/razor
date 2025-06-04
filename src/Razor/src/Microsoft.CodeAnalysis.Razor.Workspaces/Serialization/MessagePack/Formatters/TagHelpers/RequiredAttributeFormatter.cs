@@ -19,8 +19,9 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
 
     public override RequiredAttributeDescriptor Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(8);
+        reader.ReadArrayHeaderAndVerify(9);
 
+        var flags = (RequiredAttributeFlags)reader.ReadByte();
         var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var nameComparison = (NameComparisonMode)reader.ReadInt32();
         var caseSensitive = reader.ReadBoolean();
@@ -32,7 +33,7 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
         var diagnostics = reader.Deserialize<ImmutableArray<RazorDiagnostic>>(options);
 
         return new RequiredAttributeDescriptor(
-            name!, nameComparison,
+            flags, name!, nameComparison,
             caseSensitive,
             value, valueComparison,
             displayName, diagnostics, metadata);
@@ -40,8 +41,9 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
 
     public override void Serialize(ref MessagePackWriter writer, RequiredAttributeDescriptor value, SerializerCachingOptions options)
     {
-        writer.WriteArrayHeader(8);
+        writer.WriteArrayHeader(9);
 
+        writer.Write((byte)value.Flags);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Name, options);
         writer.Write((int)value.NameComparison);
         writer.Write(value.CaseSensitive);
@@ -55,8 +57,9 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
 
     public override void Skim(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(8);
+        reader.ReadArrayHeaderAndVerify(9);
 
+        reader.Skip(); // Flags
         CachedStringFormatter.Instance.Skim(ref reader, options); // Name
         reader.Skip(); // NameComparison
         reader.Skip(); // CaseSensitive

@@ -6868,10 +6868,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4420680472030537378,
-      "Data2": -466745445135603758,
-      "Data3": 2293815137443481785,
-      "Data4": 1342413353329920882
+      "Data1": 7764526377006304090,
+      "Data2": -8060472438686950853,
+      "Data3": -3335666338356335014,
+      "Data4": -5100658348038239330
     },
     "Kind": "Components.EventHandler",
     "Name": "onfocus",
@@ -6965,7 +6965,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onfocus",
           "Components.IsWeaklyTyped": "True"
         }
@@ -6983,10 +6982,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7604179771523482319,
-      "Data2": 2224551959516312396,
-      "Data3": -7050492938094674089,
-      "Data4": -6151234198001162944
+      "Data1": 7908130079876896174,
+      "Data2": 3022681128162207431,
+      "Data3": 1751703179471862542,
+      "Data4": -2325477350407051571
     },
     "Kind": "Components.EventHandler",
     "Name": "onblur",
@@ -7080,7 +7079,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onblur",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7098,10 +7096,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5751126633764559514,
-      "Data2": 2410595652426660151,
-      "Data3": 3672868175080970737,
-      "Data4": -3619928240861661999
+      "Data1": -8320143423551761329,
+      "Data2": 3845203323641572881,
+      "Data3": 7661028797389589515,
+      "Data4": 4412478481130669068
     },
     "Kind": "Components.EventHandler",
     "Name": "onfocusin",
@@ -7195,7 +7193,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onfocusin",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7213,10 +7210,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 861941431807369912,
-      "Data2": 7027010486969962954,
-      "Data3": 1254228420213235878,
-      "Data4": 9066033079407304954
+      "Data1": 3287888773110433275,
+      "Data2": -6508651664078146207,
+      "Data3": -1779712573694532511,
+      "Data4": -8191056112762099104
     },
     "Kind": "Components.EventHandler",
     "Name": "onfocusout",
@@ -7310,7 +7307,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onfocusout",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7328,10 +7324,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8978801484387472276,
-      "Data2": 2544094587673105233,
-      "Data3": 199634956992066061,
-      "Data4": -1164528454186920616
+      "Data1": -1139668121263651556,
+      "Data2": 4860896250537413820,
+      "Data3": 2110696694367533882,
+      "Data4": 693501605304876249
     },
     "Kind": "Components.EventHandler",
     "Name": "onmouseover",
@@ -7425,7 +7421,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onmouseover",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7443,10 +7438,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1656160030236088169,
-      "Data2": -1259128597673084476,
-      "Data3": -9170086844091218280,
-      "Data4": 845542562106218502
+      "Data1": 3621119056580802461,
+      "Data2": -5972049412330686989,
+      "Data3": -5074439999130981247,
+      "Data4": -6150329409752214568
     },
     "Kind": "Components.EventHandler",
     "Name": "onmouseout",
@@ -7540,7 +7535,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onmouseout",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7558,10 +7552,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1827535918741608398,
-      "Data2": -3962993706687856710,
-      "Data3": 8257773767183932881,
-      "Data4": -6347364871548293542
+      "Data1": -9040038714947939142,
+      "Data2": 2330085373795094053,
+      "Data3": 3176995131017969322,
+      "Data4": 3813490687151700490
     },
     "Kind": "Components.EventHandler",
     "Name": "onmousemove",
@@ -7655,7 +7649,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onmousemove",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7673,10 +7666,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3466889705911316580,
-      "Data2": -4960532704217981791,
-      "Data3": 2022130653156815791,
-      "Data4": 1610281911985770500
+      "Data1": 3704433209291520835,
+      "Data2": -5052094493735959228,
+      "Data3": -5645394515751043417,
+      "Data4": -8453424712680221661
     },
     "Kind": "Components.EventHandler",
     "Name": "onmousedown",
@@ -7770,7 +7763,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onmousedown",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7788,10 +7780,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2761125995735392,
-      "Data2": -2912254041849563070,
-      "Data3": -2501111855345560636,
-      "Data4": -6028411930189876135
+      "Data1": 1862385713500781275,
+      "Data2": -1956902655636939063,
+      "Data3": 7238791483833705227,
+      "Data4": 7407030818949638972
     },
     "Kind": "Components.EventHandler",
     "Name": "onmouseup",
@@ -7885,7 +7877,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onmouseup",
           "Components.IsWeaklyTyped": "True"
         }
@@ -7903,10 +7894,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1724828809332384652,
-      "Data2": 3462947577119804670,
-      "Data3": 6232600944772227356,
-      "Data4": 3575852251466689976
+      "Data1": -461580026093004315,
+      "Data2": 1029517597751734861,
+      "Data3": 3632230036565482677,
+      "Data4": -3521818455886287932
     },
     "Kind": "Components.EventHandler",
     "Name": "onclick",
@@ -8000,7 +7991,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onclick",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8018,10 +8008,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2223498006611523359,
-      "Data2": -4670117301793537457,
-      "Data3": 4197601168818746803,
-      "Data4": 2359399338313735031
+      "Data1": -6667232885192947497,
+      "Data2": 343378859033854868,
+      "Data3": -6277030276924259209,
+      "Data4": 5710051926686517384
     },
     "Kind": "Components.EventHandler",
     "Name": "ondblclick",
@@ -8115,7 +8105,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondblclick",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8133,10 +8122,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6366351730278838338,
-      "Data2": -3006946811591893449,
-      "Data3": -6446100489162286749,
-      "Data4": 5866264512143802151
+      "Data1": -6753071899186887022,
+      "Data2": -4394978659420960177,
+      "Data3": 4426195999872641618,
+      "Data4": 7279869046182739452
     },
     "Kind": "Components.EventHandler",
     "Name": "onwheel",
@@ -8230,7 +8219,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onwheel",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8248,10 +8236,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3421063700095520274,
-      "Data2": -582855646057047158,
-      "Data3": -5142096260501274534,
-      "Data4": 1824616865966893909
+      "Data1": -1465849918736254154,
+      "Data2": 8201132613325689364,
+      "Data3": 5625543978877594164,
+      "Data4": 8977583341786647804
     },
     "Kind": "Components.EventHandler",
     "Name": "onmousewheel",
@@ -8345,7 +8333,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onmousewheel",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8363,10 +8350,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7590641984208789064,
-      "Data2": 4570608577946311147,
-      "Data3": 8015689006921502930,
-      "Data4": -8042130203699601349
+      "Data1": -7485784407418941273,
+      "Data2": 3782586914593797152,
+      "Data3": -6082305278220640634,
+      "Data4": -7646860378949800339
     },
     "Kind": "Components.EventHandler",
     "Name": "oncontextmenu",
@@ -8460,7 +8447,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oncontextmenu",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8478,10 +8464,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3648693258200067805,
-      "Data2": -5992857496958223926,
-      "Data3": -4999512713228189333,
-      "Data4": 1431780164112654309
+      "Data1": 5371857169071904702,
+      "Data2": 5628233629798016267,
+      "Data3": 8517121852563380800,
+      "Data4": -8539424296515670581
     },
     "Kind": "Components.EventHandler",
     "Name": "ondrag",
@@ -8575,7 +8561,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondrag",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8593,10 +8578,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1418725579737418219,
-      "Data2": 9168367896814066814,
-      "Data3": -695948859945469390,
-      "Data4": -1472741295480257290
+      "Data1": -3148041960839194221,
+      "Data2": 4058559163616373370,
+      "Data3": -3035433012852858619,
+      "Data4": -8915509473966365887
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragend",
@@ -8690,7 +8675,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondragend",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8708,10 +8692,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7207469274796367723,
-      "Data2": -5386543630432346485,
-      "Data3": -4071275673007546812,
-      "Data4": -1205863732995710031
+      "Data1": -1947947772678663185,
+      "Data2": -435513618564707383,
+      "Data3": -97598426184528828,
+      "Data4": 333562747982673540
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragenter",
@@ -8805,7 +8789,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondragenter",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8823,10 +8806,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -9112620837351478052,
-      "Data2": -4766311406331356326,
-      "Data3": -6562935098851736088,
-      "Data4": 7403149121862680530
+      "Data1": -6328234078331118907,
+      "Data2": -1767319443433692455,
+      "Data3": -1604471603256125195,
+      "Data4": -7265573712615353538
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragleave",
@@ -8920,7 +8903,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondragleave",
           "Components.IsWeaklyTyped": "True"
         }
@@ -8938,10 +8920,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5649097632945576499,
-      "Data2": 4460568480719997775,
-      "Data3": 90228643565970695,
-      "Data4": 6172651251500540930
+      "Data1": -6975593529107079270,
+      "Data2": -6917897029668988786,
+      "Data3": 6558442593544954562,
+      "Data4": -4705234027440671999
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragover",
@@ -9035,7 +9017,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondragover",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9053,10 +9034,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7125436446064919917,
-      "Data2": -1746950214888211175,
-      "Data3": -535110227062039725,
-      "Data4": -8440700505304600489
+      "Data1": -8220811770248333452,
+      "Data2": 1001097352825574426,
+      "Data3": -6162369410811542708,
+      "Data4": -2704794444298625015
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragstart",
@@ -9150,7 +9131,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondragstart",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9168,10 +9148,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4480952644908202736,
-      "Data2": -4632328531193300274,
-      "Data3": 7874742418262397513,
-      "Data4": -4120823018224612149
+      "Data1": 3306073094804726055,
+      "Data2": -3442884617299493241,
+      "Data3": 4321037526945089653,
+      "Data4": 2070774265085545144
     },
     "Kind": "Components.EventHandler",
     "Name": "ondrop",
@@ -9265,7 +9245,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondrop",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9283,10 +9262,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -674564335047282789,
-      "Data2": -8192543865272038518,
-      "Data3": -889957984496779593,
-      "Data4": 1427866180657583190
+      "Data1": -5046624856042877515,
+      "Data2": 420393461121878030,
+      "Data3": 1025065646412042583,
+      "Data4": -8606769258656643707
     },
     "Kind": "Components.EventHandler",
     "Name": "onkeydown",
@@ -9380,7 +9359,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onkeydown",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9398,10 +9376,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6301727775650056920,
-      "Data2": 629104643891862686,
-      "Data3": -8094532999722517577,
-      "Data4": 6915162561015033886
+      "Data1": 8953075605590924887,
+      "Data2": -2982986523594167105,
+      "Data3": -5651406445789436822,
+      "Data4": 4792485550510230678
     },
     "Kind": "Components.EventHandler",
     "Name": "onkeyup",
@@ -9495,7 +9473,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onkeyup",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9513,10 +9490,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3202002764556306191,
-      "Data2": -7785740850764099914,
-      "Data3": -8248472805082776907,
-      "Data4": 4608633780887787633
+      "Data1": -778600329983323693,
+      "Data2": -7305353345402505357,
+      "Data3": -7909428275822370578,
+      "Data4": 2906044915523210063
     },
     "Kind": "Components.EventHandler",
     "Name": "onkeypress",
@@ -9610,7 +9587,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onkeypress",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9628,10 +9604,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4810855757963561849,
-      "Data2": -2504258833037273470,
-      "Data3": -5236158760781376498,
-      "Data4": -475903600303713379
+      "Data1": 8579037549800009350,
+      "Data2": -4393931763649392928,
+      "Data3": 4728907817775979186,
+      "Data4": -8145455937963904321
     },
     "Kind": "Components.EventHandler",
     "Name": "onchange",
@@ -9725,7 +9701,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onchange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9743,10 +9718,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3402777454754135044,
-      "Data2": -8384152952342891542,
-      "Data3": -1336496918243045648,
-      "Data4": -3311613215504617505
+      "Data1": 7613700176770938169,
+      "Data2": -3381572854676141070,
+      "Data3": 565940865321853113,
+      "Data4": -2035430869585550741
     },
     "Kind": "Components.EventHandler",
     "Name": "oninput",
@@ -9840,7 +9815,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oninput",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9858,10 +9832,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1452739188196573413,
-      "Data2": 5773547983363045328,
-      "Data3": 8892192348831391839,
-      "Data4": -7644031786145697758
+      "Data1": -778624446871327471,
+      "Data2": 6776110793194243579,
+      "Data3": -5793540762550455153,
+      "Data4": 4366817410355762344
     },
     "Kind": "Components.EventHandler",
     "Name": "oninvalid",
@@ -9955,7 +9929,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oninvalid",
           "Components.IsWeaklyTyped": "True"
         }
@@ -9973,10 +9946,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8801842909309879282,
-      "Data2": 3467074958831843368,
-      "Data3": 817907969038428904,
-      "Data4": 3918873148222246306
+      "Data1": 4731663284882348725,
+      "Data2": 1004119209963832806,
+      "Data3": 6972557232586930839,
+      "Data4": -7340903274592599137
     },
     "Kind": "Components.EventHandler",
     "Name": "onreset",
@@ -10070,7 +10043,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onreset",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10088,10 +10060,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6826939205867220336,
-      "Data2": 2416864789452947232,
-      "Data3": -6937022446246857654,
-      "Data4": 544875869160977705
+      "Data1": -8914522649866724823,
+      "Data2": 5524613420171871823,
+      "Data3": -3355572505613898677,
+      "Data4": 4725972596371584314
     },
     "Kind": "Components.EventHandler",
     "Name": "onselect",
@@ -10185,7 +10157,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onselect",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10203,10 +10174,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8328866981252458595,
-      "Data2": 5313117771000793411,
-      "Data3": 119608936292110676,
-      "Data4": 8353434918361367783
+      "Data1": 3927119016042794407,
+      "Data2": 7557485456095989584,
+      "Data3": -8435202847254549102,
+      "Data4": -4162465468817240452
     },
     "Kind": "Components.EventHandler",
     "Name": "onselectstart",
@@ -10300,7 +10271,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onselectstart",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10318,10 +10288,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5280185631738131306,
-      "Data2": 6983992049124476354,
-      "Data3": 8841683467335992457,
-      "Data4": 1831358900478426198
+      "Data1": -2945340606435877255,
+      "Data2": 7332191853095311582,
+      "Data3": 5250776376691876416,
+      "Data4": -6784854347290056804
     },
     "Kind": "Components.EventHandler",
     "Name": "onselectionchange",
@@ -10415,7 +10385,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onselectionchange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10433,10 +10402,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3936068347510968632,
-      "Data2": 4601271230274810652,
-      "Data3": -3278996128016508648,
-      "Data4": -8637181660650961630
+      "Data1": -7049582084984087419,
+      "Data2": -4047767527731336835,
+      "Data3": -2403712553485664426,
+      "Data4": 3464209486284348203
     },
     "Kind": "Components.EventHandler",
     "Name": "onsubmit",
@@ -10530,7 +10499,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onsubmit",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10548,10 +10516,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8471446969896426087,
-      "Data2": -1494135625922153329,
-      "Data3": 8009882705469115740,
-      "Data4": 5487476524635188632
+      "Data1": 2870497975947410108,
+      "Data2": 9123546484219618124,
+      "Data3": 6896610508112455104,
+      "Data4": 2005596989784172816
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforecopy",
@@ -10645,7 +10613,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onbeforecopy",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10663,10 +10630,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2674675530658840532,
-      "Data2": 6888032935979349865,
-      "Data3": -7487877744460056828,
-      "Data4": 1818728423261477483
+      "Data1": -1257927353485000677,
+      "Data2": -8369927024400262626,
+      "Data3": 3914035559082476884,
+      "Data4": -2069570531279506699
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforecut",
@@ -10760,7 +10727,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onbeforecut",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10778,10 +10744,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3239841679056403963,
-      "Data2": -6280949301939036180,
-      "Data3": -7699993068495855679,
-      "Data4": -2687876364317281576
+      "Data1": -592165104043431359,
+      "Data2": 9086509756001817424,
+      "Data3": 642015353916519117,
+      "Data4": 7092223482608617296
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforepaste",
@@ -10875,7 +10841,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onbeforepaste",
           "Components.IsWeaklyTyped": "True"
         }
@@ -10893,10 +10858,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2077187176501597078,
-      "Data2": 3080218176717619529,
-      "Data3": 124230955243200501,
-      "Data4": 259476778403221763
+      "Data1": -9006715247937486759,
+      "Data2": 5493680974035821923,
+      "Data3": -6105915551774820051,
+      "Data4": 5108881643762040075
     },
     "Kind": "Components.EventHandler",
     "Name": "oncopy",
@@ -10990,7 +10955,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oncopy",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11008,10 +10972,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2434542442096309661,
-      "Data2": -1398343494953003254,
-      "Data3": -7632204397140443433,
-      "Data4": -2192842077436546542
+      "Data1": 7265919142846382271,
+      "Data2": 3862731773824467673,
+      "Data3": 8502973125099547867,
+      "Data4": 8978851456260553781
     },
     "Kind": "Components.EventHandler",
     "Name": "oncut",
@@ -11105,7 +11069,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oncut",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11123,10 +11086,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7133527630323888094,
-      "Data2": -7926964399730354783,
-      "Data3": -8289596721980024002,
-      "Data4": -7601475757477507658
+      "Data1": 5703719365369113449,
+      "Data2": 7373348306648671662,
+      "Data3": 1836984525221405157,
+      "Data4": 7240181863330956415
     },
     "Kind": "Components.EventHandler",
     "Name": "onpaste",
@@ -11220,7 +11183,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpaste",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11238,10 +11200,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3848250259758774101,
-      "Data2": 5912660173178335210,
-      "Data3": 1008730967984739472,
-      "Data4": 2358301449864920933
+      "Data1": -2195207311239261627,
+      "Data2": -8419632524453764243,
+      "Data3": 2403675797555880121,
+      "Data4": 4448979131927347955
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchcancel",
@@ -11335,7 +11297,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontouchcancel",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11353,10 +11314,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8454344651688959756,
-      "Data2": 2445497898092929738,
-      "Data3": 7822304857527755893,
-      "Data4": -8283402796028522643
+      "Data1": 444638152803600221,
+      "Data2": -7031689710088244245,
+      "Data3": -4290014275087712370,
+      "Data4": -1119647323214322972
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchend",
@@ -11450,7 +11411,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontouchend",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11468,10 +11428,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7276842940287881136,
-      "Data2": 1023738154338994087,
-      "Data3": 8507881932747135982,
-      "Data4": 1303829641531652638
+      "Data1": -226378222182063769,
+      "Data2": 8698889668761872409,
+      "Data3": -9216044960198058300,
+      "Data4": -2534125537950930368
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchmove",
@@ -11565,7 +11525,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontouchmove",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11583,10 +11542,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5599239900726885767,
-      "Data2": 327032199295174015,
-      "Data3": -7552215938088518789,
-      "Data4": -3033850738040952086
+      "Data1": 4882490219800846987,
+      "Data2": 8551137474327289988,
+      "Data3": -1616465302271892708,
+      "Data4": 4120345618595302592
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchstart",
@@ -11680,7 +11639,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontouchstart",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11698,10 +11656,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 449512595349858554,
-      "Data2": -1611080050432947659,
-      "Data3": 5070203083570989509,
-      "Data4": -6207679152306961351
+      "Data1": 8185908612085970050,
+      "Data2": -8420016737480966788,
+      "Data3": 32828782514307432,
+      "Data4": -5646693811534006410
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchenter",
@@ -11795,7 +11753,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontouchenter",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11813,10 +11770,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1707009049970906751,
-      "Data2": -5169707171475712838,
-      "Data3": -1388715371116283999,
-      "Data4": 6418675235223744923
+      "Data1": 421578859713849138,
+      "Data2": -3571314090663963724,
+      "Data3": 3967185034987264781,
+      "Data4": 6128326118343789405
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchleave",
@@ -11910,7 +11867,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontouchleave",
           "Components.IsWeaklyTyped": "True"
         }
@@ -11928,10 +11884,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3820169423939340656,
-      "Data2": -8503390474008869830,
-      "Data3": -2069378558633911115,
-      "Data4": 7499200612226909920
+      "Data1": -4043743133789473003,
+      "Data2": -6064242064012898633,
+      "Data3": -486336603000442256,
+      "Data4": -1402506412039137114
     },
     "Kind": "Components.EventHandler",
     "Name": "ongotpointercapture",
@@ -12025,7 +11981,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ongotpointercapture",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12043,10 +11998,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1985222692131103668,
-      "Data2": 753950402196048653,
-      "Data3": 3578213128047981593,
-      "Data4": 8843591298595255506
+      "Data1": 6933710168080353140,
+      "Data2": -7851089013642047118,
+      "Data3": 6798409008635101848,
+      "Data4": 3661785190437111922
     },
     "Kind": "Components.EventHandler",
     "Name": "onlostpointercapture",
@@ -12140,7 +12095,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onlostpointercapture",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12158,10 +12112,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6426206620359970500,
-      "Data2": -4985724283039720855,
-      "Data3": -4939062217875638090,
-      "Data4": 6245484964075991513
+      "Data1": 307668211579814686,
+      "Data2": 3327250034842687986,
+      "Data3": 2333973669850507219,
+      "Data4": -4633080144538050985
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointercancel",
@@ -12255,7 +12209,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointercancel",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12273,10 +12226,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6579904569971959888,
-      "Data2": -5304186669012825549,
-      "Data3": 375905281870036674,
-      "Data4": 3063995887134325762
+      "Data1": -6540807962420840586,
+      "Data2": -8266904561064657440,
+      "Data3": -2431125282756235810,
+      "Data4": 8240057548277811440
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerdown",
@@ -12370,7 +12323,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerdown",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12388,10 +12340,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8077091100152201383,
-      "Data2": -509889974532670644,
-      "Data3": -9175674560445141598,
-      "Data4": -8024632367104817373
+      "Data1": 1186729487221869507,
+      "Data2": 6645307581253615489,
+      "Data3": -914839788948028087,
+      "Data4": 2189722964611204397
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerenter",
@@ -12485,7 +12437,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerenter",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12503,10 +12454,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2382054725707562982,
-      "Data2": 4499137897118275334,
-      "Data3": 2801953707483609893,
-      "Data4": 7882951487549212837
+      "Data1": -6033778838526569887,
+      "Data2": -4259080517076335766,
+      "Data3": -5188415919447811975,
+      "Data4": 6238348324347728469
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerleave",
@@ -12600,7 +12551,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerleave",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12618,10 +12568,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8823189335887760249,
-      "Data2": 2173502957725903464,
-      "Data3": 2978833931334342118,
-      "Data4": -3765253353533189891
+      "Data1": 7999506172973778741,
+      "Data2": 9028873279865665197,
+      "Data3": 1902187333833221035,
+      "Data4": 6508430392243183380
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointermove",
@@ -12715,7 +12665,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointermove",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12733,10 +12682,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6244007806715564731,
-      "Data2": -8945753293692302604,
-      "Data3": 3601104942989395782,
-      "Data4": -5260829889338883946
+      "Data1": 8139353946097992146,
+      "Data2": 43554044754845029,
+      "Data3": 2817831893033266715,
+      "Data4": -1795062967408469380
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerout",
@@ -12830,7 +12779,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerout",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12848,10 +12796,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3503613704791204806,
-      "Data2": 7407060797318079272,
-      "Data3": 8790977098451078302,
-      "Data4": -3842310265265571961
+      "Data1": -4713207353723307740,
+      "Data2": -7715159474131419983,
+      "Data3": -1241678761113511369,
+      "Data4": -5702922898186354312
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerover",
@@ -12945,7 +12893,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerover",
           "Components.IsWeaklyTyped": "True"
         }
@@ -12963,10 +12910,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2194013359693155926,
-      "Data2": -87717643611960115,
-      "Data3": -25644031405873034,
-      "Data4": -982631403986741149
+      "Data1": 6048529194020887229,
+      "Data2": 6293949228558810396,
+      "Data3": 7949058920945074641,
+      "Data4": -8763122767339854728
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerup",
@@ -13060,7 +13007,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerup",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13078,10 +13024,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4947968949361281030,
-      "Data2": -3355594081554388042,
-      "Data3": -1383543512237464848,
-      "Data4": -726160098865502180
+      "Data1": -8650696625233307511,
+      "Data2": -6340806965157176595,
+      "Data3": 3028571402041754102,
+      "Data4": 5071075298044932709
     },
     "Kind": "Components.EventHandler",
     "Name": "oncanplay",
@@ -13175,7 +13121,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oncanplay",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13193,10 +13138,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8632326550883429988,
-      "Data2": 7967289607944733614,
-      "Data3": 6506991180028951216,
-      "Data4": -4923717785393872264
+      "Data1": -3162722657215127251,
+      "Data2": 4658594349865957319,
+      "Data3": -3174008237264702729,
+      "Data4": 3107171792516549411
     },
     "Kind": "Components.EventHandler",
     "Name": "oncanplaythrough",
@@ -13290,7 +13235,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oncanplaythrough",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13308,10 +13252,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7561152373823514357,
-      "Data2": 6129586761203692364,
-      "Data3": 6872200150412369764,
-      "Data4": -3045109802062519126
+      "Data1": -3486672009585680349,
+      "Data2": 2606222077319336633,
+      "Data3": 6411337821205812385,
+      "Data4": 8184221397642138404
     },
     "Kind": "Components.EventHandler",
     "Name": "oncuechange",
@@ -13405,7 +13349,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "oncuechange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13423,10 +13366,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7990410930233280844,
-      "Data2": -4643655884437245274,
-      "Data3": -5588258397008148083,
-      "Data4": 6022708892374459647
+      "Data1": -3103926380131218223,
+      "Data2": 2659192315642775771,
+      "Data3": 2373380857055146392,
+      "Data4": 1370113244126498574
     },
     "Kind": "Components.EventHandler",
     "Name": "ondurationchange",
@@ -13520,7 +13463,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondurationchange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13538,10 +13480,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5593192573229991564,
-      "Data2": 3266589339470287026,
-      "Data3": 4696219468729782796,
-      "Data4": 2642357373537900693
+      "Data1": 5764048893830017575,
+      "Data2": 747976685720391900,
+      "Data3": 326081815871442240,
+      "Data4": 8957669001216125517
     },
     "Kind": "Components.EventHandler",
     "Name": "onemptied",
@@ -13635,7 +13577,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onemptied",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13653,10 +13594,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5944206181578715967,
-      "Data2": -1421216799937085590,
-      "Data3": 4325287812626449124,
-      "Data4": -4497682729253571039
+      "Data1": 6283654158953812440,
+      "Data2": 6833256907640379349,
+      "Data3": -5378790782580334490,
+      "Data4": -1910411438123723455
     },
     "Kind": "Components.EventHandler",
     "Name": "onpause",
@@ -13750,7 +13691,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpause",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13768,10 +13708,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7212901968045678993,
-      "Data2": 7109443773408582796,
-      "Data3": -4271374094866377026,
-      "Data4": -3499284370952803504
+      "Data1": -8280408194746889160,
+      "Data2": -8074480829520908897,
+      "Data3": 7158114439987248000,
+      "Data4": 9184702489603899352
     },
     "Kind": "Components.EventHandler",
     "Name": "onplay",
@@ -13865,7 +13805,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onplay",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13883,10 +13822,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2711767990990091019,
-      "Data2": 1873892108707944746,
-      "Data3": 599173911343354311,
-      "Data4": 4759773890106630545
+      "Data1": -5870516933477182594,
+      "Data2": 9130245807852351036,
+      "Data3": 7271599809138912090,
+      "Data4": -1290700340062211439
     },
     "Kind": "Components.EventHandler",
     "Name": "onplaying",
@@ -13980,7 +13919,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onplaying",
           "Components.IsWeaklyTyped": "True"
         }
@@ -13998,10 +13936,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7585930551492923586,
-      "Data2": 6103916796599151243,
-      "Data3": 9188364017411797422,
-      "Data4": 2594429545094652799
+      "Data1": 4558861504013445755,
+      "Data2": 3833250474815453780,
+      "Data3": -608081354802289507,
+      "Data4": -5414414016277956669
     },
     "Kind": "Components.EventHandler",
     "Name": "onratechange",
@@ -14095,7 +14033,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onratechange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14113,10 +14050,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1601698452228020203,
-      "Data2": 2816618064868916640,
-      "Data3": 3076724554212479214,
-      "Data4": -7422433245362720829
+      "Data1": -4438903578942549082,
+      "Data2": -7345265521066313398,
+      "Data3": 5989033741603676402,
+      "Data4": -33068130081412235
     },
     "Kind": "Components.EventHandler",
     "Name": "onseeked",
@@ -14210,7 +14147,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onseeked",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14228,10 +14164,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 589847604676852275,
-      "Data2": 3222621378538609936,
-      "Data3": 5175355642549366067,
-      "Data4": -1025906989651592264
+      "Data1": 6848633179620516885,
+      "Data2": -6042372754789785486,
+      "Data3": -3253073338614890947,
+      "Data4": 8540836165765040963
     },
     "Kind": "Components.EventHandler",
     "Name": "onseeking",
@@ -14325,7 +14261,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onseeking",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14343,10 +14278,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2871993726664812699,
-      "Data2": -9107839732144230371,
-      "Data3": -8189599647414848857,
-      "Data4": 3921018090424695367
+      "Data1": 5863140141090178719,
+      "Data2": 3967440712217688881,
+      "Data3": -8419418826680001145,
+      "Data4": -6203488104494198289
     },
     "Kind": "Components.EventHandler",
     "Name": "onstalled",
@@ -14440,7 +14375,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onstalled",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14458,10 +14392,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8121286249872949232,
-      "Data2": 1509301270139478408,
-      "Data3": 7635065557989773715,
-      "Data4": -1074041899690336647
+      "Data1": -2183056752707886927,
+      "Data2": -4793039057614647391,
+      "Data3": 7139809677221685933,
+      "Data4": -8815789336559558372
     },
     "Kind": "Components.EventHandler",
     "Name": "onstop",
@@ -14555,7 +14489,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onstop",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14573,10 +14506,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3839682524085230681,
-      "Data2": 7080770460247222917,
-      "Data3": -123547437381659053,
-      "Data4": 1908364851974335141
+      "Data1": 3308951304442507910,
+      "Data2": 3441325157066104351,
+      "Data3": -7898875198287136675,
+      "Data4": 1042808655626664346
     },
     "Kind": "Components.EventHandler",
     "Name": "onsuspend",
@@ -14670,7 +14603,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onsuspend",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14688,10 +14620,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4449306204625175052,
-      "Data2": -5130804235495820305,
-      "Data3": 8875447671770323032,
-      "Data4": -7496629426673200488
+      "Data1": -5170277932673118378,
+      "Data2": 4380732371761980089,
+      "Data3": 8955140528026743497,
+      "Data4": 1154116140816840999
     },
     "Kind": "Components.EventHandler",
     "Name": "ontimeupdate",
@@ -14785,7 +14717,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontimeupdate",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14803,10 +14734,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3454161895690772662,
-      "Data2": 2092426368956239531,
-      "Data3": 805218792801124456,
-      "Data4": 1002506673245360811
+      "Data1": -613588577558960135,
+      "Data2": 6000690897134402945,
+      "Data3": -4015168372203999052,
+      "Data4": 653561428240137617
     },
     "Kind": "Components.EventHandler",
     "Name": "onvolumechange",
@@ -14900,7 +14831,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onvolumechange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -14918,10 +14848,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1890058259065028705,
-      "Data2": 5197042850404570613,
-      "Data3": 3032721616072681825,
-      "Data4": -1819638579869446114
+      "Data1": 2265979350348421156,
+      "Data2": 3239156925483365118,
+      "Data3": -1341621531717109263,
+      "Data4": 18910123061465793
     },
     "Kind": "Components.EventHandler",
     "Name": "onwaiting",
@@ -15015,7 +14945,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onwaiting",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15033,10 +14962,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5044571955706191113,
-      "Data2": -9112471101844389284,
-      "Data3": 4562609539040862980,
-      "Data4": -1931821038665737143
+      "Data1": -7161695515772055250,
+      "Data2": 3509243521082902839,
+      "Data3": 8500554035424504571,
+      "Data4": -7813046758516364925
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadstart",
@@ -15130,7 +15059,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onloadstart",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15148,10 +15076,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2049424023429413996,
-      "Data2": 6085665054707891694,
-      "Data3": -2883420009882746646,
-      "Data4": -2194580111039119221
+      "Data1": -2733145408592922703,
+      "Data2": -6685126393912760410,
+      "Data3": -4250977978516254965,
+      "Data4": 8895327767879536959
     },
     "Kind": "Components.EventHandler",
     "Name": "ontimeout",
@@ -15245,7 +15173,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontimeout",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15263,10 +15190,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5254815415226759229,
-      "Data2": -3242744492244483572,
-      "Data3": 4354302237065085039,
-      "Data4": 1727060036725107311
+      "Data1": 4968241227417815291,
+      "Data2": -5080897113703942520,
+      "Data3": -9087434050577116429,
+      "Data4": -8633773226453937983
     },
     "Kind": "Components.EventHandler",
     "Name": "onabort",
@@ -15360,7 +15287,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onabort",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15378,10 +15304,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5877693495138945598,
-      "Data2": -3840439381863010849,
-      "Data3": 1270944257894656050,
-      "Data4": -1803749479966220075
+      "Data1": 6643494836289241112,
+      "Data2": 8205556495949148981,
+      "Data3": 4924484382013004544,
+      "Data4": -1668529963135384890
     },
     "Kind": "Components.EventHandler",
     "Name": "onload",
@@ -15475,7 +15401,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onload",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15493,10 +15418,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8449873605062256925,
-      "Data2": 6170030591534920485,
-      "Data3": -127091926922472525,
-      "Data4": -7548361723862798527
+      "Data1": 3228134072853305870,
+      "Data2": 4302042234311864280,
+      "Data3": -33820231801061500,
+      "Data4": -8887065693300482412
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadend",
@@ -15590,7 +15515,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onloadend",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15608,10 +15532,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8513304447281492773,
-      "Data2": 3150962729069094036,
-      "Data3": -7707031608123036216,
-      "Data4": 5621027807418316159
+      "Data1": -9128661765227049018,
+      "Data2": -5289519207739510570,
+      "Data3": 1749084506935500353,
+      "Data4": -4092536975948804715
     },
     "Kind": "Components.EventHandler",
     "Name": "onprogress",
@@ -15705,7 +15629,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onprogress",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15723,10 +15646,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3617484231022085301,
-      "Data2": 6887895244371439787,
-      "Data3": 3403646793955552717,
-      "Data4": 6612522038795212413
+      "Data1": -5438332330845228800,
+      "Data2": -7992794714767089741,
+      "Data3": 5270649272129570761,
+      "Data4": -769629469959343761
     },
     "Kind": "Components.EventHandler",
     "Name": "onerror",
@@ -15820,7 +15743,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onerror",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15838,10 +15760,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5537612923470513194,
-      "Data2": -7212195223985075391,
-      "Data3": 5122058933191456049,
-      "Data4": 4279292182629874329
+      "Data1": 6069930134105013201,
+      "Data2": -7432149897941594557,
+      "Data3": 7017331480641801716,
+      "Data4": 7323188706602887447
     },
     "Kind": "Components.EventHandler",
     "Name": "onactivate",
@@ -15935,7 +15857,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onactivate",
           "Components.IsWeaklyTyped": "True"
         }
@@ -15953,10 +15874,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6575581013598711197,
-      "Data2": 992235510866078141,
-      "Data3": -4300860952275329312,
-      "Data4": 1784743839251200617
+      "Data1": -2560200517901195075,
+      "Data2": 8905030024470655363,
+      "Data3": 1115998445584187902,
+      "Data4": -6616635190626806478
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforeactivate",
@@ -16050,7 +15971,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onbeforeactivate",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16068,10 +15988,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4594797973202407501,
-      "Data2": -7605798577311498784,
-      "Data3": 4090648412164055378,
-      "Data4": 2908246938601337095
+      "Data1": 4125166111822885499,
+      "Data2": -2189408496906870300,
+      "Data3": -4861794258689378686,
+      "Data4": 5247003023682497035
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforedeactivate",
@@ -16165,7 +16085,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onbeforedeactivate",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16183,10 +16102,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 9155470171675461410,
-      "Data2": 8929872180698489070,
-      "Data3": 4408604297482340692,
-      "Data4": -8850986179292546330
+      "Data1": 5722117096319783285,
+      "Data2": 6633496099013321514,
+      "Data3": 5216946244917038172,
+      "Data4": -2568277552164715330
     },
     "Kind": "Components.EventHandler",
     "Name": "ondeactivate",
@@ -16280,7 +16199,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ondeactivate",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16298,10 +16216,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6654393818787653336,
-      "Data2": 1975694515821190387,
-      "Data3": 3096495234146617696,
-      "Data4": -3229019398535524501
+      "Data1": 6441838608791993751,
+      "Data2": 4942308007887433609,
+      "Data3": -5535905485967770630,
+      "Data4": 249598561023491397
     },
     "Kind": "Components.EventHandler",
     "Name": "onended",
@@ -16395,7 +16313,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onended",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16413,10 +16330,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8505881251094151480,
-      "Data2": 5997813012860456540,
-      "Data3": 2350166895511938768,
-      "Data4": -3406079090563204961
+      "Data1": 4085614541981020285,
+      "Data2": -2600044863987578422,
+      "Data3": -1518921384525103407,
+      "Data4": -8269317635913578978
     },
     "Kind": "Components.EventHandler",
     "Name": "onfullscreenchange",
@@ -16510,7 +16427,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onfullscreenchange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16528,10 +16444,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5049730640933551363,
-      "Data2": 2017559519104223003,
-      "Data3": -5746272181880479717,
-      "Data4": -4163886322265440050
+      "Data1": 9218704052447591554,
+      "Data2": -4643031176995878411,
+      "Data3": -592029984645202732,
+      "Data4": 496511566477301374
     },
     "Kind": "Components.EventHandler",
     "Name": "onfullscreenerror",
@@ -16625,7 +16541,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onfullscreenerror",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16643,10 +16558,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1121975328083665405,
-      "Data2": 8900397559218086892,
-      "Data3": 4767515429004782285,
-      "Data4": -550819125273636043
+      "Data1": -811681692254841334,
+      "Data2": 5771862649549406723,
+      "Data3": 5036746201368336020,
+      "Data4": -3567090562549777953
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadeddata",
@@ -16740,7 +16655,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onloadeddata",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16758,10 +16672,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7298635134415769320,
-      "Data2": -2995404387497793241,
-      "Data3": 481844789962128672,
-      "Data4": 7912934009948046290
+      "Data1": 6426884379833601906,
+      "Data2": 4900325416273662299,
+      "Data3": 3417656081650496174,
+      "Data4": -6390479008224621562
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadedmetadata",
@@ -16855,7 +16769,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onloadedmetadata",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16873,10 +16786,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1779987483995118847,
-      "Data2": 220916162355879802,
-      "Data3": 1568756207559874954,
-      "Data4": 1998339188007350938
+      "Data1": -5633946525621111828,
+      "Data2": -3674492125899562710,
+      "Data3": -5715733764613603695,
+      "Data4": 978261476574769269
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerlockchange",
@@ -16970,7 +16883,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerlockchange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -16988,10 +16900,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1964590142281604317,
-      "Data2": -386708702802207691,
-      "Data3": -7938974285808625300,
-      "Data4": -6734775360429069301
+      "Data1": 5697161707413878908,
+      "Data2": -4133454868489534331,
+      "Data3": 6262411620660923859,
+      "Data4": 2504351714331955161
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerlockerror",
@@ -17085,7 +16997,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onpointerlockerror",
           "Components.IsWeaklyTyped": "True"
         }
@@ -17103,10 +17014,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2910683329864203718,
-      "Data2": 4098567483756263235,
-      "Data3": 8878364271434370477,
-      "Data4": -5021310964223300182
+      "Data1": -7195032345643112101,
+      "Data2": 7288160341798825180,
+      "Data3": 6733520398106831473,
+      "Data4": 1213979998851959645
     },
     "Kind": "Components.EventHandler",
     "Name": "onreadystatechange",
@@ -17200,7 +17111,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onreadystatechange",
           "Components.IsWeaklyTyped": "True"
         }
@@ -17218,10 +17128,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2026826769639697380,
-      "Data2": -2330242959161601024,
-      "Data3": -8042691349390193381,
-      "Data4": 862953883022241192
+      "Data1": -6363847847370229985,
+      "Data2": -162035362037503339,
+      "Data3": 4465609881543587158,
+      "Data4": -2048442754077482906
     },
     "Kind": "Components.EventHandler",
     "Name": "onscroll",
@@ -17315,7 +17225,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "onscroll",
           "Components.IsWeaklyTyped": "True"
         }
@@ -17333,10 +17242,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1513533445803928200,
-      "Data2": -1200797054364724838,
-      "Data3": -9213951095106925046,
-      "Data4": 5101505198263871538
+      "Data1": -6115040654879285129,
+      "Data2": 2208260760544009708,
+      "Data3": -5401126562791810621,
+      "Data4": 6731614672828635028
     },
     "Kind": "Components.EventHandler",
     "Name": "ontoggle",
@@ -17430,7 +17339,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "ontoggle",
           "Components.IsWeaklyTyped": "True"
         }
@@ -17448,10 +17356,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5107649486960899471,
-      "Data2": 376289366325661089,
-      "Data3": -5912356958726927100,
-      "Data4": -4123457849213235010
+      "Data1": -4398606775907065988,
+      "Data2": -5755642919702714919,
+      "Data3": -7034616992762500187,
+      "Data4": -3536933149503638231
     },
     "Kind": "Components.Splat",
     "Name": "Attributes",
@@ -17485,7 +17393,6 @@
           "Id": 19
         },
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Attributes"
         }
       }
@@ -20283,10 +20190,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 218589513625224636,
-      "Data2": -4291262767135431010,
-      "Data3": -8545555724839425507,
-      "Data4": -3113413252802569286
+      "Data1": 981771177356390488,
+      "Data2": 2775221050505306254,
+      "Data3": -2872282571475907969,
+      "Data4": 8785397603060902998
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20393,7 +20300,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       }
@@ -20410,10 +20316,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1109725836404139976,
-      "Data2": 1513800012799804865,
-      "Data3": 6517638571382941311,
-      "Data4": -7201337188231265549
+      "Data1": 4261061341356155524,
+      "Data2": -1929038487635853545,
+      "Data3": -2801199782449763161,
+      "Data4": 4841792818464778761
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20545,7 +20451,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -20581,10 +20486,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7534228417961465199,
-      "Data2": -4766191618756424414,
-      "Data3": 522860430752100062,
-      "Data4": -2817540445608592296
+      "Data1": 2895431842166401020,
+      "Data2": 4530838940229077218,
+      "Data3": 7203853679319464345,
+      "Data4": -8250746454169516238
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -20716,7 +20621,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind_value"
         }
       },
@@ -20752,10 +20656,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1798982283117152384,
-      "Data2": 7535114734607109050,
-      "Data3": 7956126784229574152,
-      "Data4": -8757095259972283003
+      "Data1": -9169585569665034128,
+      "Data2": -4224409549608911779,
+      "Data3": -555140919632024553,
+      "Data4": -7472956726282746613
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20899,7 +20803,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -20936,10 +20839,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1763962940539542808,
-      "Data2": 8591953708570492074,
-      "Data3": 7343564219529797057,
-      "Data4": 3359496929968825398
+      "Data1": 6345538500816035378,
+      "Data2": 4116758561419823187,
+      "Data3": -2718265742379706686,
+      "Data4": -6376771068890701473
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21083,7 +20986,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -21120,10 +21022,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5972766612956441914,
-      "Data2": 2414908866198422503,
-      "Data3": -3365320512771175033,
-      "Data4": -9116878985089956514
+      "Data1": 4855837091203067560,
+      "Data2": 6460826967740679214,
+      "Data3": -2423060034021423700,
+      "Data4": 5982185753552933147
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21267,7 +21169,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -21304,10 +21205,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1303476681909997728,
-      "Data2": 2380633242086400825,
-      "Data3": -2281867565882990110,
-      "Data4": 6927517053337683365
+      "Data1": 196822542440767363,
+      "Data2": -1840875539634634588,
+      "Data3": -6955547694010423689,
+      "Data4": 1875755448922528120
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -21451,7 +21352,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind_value"
         }
       },
@@ -21488,10 +21388,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5376803577146379924,
-      "Data2": 3849588772998563996,
-      "Data3": -4122323655351132685,
-      "Data4": 8907852158942627943
+      "Data1": -5623061914914480468,
+      "Data2": 2897231168901890296,
+      "Data3": 3207647682127774490,
+      "Data4": 2124502462317847229
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21635,7 +21535,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -21672,10 +21571,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 196987248142256520,
-      "Data2": 7791414220957472657,
-      "Data3": -6777494389929502457,
-      "Data4": 6605755066826957417
+      "Data1": -8795240082476700642,
+      "Data2": 37751442862456099,
+      "Data3": 3602598371473188065,
+      "Data4": -9213254812982175440
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -21819,7 +21718,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind_value"
         }
       },
@@ -21856,10 +21754,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2851050530543697509,
-      "Data2": 3453858276246517454,
-      "Data3": -832167137743041705,
-      "Data4": -9159184687662685762
+      "Data1": -260477059723984723,
+      "Data2": -5313404294997981571,
+      "Data3": -8335858799822751228,
+      "Data4": 2976038721543230822
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -22003,7 +21901,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -22040,10 +21937,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6909425438563498112,
-      "Data2": 8832749800298693970,
-      "Data3": -2742583595948446501,
-      "Data4": 3666036598578404246
+      "Data1": 1059334998953544936,
+      "Data2": -2731650582871012108,
+      "Data3": 488132406018783435,
+      "Data4": 902128137397108885
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -22187,7 +22084,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind_value"
         }
       },
@@ -22224,10 +22120,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7549484063820300960,
-      "Data2": 8335874842341498074,
-      "Data3": -8067813433911250531,
-      "Data4": 1814582749071142352
+      "Data1": -4729053698799308865,
+      "Data2": 2034112512711662361,
+      "Data3": -6325861362180248598,
+      "Data4": -6939015712413091836
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -22371,7 +22267,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -22408,10 +22303,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2992121853773026454,
-      "Data2": 5096037944944460716,
-      "Data3": 2265792885765383263,
-      "Data4": -7639926559601346293
+      "Data1": -3831864702476704986,
+      "Data2": 293676417114872236,
+      "Data3": -8916187803752555950,
+      "Data4": -1178616491707147661
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -22555,7 +22450,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind_value"
         }
       },
@@ -22592,10 +22486,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5604103268774486285,
-      "Data2": 6277507372147740672,
-      "Data3": 3649537978510107863,
-      "Data4": 8133193020905979740
+      "Data1": 3074150478074564857,
+      "Data2": -2756104694854937944,
+      "Data3": 5657766309734773415,
+      "Data4": -4821986201515698934
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -22739,7 +22633,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -22776,10 +22669,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8450524168764732912,
-      "Data2": -8444978264781864728,
-      "Data3": 9194968053561052864,
-      "Data4": 3631840960103666810
+      "Data1": -8766662465711473648,
+      "Data2": 7095537521168186004,
+      "Data3": -6528160653729088577,
+      "Data4": 5938285343845559460
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -22923,7 +22816,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind_value"
         }
       },
@@ -22960,10 +22852,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4828379828640333039,
-      "Data2": -4794772554242076891,
-      "Data3": -8266959884012651920,
-      "Data4": 8278972720619521830
+      "Data1": -539872078204030385,
+      "Data2": 7930243274688410262,
+      "Data3": -9142421217548733575,
+      "Data4": 2027787091527187843
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -23095,7 +22987,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -23131,10 +23022,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6496125229589557116,
-      "Data2": -3409247973141356837,
-      "Data3": 6264336018210784358,
-      "Data4": -8147174002136902069
+      "Data1": 293207485633971672,
+      "Data2": -8531887172060897499,
+      "Data3": -3773611953319648082,
+      "Data4": 7248281387668195063
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -23266,7 +23157,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Bind"
         }
       },
@@ -23302,10 +23192,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6567623378323112943,
-      "Data2": -607617794480128934,
-      "Data3": 8571927852729905627,
-      "Data4": 6655093473488497847
+      "Data1": 4905159776254527934,
+      "Data2": 614338979289903955,
+      "Data3": 5027275137214273035,
+      "Data4": 4134986744926982562
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -23398,7 +23288,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -23416,10 +23305,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2053232748455477644,
-      "Data2": 4518193157486914997,
-      "Data3": 3455695405618978577,
-      "Data4": -3391725251197836680
+      "Data1": -3271719848128062363,
+      "Data2": -7035171334798627136,
+      "Data3": -3827024056832851031,
+      "Data4": -2206911812366940695
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -23512,7 +23401,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -23531,10 +23419,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 751835807255124003,
-      "Data2": 1095728830299993438,
-      "Data3": -4956215318868035331,
-      "Data4": 8492386597365034528
+      "Data1": 4900191390243739436,
+      "Data2": 5298086036615322458,
+      "Data3": -5724597259125828049,
+      "Data4": 5078411168232378898
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -23627,7 +23515,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -23645,10 +23532,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1497626927278524040,
-      "Data2": -4229843753418029114,
-      "Data3": -1535690557416021291,
-      "Data4": -1197629927398352900
+      "Data1": 3047527917831651950,
+      "Data2": 865139184962917158,
+      "Data3": 844456497565304993,
+      "Data4": -8299248234847422577
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -23741,7 +23628,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -23760,10 +23646,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4094973930856552858,
-      "Data2": 5970515746290887909,
-      "Data3": 5364302356778113607,
-      "Data4": -7066535325423370006
+      "Data1": -8668880790125476481,
+      "Data2": 6455976756748483051,
+      "Data3": 8772192530992555391,
+      "Data4": -4612710968223621353
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -23856,7 +23742,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -23874,10 +23759,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8555624462731560642,
-      "Data2": 4212793621301116974,
-      "Data3": -987658464647369366,
-      "Data4": 5612474385815794990
+      "Data1": 5859901718390142934,
+      "Data2": -4316293630378416170,
+      "Data3": -3745117989816349011,
+      "Data4": 2002862967126412691
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -23970,7 +23855,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -23989,10 +23873,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6280494890092967268,
-      "Data2": 8101648641366319638,
-      "Data3": -7515636920313673478,
-      "Data4": 8694814087942916113
+      "Data1": -5483271704641953550,
+      "Data2": 8768654673654656584,
+      "Data3": -1600401312279187913,
+      "Data4": -5384209376433612517
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputRadioGroup<TValue>",
@@ -24085,7 +23969,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24103,10 +23986,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7728141752253190896,
-      "Data2": -4480798709939165850,
-      "Data3": 3454751543406909052,
-      "Data4": 2670817588907308171
+      "Data1": 7182792729120721137,
+      "Data2": 2589353670390845177,
+      "Data3": -533969323855158640,
+      "Data4": -7062657015104322156
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputRadioGroup<TValue>",
@@ -24199,7 +24082,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24218,10 +24100,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -9007065425150704855,
-      "Data2": -6756376329887285769,
-      "Data3": -1132356660392951997,
-      "Data4": 8282346113183130710
+      "Data1": -9136866458306127338,
+      "Data2": 6977630579440425542,
+      "Data3": 3874150274899951920,
+      "Data4": -8304504283516783149
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -24314,7 +24196,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24332,10 +24213,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7432354078337775264,
-      "Data2": 3376970200537933465,
-      "Data3": -7858905443591901587,
-      "Data4": 7896798501784974117
+      "Data1": 3726057360944211629,
+      "Data2": 8903917217790600621,
+      "Data3": 1707483575801196105,
+      "Data4": -7139858467707160369
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -24428,7 +24309,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24447,10 +24327,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1790885174284432952,
-      "Data2": -5838401522580498862,
-      "Data3": 1534440344637968970,
-      "Data4": 8141996620137812328
+      "Data1": 8699539289942530507,
+      "Data2": -7247505537968500587,
+      "Data3": -1913000409723171514,
+      "Data4": 2274531922971205187
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -24543,7 +24423,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24561,10 +24440,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6458893718815141672,
-      "Data2": 248835190255941373,
-      "Data3": 1264858122181826570,
-      "Data4": -7398385981113528995
+      "Data1": 4704939882277025703,
+      "Data2": 3827749973208157406,
+      "Data3": -719233688140183195,
+      "Data4": 7570573800543222720
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -24657,7 +24536,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24676,10 +24554,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 459649849707475789,
-      "Data2": 7804408469008312859,
-      "Data3": -4078919485350190247,
-      "Data4": 5950278002911902081
+      "Data1": -4681731593304033195,
+      "Data2": 3862197063096592911,
+      "Data3": 968281765573615378,
+      "Data4": -4814524537252770416
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -24772,7 +24650,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24790,10 +24667,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6926727493470133295,
-      "Data2": -894644307768772145,
-      "Data3": 6783805888568389545,
-      "Data4": 5637704060299484057
+      "Data1": -1138205838427410036,
+      "Data2": 2363579265285369015,
+      "Data3": -8302923775089294196,
+      "Data4": 5906074467783544662
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -24886,7 +24763,6 @@
           }
         ],
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Value"
         }
       }
@@ -24905,10 +24781,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3433851023208733174,
-      "Data2": 3375754526381928938,
-      "Data3": 2450211486116827704,
-      "Data4": 1369009548225546692
+      "Data1": -4843331272280754681,
+      "Data2": 5949981194570096649,
+      "Data3": 4334511077959932880,
+      "Data4": -2847825680450866652
     },
     "Kind": "Components.Ref",
     "Name": "Ref",
@@ -24942,7 +24818,6 @@
           "Id": 18
         },
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Ref"
         }
       }
@@ -24956,10 +24831,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6698348811685334064,
-      "Data2": -5587990710963161315,
-      "Data3": -1849342611069762618,
-      "Data4": 4103764586591951114
+      "Data1": 2859282532000069277,
+      "Data2": -5450705881105643484,
+      "Data3": -629153408413201865,
+      "Data4": -2195871990175255995
     },
     "Kind": "Components.Key",
     "Name": "Key",
@@ -24993,7 +24868,6 @@
           "Id": 17
         },
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "Key"
         }
       }

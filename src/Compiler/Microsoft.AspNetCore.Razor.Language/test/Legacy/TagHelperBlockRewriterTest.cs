@@ -2447,19 +2447,18 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     RuntimeName(ComponentMetadata.Bind.RuntimeName),
                     TypeName("Microsoft.AspNetCore.Components.Bind"),
                     MakeTrue(ComponentMetadata.Bind.FallbackKey))
-                .TagMatchingRuleDescriptor(rule =>
-                    rule
-                        .RequireTagName("*")
-                        .RequireAttributeDescriptor(r =>
-                        {
-                            r.Name = "@bind-";
-                            r.NameComparison = RequiredAttributeNameComparison.PrefixMatch;
-                            r.IsDirectiveAttribute = true;
-                        }))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
+                .TagMatchingRuleDescriptor(rule => rule
+                    .RequireTagName("*")
+                    .RequireAttributeDescriptor(r =>
+                    {
+                        r.Name = "@bind-";
+                        r.NameComparison = RequiredAttributeNameComparison.PrefixMatch;
+                        r.IsDirectiveAttribute = true;
+                    }))
+                .BoundAttributeDescriptor(attribute => attribute
                     .Name("@bind-...")
-                    .Metadata(PropertyName("Bind"), IsDirectiveAttribute)
+                    .IsDirectiveAttribute()
+                    .Metadata(PropertyName("Bind"))
                     .AsDictionaryAttribute("@bind-", typeof(object).FullName)
                     .TypeName("System.Collections.Generic.Dictionary<string, object>")
                     .BindAttributeParameter(p =>
@@ -2492,22 +2491,20 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     RuntimeName(ComponentMetadata.Bind.RuntimeName),
                     TypeName("Microsoft.AspNetCore.Components.Bind"),
                     MakeTrue(ComponentMetadata.Bind.FallbackKey))
-                .TagMatchingRuleDescriptor(rule =>
-                    rule
-                        .RequireTagName("*")
-                        .RequireAttributeDescriptor(r =>
-                        {
-                            r.Name = "@bind-";
-                            r.NameComparison = RequiredAttributeNameComparison.PrefixMatch;
-                            r.IsDirectiveAttribute = true;
-                        }))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
+                .TagMatchingRuleDescriptor(rule => rule
+                    .RequireTagName("*")
+                    .RequireAttributeDescriptor(r =>
+                    {
+                        r.Name = "@bind-";
+                        r.NameComparison = RequiredAttributeNameComparison.PrefixMatch;
+                        r.IsDirectiveAttribute = true;
+                    }))
+                .BoundAttributeDescriptor(attribute => attribute
                     .Name("@bind-...")
-                    .Metadata(PropertyName("Bind"), IsDirectiveAttribute)
+                    .IsDirectiveAttribute()
+                    .Metadata(PropertyName("Bind"))
                     .AsDictionaryAttribute("@bind-", typeof(object).FullName)
                     .TypeName("System.Collections.Generic.Dictionary<string, object>")
-                    .Metadata(IsDirectiveAttribute)
                     .BindAttributeParameter(p =>
                     {
                         p.Name = "param";

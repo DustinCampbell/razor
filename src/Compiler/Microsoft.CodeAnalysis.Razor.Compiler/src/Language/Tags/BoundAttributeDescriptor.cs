@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -84,11 +83,6 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
         if (typeName == typeof(bool).FullName || typeName == "bool")
         {
             flags |= BoundAttributeFlags.IsBooleanProperty;
-        }
-
-        if (Metadata.Contains(ComponentMetadata.Common.DirectiveAttribute, bool.TrueString))
-        {
-            flags |= BoundAttributeFlags.IsDirectiveAttribute;
         }
 
         _flags = flags;

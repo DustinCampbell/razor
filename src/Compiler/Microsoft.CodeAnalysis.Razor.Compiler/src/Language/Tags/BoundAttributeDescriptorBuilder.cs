@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -79,6 +78,12 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
     {
         get => _caseSensitive ?? _parent.CaseSensitive;
         set => _caseSensitive = value;
+    }
+
+    public bool IsDirectiveAttribute
+    {
+        get => _flags.IsFlagSet(BoundAttributeFlags.IsDirectiveAttribute);
+        set => _flags.UpdateFlag(BoundAttributeFlags.IsDirectiveAttribute, value);
     }
 
     public bool IsEnum
@@ -181,16 +186,12 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
         return Name ?? string.Empty;
     }
 
-    private bool IsDirectiveAttribute()
-        => TryGetMetadataValue(ComponentMetadata.Common.DirectiveAttribute, out var value) &&
-           value == bool.TrueString;
-
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)
     {
         // data-* attributes are explicitly not implemented by user agents and are not intended for use on
         // the server; therefore it's invalid for TagHelpers to bind to them.
         const string DataDashPrefix = "data-";
-        var isDirectiveAttribute = IsDirectiveAttribute();
+        var isDirectiveAttribute = IsDirectiveAttribute;
 
         if (Name.IsNullOrWhiteSpace())
         {

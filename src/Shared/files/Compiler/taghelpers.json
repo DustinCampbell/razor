@@ -4240,10 +4240,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8092035641332991887,
-      "Data2": -7283911352065565502,
-      "Data3": 3178387577637483365,
-      "Data4": -8589771937613264575
+      "Data1": -7190723432164962052,
+      "Data2": -6482363780359048012,
+      "Data3": -363667395982414305,
+      "Data4": 6278885733588512543
     },
     "Kind": "Components.EventHandler",
     "Name": "onabort",
@@ -4295,7 +4295,6 @@
         "DisplayName": "preventDefault",
         "Documentation": "Specifieswhethertocancel(ifcancelable)thedefaultactionthatbelongstothe'@onabort'event.",
         "Metadata": {
-          "Common.DirectiveAttribute": "True",
           "Common.PropertyName": "PreventDefault",
           "Components.IsWeaklyTyped": "True"
         },

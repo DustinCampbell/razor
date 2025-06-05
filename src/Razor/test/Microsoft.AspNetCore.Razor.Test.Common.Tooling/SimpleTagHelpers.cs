@@ -116,8 +116,9 @@ internal static class SimpleTagHelpers
         directiveAttribute1.BindAttribute(attribute =>
         {
             attribute.Name = "@test";
-            attribute.SetMetadata(PropertyName("Test"), IsDirectiveAttribute);
+            attribute.SetMetadata(PropertyName("Test"));
             attribute.TypeName = typeof(string).FullName;
+            attribute.IsDirectiveAttribute = true;
 
             attribute.BindAttributeParameter(parameter =>
             {
@@ -153,8 +154,9 @@ internal static class SimpleTagHelpers
         directiveAttribute2.BindAttribute(attribute =>
         {
             attribute.Name = "@minimized";
-            attribute.SetMetadata(PropertyName("Minimized"), IsDirectiveAttribute);
+            attribute.SetMetadata(PropertyName("Minimized"));
             attribute.TypeName = typeof(bool).FullName;
+            attribute.IsDirectiveAttribute = true;
 
             attribute.BindAttributeParameter(parameter =>
             {
@@ -192,8 +194,9 @@ internal static class SimpleTagHelpers
         directiveAttribute3.BindAttribute(attribute =>
         {
             attribute.Name = "@onclick";
-            attribute.SetMetadata(PropertyName("onclick"), IsDirectiveAttribute, IsWeaklyTyped);
+            attribute.SetMetadata(PropertyName("onclick"), IsWeaklyTyped);
             attribute.TypeName = "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Web.MouseEventArgs>";
+            attribute.IsDirectiveAttribute = true;
         });
         directiveAttribute3.SetMetadata(
             RuntimeName(ComponentMetadata.EventHandler.RuntimeName),

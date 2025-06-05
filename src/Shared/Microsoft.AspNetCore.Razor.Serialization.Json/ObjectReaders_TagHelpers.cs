@@ -144,8 +144,8 @@ internal static partial class ObjectReaders
             {
                 var flags = (BoundAttributeFlags)reader.ReadInt32(nameof(BoundAttributeDescriptor.Flags));
                 var kind = reader.ReadNonNullString(nameof(BoundAttributeDescriptor.Kind));
-                var name = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.Name));
-                var propertyName = reader.ReadNonNullString(nameof(BoundAttributeDescriptor.PropertyName));
+                var name = reader.ReadStringOrDefault(nameof(BoundAttributeDescriptor.Name), defaultValue: string.Empty);
+                var propertyName = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.PropertyName));
                 var typeName = reader.ReadNonNullString(nameof(BoundAttributeDescriptor.TypeName));
                 var indexerNamePrefix = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.IndexerNamePrefix));
                 var indexerTypeName = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.IndexerTypeName));

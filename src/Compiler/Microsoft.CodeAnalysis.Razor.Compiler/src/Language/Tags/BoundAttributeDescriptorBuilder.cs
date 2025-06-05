@@ -132,6 +132,8 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
     private protected override BoundAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        Assumed.NotNull(TypeName, $"{nameof(TypeName)} must be set before calling Build().");
+
         var flags = _flags;
 
         if (CaseSensitive)
@@ -143,8 +145,8 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
             flags,
             _kind,
             Name ?? string.Empty,
-            PropertyName!,
-            TypeName ?? string.Empty,
+            PropertyName,
+            TypeName,
             IndexerAttributeNamePrefix,
             IndexerValueTypeName,
             _documentationObject,

@@ -69,12 +69,12 @@ internal abstract class AbstractRazorComponentDefinitionService(
 
     private async Task<LspRange> GetNavigateRangeAsync(IDocumentSnapshot documentSnapshot, BoundAttributeDescriptor? attributeDescriptor, CancellationToken cancellationToken)
     {
-        if (attributeDescriptor is not null)
+        if (attributeDescriptor?.PropertyName is string propertyName)
         {
             _logger.LogInformation($"Attempting to get definition from an attribute directly.");
 
             var range = await RazorComponentDefinitionHelpers
-                .TryGetPropertyRangeAsync(documentSnapshot, attributeDescriptor.PropertyName, _documentMappingService, _logger, cancellationToken)
+                .TryGetPropertyRangeAsync(documentSnapshot, propertyName, _documentMappingService, _logger, cancellationToken)
                 .ConfigureAwait(false);
 
             if (range is not null)

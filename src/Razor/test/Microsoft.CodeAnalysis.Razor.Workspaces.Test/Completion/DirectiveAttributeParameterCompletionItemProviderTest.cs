@@ -101,10 +101,15 @@ public class DirectiveAttributeParameterCompletionItemProviderTest : RazorToolin
     public void GetAttributeParameterCompletions_NoDirectiveAttributesForTag_ReturnsEmptyCollection()
     {
         // Arrange
-        var descriptor = TagHelperDescriptorBuilder.Create("CatchAll", "TestAssembly");
-        descriptor.BoundAttributeDescriptor(boundAttribute => boundAttribute.Name = "Test");
-        descriptor.TagMatchingRule(rule => rule.RequireTagName("*"));
-        var documentContext = TagHelperDocumentContext.Create(string.Empty, [descriptor.Build()]);
+        var builder = TagHelperDescriptorBuilder.Create("CatchAll", "TestAssembly");
+        builder.BindAttribute(a =>
+        {
+            a.Name = "Test";
+            a.TypeName = typeof(string).FullName;
+        });
+
+        builder.TagMatchingRule(rule => rule.RequireTagName("*"));
+        var documentContext = TagHelperDocumentContext.Create(string.Empty, [builder.Build()]);
 
         // Act
         var completions = DirectiveAttributeParameterCompletionItemProvider.GetAttributeParameterCompletions("@bin", string.Empty, "input", [], documentContext);

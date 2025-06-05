@@ -628,6 +628,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .BoundAttributeDescriptor(builder =>
                 {
                     builder.Name = "@bind";
+                    builder.TypeName = typeof(int).FullName;
                     builder.IsDirectiveAttribute = true;
                 })
                 .TagOutputHint("table")

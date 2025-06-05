@@ -171,8 +171,14 @@ public class TextDocumentUriPresentationEndpointTests(ITestOutputHelper testOutp
         {
             b.IsEditorRequired = true;
             b.Name = "MyAttribute";
+            b.TypeName = typeof(string).FullName;
         });
-        builder.BindAttribute(b => b.Name = "MyNonRequiredAttribute");
+
+        builder.BindAttribute(b =>
+        {
+            b.Name = "MyNonRequiredAttribute";
+            b.TypeName = typeof(string).FullName;
+        });
 
         await projectManager.UpdateAsync(updater =>
         {

@@ -616,6 +616,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
                 .BoundAttributeDescriptor(builder =>
                 {
                     builder.Name = "@bind";
+                    builder.TypeName = typeof(int).FullName;
                     builder.IsDirectiveAttribute = true;
                 })
                 .TagOutputHint("table")

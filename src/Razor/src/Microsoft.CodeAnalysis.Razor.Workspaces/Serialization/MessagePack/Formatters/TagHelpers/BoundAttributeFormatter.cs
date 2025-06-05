@@ -22,8 +22,8 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
 
         var flags = (BoundAttributeFlags)reader.ReadUInt16();
         var kind = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
-        var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
-        var propertyName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
+        var name = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
+        var propertyName = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var typeName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var indexerNamePrefix = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var indexerTypeName = CachedStringFormatter.Instance.Deserialize(ref reader, options);

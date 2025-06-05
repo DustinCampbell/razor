@@ -39,10 +39,7 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
 
     public void Attribute(Action<RequiredAttributeDescriptorBuilder> configure)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgHelper.ThrowIfNull(configure);
 
         var builder = RequiredAttributeDescriptorBuilder.GetInstance(this);
         configure(builder);
@@ -51,6 +48,8 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
 
     private protected override TagMatchingRuleDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        Assumed.NotNull(TagName, $"{nameof(TagName)} must be set before calling Build().");
+
         var flags = _flags;
 
         if (CaseSensitive)
@@ -58,12 +57,7 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
             flags.SetFlag(TagMatchingRuleFlags.CaseSensitive);
         }
 
-        return new TagMatchingRuleDescriptor(
-            flags,
-            TagName ?? string.Empty,
-            ParentTag,
-            Attributes.ToImmutable(),
-            diagnostics);
+        return new TagMatchingRuleDescriptor(flags, TagName, ParentTag, Attributes.ToImmutable(), diagnostics);
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

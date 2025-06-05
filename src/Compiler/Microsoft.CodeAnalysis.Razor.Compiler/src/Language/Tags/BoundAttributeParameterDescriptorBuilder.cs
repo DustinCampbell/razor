@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -17,7 +16,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
     [AllowNull]
     private string _kind;
     private DocumentationObject _documentationObject;
-    private MetadataHolder _metadata;
 
     private BoundAttributeParameterDescriptorBuilder()
     {
@@ -41,6 +39,8 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 
     public string? DisplayName { get; set; }
 
+    internal bool CaseSensitive => _parent.CaseSensitive;
+
     public bool IsEnum
     {
         get => _flags.IsFlagSet(BoundAttributeParameterFlags.IsEnum);
@@ -52,15 +52,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
         get => _flags.IsFlagSet(BoundAttributeParameterFlags.IsBindAttributeGetSet);
         set => _flags.UpdateFlag(BoundAttributeParameterFlags.IsBindAttributeGetSet, value);
     }
-
-    public IDictionary<string, string?> Metadata => _metadata.MetadataDictionary;
-
-    public void SetMetadata(MetadataCollection metadata) => _metadata.SetMetadataCollection(metadata);
-
-    public bool TryGetMetadataValue(string key, [NotNullWhen(true)] out string? value)
-        => _metadata.TryGetMetadataValue(key, out value);
-
-    internal bool CaseSensitive => _parent.CaseSensitive;
 
     internal void SetDocumentation(string? text)
     {
@@ -89,7 +80,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
             TypeName ?? string.Empty,
             _documentationObject,
             GetDisplayName(),
-            _metadata.GetMetadataCollection(),
             diagnostics);
     }
 

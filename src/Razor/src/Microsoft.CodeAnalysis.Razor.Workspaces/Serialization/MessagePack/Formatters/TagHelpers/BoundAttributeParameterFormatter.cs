@@ -18,7 +18,7 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
 
     public override BoundAttributeParameterDescriptor Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(9);
+        reader.ReadArrayHeaderAndVerify(8);
 
         var flags = (BoundAttributeParameterFlags)reader.ReadByte();
         var kind = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
@@ -28,16 +28,15 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
         var displayName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var documentationObject = reader.Deserialize<DocumentationObject>(options);
 
-        var metadata = reader.Deserialize<MetadataCollection>(options);
         var diagnostics = reader.Deserialize<ImmutableArray<RazorDiagnostic>>(options);
 
         return new BoundAttributeParameterDescriptor(
-            flags, kind, name!, propertyName, typeName, documentationObject, displayName, metadata, diagnostics);
+            flags, kind, name!, propertyName, typeName, documentationObject, displayName, diagnostics);
     }
 
     public override void Serialize(ref MessagePackWriter writer, BoundAttributeParameterDescriptor value, SerializerCachingOptions options)
     {
-        writer.WriteArrayHeader(9);
+        writer.WriteArrayHeader(8);
 
         writer.Write((byte)value.Flags);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Kind, options);
@@ -47,13 +46,12 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
         CachedStringFormatter.Instance.Serialize(ref writer, value.DisplayName, options);
         writer.Serialize(value.DocumentationObject, options);
 
-        writer.Serialize(value.Metadata, options);
         writer.Serialize(value.Diagnostics, options);
     }
 
     public override void Skim(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(9);
+        reader.ReadArrayHeaderAndVerify(8);
 
         reader.Skip(); // Flags
         CachedStringFormatter.Instance.Skim(ref reader, options); // Kind
@@ -63,7 +61,6 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
         CachedStringFormatter.Instance.Skim(ref reader, options); // DisplayName
         DocumentationObjectFormatter.Instance.Skim(ref reader, options); // DocumentationObject
 
-        MetadataCollectionFormatter.Instance.Skim(ref reader, options); // Metadata
         RazorDiagnosticFormatter.Instance.SkimArray(ref reader, options); // Diagnostics
     }
 }

@@ -181,13 +181,11 @@ internal static partial class ObjectReaders
                 var displayName = reader.ReadNonNullString(nameof(BoundAttributeParameterDescriptor.DisplayName));
                 var documentationObject = ReadDocumentationObject(reader, nameof(BoundAttributeParameterDescriptor.Documentation));
 
-                var metadata = ReadMetadata(reader, nameof(BoundAttributeParameterDescriptor.Metadata));
                 var diagnostics = reader.ReadImmutableArrayOrEmpty(nameof(BoundAttributeParameterDescriptor.Diagnostics), ReadDiagnostic);
 
                 return new BoundAttributeParameterDescriptor(
                     flags, Cached(kind), Cached(name)!, propertyName, Cached(typeName),
-                    documentationObject, Cached(displayName),
-                    metadata, diagnostics);
+                    documentationObject, Cached(displayName), diagnostics);
             }
         }
 

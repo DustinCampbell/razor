@@ -65,6 +65,12 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 
     private protected override BoundAttributeParameterDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        Assumed.NotNull(Name, $"{nameof(Name)} must be set before calling Build().");
+        Assumed.NotNull(PropertyName, $"{nameof(PropertyName)} must be set before calling Build().");
+        Assumed.NotNull(TypeName, $"{nameof(TypeName)} must be set before calling Build().");
+
+        var displayName = DisplayName ?? $":{Name}";
+
         var flags = _flags;
 
         if (CaseSensitive)
@@ -73,18 +79,8 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
         }
 
         return new BoundAttributeParameterDescriptor(
-            flags,
-            _kind,
-            Name ?? string.Empty,
-            PropertyName ?? string.Empty,
-            TypeName ?? string.Empty,
-            _documentationObject,
-            GetDisplayName(),
-            diagnostics);
+            flags, _kind, Name, PropertyName, TypeName, _documentationObject, displayName, diagnostics);
     }
-
-    private string GetDisplayName()
-        => DisplayName ?? $":{Name}";
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)
     {

@@ -35,6 +35,7 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
     [AllowNull]
     private TagHelperDescriptorBuilder _parent;
+    private BoundAttributeFlags _flags;
     [AllowNull]
     private string _kind;
     private DocumentationObject _documentationObject;
@@ -54,11 +55,8 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
     [AllowNull]
     public string Name { get; set; }
     public string? TypeName { get; set; }
-    public bool IsEnum { get; set; }
-    public bool IsDictionary { get; set; }
     public string? IndexerAttributeNamePrefix { get; set; }
     public string? IndexerValueTypeName { get; set; }
-    internal bool IsEditorRequired { get; set; }
 
     public string? Documentation
     {
@@ -81,6 +79,24 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
     {
         get => _caseSensitive ?? _parent.CaseSensitive;
         set => _caseSensitive = value;
+    }
+
+    public bool IsEnum
+    {
+        get => _flags.IsFlagSet(BoundAttributeFlags.IsEnum);
+        set => _flags.UpdateFlag(BoundAttributeFlags.IsEnum, value);
+    }
+
+    public bool IsDictionary
+    {
+        get => _flags.IsFlagSet(BoundAttributeFlags.HasIndexer);
+        set => _flags.UpdateFlag(BoundAttributeFlags.HasIndexer, value);
+    }
+
+    internal bool IsEditorRequired
+    {
+        get => _flags.IsFlagSet(BoundAttributeFlags.IsEditorRequired);
+        set => _flags.UpdateFlag(BoundAttributeFlags.IsEditorRequired, value);
     }
 
     private TagHelperObjectBuilderCollection<BoundAttributeParameterDescriptor, BoundAttributeParameterDescriptorBuilder> Parameters { get; }
@@ -110,19 +126,23 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
     private protected override BoundAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var flags = _flags;
+
+        if (CaseSensitive)
+        {
+            flags |= BoundAttributeFlags.CaseSensitive;
+        }
+
         return new BoundAttributeDescriptor(
+            flags,
             _kind,
             Name ?? string.Empty,
             TypeName ?? string.Empty,
-            IsEnum,
-            IsDictionary,
             IndexerAttributeNamePrefix,
             IndexerValueTypeName,
             _documentationObject,
             GetDisplayName(),
             ContainingType,
-            CaseSensitive,
-            IsEditorRequired,
             Parameters.ToImmutable(),
             _metadata.GetMetadataCollection(),
             diagnostics);

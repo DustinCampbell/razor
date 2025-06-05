@@ -1,29 +1,33 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 namespace Microsoft.AspNetCore.Razor.Language;
 
 /// <summary>
-/// The structure the element should be written in.
+///  The structure the element should be written in.
 /// </summary>
+/// <remarks>
+///  ⚠️ This enum are packed into two bits of <see cref="TagMatchingRuleFlags"/> values.
+///  Adding more than four values requires updating <see cref="TagMatchingRuleFlags"/> and related logic.
+/// </remarks>
 public enum TagStructure
 {
     /// <summary>
-    /// If no other tag helper applies to the same element and specifies a <see cref="TagStructure"/>,
-    /// <see cref="NormalOrSelfClosing"/> will be used.
+    ///  If no other tag helper applies to the same element and specifies a <see cref="TagStructure"/>,
+    ///  <see cref="NormalOrSelfClosing"/> will be used.
     /// </summary>
-    Unspecified,
+    Unspecified = 0,
 
     /// <summary>
-    /// Element can be written as &lt;my-tag-helper&gt;&lt;/my-tag-helper&gt; or &lt;my-tag-helper /&gt;.
+    ///  Element can be written as &lt;my-tag-helper&gt;&lt;/my-tag-helper&gt; or &lt;my-tag-helper /&gt;.
     /// </summary>
-    NormalOrSelfClosing,
+    NormalOrSelfClosing = 1,
 
     /// <summary>
-    /// Element can be written as &lt;my-tag-helper&gt; or &lt;my-tag-helper /&gt;.
+    ///  Element can be written as &lt;my-tag-helper&gt; or &lt;my-tag-helper /&gt;.
     /// </summary>
-    /// <remarks>Elements with a <see cref="WithoutEndTag"/> structure will never have any content.</remarks>
-    WithoutEndTag
+    /// <remarks>
+    ///  Elements with a <see cref="WithoutEndTag"/> structure will never have any content.
+    /// </remarks>
+    WithoutEndTag = 2
 }

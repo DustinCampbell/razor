@@ -23,6 +23,7 @@ public partial class BoundAttributeParameterDescriptorBuilder
     private protected override void Reset()
     {
         _parent = null;
+        _flags = 0;
         _kind = null;
         _documentationObject = default;
 

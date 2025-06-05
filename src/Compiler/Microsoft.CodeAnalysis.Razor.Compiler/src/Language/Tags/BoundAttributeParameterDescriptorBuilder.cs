@@ -13,6 +13,7 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 {
     [AllowNull]
     private BoundAttributeDescriptorBuilder _parent;
+    private BoundAttributeParameterFlags _flags;
     [AllowNull]
     private string _kind;
     private DocumentationObject _documentationObject;
@@ -30,7 +31,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 
     public string? Name { get; set; }
     public string? TypeName { get; set; }
-    public bool IsEnum { get; set; }
 
     public string? Documentation
     {
@@ -39,6 +39,12 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
     }
 
     public string? DisplayName { get; set; }
+
+    public bool IsEnum
+    {
+        get => _flags.IsFlagSet(BoundAttributeParameterFlags.IsEnum);
+        set => _flags.UpdateFlag(BoundAttributeParameterFlags.IsEnum, value);
+    }
 
     public IDictionary<string, string?> Metadata => _metadata.MetadataDictionary;
 
@@ -61,14 +67,20 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 
     private protected override BoundAttributeParameterDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var flags = _flags;
+
+        if (CaseSensitive)
+        {
+            flags |= BoundAttributeParameterFlags.CaseSensitive;
+        }
+
         return new BoundAttributeParameterDescriptor(
+            flags,
             _kind,
             Name ?? string.Empty,
             TypeName ?? string.Empty,
-            IsEnum,
             _documentationObject,
             GetDisplayName(),
-            CaseSensitive,
             _metadata.GetMetadataCollection(),
             diagnostics);
     }

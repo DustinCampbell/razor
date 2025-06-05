@@ -4051,10 +4051,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5340276905534729414,
-          "Data2": 7965708409412462159,
-          "Data3": 3933155878710532897,
-          "Data4": 5127580265248437608
+          "Data1": 1263103628170926893,
+          "Data2": -2598980518848531745,
+          "Data3": -4433699875558123694,
+          "Data4": -5662878381896558398
         },
         "Kind": "Components.EventHandler",
         "Name": "onabort",
@@ -4106,6 +4106,7 @@
             "Documentation": "Sets the '@onabort' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ProgressEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4116,6 +4117,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4143,10 +4145,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 5341464665459495706,
-          "Data2": 8434874177749153713,
-          "Data3": 4372396008434299285,
-          "Data4": 8369092128322552856
+          "Data1": 3244917802505984800,
+          "Data2": -2157852231156527086,
+          "Data3": -6842843197945059024,
+          "Data4": 2697725433481137874
         },
         "Kind": "Components.EventHandler",
         "Name": "onactivate",
@@ -4198,6 +4200,7 @@
             "Documentation": "Sets the '@onactivate' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4208,6 +4211,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4235,10 +4239,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 1141757535500825123,
-          "Data2": -6773871237239928969,
-          "Data3": -1713259156328672955,
-          "Data4": -6715639837058694554
+          "Data1": 9191595693677244788,
+          "Data2": -6252074438605916717,
+          "Data3": 3090030514508336784,
+          "Data4": 6019943988797139875
         },
         "Kind": "Components.EventHandler",
         "Name": "onbeforeactivate",
@@ -4290,6 +4294,7 @@
             "Documentation": "Sets the '@onbeforeactivate' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4300,6 +4305,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4327,10 +4333,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -687061060804453395,
-          "Data2": 4939948007043659594,
-          "Data3": 3329227115305705534,
-          "Data4": -4252215607662237770
+          "Data1": 1768581685435824486,
+          "Data2": -3685640579433038920,
+          "Data3": 2039418305864753458,
+          "Data4": -2535539891315894239
         },
         "Kind": "Components.EventHandler",
         "Name": "onbeforecopy",
@@ -4382,6 +4388,7 @@
             "Documentation": "Sets the '@onbeforecopy' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4392,6 +4399,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4419,10 +4427,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 4095226631553932341,
-          "Data2": 6194587741804233234,
-          "Data3": 2809787388744028088,
-          "Data4": 7811139409657612091
+          "Data1": -8651993883490510160,
+          "Data2": 9103601260133020543,
+          "Data3": 1632376183485217572,
+          "Data4": 4029080546423692532
         },
         "Kind": "Components.EventHandler",
         "Name": "onbeforecut",
@@ -4474,6 +4482,7 @@
             "Documentation": "Sets the '@onbeforecut' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4484,6 +4493,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4511,10 +4521,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -7606557138198674200,
-          "Data2": -6624808672871897432,
-          "Data3": 4154420917122000004,
-          "Data4": -394407405687047729
+          "Data1": 6287946122333612480,
+          "Data2": 1599763104943998755,
+          "Data3": 1703652840432279142,
+          "Data4": 3288261351281764889
         },
         "Kind": "Components.EventHandler",
         "Name": "onbeforedeactivate",
@@ -4566,6 +4576,7 @@
             "Documentation": "Sets the '@onbeforedeactivate' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4576,6 +4587,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4603,10 +4615,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 1116015094610985774,
-          "Data2": 94033766777102236,
-          "Data3": 7829293251111134401,
-          "Data4": 7783913287431373015
+          "Data1": 1627529528323659762,
+          "Data2": 5106787881176256158,
+          "Data3": 2737091940155574835,
+          "Data4": -4148486658118327467
         },
         "Kind": "Components.EventHandler",
         "Name": "onbeforepaste",
@@ -4658,6 +4670,7 @@
             "Documentation": "Sets the '@onbeforepaste' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4668,6 +4681,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4695,10 +4709,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -590338933990042976,
-          "Data2": -3950078287911151334,
-          "Data3": 5460665443945589622,
-          "Data4": 6642743898108022204
+          "Data1": 1970340132561318427,
+          "Data2": -8126561943290257095,
+          "Data3": 8156954798855779701,
+          "Data4": 5614865050916458994
         },
         "Kind": "Components.EventHandler",
         "Name": "onblur",
@@ -4750,6 +4764,7 @@
             "Documentation": "Sets the '@onblur' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.FocusEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4760,6 +4775,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4787,10 +4803,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 1317463641620212572,
-          "Data2": 6743929474328263309,
-          "Data3": -4345303186324680084,
-          "Data4": 2201541864969711398
+          "Data1": -4040703229413739856,
+          "Data2": -4931192097649604290,
+          "Data3": 1977725060406513853,
+          "Data4": -2058846049956540174
         },
         "Kind": "Components.EventHandler",
         "Name": "oncanplay",
@@ -4842,6 +4858,7 @@
             "Documentation": "Sets the '@oncanplay' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4852,6 +4869,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4879,10 +4897,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5152481119839371423,
-          "Data2": 5450145399713671077,
-          "Data3": 2549326010162598375,
-          "Data4": 8913886487039991839
+          "Data1": -1044263066343789612,
+          "Data2": -4750177930868867128,
+          "Data3": 1082670981736789180,
+          "Data4": -8864832805696219472
         },
         "Kind": "Components.EventHandler",
         "Name": "oncanplaythrough",
@@ -4934,6 +4952,7 @@
             "Documentation": "Sets the '@oncanplaythrough' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -4944,6 +4963,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -4971,10 +4991,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5326691521123930926,
-          "Data2": -5159996806243732956,
-          "Data3": 6133157489153212428,
-          "Data4": -5500722850585637566
+          "Data1": -8429960443142279941,
+          "Data2": 3723950470870162375,
+          "Data3": 2411344645414617137,
+          "Data4": -7232902004351922128
         },
         "Kind": "Components.EventHandler",
         "Name": "onchange",
@@ -5026,6 +5046,7 @@
             "Documentation": "Sets the '@onchange' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.ChangeEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5036,6 +5057,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5063,10 +5085,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 7662119673845377080,
-          "Data2": -5484315247902697283,
-          "Data3": 3741291334549476657,
-          "Data4": 5881101952225347827
+          "Data1": 7396570107593387253,
+          "Data2": 7985545435978821465,
+          "Data3": -6162834181879794829,
+          "Data4": -646062603030461299
         },
         "Kind": "Components.EventHandler",
         "Name": "onclick",
@@ -5118,6 +5140,7 @@
             "Documentation": "Sets the '@onclick' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5128,6 +5151,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5155,10 +5179,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -7656354774163203760,
-          "Data2": -1811194485094274557,
-          "Data3": 8162916913393558672,
-          "Data4": -1368868874086312035
+          "Data1": -1745639619036522348,
+          "Data2": 5218097543096764416,
+          "Data3": -2424653562074228092,
+          "Data4": -5157789947666737918
         },
         "Kind": "Components.EventHandler",
         "Name": "oncontextmenu",
@@ -5210,6 +5234,7 @@
             "Documentation": "Sets the '@oncontextmenu' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5220,6 +5245,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5247,10 +5273,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -6500965808263113955,
-          "Data2": -1233535290922438842,
-          "Data3": 3903051244895711138,
-          "Data4": 8501219031983961491
+          "Data1": 4358556231717849727,
+          "Data2": -4876201554013923905,
+          "Data3": -3464082726366980103,
+          "Data4": -7754228764139442851
         },
         "Kind": "Components.EventHandler",
         "Name": "oncopy",
@@ -5302,6 +5328,7 @@
             "Documentation": "Sets the '@oncopy' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ClipboardEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5312,6 +5339,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5339,10 +5367,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -3398962677370949582,
-          "Data2": -8615610053743389693,
-          "Data3": -4959371828723731752,
-          "Data4": -471243177684550605
+          "Data1": -800065078635219720,
+          "Data2": 8637505831277925970,
+          "Data3": 8116194791292390780,
+          "Data4": 7060410095264742864
         },
         "Kind": "Components.EventHandler",
         "Name": "oncuechange",
@@ -5394,6 +5422,7 @@
             "Documentation": "Sets the '@oncuechange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5404,6 +5433,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5431,10 +5461,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2598144257154626074,
-          "Data2": -9125840664809037618,
-          "Data3": -6413574766958681749,
-          "Data4": 6503827985424700216
+          "Data1": 8062709130300170057,
+          "Data2": 6076660585023136572,
+          "Data3": 3164861497966697057,
+          "Data4": 1181090866341589250
         },
         "Kind": "Components.EventHandler",
         "Name": "oncut",
@@ -5486,6 +5516,7 @@
             "Documentation": "Sets the '@oncut' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ClipboardEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5496,6 +5527,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5523,10 +5555,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 8875888382664770179,
-          "Data2": -4474553657965909164,
-          "Data3": -1403985406426352299,
-          "Data4": -3439735904555196992
+          "Data1": -7866225312576173857,
+          "Data2": -2895264866536691927,
+          "Data3": -4567903606245371535,
+          "Data4": 1849714218491847088
         },
         "Kind": "Components.EventHandler",
         "Name": "ondblclick",
@@ -5578,6 +5610,7 @@
             "Documentation": "Sets the '@ondblclick' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5588,6 +5621,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5615,10 +5649,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -4851704730644063566,
-          "Data2": -1339856804671885298,
-          "Data3": -57695946008396884,
-          "Data4": 5659864669224728882
+          "Data1": 433508790269632518,
+          "Data2": 2115370318830337928,
+          "Data3": 8727196756654955333,
+          "Data4": -2258647417807719319
         },
         "Kind": "Components.EventHandler",
         "Name": "ondeactivate",
@@ -5670,6 +5704,7 @@
             "Documentation": "Sets the '@ondeactivate' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5680,6 +5715,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5707,10 +5743,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1352725422691831776,
-          "Data2": -9069909562117129846,
-          "Data3": 2883463911345785759,
-          "Data4": -4946419222871164273
+          "Data1": 7164434672529495194,
+          "Data2": -1860133857059923577,
+          "Data3": -3191588532441939759,
+          "Data4": 5036331963407308430
         },
         "Kind": "Components.EventHandler",
         "Name": "ondrag",
@@ -5762,6 +5798,7 @@
             "Documentation": "Sets the '@ondrag' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.DragEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5772,6 +5809,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5799,10 +5837,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -4631792175685455798,
-          "Data2": 7097514216263163600,
-          "Data3": -1945366310925209131,
-          "Data4": -5189753813893985406
+          "Data1": -6134964205010227327,
+          "Data2": 3715865385056930296,
+          "Data3": -8821133095097608944,
+          "Data4": -2105052895575745799
         },
         "Kind": "Components.EventHandler",
         "Name": "ondragend",
@@ -5854,6 +5892,7 @@
             "Documentation": "Sets the '@ondragend' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.DragEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5864,6 +5903,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5891,10 +5931,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 5815234548978811196,
-          "Data2": 1999810229818883725,
-          "Data3": -1966046684653349597,
-          "Data4": -183886395346490864
+          "Data1": -231513178439479246,
+          "Data2": 5931095511729870928,
+          "Data3": 5428214987273316754,
+          "Data4": -2654348649845048580
         },
         "Kind": "Components.EventHandler",
         "Name": "ondragenter",
@@ -5946,6 +5986,7 @@
             "Documentation": "Sets the '@ondragenter' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.DragEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -5956,6 +5997,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -5983,10 +6025,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -302706429090707335,
-          "Data2": -1919303819571174727,
-          "Data3": -4490597508367810185,
-          "Data4": 6700423512661466581
+          "Data1": 6365007253124443517,
+          "Data2": 1821744124812605244,
+          "Data3": -814528632128773330,
+          "Data4": -2470338035066049749
         },
         "Kind": "Components.EventHandler",
         "Name": "ondragleave",
@@ -6038,6 +6080,7 @@
             "Documentation": "Sets the '@ondragleave' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.DragEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6048,6 +6091,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6075,10 +6119,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -7115126412473066351,
-          "Data2": -9058493366204761764,
-          "Data3": -7825248201019038346,
-          "Data4": 3000930089492031320
+          "Data1": 3179092313018138138,
+          "Data2": -499652999958628266,
+          "Data3": -320075376326256840,
+          "Data4": 6692458797725767158
         },
         "Kind": "Components.EventHandler",
         "Name": "ondragover",
@@ -6130,6 +6174,7 @@
             "Documentation": "Sets the '@ondragover' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.DragEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6140,6 +6185,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6167,10 +6213,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 718403870769492387,
-          "Data2": -167408525035148872,
-          "Data3": -5089119922888820716,
-          "Data4": -165657452775227567
+          "Data1": 3232547425547267110,
+          "Data2": 4192673159533135784,
+          "Data3": -7785834812960055128,
+          "Data4": 2377931724825885902
         },
         "Kind": "Components.EventHandler",
         "Name": "ondragstart",
@@ -6222,6 +6268,7 @@
             "Documentation": "Sets the '@ondragstart' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.DragEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6232,6 +6279,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6259,10 +6307,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1248170110050713148,
-          "Data2": 2636076217974260306,
-          "Data3": 4632113448321024508,
-          "Data4": 2630758307219977174
+          "Data1": 475711794496789925,
+          "Data2": -2534961280547867041,
+          "Data3": -7662916863503708422,
+          "Data4": -1852825828458549122
         },
         "Kind": "Components.EventHandler",
         "Name": "ondrop",
@@ -6314,6 +6362,7 @@
             "Documentation": "Sets the '@ondrop' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.DragEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6324,6 +6373,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6351,10 +6401,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2120023756783541342,
-          "Data2": -1051284168360907553,
-          "Data3": 6586156830679213536,
-          "Data4": 7159023474544639291
+          "Data1": -8429330011804017616,
+          "Data2": 2281655541761407139,
+          "Data3": -9125940535850541250,
+          "Data4": -8153043290309171107
         },
         "Kind": "Components.EventHandler",
         "Name": "ondurationchange",
@@ -6406,6 +6456,7 @@
             "Documentation": "Sets the '@ondurationchange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6416,6 +6467,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6443,10 +6495,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3604820933350874200,
-          "Data2": -2722351219976677935,
-          "Data3": -6220687394249573424,
-          "Data4": 6314317214293266238
+          "Data1": 8321953176724193363,
+          "Data2": 7283070449782734097,
+          "Data3": -2807802870451160242,
+          "Data4": -6976916056459984409
         },
         "Kind": "Components.EventHandler",
         "Name": "onemptied",
@@ -6498,6 +6550,7 @@
             "Documentation": "Sets the '@onemptied' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6508,6 +6561,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6535,10 +6589,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 133082398756886056,
-          "Data2": -8095492782794213855,
-          "Data3": 5408396958539262056,
-          "Data4": -4643463550261369264
+          "Data1": 8384456262250558957,
+          "Data2": 2120117068993995375,
+          "Data3": -7006809532949413970,
+          "Data4": 7310949798378195352
         },
         "Kind": "Components.EventHandler",
         "Name": "onended",
@@ -6590,6 +6644,7 @@
             "Documentation": "Sets the '@onended' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6600,6 +6655,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6627,10 +6683,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -4486280678439965698,
-          "Data2": 5592566337690237024,
-          "Data3": -742645617983619682,
-          "Data4": -9148851547620949303
+          "Data1": 3041473389511014441,
+          "Data2": 2553021447358584185,
+          "Data3": -1005861720232419290,
+          "Data4": -83308537028210671
         },
         "Kind": "Components.EventHandler",
         "Name": "onerror",
@@ -6682,6 +6738,7 @@
             "Documentation": "Sets the '@onerror' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ErrorEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6692,6 +6749,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6719,10 +6777,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 6833518109125544258,
-          "Data2": 890571871090409406,
-          "Data3": -7109908677177960782,
-          "Data4": -827915973256196842
+          "Data1": 1427891007784910328,
+          "Data2": 597176656910817751,
+          "Data3": -5117377010289236297,
+          "Data4": -5523375798854739676
         },
         "Kind": "Components.EventHandler",
         "Name": "onfocus",
@@ -6774,6 +6832,7 @@
             "Documentation": "Sets the '@onfocus' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.FocusEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6784,6 +6843,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6811,10 +6871,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3186963719585834490,
-          "Data2": 675811236969766132,
-          "Data3": 7232656677280607948,
-          "Data4": -6163663503330652436
+          "Data1": 8058460388326486895,
+          "Data2": 9166251069843516573,
+          "Data3": 7786716553750306595,
+          "Data4": 2442918276009889132
         },
         "Kind": "Components.EventHandler",
         "Name": "onfocusin",
@@ -6866,6 +6926,7 @@
             "Documentation": "Sets the '@onfocusin' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.FocusEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6876,6 +6937,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6903,10 +6965,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 5804293307591478390,
-          "Data2": -5704631246665421767,
-          "Data3": -4874939620735222895,
-          "Data4": -7112637079493299345
+          "Data1": 2566310580358471433,
+          "Data2": -4864026329527258558,
+          "Data3": 6118125452053682324,
+          "Data4": -8016839645743051346
         },
         "Kind": "Components.EventHandler",
         "Name": "onfocusout",
@@ -6958,6 +7020,7 @@
             "Documentation": "Sets the '@onfocusout' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.FocusEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -6968,6 +7031,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -6995,10 +7059,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1673410192227158254,
-          "Data2": -379313999120273340,
-          "Data3": -2823658960972592670,
-          "Data4": 5685327535939113479
+          "Data1": -2442022947238472932,
+          "Data2": 8262880058082717623,
+          "Data3": -8123731374270388650,
+          "Data4": -6563320161734512471
         },
         "Kind": "Components.EventHandler",
         "Name": "onfullscreenchange",
@@ -7050,6 +7114,7 @@
             "Documentation": "Sets the '@onfullscreenchange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7060,6 +7125,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7087,10 +7153,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -6476183344953676585,
-          "Data2": -529101740562209527,
-          "Data3": -4805281465521222606,
-          "Data4": -5248495476717956770
+          "Data1": 4972780108888569087,
+          "Data2": 1659180766877981693,
+          "Data3": -3451379373426447546,
+          "Data4": 9217526676577639777
         },
         "Kind": "Components.EventHandler",
         "Name": "onfullscreenerror",
@@ -7142,6 +7208,7 @@
             "Documentation": "Sets the '@onfullscreenerror' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7152,6 +7219,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7179,10 +7247,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5621385778685022084,
-          "Data2": 300653877889887474,
-          "Data3": -7702018927540130556,
-          "Data4": -2680687242253970552
+          "Data1": 887373908546298492,
+          "Data2": 3179612958515884324,
+          "Data3": 8820492845540795258,
+          "Data4": -5312151256502712585
         },
         "Kind": "Components.EventHandler",
         "Name": "ongotpointercapture",
@@ -7234,6 +7302,7 @@
             "Documentation": "Sets the '@ongotpointercapture' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7244,6 +7313,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7271,10 +7341,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -3251780792722679275,
-          "Data2": -5902629143688111216,
-          "Data3": 2286330904452979696,
-          "Data4": 2728659800435552918
+          "Data1": -1846627508086119722,
+          "Data2": -4900892965959204176,
+          "Data3": 3342764080045539527,
+          "Data4": 5281320219451680681
         },
         "Kind": "Components.EventHandler",
         "Name": "oninput",
@@ -7326,6 +7396,7 @@
             "Documentation": "Sets the '@oninput' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.ChangeEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7336,6 +7407,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7363,10 +7435,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -6892980729033990282,
-          "Data2": 7085900900713462635,
-          "Data3": 6114206558322960020,
-          "Data4": -4174376565143804830
+          "Data1": -164335184034671265,
+          "Data2": 2534971874336625643,
+          "Data3": 8812191555575569747,
+          "Data4": -8979609636110360988
         },
         "Kind": "Components.EventHandler",
         "Name": "oninvalid",
@@ -7418,6 +7490,7 @@
             "Documentation": "Sets the '@oninvalid' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7428,6 +7501,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7455,10 +7529,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1341728201749595011,
-          "Data2": 1422647101682876303,
-          "Data3": 3803875920587751387,
-          "Data4": 3905779542238258958
+          "Data1": -4278649532722811264,
+          "Data2": -6376916273960023178,
+          "Data3": 8906963228383115396,
+          "Data4": 7834863912711977161
         },
         "Kind": "Components.EventHandler",
         "Name": "onkeydown",
@@ -7510,6 +7584,7 @@
             "Documentation": "Sets the '@onkeydown' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.KeyboardEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7520,6 +7595,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7547,10 +7623,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5269877278379987580,
-          "Data2": 4434216826796535467,
-          "Data3": 4408987512042480641,
-          "Data4": 3520884047848388157
+          "Data1": 936149088646041987,
+          "Data2": -3329128217777861854,
+          "Data3": 2555175381107390051,
+          "Data4": -267995365430619797
         },
         "Kind": "Components.EventHandler",
         "Name": "onkeypress",
@@ -7602,6 +7678,7 @@
             "Documentation": "Sets the '@onkeypress' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.KeyboardEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7612,6 +7689,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7639,10 +7717,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2230040957416353728,
-          "Data2": 3368437306570732059,
-          "Data3": 1646915831169855787,
-          "Data4": 2845420769545845093
+          "Data1": -1182725637662507445,
+          "Data2": 8910294038427165789,
+          "Data3": 6267511817186049091,
+          "Data4": -230148190300398339
         },
         "Kind": "Components.EventHandler",
         "Name": "onkeyup",
@@ -7694,6 +7772,7 @@
             "Documentation": "Sets the '@onkeyup' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.KeyboardEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7704,6 +7783,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7731,10 +7811,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 6871935123943373483,
-          "Data2": -3313703345397344523,
-          "Data3": -8373654878970562745,
-          "Data4": 7727404043461698745
+          "Data1": -2352624311941067325,
+          "Data2": -6854821135282855844,
+          "Data3": -3725853386512100103,
+          "Data4": 4512517235394481350
         },
         "Kind": "Components.EventHandler",
         "Name": "onload",
@@ -7786,6 +7866,7 @@
             "Documentation": "Sets the '@onload' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ProgressEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7796,6 +7877,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7823,10 +7905,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2986597279693662474,
-          "Data2": 1191124257539146815,
-          "Data3": -8335457597615902434,
-          "Data4": -2850525824450308061
+          "Data1": -5986185848459029266,
+          "Data2": -4768130133986828578,
+          "Data3": -7787651937695940021,
+          "Data4": -6467298722534631225
         },
         "Kind": "Components.EventHandler",
         "Name": "onloadeddata",
@@ -7878,6 +7960,7 @@
             "Documentation": "Sets the '@onloadeddata' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7888,6 +7971,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -7915,10 +7999,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -8158642910636210320,
-          "Data2": 8926845173277876118,
-          "Data3": 7257605364503146751,
-          "Data4": 3698972554118874485
+          "Data1": 3170139486611402925,
+          "Data2": 6862301739469019897,
+          "Data3": -8816674499362451028,
+          "Data4": -6172757472911575290
         },
         "Kind": "Components.EventHandler",
         "Name": "onloadedmetadata",
@@ -7970,6 +8054,7 @@
             "Documentation": "Sets the '@onloadedmetadata' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -7980,6 +8065,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8007,10 +8093,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5224162731359817971,
-          "Data2": 7220614583911765223,
-          "Data3": -1074224089730479004,
-          "Data4": 3393252678705672427
+          "Data1": -6340573520301411669,
+          "Data2": 1023431619819644866,
+          "Data3": 2769095575223950341,
+          "Data4": 992800544949069259
         },
         "Kind": "Components.EventHandler",
         "Name": "onloadend",
@@ -8062,6 +8148,7 @@
             "Documentation": "Sets the '@onloadend' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ProgressEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8072,6 +8159,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8099,10 +8187,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1610253553889634186,
-          "Data2": -2577598749396422135,
-          "Data3": -4151385303024813440,
-          "Data4": 6807162891233981389
+          "Data1": 6521507500059906136,
+          "Data2": -8890170456316594475,
+          "Data3": 5590981989299400581,
+          "Data4": -5949186695408116671
         },
         "Kind": "Components.EventHandler",
         "Name": "onloadstart",
@@ -8154,6 +8242,7 @@
             "Documentation": "Sets the '@onloadstart' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ProgressEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8164,6 +8253,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8191,10 +8281,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -4921076859140587199,
-          "Data2": -830104400415021449,
-          "Data3": -7989479391916408344,
-          "Data4": 4226057927546558628
+          "Data1": -6146175579549673575,
+          "Data2": 4210884374309012086,
+          "Data3": 7663985233465851607,
+          "Data4": 8234834399068327696
         },
         "Kind": "Components.EventHandler",
         "Name": "onlostpointercapture",
@@ -8246,6 +8336,7 @@
             "Documentation": "Sets the '@onlostpointercapture' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8256,6 +8347,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8283,10 +8375,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3507481622205282101,
-          "Data2": -4903735992918039143,
-          "Data3": -4071453778341338634,
-          "Data4": -132013452216246494
+          "Data1": 1147653953504991435,
+          "Data2": 3015017935678155509,
+          "Data3": -7416141532055101930,
+          "Data4": 159325648628740361
         },
         "Kind": "Components.EventHandler",
         "Name": "onmousedown",
@@ -8338,6 +8430,7 @@
             "Documentation": "Sets the '@onmousedown' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8348,6 +8441,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8375,10 +8469,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 5770180200647685124,
-          "Data2": 8521855912684147888,
-          "Data3": -2069326340370647990,
-          "Data4": -8247690252067522784
+          "Data1": -6144625040370859263,
+          "Data2": 50250235611252868,
+          "Data3": 2880112216044661709,
+          "Data4": 8345984976729739116
         },
         "Kind": "Components.EventHandler",
         "Name": "onmousemove",
@@ -8430,6 +8524,7 @@
             "Documentation": "Sets the '@onmousemove' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8440,6 +8535,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8467,10 +8563,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 4136364895193461375,
-          "Data2": 2023558581770300374,
-          "Data3": -7003861466719194183,
-          "Data4": 1751066241598401187
+          "Data1": 631312136575837246,
+          "Data2": -1212047412771714215,
+          "Data3": -919212533488386252,
+          "Data4": 9113667007265434633
         },
         "Kind": "Components.EventHandler",
         "Name": "onmouseout",
@@ -8522,6 +8618,7 @@
             "Documentation": "Sets the '@onmouseout' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8532,6 +8629,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8559,10 +8657,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3090822109635339303,
-          "Data2": 479529864980595033,
-          "Data3": -2714552875570472513,
-          "Data4": -5962566423055272147
+          "Data1": -6977272691444895853,
+          "Data2": -192628776950777388,
+          "Data3": 5806209289547884848,
+          "Data4": -842936131736787576
         },
         "Kind": "Components.EventHandler",
         "Name": "onmouseover",
@@ -8614,6 +8712,7 @@
             "Documentation": "Sets the '@onmouseover' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8624,6 +8723,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8651,10 +8751,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 8745308092160005898,
-          "Data2": -2208158449794145868,
-          "Data3": 2873860780772329486,
-          "Data4": 7727928833549757070
+          "Data1": -7795526149341559625,
+          "Data2": -1951735676381176644,
+          "Data3": -6126676060466660232,
+          "Data4": 516496372276941258
         },
         "Kind": "Components.EventHandler",
         "Name": "onmouseup",
@@ -8706,6 +8806,7 @@
             "Documentation": "Sets the '@onmouseup' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.MouseEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8716,6 +8817,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8743,10 +8845,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 5730598234294983204,
-          "Data2": 8135428517861825146,
-          "Data3": -8420124985007843701,
-          "Data4": -315146805196309860
+          "Data1": -34934437270053745,
+          "Data2": -9222853233904378740,
+          "Data3": -5666974677876750850,
+          "Data4": 3685206345032088766
         },
         "Kind": "Components.EventHandler",
         "Name": "onmousewheel",
@@ -8798,6 +8900,7 @@
             "Documentation": "Sets the '@onmousewheel' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.WheelEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8808,6 +8911,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8835,10 +8939,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 2424110835858377539,
-          "Data2": -4156544965286311111,
-          "Data3": 1830765505294892487,
-          "Data4": -9197846189718979096
+          "Data1": 5163948486433852757,
+          "Data2": -4988375116591859824,
+          "Data3": 2001248064698965916,
+          "Data4": 6975223967444389529
         },
         "Kind": "Components.EventHandler",
         "Name": "onpaste",
@@ -8890,6 +8994,7 @@
             "Documentation": "Sets the '@onpaste' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ClipboardEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8900,6 +9005,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -8927,10 +9033,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 6819470411070556598,
-          "Data2": -4922487350144496679,
-          "Data3": 1454089958216143233,
-          "Data4": -3362818031301416882
+          "Data1": -2991237039354751088,
+          "Data2": -2923196686134614508,
+          "Data3": -2094041395580313604,
+          "Data4": -6439630352012381892
         },
         "Kind": "Components.EventHandler",
         "Name": "onpause",
@@ -8982,6 +9088,7 @@
             "Documentation": "Sets the '@onpause' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -8992,6 +9099,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9019,10 +9127,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 2619823585581048687,
-          "Data2": 948472122898050687,
-          "Data3": -5548382427285464027,
-          "Data4": 9182592561849280648
+          "Data1": 3981296614936286689,
+          "Data2": 2024118606187330691,
+          "Data3": -2179345826702233514,
+          "Data4": 2281761513650261461
         },
         "Kind": "Components.EventHandler",
         "Name": "onplay",
@@ -9074,6 +9182,7 @@
             "Documentation": "Sets the '@onplay' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9084,6 +9193,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9111,10 +9221,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5728568697569049788,
-          "Data2": -6048949366001824607,
-          "Data3": -5453885716737791978,
-          "Data4": 529809438354594503
+          "Data1": 1450314338385364552,
+          "Data2": -3146316092575910116,
+          "Data3": 1662587779356909459,
+          "Data4": 7220269077813594589
         },
         "Kind": "Components.EventHandler",
         "Name": "onplaying",
@@ -9166,6 +9276,7 @@
             "Documentation": "Sets the '@onplaying' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9176,6 +9287,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9203,10 +9315,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -3378634348745331357,
-          "Data2": 4452641657191170815,
-          "Data3": -6310106192179529777,
-          "Data4": -7717373834767276891
+          "Data1": 258204396146934390,
+          "Data2": -1301728763050887807,
+          "Data3": 3937561407527190015,
+          "Data4": -1635935018632874384
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointercancel",
@@ -9258,6 +9370,7 @@
             "Documentation": "Sets the '@onpointercancel' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9268,6 +9381,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9295,10 +9409,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 7957313803951590179,
-          "Data2": 2189427400804819333,
-          "Data3": 4317167041318390657,
-          "Data4": -3153654758899041043
+          "Data1": 4988078751817091622,
+          "Data2": -2275247100459254745,
+          "Data3": 7116321244537075975,
+          "Data4": -2241203684258272032
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerdown",
@@ -9350,6 +9464,7 @@
             "Documentation": "Sets the '@onpointerdown' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9360,6 +9475,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9387,10 +9503,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -7206050731355079786,
-          "Data2": -6199392161395578804,
-          "Data3": -1710111200814866507,
-          "Data4": 7947647956547806893
+          "Data1": 4392967971078930686,
+          "Data2": -7785589112014677407,
+          "Data3": 8636885038971003313,
+          "Data4": -6202619249326363794
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerenter",
@@ -9442,6 +9558,7 @@
             "Documentation": "Sets the '@onpointerenter' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9452,6 +9569,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9479,10 +9597,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -7629101745227542643,
-          "Data2": -346268319351731472,
-          "Data3": 8515023754867206423,
-          "Data4": 1261644889890533943
+          "Data1": -3528421988687987347,
+          "Data2": -8890577800186204093,
+          "Data3": -1927413673213483308,
+          "Data4": 1059236574669710060
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerleave",
@@ -9534,6 +9652,7 @@
             "Documentation": "Sets the '@onpointerleave' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9544,6 +9663,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9571,10 +9691,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -9146611686171683121,
-          "Data2": -3842271740315304807,
-          "Data3": -315675415135721467,
-          "Data4": -3398787813647456276
+          "Data1": -1814603038494109080,
+          "Data2": -1323861356552780380,
+          "Data3": 1325663165241974252,
+          "Data4": 2120599961230109596
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerlockchange",
@@ -9626,6 +9746,7 @@
             "Documentation": "Sets the '@onpointerlockchange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9636,6 +9757,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9663,10 +9785,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2388175193302733244,
-          "Data2": 7762836710079057370,
-          "Data3": -8738250460204539338,
-          "Data4": 7727925973477633954
+          "Data1": 7910037644203037152,
+          "Data2": -6906441598442933979,
+          "Data3": 4371869803010590136,
+          "Data4": 22579480013559836
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerlockerror",
@@ -9718,6 +9840,7 @@
             "Documentation": "Sets the '@onpointerlockerror' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9728,6 +9851,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9755,10 +9879,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 8510610335916366143,
-          "Data2": 710103541451086286,
-          "Data3": 4578443593084985666,
-          "Data4": 2060322270196726553
+          "Data1": -4430225070963388035,
+          "Data2": 5758394873658880526,
+          "Data3": 744423697827822532,
+          "Data4": -491983648693486308
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointermove",
@@ -9810,6 +9934,7 @@
             "Documentation": "Sets the '@onpointermove' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9820,6 +9945,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9847,10 +9973,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 7445714737515887928,
-          "Data2": -4723171081255614819,
-          "Data3": 3688347097664407694,
-          "Data4": 4682719861339366638
+          "Data1": 6916218533417180186,
+          "Data2": 2570858652527172528,
+          "Data3": -1527888103602493106,
+          "Data4": -7810647140098144757
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerout",
@@ -9902,6 +10028,7 @@
             "Documentation": "Sets the '@onpointerout' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -9912,6 +10039,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -9939,10 +10067,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -962374020441826998,
-          "Data2": 502291956531076587,
-          "Data3": -8109175737505767282,
-          "Data4": -6665318589114447523
+          "Data1": 8282944159087845715,
+          "Data2": -1389356299401328723,
+          "Data3": 2341797038133822199,
+          "Data4": -4857227343446195172
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerover",
@@ -9994,6 +10122,7 @@
             "Documentation": "Sets the '@onpointerover' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10004,6 +10133,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10031,10 +10161,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5805077065975714201,
-          "Data2": 5852242272342923264,
-          "Data3": -7520892789239764531,
-          "Data4": 9025408504193357432
+          "Data1": -7094633520183200839,
+          "Data2": -6125172613062482307,
+          "Data3": -3478441667017706101,
+          "Data4": -1120178893869751714
         },
         "Kind": "Components.EventHandler",
         "Name": "onpointerup",
@@ -10086,6 +10216,7 @@
             "Documentation": "Sets the '@onpointerup' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.PointerEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10096,6 +10227,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10123,10 +10255,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -3504510957288352336,
-          "Data2": -280671228838515896,
-          "Data3": 4805403234769420320,
-          "Data4": 1598184389420621987
+          "Data1": -6517787570602756806,
+          "Data2": 5039265271521355007,
+          "Data3": 5100412038190269929,
+          "Data4": -3635955821478242881
         },
         "Kind": "Components.EventHandler",
         "Name": "onprogress",
@@ -10178,6 +10310,7 @@
             "Documentation": "Sets the '@onprogress' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ProgressEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10188,6 +10321,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10215,10 +10349,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1288212200121447704,
-          "Data2": -2178486417909814484,
-          "Data3": 4091090553589983715,
-          "Data4": -7633678883380274962
+          "Data1": -4705322759185265735,
+          "Data2": 2402019134426351052,
+          "Data3": 1947653823694286176,
+          "Data4": 8044717718636569178
         },
         "Kind": "Components.EventHandler",
         "Name": "onratechange",
@@ -10270,6 +10404,7 @@
             "Documentation": "Sets the '@onratechange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10280,6 +10415,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10307,10 +10443,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3990498965829747512,
-          "Data2": -8742706562163268578,
-          "Data3": 4106975609739468893,
-          "Data4": 8388758166518394890
+          "Data1": 8266914181551523041,
+          "Data2": 1434593243161145209,
+          "Data3": -3476187822184609941,
+          "Data4": 9041912910787988804
         },
         "Kind": "Components.EventHandler",
         "Name": "onreadystatechange",
@@ -10362,6 +10498,7 @@
             "Documentation": "Sets the '@onreadystatechange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10372,6 +10509,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10399,10 +10537,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3316164347595696520,
-          "Data2": -6956281542155228308,
-          "Data3": 7752203617876023480,
-          "Data4": -8780261360696354438
+          "Data1": -1390916766972038425,
+          "Data2": -63665858822761643,
+          "Data3": 7478189127770246804,
+          "Data4": -7980498690621478012
         },
         "Kind": "Components.EventHandler",
         "Name": "onreset",
@@ -10454,6 +10592,7 @@
             "Documentation": "Sets the '@onreset' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10464,6 +10603,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10491,10 +10631,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3900459551164816067,
-          "Data2": -3525304614469449157,
-          "Data3": 4616073051429782202,
-          "Data4": -7934943018857318816
+          "Data1": -1917748151394470334,
+          "Data2": 1890419080165999102,
+          "Data3": -5073990446330398247,
+          "Data4": 2689861021752034894
         },
         "Kind": "Components.EventHandler",
         "Name": "onscroll",
@@ -10546,6 +10686,7 @@
             "Documentation": "Sets the '@onscroll' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10556,6 +10697,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10583,10 +10725,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 834096373195989307,
-          "Data2": 951677219829277361,
-          "Data3": -2478875786907513926,
-          "Data4": 4328175712976082219
+          "Data1": -7761751509689998640,
+          "Data2": -2372035692697671166,
+          "Data3": -3271340700297524967,
+          "Data4": -8076591086698404173
         },
         "Kind": "Components.EventHandler",
         "Name": "onseeked",
@@ -10638,6 +10780,7 @@
             "Documentation": "Sets the '@onseeked' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10648,6 +10791,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10675,10 +10819,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -8635796349175951791,
-          "Data2": 6230607736693013950,
-          "Data3": 2098593625119622979,
-          "Data4": -5534953928230885185
+          "Data1": -3181144423937218091,
+          "Data2": 2784727988181588671,
+          "Data3": -8763883809897607843,
+          "Data4": -712191399746956547
         },
         "Kind": "Components.EventHandler",
         "Name": "onseeking",
@@ -10730,6 +10874,7 @@
             "Documentation": "Sets the '@onseeking' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10740,6 +10885,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10767,10 +10913,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -570332459149931199,
-          "Data2": 753787774967453742,
-          "Data3": -992034802732778564,
-          "Data4": -1602546238395477303
+          "Data1": 8808292392531924046,
+          "Data2": 5328858395510145867,
+          "Data3": -4953410179698663907,
+          "Data4": -916109168428971050
         },
         "Kind": "Components.EventHandler",
         "Name": "onselect",
@@ -10822,6 +10968,7 @@
             "Documentation": "Sets the '@onselect' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10832,6 +10979,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10859,10 +11007,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 4425061163388456576,
-          "Data2": -2944873021841786466,
-          "Data3": -6309487446301407775,
-          "Data4": 1996935485935313516
+          "Data1": -8881170228340585778,
+          "Data2": -2912350779607053676,
+          "Data3": 2172981107130891433,
+          "Data4": -2279055438558493815
         },
         "Kind": "Components.EventHandler",
         "Name": "onselectionchange",
@@ -10914,6 +11062,7 @@
             "Documentation": "Sets the '@onselectionchange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -10924,6 +11073,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -10951,10 +11101,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2842136403237875760,
-          "Data2": -1671941613935426841,
-          "Data3": 3982653653052656597,
-          "Data4": -7054423819644037915
+          "Data1": 5930509200385894463,
+          "Data2": -3592846902754373873,
+          "Data3": -2851069378535109516,
+          "Data4": -6679403484988195125
         },
         "Kind": "Components.EventHandler",
         "Name": "onselectstart",
@@ -11006,6 +11156,7 @@
             "Documentation": "Sets the '@onselectstart' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11016,6 +11167,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11043,10 +11195,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 6162152322595123855,
-          "Data2": -810712367805158538,
-          "Data3": 1053208968066624752,
-          "Data4": 6350850609412000116
+          "Data1": 190323778625205747,
+          "Data2": -200291288094332092,
+          "Data3": 930433993432461673,
+          "Data4": 3808169869897571125
         },
         "Kind": "Components.EventHandler",
         "Name": "onstalled",
@@ -11098,6 +11250,7 @@
             "Documentation": "Sets the '@onstalled' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11108,6 +11261,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11135,10 +11289,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 233682526275747270,
-          "Data2": -8430753551304760025,
-          "Data3": 3737391686525288075,
-          "Data4": 7662835913334965388
+          "Data1": 3611951974972678410,
+          "Data2": 6309641186883889267,
+          "Data3": -5274445284274848099,
+          "Data4": 702266726609137148
         },
         "Kind": "Components.EventHandler",
         "Name": "onstop",
@@ -11190,6 +11344,7 @@
             "Documentation": "Sets the '@onstop' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11200,6 +11355,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11227,10 +11383,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 1345327735913776295,
-          "Data2": -1646826199649153677,
-          "Data3": 4107269434365540945,
-          "Data4": 686255585890259128
+          "Data1": 5782648629811202149,
+          "Data2": -141526042276272528,
+          "Data3": -5014445570874886199,
+          "Data4": 2299363622222450484
         },
         "Kind": "Components.EventHandler",
         "Name": "onsubmit",
@@ -11282,6 +11438,7 @@
             "Documentation": "Sets the '@onsubmit' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11292,6 +11449,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11319,10 +11477,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1480538744859242400,
-          "Data2": -7142312598204585068,
-          "Data3": -4808668053676580541,
-          "Data4": 4896193789363307
+          "Data1": 5320430053620501390,
+          "Data2": 1500217693803192016,
+          "Data3": -5677897822002477176,
+          "Data4": 8461216503566378461
         },
         "Kind": "Components.EventHandler",
         "Name": "onsuspend",
@@ -11374,6 +11532,7 @@
             "Documentation": "Sets the '@onsuspend' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11384,6 +11543,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11411,10 +11571,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 4621608941724633567,
-          "Data2": -3999846995575705359,
-          "Data3": 4424506760933656574,
-          "Data4": 2832226999876523077
+          "Data1": 5167822342838274051,
+          "Data2": 1240294746454122524,
+          "Data3": -242751283833386035,
+          "Data4": -8927016457044914130
         },
         "Kind": "Components.EventHandler",
         "Name": "ontimeout",
@@ -11466,6 +11626,7 @@
             "Documentation": "Sets the '@ontimeout' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.ProgressEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11476,6 +11637,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11503,10 +11665,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1396878298446987800,
-          "Data2": 9106313427562282275,
-          "Data3": 3304823613576451509,
-          "Data4": -2900412133884763719
+          "Data1": 2479592847074099708,
+          "Data2": -3148106552496129690,
+          "Data3": -8886855484075591329,
+          "Data4": 5001321867476099478
         },
         "Kind": "Components.EventHandler",
         "Name": "ontimeupdate",
@@ -11558,6 +11720,7 @@
             "Documentation": "Sets the '@ontimeupdate' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11568,6 +11731,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11595,10 +11759,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -1681071676758824536,
-          "Data2": 1817293776139772223,
-          "Data3": -5696011023470757110,
-          "Data4": -6901311758633538930
+          "Data1": 4321642835805387391,
+          "Data2": 8331028984786119568,
+          "Data3": -7043528767872572713,
+          "Data4": -5122948993860310438
         },
         "Kind": "Components.EventHandler",
         "Name": "ontouchcancel",
@@ -11650,6 +11814,7 @@
             "Documentation": "Sets the '@ontouchcancel' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.TouchEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11660,6 +11825,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11687,10 +11853,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -4330226380899461,
-          "Data2": 8584340561638973908,
-          "Data3": -1413061585702418414,
-          "Data4": 5551159058696798263
+          "Data1": -4539181085409414819,
+          "Data2": -5401949402973251588,
+          "Data3": 5597912163767238020,
+          "Data4": -3923463878559337558
         },
         "Kind": "Components.EventHandler",
         "Name": "ontouchend",
@@ -11742,6 +11908,7 @@
             "Documentation": "Sets the '@ontouchend' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.TouchEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11752,6 +11919,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11779,10 +11947,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -8322611833021273377,
-          "Data2": -8429995824860404343,
-          "Data3": -993408494483370092,
-          "Data4": 1587409480231430486
+          "Data1": -6676470235912234330,
+          "Data2": -4222436476436690062,
+          "Data3": 4486843954250601609,
+          "Data4": -6664740000989319629
         },
         "Kind": "Components.EventHandler",
         "Name": "ontouchenter",
@@ -11834,6 +12002,7 @@
             "Documentation": "Sets the '@ontouchenter' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.TouchEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11844,6 +12013,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11871,10 +12041,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -342543264264682973,
-          "Data2": 4513578226144994468,
-          "Data3": 2257319996155252818,
-          "Data4": -8524543748544877626
+          "Data1": -6407201166715265974,
+          "Data2": -2756646390926182424,
+          "Data3": -8773509672772922873,
+          "Data4": 8259016943574279552
         },
         "Kind": "Components.EventHandler",
         "Name": "ontouchleave",
@@ -11926,6 +12096,7 @@
             "Documentation": "Sets the '@ontouchleave' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.TouchEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -11936,6 +12107,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -11963,10 +12135,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 2270905653504666552,
-          "Data2": 2291737824877298633,
-          "Data3": 7073228672458192051,
-          "Data4": -9152868160620742573
+          "Data1": 4259853570891424800,
+          "Data2": 2704196718116342103,
+          "Data3": -5931104069623489456,
+          "Data4": -7130511412697981137
         },
         "Kind": "Components.EventHandler",
         "Name": "ontouchmove",
@@ -12018,6 +12190,7 @@
             "Documentation": "Sets the '@ontouchmove' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.TouchEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -12028,6 +12201,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -12055,10 +12229,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 8740533601832618079,
-          "Data2": -2793060176306905747,
-          "Data3": 4739017158793227549,
-          "Data4": 1172737037924225385
+          "Data1": -5946888547674430712,
+          "Data2": 424360585241316223,
+          "Data3": 7215082397758695302,
+          "Data4": 1379656174681647661
         },
         "Kind": "Components.EventHandler",
         "Name": "ontouchstart",
@@ -12110,6 +12284,7 @@
             "Documentation": "Sets the '@ontouchstart' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.TouchEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -12120,6 +12295,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -12147,10 +12323,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -4316995444087787796,
-          "Data2": -6365368235705374611,
-          "Data3": -6750985629930758479,
-          "Data4": 6155619873031821746
+          "Data1": -7221295843593166771,
+          "Data2": -6890698726658597632,
+          "Data3": 6644351890510950948,
+          "Data4": 3963939483353214088
         },
         "Kind": "Components.EventHandler",
         "Name": "onvolumechange",
@@ -12202,6 +12378,7 @@
             "Documentation": "Sets the '@onvolumechange' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -12212,6 +12389,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -12239,10 +12417,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2352374362071787006,
-          "Data2": 1915332314456662830,
-          "Data3": -5194079900402090309,
-          "Data4": -1650609379049762397
+          "Data1": -1246089291679523529,
+          "Data2": 3511800867315779746,
+          "Data3": 4902076778894785006,
+          "Data4": 4230819368158126903
         },
         "Kind": "Components.EventHandler",
         "Name": "onwaiting",
@@ -12294,6 +12472,7 @@
             "Documentation": "Sets the '@onwaiting' attribute to the provided string or delegate value. A delegate value should be of type 'System.EventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -12304,6 +12483,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -12331,10 +12511,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -9079056899825801949,
-          "Data2": -1167923541420528875,
-          "Data3": -4992768221004426155,
-          "Data4": 3552131630419612588
+          "Data1": -1536466572808324797,
+          "Data2": 8071081128150867104,
+          "Data3": 762244993938306609,
+          "Data4": 5706672911736865581
         },
         "Kind": "Components.EventHandler",
         "Name": "onwheel",
@@ -12386,6 +12566,7 @@
             "Documentation": "Sets the '@onwheel' attribute to the provided string or delegate value. A delegate value should be of type 'Microsoft.AspNetCore.Components.Web.WheelEventArgs'.",
             "BoundAttributeParameters": [
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "preventDefault",
                 "TypeName": "System.Boolean",
@@ -12396,6 +12577,7 @@
                 }
               },
               {
+                "Flags": 9,
                 "Kind": "Components.EventHandler",
                 "Name": "stopPropagation",
                 "TypeName": "System.Boolean",
@@ -15183,10 +15365,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 780809920266565626,
-          "Data2": -4480953680100674188,
-          "Data3": -5948002530341282873,
-          "Data4": -1014446586753242790
+          "Data1": -2719192494817416236,
+          "Data2": 699713990302260239,
+          "Data3": 5823833041340357167,
+          "Data4": 4718384792606326683
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -15219,6 +15401,7 @@
             "Documentation": "Binds the provided expression to an attribute and a change event, based on the naming of the bind attribute. For example: <code>@bind-value=\"...\"</code> and <code>@bind-value:event=\"onchange\"</code> will assign the current value of the expression to the 'value' attribute, and assign a delegate that attempts to set the value to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15229,6 +15412,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15239,6 +15423,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15265,10 +15450,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -6652265822596194694,
-          "Data2": -8822122352303827434,
-          "Data3": 779583094543703564,
-          "Data4": 7907043569872146742
+          "Data1": -8390399626735936132,
+          "Data2": 6701443316706740677,
+          "Data3": -7658526656240869648,
+          "Data4": -8216335806964835879
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -15298,6 +15483,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15308,6 +15494,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15318,6 +15505,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15357,10 +15545,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5579941600492271515,
-          "Data2": 1911529531832763189,
-          "Data3": 6879653585938689071,
-          "Data4": 1385431769685170058
+          "Data1": 9074319312264545632,
+          "Data2": 638778895384285003,
+          "Data3": -5220084760029643020,
+          "Data4": -218814879120688330
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -15390,6 +15578,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15400,6 +15589,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15410,6 +15600,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15449,10 +15640,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2187328803230905511,
-          "Data2": 7436985108224995022,
-          "Data3": -1089171225280212837,
-          "Data4": -5934592520303418187
+          "Data1": 7278711285179610184,
+          "Data2": 815933783536535845,
+          "Data3": 3488636715691945316,
+          "Data4": -7158437893379887292
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -15488,6 +15679,7 @@
             "Documentation": "Binds the provided expression to the 'checked' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15498,6 +15690,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15508,6 +15701,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15548,10 +15742,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -3515573979007388473,
-          "Data2": 3092184016606318982,
-          "Data3": 6366265487478405335,
-          "Data4": -8519967891414522901
+          "Data1": -7659424281909149935,
+          "Data2": 651653323205675396,
+          "Data3": -3744349343873567457,
+          "Data4": -5758861161905887334
         },
         "Kind": "Components.Bind",
         "Name": "Bind_value",
@@ -15587,6 +15781,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15597,6 +15792,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15607,6 +15803,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15647,10 +15844,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 5955359624264300253,
-          "Data2": 5568048773081286641,
-          "Data3": -276791554672898474,
-          "Data4": -9080691025293015548
+          "Data1": -289079909750337871,
+          "Data2": -2818361612700397655,
+          "Data3": 8826890896515768184,
+          "Data4": 3790901661462461991
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -15686,6 +15883,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15696,6 +15894,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15706,6 +15905,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15746,10 +15946,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 2864029783903047912,
-          "Data2": -5099421923052258528,
-          "Data3": 2090619209086729403,
-          "Data4": -7726754944255969240
+          "Data1": -3287661213929076536,
+          "Data2": -2708103494226849754,
+          "Data3": -8642646124701481010,
+          "Data4": 689636443357109256
         },
         "Kind": "Components.Bind",
         "Name": "Bind_value",
@@ -15785,6 +15985,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15795,6 +15996,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15805,6 +16007,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15845,10 +16048,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 6003003904156710798,
-          "Data2": 4801013668718721284,
-          "Data3": -6073676558958692538,
-          "Data4": -183963088532896689
+          "Data1": -8346482011352131887,
+          "Data2": -1345079626780797751,
+          "Data3": -5176154030796480859,
+          "Data4": 4808350811998411988
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -15884,6 +16087,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15894,6 +16098,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -15904,6 +16109,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -15944,10 +16150,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 4013391739702963409,
-          "Data2": 2709671531987578993,
-          "Data3": -3224866841415380957,
-          "Data4": -8183721659462266405
+          "Data1": 7165836949953988168,
+          "Data2": 1974364418550839953,
+          "Data3": -8984098269793862526,
+          "Data4": 5390521599405016599
         },
         "Kind": "Components.Bind",
         "Name": "Bind_value",
@@ -15983,6 +16189,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -15993,6 +16200,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16003,6 +16211,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16043,10 +16252,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -8279522528925375743,
-          "Data2": 6363194889504179203,
-          "Data3": 1717522626034156268,
-          "Data4": -1501638453105689410
+          "Data1": 7707466875493961909,
+          "Data2": -6084409490549271130,
+          "Data3": -1146918334169523977,
+          "Data4": 3240858011927554076
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -16082,6 +16291,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16092,6 +16302,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16102,6 +16313,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16142,10 +16354,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3994979778942074684,
-          "Data2": -7926130682905306260,
-          "Data3": 5193335493920370267,
-          "Data4": 8156793421243924576
+          "Data1": -1171716960755794825,
+          "Data2": -4526309265689160709,
+          "Data3": -82037353599421906,
+          "Data4": 2374093156837816142
         },
         "Kind": "Components.Bind",
         "Name": "Bind_value",
@@ -16181,6 +16393,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16191,6 +16404,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16201,6 +16415,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16241,10 +16456,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -5326363927127277202,
-          "Data2": 7635845957356089737,
-          "Data3": 3431313814913153187,
-          "Data4": 7405275298096502188
+          "Data1": 4919126344153755727,
+          "Data2": 5171862147914486377,
+          "Data3": 4735293379854725809,
+          "Data4": -2761972307422019207
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -16280,6 +16495,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16290,6 +16506,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16300,6 +16517,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16340,10 +16558,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 5651139390761588763,
-          "Data2": -5994871256546231610,
-          "Data3": -5640265800424638925,
-          "Data4": -6130474711894975599
+          "Data1": 771150668556559050,
+          "Data2": 3802780348964806462,
+          "Data3": 2501763597571620064,
+          "Data4": -214134213146000795
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -16379,6 +16597,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16389,6 +16608,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16399,6 +16619,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16439,10 +16660,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 818100773949698758,
-          "Data2": -2780904131715234408,
-          "Data3": 525213638027332911,
-          "Data4": 2495969452143911806
+          "Data1": -9179190227964819939,
+          "Data2": 7605475459812166720,
+          "Data3": 1765603458753986462,
+          "Data4": -7435949578324040526
         },
         "Kind": "Components.Bind",
         "Name": "Bind_value",
@@ -16478,6 +16699,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16488,6 +16710,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16498,6 +16721,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16538,10 +16762,10 @@
       },
       {
         "__Checksum": {
-          "Data1": -2748948399142396561,
-          "Data2": -1279365723277214276,
-          "Data3": 4118791482820452569,
-          "Data4": -2370977357665825922
+          "Data1": -4548260759458432277,
+          "Data2": -7882199734260248862,
+          "Data3": -5468214451432659191,
+          "Data4": -3605529631627477447
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -16577,6 +16801,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16587,6 +16812,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16597,6 +16823,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16637,10 +16864,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 6806447348215203909,
-          "Data2": 1480644517494166845,
-          "Data3": -4279476452427940647,
-          "Data4": 3365692906282503997
+          "Data1": -2426821748224709019,
+          "Data2": 143954298714685129,
+          "Data3": 5873833755693583995,
+          "Data4": 8885247711901455755
         },
         "Kind": "Components.Bind",
         "Name": "Bind_value",
@@ -16670,6 +16897,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16680,6 +16908,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16690,6 +16919,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",
@@ -16729,10 +16959,10 @@
       },
       {
         "__Checksum": {
-          "Data1": 3624511035969456010,
-          "Data2": 284262138358610318,
-          "Data3": -4515388354949321030,
-          "Data4": -3452716019082389434
+          "Data1": -5847267341081128090,
+          "Data2": 3294051925298438338,
+          "Data3": 7711472756150087100,
+          "Data4": -3260052922729231476
         },
         "Kind": "Components.Bind",
         "Name": "Bind",
@@ -16762,6 +16992,7 @@
             "Documentation": "Binds the provided expression to the 'value' attribute and a change event delegate to the 'onchange' attribute.",
             "BoundAttributeParameters": [
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "format",
                 "TypeName": "System.String",
@@ -16772,6 +17003,7 @@
                 }
               },
               {
+                "Flags": 5,
                 "Kind": "Components.Bind",
                 "Name": "event",
                 "TypeName": "System.String",
@@ -16782,6 +17014,7 @@
                 }
               },
               {
+                "Flags": 1,
                 "Kind": "Components.Bind",
                 "Name": "culture",
                 "TypeName": "System.Globalization.CultureInfo",

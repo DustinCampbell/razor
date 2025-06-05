@@ -18,36 +18,32 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
 
     public override BoundAttributeParameterDescriptor Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(9);
+        reader.ReadArrayHeaderAndVerify(8);
 
+        var flags = (BoundAttributeParameterFlags)reader.ReadByte();
         var kind = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var typeName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
-        var isEnum = reader.ReadBoolean();
         var displayName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var documentationObject = reader.Deserialize<DocumentationObject>(options);
-        var caseSensitive = reader.ReadBoolean();
 
         var metadata = reader.Deserialize<MetadataCollection>(options);
         var diagnostics = reader.Deserialize<ImmutableArray<RazorDiagnostic>>(options);
 
         return new BoundAttributeParameterDescriptor(
-            kind, name!, typeName,
-            isEnum, documentationObject, displayName, caseSensitive,
-            metadata, diagnostics);
+            flags, kind, name!, typeName, documentationObject, displayName, metadata, diagnostics);
     }
 
     public override void Serialize(ref MessagePackWriter writer, BoundAttributeParameterDescriptor value, SerializerCachingOptions options)
     {
-        writer.WriteArrayHeader(9);
+        writer.WriteArrayHeader(8);
 
+        writer.Write((byte)value.Flags);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Kind, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Name, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.TypeName, options);
-        writer.Write(value.IsEnum);
         CachedStringFormatter.Instance.Serialize(ref writer, value.DisplayName, options);
         writer.Serialize(value.DocumentationObject, options);
-        writer.Write(value.CaseSensitive);
 
         writer.Serialize(value.Metadata, options);
         writer.Serialize(value.Diagnostics, options);
@@ -55,15 +51,14 @@ internal sealed class BoundAttributeParameterFormatter : ValueFormatter<BoundAtt
 
     public override void Skim(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(9);
+        reader.ReadArrayHeaderAndVerify(8);
 
+        reader.Skip(); // Flags
         CachedStringFormatter.Instance.Skim(ref reader, options); // Kind
         CachedStringFormatter.Instance.Skim(ref reader, options); // Name
         CachedStringFormatter.Instance.Skim(ref reader, options); // TypeName
-        reader.Skip(); // IsEnum
         CachedStringFormatter.Instance.Skim(ref reader, options); // DisplayName
         DocumentationObjectFormatter.Instance.Skim(ref reader, options); // DocumentationObject
-        reader.Skip(); // CaseSensitive
 
         MetadataCollectionFormatter.Instance.Skim(ref reader, options); // Metadata
         RazorDiagnosticFormatter.Instance.SkimArray(ref reader, options); // Diagnostics

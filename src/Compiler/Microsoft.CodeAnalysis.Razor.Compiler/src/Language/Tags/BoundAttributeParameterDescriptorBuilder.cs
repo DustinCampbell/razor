@@ -30,6 +30,7 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
     }
 
     public string? Name { get; set; }
+    public string? PropertyName { get; set; }
     public string? TypeName { get; set; }
 
     public string? Documentation
@@ -84,6 +85,7 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
             flags,
             _kind,
             Name ?? string.Empty,
+            PropertyName ?? string.Empty,
             TypeName ?? string.Empty,
             _documentationObject,
             GetDisplayName(),

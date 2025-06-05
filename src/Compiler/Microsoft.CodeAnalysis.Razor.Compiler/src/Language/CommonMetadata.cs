@@ -34,16 +34,4 @@ public static class CommonMetadata
     {
         public static readonly MetadataCollection IsDirectiveAttribute = MetadataCollection.Create(CommonMetadata.IsDirectiveAttribute);
     }
-
-    internal static class Parameters
-    {
-        public static readonly MetadataCollection After = MetadataCollection.Create(PropertyName("After"));
-        public static readonly MetadataCollection Culture = MetadataCollection.Create(PropertyName("Culture"));
-        public static readonly MetadataCollection Event = MetadataCollection.Create(PropertyName("Event"));
-        public static readonly MetadataCollection Format = MetadataCollection.Create(PropertyName("Format"));
-        public static readonly MetadataCollection Get = MetadataCollection.Create(PropertyName("Get"));
-        public static readonly MetadataCollection PreventDefault = MetadataCollection.Create(PropertyName("PreventDefault"));
-        public static readonly MetadataCollection Set = MetadataCollection.Create(PropertyName("Set"));
-        public static readonly MetadataCollection StopPropagation = MetadataCollection.Create(PropertyName("StopPropagation"));
-    }
 }

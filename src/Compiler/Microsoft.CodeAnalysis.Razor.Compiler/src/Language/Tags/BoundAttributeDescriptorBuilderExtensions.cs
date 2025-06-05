@@ -49,9 +49,4 @@ public static class BoundAttributeDescriptorBuilderExtensions
         builder.IndexerAttributeNamePrefix = attributeNamePrefix;
         builder.IndexerValueTypeName = valueTypeName;
     }
-
-    internal static void SetMetadata(this BoundAttributeParameterDescriptorBuilder builder, KeyValuePair<string, string> pair)
-    {
-        builder.SetMetadata(MetadataCollection.Create(pair));
-    }
 }

@@ -15,6 +15,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
 
     public string Kind { get; }
     public string Name { get; }
+    public string PropertyName { get; }
     public string TypeName { get; }
     public string DisplayName { get; }
 
@@ -30,6 +31,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         BoundAttributeParameterFlags flags,
         string kind,
         string name,
+        string propertyName,
         string typeName,
         DocumentationObject documentationObject,
         string displayName,
@@ -39,6 +41,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
     {
         Kind = kind;
         Name = name;
+        PropertyName = propertyName;
         TypeName = typeName;
         _documentationObject = documentationObject;
         DisplayName = displayName;
@@ -62,6 +65,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         builder.AppendData((byte)Flags);
         builder.AppendData(Kind);
         builder.AppendData(Name);
+        builder.AppendData(PropertyName);
         builder.AppendData(TypeName);
         builder.AppendData(DisplayName);
 

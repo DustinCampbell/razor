@@ -115,6 +115,7 @@ internal static partial class ObjectWriters
                 writer.Write(nameof(value.Flags), (byte)value.Flags);
                 writer.Write(nameof(value.Kind), value.Kind);
                 writer.Write(nameof(value.Name), value.Name);
+                writer.Write(nameof(value.PropertyName), value.PropertyName);
                 writer.Write(nameof(value.TypeName), value.TypeName);
                 writer.WriteIfNotNull(nameof(value.DisplayName), value.DisplayName);
                 WriteDocumentationObject(writer, nameof(value.Documentation), value.DocumentationObject);

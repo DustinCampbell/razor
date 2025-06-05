@@ -27,12 +27,11 @@ public sealed partial class AllowedChildTagDescriptorBuilder : TagHelperObjectBu
 
     private protected override AllowedChildTagDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        var displayName = DisplayName ?? Name ?? string.Empty;
+        Assumed.NotNull(Name, $"{nameof(Name)} must be set before calling Build().");
 
-        return new AllowedChildTagDescriptor(
-            Name ?? string.Empty,
-            displayName,
-            diagnostics);
+        var displayName = DisplayName ?? Name;
+
+        return new AllowedChildTagDescriptor(Name, displayName, diagnostics);
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

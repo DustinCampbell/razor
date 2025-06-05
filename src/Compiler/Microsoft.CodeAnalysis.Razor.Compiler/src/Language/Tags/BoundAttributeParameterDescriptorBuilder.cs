@@ -36,8 +36,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 
     public string? DisplayName { get; set; }
 
-    internal bool CaseSensitive => _parent.CaseSensitive;
-
     public bool IsEnum
     {
         get => _flags.IsFlagSet(BoundAttributeParameterFlags.IsEnum);
@@ -68,15 +66,8 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 
         var displayName = DisplayName ?? $":{Name}";
 
-        var flags = _flags;
-
-        if (CaseSensitive)
-        {
-            flags |= BoundAttributeParameterFlags.CaseSensitive;
-        }
-
         return new BoundAttributeParameterDescriptor(
-            flags, Name, PropertyName, TypeName, _documentationObject, displayName, diagnostics);
+            _flags, Name, PropertyName, TypeName, _documentationObject, displayName, diagnostics);
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

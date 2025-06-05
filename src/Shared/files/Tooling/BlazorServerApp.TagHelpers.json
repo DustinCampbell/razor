@@ -6606,10 +6606,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7195347519841220175,
-      "Data2": 4024716143656464439,
-      "Data3": -7404571191255493967,
-      "Data4": -5462901828007641427
+      "Data1": 8082566452946030942,
+      "Data2": -4219761079567769799,
+      "Data3": 257644518721510921,
+      "Data4": 146175025780732156
     },
     "Kind": "Components.EventHandler",
     "Name": "onfocus",
@@ -6674,7 +6674,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -6687,7 +6687,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -6717,10 +6717,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4972683579997117519,
-      "Data2": 2995689587344343476,
-      "Data3": 2055202995872309718,
-      "Data4": 1711187378865416344
+      "Data1": 3657848506260252852,
+      "Data2": -5472483599651363633,
+      "Data3": -3413504248272291527,
+      "Data4": -88161801440636488
     },
     "Kind": "Components.EventHandler",
     "Name": "onblur",
@@ -6785,7 +6785,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -6798,7 +6798,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -6828,10 +6828,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2589094429458400438,
-      "Data2": 6807003666941480104,
-      "Data3": 3610722411060471075,
-      "Data4": 8085963125228955724
+      "Data1": 1725268144867141377,
+      "Data2": 5296320071847963331,
+      "Data3": -5103384940519830396,
+      "Data4": -1851798140821405839
     },
     "Kind": "Components.EventHandler",
     "Name": "onfocusin",
@@ -6896,7 +6896,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -6909,7 +6909,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -6939,10 +6939,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5982184066858972162,
-      "Data2": 5588724473004733829,
-      "Data3": 7897110788966101018,
-      "Data4": -2343011271393034659
+      "Data1": 7577980012190080887,
+      "Data2": 4022147662226212811,
+      "Data3": -613407916814379514,
+      "Data4": -5145015529961662632
     },
     "Kind": "Components.EventHandler",
     "Name": "onfocusout",
@@ -7007,7 +7007,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7020,7 +7020,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7050,10 +7050,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4131687369222370437,
-      "Data2": 5693241937136194161,
-      "Data3": -8055121740823630402,
-      "Data4": 7885531124890131182
+      "Data1": 8821206600681374909,
+      "Data2": 3699416076633187603,
+      "Data3": 3483242473139395802,
+      "Data4": -5933831393787842252
     },
     "Kind": "Components.EventHandler",
     "Name": "onmouseover",
@@ -7118,7 +7118,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7131,7 +7131,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7161,10 +7161,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6150365405975631159,
-      "Data2": 6661531916633581504,
-      "Data3": 3090247183579519168,
-      "Data4": 2174159634195555737
+      "Data1": 364847955750122951,
+      "Data2": -1377853627387945899,
+      "Data3": 7604288844389075110,
+      "Data4": -959825422026067760
     },
     "Kind": "Components.EventHandler",
     "Name": "onmouseout",
@@ -7229,7 +7229,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7242,7 +7242,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7272,10 +7272,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3891248055929881296,
-      "Data2": -4349306904240392228,
-      "Data3": 3979395882040831152,
-      "Data4": -8405782496654427581
+      "Data1": 4749427298321304014,
+      "Data2": 7865982490112755470,
+      "Data3": 2877708680708529516,
+      "Data4": -4406857681921287583
     },
     "Kind": "Components.EventHandler",
     "Name": "onmousemove",
@@ -7340,7 +7340,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7353,7 +7353,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7383,10 +7383,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6953930989172962441,
-      "Data2": -3407110562124382931,
-      "Data3": 4921244599023557300,
-      "Data4": 2522575740362328220
+      "Data1": 2586643738405022055,
+      "Data2": 8643838147890738277,
+      "Data3": 1074835780421489691,
+      "Data4": -6424261498663036828
     },
     "Kind": "Components.EventHandler",
     "Name": "onmousedown",
@@ -7451,7 +7451,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7464,7 +7464,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7494,10 +7494,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6551558905126476155,
-      "Data2": -5236631735571553181,
-      "Data3": 2266521317755044830,
-      "Data4": 498839085883751760
+      "Data1": 6478783583682661058,
+      "Data2": -1079945097568154853,
+      "Data3": 3500518254066793592,
+      "Data4": -7160451818003744739
     },
     "Kind": "Components.EventHandler",
     "Name": "onmouseup",
@@ -7562,7 +7562,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7575,7 +7575,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7605,10 +7605,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1653796526288707606,
-      "Data2": 1460617320764617301,
-      "Data3": -4720316786764670147,
-      "Data4": -1092445040298325854
+      "Data1": 3743924550466745524,
+      "Data2": 22638171027790533,
+      "Data3": 5544231306923462904,
+      "Data4": -4851180230681533813
     },
     "Kind": "Components.EventHandler",
     "Name": "onclick",
@@ -7673,7 +7673,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7686,7 +7686,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7716,10 +7716,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7510631029243260575,
-      "Data2": -8939993899173786733,
-      "Data3": -274201112829074731,
-      "Data4": 2198361191210340459
+      "Data1": 6542279027623399217,
+      "Data2": 6306573929528330754,
+      "Data3": 7003201080377680863,
+      "Data4": -3126096818838514941
     },
     "Kind": "Components.EventHandler",
     "Name": "ondblclick",
@@ -7784,7 +7784,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7797,7 +7797,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7827,10 +7827,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8035748645156802791,
-      "Data2": -5227642022711767869,
-      "Data3": 2378948904893872158,
-      "Data4": 7484919273568393435
+      "Data1": 363263213468504336,
+      "Data2": -7844412034644932117,
+      "Data3": 1020801734043165901,
+      "Data4": 6522743586410400514
     },
     "Kind": "Components.EventHandler",
     "Name": "onwheel",
@@ -7895,7 +7895,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -7908,7 +7908,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -7938,10 +7938,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6805200520338130161,
-      "Data2": 6554963204935932870,
-      "Data3": 8509589476362917222,
-      "Data4": -3150226466633216596
+      "Data1": 6580519429610478287,
+      "Data2": -6952199223191972852,
+      "Data3": -3272940574464592289,
+      "Data4": 5616680153084328939
     },
     "Kind": "Components.EventHandler",
     "Name": "onmousewheel",
@@ -8006,7 +8006,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8019,7 +8019,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8049,10 +8049,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2305300125818590965,
-      "Data2": 9105185925316182082,
-      "Data3": -612575227129135996,
-      "Data4": 7661072965883212384
+      "Data1": -6822931245726446522,
+      "Data2": 2504716577233254690,
+      "Data3": -5565955084654278238,
+      "Data4": 4944853338743417100
     },
     "Kind": "Components.EventHandler",
     "Name": "oncontextmenu",
@@ -8117,7 +8117,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8130,7 +8130,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8160,10 +8160,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7020420001754242200,
-      "Data2": -3064963930972803526,
-      "Data3": 2923599594758763031,
-      "Data4": 2297364483162320502
+      "Data1": 3905260036402785486,
+      "Data2": -5634802271715795621,
+      "Data3": 5034088471968033697,
+      "Data4": 1338583259062472621
     },
     "Kind": "Components.EventHandler",
     "Name": "ondrag",
@@ -8228,7 +8228,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8241,7 +8241,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8271,10 +8271,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4551558211018449659,
-      "Data2": 8799935289379344368,
-      "Data3": 5005109829804658877,
-      "Data4": 2136012564589701579
+      "Data1": -1430118278452710719,
+      "Data2": -2645954855453323890,
+      "Data3": -8050005498361106385,
+      "Data4": -2706930231530322101
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragend",
@@ -8339,7 +8339,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8352,7 +8352,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8382,10 +8382,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 36435839516173065,
-      "Data2": 3418682693853633508,
-      "Data3": -5280932219323173690,
-      "Data4": -3407223753648104677
+      "Data1": -4427894709283166393,
+      "Data2": 9096462772539800755,
+      "Data3": 3436291255906818525,
+      "Data4": 1317855527807816647
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragenter",
@@ -8450,7 +8450,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8463,7 +8463,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8493,10 +8493,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1454711732087618372,
-      "Data2": 4014219595352215476,
-      "Data3": -7187926783967803064,
-      "Data4": 7452707148032575330
+      "Data1": 6939748197517146242,
+      "Data2": 7514410994325405660,
+      "Data3": -6218311453880742747,
+      "Data4": -7453488427796498938
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragleave",
@@ -8561,7 +8561,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8574,7 +8574,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8604,10 +8604,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5338137326734814440,
-      "Data2": 3932038160941938391,
-      "Data3": -3535499691413161387,
-      "Data4": 147972191075038106
+      "Data1": -1438508604681842333,
+      "Data2": 3952978189100561229,
+      "Data3": 6723587727938666269,
+      "Data4": 7715600820477438011
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragover",
@@ -8672,7 +8672,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8685,7 +8685,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8715,10 +8715,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8515183711109719516,
-      "Data2": 5211374907592051811,
-      "Data3": -1965997222593322606,
-      "Data4": -95222427593957483
+      "Data1": -4873973496671977501,
+      "Data2": -929748042033827381,
+      "Data3": -1792500097740829293,
+      "Data4": -5721886865941639411
     },
     "Kind": "Components.EventHandler",
     "Name": "ondragstart",
@@ -8783,7 +8783,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8796,7 +8796,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8826,10 +8826,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4942351828635542311,
-      "Data2": 8248317013284600163,
-      "Data3": 4413519832160943402,
-      "Data4": 6179040903420221243
+      "Data1": -3034441734583693622,
+      "Data2": -567235906816677193,
+      "Data3": 5647269184242324970,
+      "Data4": 2270580108006600748
     },
     "Kind": "Components.EventHandler",
     "Name": "ondrop",
@@ -8894,7 +8894,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -8907,7 +8907,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -8937,10 +8937,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2759010230436245452,
-      "Data2": 1746132504077489502,
-      "Data3": -1192497923952479483,
-      "Data4": 4840529761738353912
+      "Data1": 7589565213087700408,
+      "Data2": 5544825215277539270,
+      "Data3": -5876380222320375589,
+      "Data4": 2594546294286389121
     },
     "Kind": "Components.EventHandler",
     "Name": "onkeydown",
@@ -9005,7 +9005,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9018,7 +9018,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9048,10 +9048,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4290230211881982926,
-      "Data2": 1193702611444081848,
-      "Data3": -3135305676779469205,
-      "Data4": -7059203579565671562
+      "Data1": -7543606917145590488,
+      "Data2": 6346453044413689786,
+      "Data3": -1787762434307924083,
+      "Data4": 7923059540975536724
     },
     "Kind": "Components.EventHandler",
     "Name": "onkeyup",
@@ -9116,7 +9116,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9129,7 +9129,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9159,10 +9159,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2926322165609764978,
-      "Data2": -4314775720816548572,
-      "Data3": 8549243616546612467,
-      "Data4": 3685054578998146971
+      "Data1": -5392267924485252596,
+      "Data2": 7807301195827446045,
+      "Data3": -8906973159982293502,
+      "Data4": -5584528227758491772
     },
     "Kind": "Components.EventHandler",
     "Name": "onkeypress",
@@ -9227,7 +9227,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9240,7 +9240,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9270,10 +9270,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7179540324663226339,
-      "Data2": -6482110550028430590,
-      "Data3": 8537703996318176761,
-      "Data4": 6474913700927597070
+      "Data1": -5499268457243931131,
+      "Data2": 2783024839301093986,
+      "Data3": -2472624309738201613,
+      "Data4": 2021635466148361141
     },
     "Kind": "Components.EventHandler",
     "Name": "onchange",
@@ -9338,7 +9338,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9351,7 +9351,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9381,10 +9381,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3918192273820847761,
-      "Data2": -8774087608530018093,
-      "Data3": -8973814011312187710,
-      "Data4": 1762048556952815485
+      "Data1": 2757374086741071542,
+      "Data2": -7793854579267739578,
+      "Data3": -589073562559944130,
+      "Data4": -788249053464661315
     },
     "Kind": "Components.EventHandler",
     "Name": "oninput",
@@ -9449,7 +9449,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9462,7 +9462,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9492,10 +9492,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4204203115975673661,
-      "Data2": 4231480639450517647,
-      "Data3": 6188572459403930635,
-      "Data4": 7139350098595634911
+      "Data1": -548289503108577713,
+      "Data2": 2996436477206286617,
+      "Data3": -7407447778647717213,
+      "Data4": 4092667559257263334
     },
     "Kind": "Components.EventHandler",
     "Name": "oninvalid",
@@ -9560,7 +9560,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9573,7 +9573,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9603,10 +9603,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5324992094244902301,
-      "Data2": -8501372146395018798,
-      "Data3": -3380117390710068397,
-      "Data4": 1159498364894028328
+      "Data1": -4537357127728791576,
+      "Data2": -8162433868042457433,
+      "Data3": -4874885260494226020,
+      "Data4": 3262440021046826422
     },
     "Kind": "Components.EventHandler",
     "Name": "onreset",
@@ -9671,7 +9671,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9684,7 +9684,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9714,10 +9714,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5988657416539126024,
-      "Data2": 7666818843061985226,
-      "Data3": 4484723459837545338,
-      "Data4": 4753447343567403682
+      "Data1": 2606564067410410226,
+      "Data2": -5352029296973259126,
+      "Data3": -2011810970859892312,
+      "Data4": 7794944133489354800
     },
     "Kind": "Components.EventHandler",
     "Name": "onselect",
@@ -9782,7 +9782,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9795,7 +9795,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9825,10 +9825,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5263822591441487770,
-      "Data2": -3496082115346166051,
-      "Data3": 1989433709010002752,
-      "Data4": 3151602219939279053
+      "Data1": -773427315334921674,
+      "Data2": -2317818984065579310,
+      "Data3": -6532495331375998900,
+      "Data4": -9121616067387208333
     },
     "Kind": "Components.EventHandler",
     "Name": "onselectstart",
@@ -9893,7 +9893,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -9906,7 +9906,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -9936,10 +9936,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1100426368845220819,
-      "Data2": -5132754734095483665,
-      "Data3": 7479812589876667067,
-      "Data4": -6216747416123775227
+      "Data1": 3565798118504844552,
+      "Data2": -6486799487708579922,
+      "Data3": -4789485677938932196,
+      "Data4": 6910670979766489360
     },
     "Kind": "Components.EventHandler",
     "Name": "onselectionchange",
@@ -10004,7 +10004,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10017,7 +10017,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10047,10 +10047,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1543740095012623433,
-      "Data2": 3568245635152224301,
-      "Data3": -6838293773077839098,
-      "Data4": -7507280112382063135
+      "Data1": 92324396724178414,
+      "Data2": -653119973164563213,
+      "Data3": -1281558451740462414,
+      "Data4": 1075966834523216897
     },
     "Kind": "Components.EventHandler",
     "Name": "onsubmit",
@@ -10115,7 +10115,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10128,7 +10128,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10158,10 +10158,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4334061986117190847,
-      "Data2": -7551091583682662544,
-      "Data3": 9067118875725630544,
-      "Data4": 6282646220553895474
+      "Data1": 8653133383478323561,
+      "Data2": -863154969126526746,
+      "Data3": 207852655842445865,
+      "Data4": -3441165120646900281
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforecopy",
@@ -10226,7 +10226,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10239,7 +10239,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10269,10 +10269,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 142606517912447711,
-      "Data2": 6042817192821505826,
-      "Data3": -7739148431127444253,
-      "Data4": -5416360200761172539
+      "Data1": 339561850018521122,
+      "Data2": -3141152991827501845,
+      "Data3": 1223318850658811737,
+      "Data4": 7777436226406189268
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforecut",
@@ -10337,7 +10337,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10350,7 +10350,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10380,10 +10380,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5110805833647362724,
-      "Data2": 4013272034950197168,
-      "Data3": 179935047053736065,
-      "Data4": 593836410683126497
+      "Data1": -1638461697998189055,
+      "Data2": -9077970507846954342,
+      "Data3": -8200303830901637576,
+      "Data4": -4615619476358122387
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforepaste",
@@ -10448,7 +10448,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10461,7 +10461,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10491,10 +10491,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6273225794900616375,
-      "Data2": 4306254745564607594,
-      "Data3": 7519630950019931749,
-      "Data4": 516402920256738678
+      "Data1": -257138701399401002,
+      "Data2": 8755571887835464633,
+      "Data3": -4911459002691200735,
+      "Data4": 3201608273794833536
     },
     "Kind": "Components.EventHandler",
     "Name": "oncopy",
@@ -10559,7 +10559,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10572,7 +10572,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10602,10 +10602,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -832676730478720647,
-      "Data2": -7102405900779190059,
-      "Data3": 1524097646406908259,
-      "Data4": -8397277862270179538
+      "Data1": -199153521106465399,
+      "Data2": -1798512078642422032,
+      "Data3": -2902234173373065786,
+      "Data4": 7324270782348788889
     },
     "Kind": "Components.EventHandler",
     "Name": "oncut",
@@ -10670,7 +10670,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10683,7 +10683,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10713,10 +10713,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2757320487876756848,
-      "Data2": 6938001881175666399,
-      "Data3": -8989740390488660927,
-      "Data4": 4609451989297180904
+      "Data1": 2272899994288718763,
+      "Data2": -541163290600893057,
+      "Data3": -865475772783038487,
+      "Data4": -378115119446808125
     },
     "Kind": "Components.EventHandler",
     "Name": "onpaste",
@@ -10781,7 +10781,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10794,7 +10794,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10824,10 +10824,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1984347156283173906,
-      "Data2": -8997692851700877198,
-      "Data3": -1965531801878993409,
-      "Data4": -8957061752435417941
+      "Data1": -8543249706854054006,
+      "Data2": 3362410126915948822,
+      "Data3": 3794713502468809844,
+      "Data4": -8212660210783095608
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchcancel",
@@ -10892,7 +10892,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -10905,7 +10905,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -10935,10 +10935,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4286918057642648241,
-      "Data2": -98287398515653994,
-      "Data3": -1125006939383509220,
-      "Data4": -2887045700099211112
+      "Data1": 7786125185619473767,
+      "Data2": -8502308788416322979,
+      "Data3": 8823677048517305887,
+      "Data4": -291806805294131129
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchend",
@@ -11003,7 +11003,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11016,7 +11016,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11046,10 +11046,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6415067615736442712,
-      "Data2": 5535518174866210193,
-      "Data3": -115116857305670114,
-      "Data4": 5811124118147800945
+      "Data1": 3605122663525085884,
+      "Data2": -1024535128570159299,
+      "Data3": -7108243618206149448,
+      "Data4": -3658938739945190442
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchmove",
@@ -11114,7 +11114,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11127,7 +11127,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11157,10 +11157,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4936322404859108398,
-      "Data2": 5232633173152221955,
-      "Data3": -6793101146552060003,
-      "Data4": -5817169316613947367
+      "Data1": 1212054415446253073,
+      "Data2": 7153736631506752957,
+      "Data3": -7485492105012400726,
+      "Data4": -3774978254265097797
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchstart",
@@ -11225,7 +11225,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11238,7 +11238,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11268,10 +11268,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2813454637119578958,
-      "Data2": 4867432165201802022,
-      "Data3": 3747092156281940654,
-      "Data4": -7102264201794473761
+      "Data1": 4200918287092342331,
+      "Data2": 7902893437688338497,
+      "Data3": 2469819094445334529,
+      "Data4": 4897548578694660495
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchenter",
@@ -11336,7 +11336,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11349,7 +11349,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11379,10 +11379,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1862148182450569166,
-      "Data2": -5093466990649901870,
-      "Data3": 5406604638078918124,
-      "Data4": 514117563919872724
+      "Data1": 1957064766002829561,
+      "Data2": -8172262324889611232,
+      "Data3": -3524380511420106028,
+      "Data4": 4575609471286702168
     },
     "Kind": "Components.EventHandler",
     "Name": "ontouchleave",
@@ -11447,7 +11447,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11460,7 +11460,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11490,10 +11490,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2263105770579786143,
-      "Data2": -2768638416476831075,
-      "Data3": -5590077128959793521,
-      "Data4": 4730409565472151926
+      "Data1": 3059587589542949702,
+      "Data2": -7435574188594397670,
+      "Data3": -5230356413805353309,
+      "Data4": -856274820144721472
     },
     "Kind": "Components.EventHandler",
     "Name": "ongotpointercapture",
@@ -11558,7 +11558,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11571,7 +11571,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11601,10 +11601,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -492890347271499489,
-      "Data2": -4854865412956522541,
-      "Data3": -8067439501322185171,
-      "Data4": 7588708855599255384
+      "Data1": -8995804767688897834,
+      "Data2": 8776067628457159663,
+      "Data3": -851492183158003090,
+      "Data4": -1892177155092008615
     },
     "Kind": "Components.EventHandler",
     "Name": "onlostpointercapture",
@@ -11669,7 +11669,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11682,7 +11682,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11712,10 +11712,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7534026821769535117,
-      "Data2": 3679973560076562312,
-      "Data3": 7620297403121417864,
-      "Data4": -5952477490624481370
+      "Data1": -5595927299604403126,
+      "Data2": -8732120668627148129,
+      "Data3": 415776709115917552,
+      "Data4": -4532136607030822488
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointercancel",
@@ -11780,7 +11780,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11793,7 +11793,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11823,10 +11823,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8674537879804826875,
-      "Data2": -3197699128490272620,
-      "Data3": 3475451705936513815,
-      "Data4": -4595753153680717845
+      "Data1": -7650152410999308909,
+      "Data2": -6448180400900829039,
+      "Data3": 1064003777667165285,
+      "Data4": 1985823440936071037
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerdown",
@@ -11891,7 +11891,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -11904,7 +11904,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -11934,10 +11934,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3869662416579421509,
-      "Data2": -5174685294374408702,
-      "Data3": -4508558666352391299,
-      "Data4": 3655426330992896039
+      "Data1": -1200606238074332960,
+      "Data2": 8407549381638637933,
+      "Data3": -8564361288733414094,
+      "Data4": 7918770276019866531
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerenter",
@@ -12002,7 +12002,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12015,7 +12015,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12045,10 +12045,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8279407945921168510,
-      "Data2": 2043345885805911449,
-      "Data3": 5393743213390490073,
-      "Data4": 608035606698618511
+      "Data1": 1570429199588685682,
+      "Data2": -1258397285872884413,
+      "Data3": -3210476983563574474,
+      "Data4": 81574377841535356
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerleave",
@@ -12113,7 +12113,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12126,7 +12126,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12156,10 +12156,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 819111073635355635,
-      "Data2": 4453882855756244589,
-      "Data3": -5881708139104185519,
-      "Data4": 316804172152536198
+      "Data1": 375235268867453938,
+      "Data2": 9107244156496683720,
+      "Data3": 7464932978376625991,
+      "Data4": -15661312416315919
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointermove",
@@ -12224,7 +12224,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12237,7 +12237,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12267,10 +12267,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4563536111112203434,
-      "Data2": -5030169160310071695,
-      "Data3": -2600949803494486183,
-      "Data4": -3578288604335706039
+      "Data1": -6505640592995636697,
+      "Data2": 1855077924290478687,
+      "Data3": 6737204962521829771,
+      "Data4": -2955535476915352545
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerout",
@@ -12335,7 +12335,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12348,7 +12348,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12378,10 +12378,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1752470825491471165,
-      "Data2": 8687208739325151074,
-      "Data3": 8402552955834575746,
-      "Data4": -5405469179037470375
+      "Data1": 6425814307169933105,
+      "Data2": 1955883725747608300,
+      "Data3": -8853420832403841814,
+      "Data4": -2511474299546628849
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerover",
@@ -12446,7 +12446,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12459,7 +12459,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12489,10 +12489,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3664981666626238608,
-      "Data2": 5740095989950871357,
-      "Data3": -4459461336013889100,
-      "Data4": 7034248270927059933
+      "Data1": -8809149921422437728,
+      "Data2": -1535015274249999124,
+      "Data3": -6149452580115859414,
+      "Data4": -7070028952394607172
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerup",
@@ -12557,7 +12557,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12570,7 +12570,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12600,10 +12600,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2991383744219594060,
-      "Data2": -6085066548041488174,
-      "Data3": -6682681819556555008,
-      "Data4": 4307027951253027892
+      "Data1": 1443088528560138252,
+      "Data2": 6202755918622071903,
+      "Data3": 4042937180074562582,
+      "Data4": -2607490034709331838
     },
     "Kind": "Components.EventHandler",
     "Name": "oncanplay",
@@ -12668,7 +12668,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12681,7 +12681,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12711,10 +12711,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7832421107640439686,
-      "Data2": -6715209523813118330,
-      "Data3": 4337880694145333768,
-      "Data4": 8269312625722956523
+      "Data1": 650050140158118243,
+      "Data2": -2492254494976455525,
+      "Data3": 5571253068665822057,
+      "Data4": 2957444922854032711
     },
     "Kind": "Components.EventHandler",
     "Name": "oncanplaythrough",
@@ -12779,7 +12779,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12792,7 +12792,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12822,10 +12822,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2161074716907827195,
-      "Data2": 2531328168202649825,
-      "Data3": 1746779816880704991,
-      "Data4": 3784626831048832319
+      "Data1": -9023339044072746786,
+      "Data2": 6696082743294041050,
+      "Data3": 9146670337327959185,
+      "Data4": -1069323748123743190
     },
     "Kind": "Components.EventHandler",
     "Name": "oncuechange",
@@ -12890,7 +12890,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -12903,7 +12903,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -12933,10 +12933,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1038229640534704688,
-      "Data2": 8887345024002703592,
-      "Data3": -1747097086826816416,
-      "Data4": 2597766595789288894
+      "Data1": 6507531954841635955,
+      "Data2": -8695477043405265639,
+      "Data3": 2238682190110156090,
+      "Data4": -7966977104721274210
     },
     "Kind": "Components.EventHandler",
     "Name": "ondurationchange",
@@ -13001,7 +13001,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13014,7 +13014,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13044,10 +13044,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 903816825084661205,
-      "Data2": -7069195735484009611,
-      "Data3": -7812370089065033830,
-      "Data4": 818552659134170457
+      "Data1": -4509694545825719660,
+      "Data2": -4211890443991765599,
+      "Data3": 8545616962467198440,
+      "Data4": 3996719890467804247
     },
     "Kind": "Components.EventHandler",
     "Name": "onemptied",
@@ -13112,7 +13112,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13125,7 +13125,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13155,10 +13155,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4207486849517941791,
-      "Data2": -9146589272972644147,
-      "Data3": 7255157974476481576,
-      "Data4": -5259764001480796466
+      "Data1": 6718598146059759808,
+      "Data2": -8205269684371370449,
+      "Data3": -8902660195603824438,
+      "Data4": 7768207348679770227
     },
     "Kind": "Components.EventHandler",
     "Name": "onpause",
@@ -13223,7 +13223,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13236,7 +13236,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13266,10 +13266,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1643747798193101223,
-      "Data2": 5128492619529750220,
-      "Data3": -9154855459582971213,
-      "Data4": 4767964203267158230
+      "Data1": 5653835512252886081,
+      "Data2": 5891916352743257937,
+      "Data3": -3925347981204273163,
+      "Data4": -3448711997717091587
     },
     "Kind": "Components.EventHandler",
     "Name": "onplay",
@@ -13334,7 +13334,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13347,7 +13347,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13377,10 +13377,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -364807911926755359,
-      "Data2": -4544511400258798241,
-      "Data3": 7103673572302137165,
-      "Data4": 2938069164360626681
+      "Data1": -1871914836007851938,
+      "Data2": 2743961955923973642,
+      "Data3": 972928440923473654,
+      "Data4": -5677254893348968081
     },
     "Kind": "Components.EventHandler",
     "Name": "onplaying",
@@ -13445,7 +13445,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13458,7 +13458,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13488,10 +13488,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2744554944344210462,
-      "Data2": 4953460402486018741,
-      "Data3": -5150395969171749523,
-      "Data4": 7185398249581526284
+      "Data1": -2728451998853452394,
+      "Data2": -2016251008969077249,
+      "Data3": -3145625845606042429,
+      "Data4": 3544927568670839469
     },
     "Kind": "Components.EventHandler",
     "Name": "onratechange",
@@ -13556,7 +13556,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13569,7 +13569,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13599,10 +13599,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5528288107566946428,
-      "Data2": 8551689193866960036,
-      "Data3": 573776571288862033,
-      "Data4": 6454103065434052369
+      "Data1": 4313606076079907138,
+      "Data2": 5107846535302834313,
+      "Data3": -6542425207084441016,
+      "Data4": -3935002797318630919
     },
     "Kind": "Components.EventHandler",
     "Name": "onseeked",
@@ -13667,7 +13667,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13680,7 +13680,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13710,10 +13710,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6635330418449455252,
-      "Data2": -8496318696228040339,
-      "Data3": -5003976100390421899,
-      "Data4": 7769096043364519978
+      "Data1": -4851618167681989299,
+      "Data2": -4535403520061603740,
+      "Data3": 2238297269093919043,
+      "Data4": -1015892747566814870
     },
     "Kind": "Components.EventHandler",
     "Name": "onseeking",
@@ -13778,7 +13778,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13791,7 +13791,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13821,10 +13821,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4218672634915691977,
-      "Data2": -6874481724397120865,
-      "Data3": -5216154288201796706,
-      "Data4": 5701910827492881963
+      "Data1": -8529959184735351296,
+      "Data2": -3727918308372672711,
+      "Data3": -1704679584485009843,
+      "Data4": -6384170799499343067
     },
     "Kind": "Components.EventHandler",
     "Name": "onstalled",
@@ -13889,7 +13889,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -13902,7 +13902,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -13932,10 +13932,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 140693760627878374,
-      "Data2": 3274220297330261138,
-      "Data3": 880168278902566353,
-      "Data4": -6821866570074696270
+      "Data1": -1485674640355390990,
+      "Data2": -8681091196558397398,
+      "Data3": -3618730323986076120,
+      "Data4": -7267495402264676698
     },
     "Kind": "Components.EventHandler",
     "Name": "onstop",
@@ -14000,7 +14000,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14013,7 +14013,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14043,10 +14043,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 367239920631491913,
-      "Data2": -3095728374922170740,
-      "Data3": 3446420521066184674,
-      "Data4": 7190719172721239377
+      "Data1": -4987221327788580551,
+      "Data2": -1692891633609565601,
+      "Data3": 1686955690232849421,
+      "Data4": 5473062276356676444
     },
     "Kind": "Components.EventHandler",
     "Name": "onsuspend",
@@ -14111,7 +14111,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14124,7 +14124,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14154,10 +14154,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2924350270722244868,
-      "Data2": -4802406097646796615,
-      "Data3": 7395300410669423662,
-      "Data4": 8661302973377480648
+      "Data1": -1358989972220783532,
+      "Data2": -3305500034741215765,
+      "Data3": 3130695964872094162,
+      "Data4": 5768380027771735329
     },
     "Kind": "Components.EventHandler",
     "Name": "ontimeupdate",
@@ -14222,7 +14222,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14235,7 +14235,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14265,10 +14265,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2983099085494511645,
-      "Data2": -6349500776852875006,
-      "Data3": -616705406521412599,
-      "Data4": 7182001303116261960
+      "Data1": 705525167610487895,
+      "Data2": -8705424231424185451,
+      "Data3": -6632553794084247670,
+      "Data4": -3797138266995518797
     },
     "Kind": "Components.EventHandler",
     "Name": "onvolumechange",
@@ -14333,7 +14333,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14346,7 +14346,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14376,10 +14376,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7487482509818119439,
-      "Data2": -2056646549825647838,
-      "Data3": -5517822306470978944,
-      "Data4": 5461287105287372680
+      "Data1": 5689253670468836896,
+      "Data2": 8144926758489153638,
+      "Data3": 4627028482833710180,
+      "Data4": -2881457707868498049
     },
     "Kind": "Components.EventHandler",
     "Name": "onwaiting",
@@ -14444,7 +14444,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14457,7 +14457,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14487,10 +14487,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5608623774807442984,
-      "Data2": 5606005619742315175,
-      "Data3": -4977185528802581222,
-      "Data4": -7232665467612106537
+      "Data1": 2508557980850133050,
+      "Data2": 4347594072692257834,
+      "Data3": -471058885348414474,
+      "Data4": 6057667619589529989
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadstart",
@@ -14555,7 +14555,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14568,7 +14568,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14598,10 +14598,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 181821390058033637,
-      "Data2": 7730400197297680249,
-      "Data3": -7199855487675964071,
-      "Data4": 5260571453129246203
+      "Data1": 5369935256568200640,
+      "Data2": -7664498470876625849,
+      "Data3": 7547580678302259181,
+      "Data4": 49617263773847464
     },
     "Kind": "Components.EventHandler",
     "Name": "ontimeout",
@@ -14666,7 +14666,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14679,7 +14679,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14709,10 +14709,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5157028899814641798,
-      "Data2": 4286069009929866778,
-      "Data3": -3512850529579144410,
-      "Data4": 2810148326399410052
+      "Data1": 2889374820157341114,
+      "Data2": -3841670480875400624,
+      "Data3": -4116285620174677044,
+      "Data4": 2671389690308345883
     },
     "Kind": "Components.EventHandler",
     "Name": "onabort",
@@ -14777,7 +14777,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14790,7 +14790,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14820,10 +14820,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4935648006057203307,
-      "Data2": -1015621701818962380,
-      "Data3": -6478772625550649707,
-      "Data4": -1859719134556545962
+      "Data1": 5410357655762977812,
+      "Data2": 998052397561610993,
+      "Data3": 5613382127681374920,
+      "Data4": -8164783016706470816
     },
     "Kind": "Components.EventHandler",
     "Name": "onload",
@@ -14888,7 +14888,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -14901,7 +14901,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -14931,10 +14931,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1757508881842215829,
-      "Data2": 3535846776922352151,
-      "Data3": 1555421710129625381,
-      "Data4": 5620167591679120340
+      "Data1": 7180341183643916306,
+      "Data2": 693215629736165539,
+      "Data3": 4709370394683635731,
+      "Data4": 582570470320586540
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadend",
@@ -14999,7 +14999,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15012,7 +15012,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15042,10 +15042,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2151814078484691392,
-      "Data2": 8223079760296106225,
-      "Data3": 3931110049210828421,
-      "Data4": -5057506469397525468
+      "Data1": -702319055040909786,
+      "Data2": -5002540595156239653,
+      "Data3": 4151816916675073559,
+      "Data4": 8131168766383823900
     },
     "Kind": "Components.EventHandler",
     "Name": "onprogress",
@@ -15110,7 +15110,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15123,7 +15123,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15153,10 +15153,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4002624598220671687,
-      "Data2": -7608043634700899624,
-      "Data3": -4714013180246662198,
-      "Data4": 5039444149143285607
+      "Data1": 5863527547393613649,
+      "Data2": -614814292726896900,
+      "Data3": 971215844678729931,
+      "Data4": -5539939995967166634
     },
     "Kind": "Components.EventHandler",
     "Name": "onerror",
@@ -15221,7 +15221,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15234,7 +15234,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15264,10 +15264,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1325542935786775738,
-      "Data2": -7818341981684504246,
-      "Data3": -8792439938230714100,
-      "Data4": 7373178988486610506
+      "Data1": -2331633137594263859,
+      "Data2": 8980829059415540643,
+      "Data3": 5506340425712527269,
+      "Data4": 8225599422737810163
     },
     "Kind": "Components.EventHandler",
     "Name": "onactivate",
@@ -15332,7 +15332,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15345,7 +15345,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15375,10 +15375,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3948855025429455261,
-      "Data2": 2527568401694086888,
-      "Data3": 1875337536123985655,
-      "Data4": 1330698554208522647
+      "Data1": 4769230216969971602,
+      "Data2": -3586636451922266872,
+      "Data3": 7743215201844931807,
+      "Data4": 709344230822469715
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforeactivate",
@@ -15443,7 +15443,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15456,7 +15456,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15486,10 +15486,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4699673105044028454,
-      "Data2": 7173403175312346248,
-      "Data3": 1722526577743085092,
-      "Data4": 633961574685592218
+      "Data1": -4594903800901623523,
+      "Data2": 7601324018892002143,
+      "Data3": 4537405835062677415,
+      "Data4": 7734822253764777852
     },
     "Kind": "Components.EventHandler",
     "Name": "onbeforedeactivate",
@@ -15554,7 +15554,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15567,7 +15567,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15597,10 +15597,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5359461329899802759,
-      "Data2": 8486591602840086741,
-      "Data3": -3074332605861170548,
-      "Data4": -5879992354459419051
+      "Data1": -3571615696745151739,
+      "Data2": 4800467010495294631,
+      "Data3": 1475652485872751720,
+      "Data4": 4300023704724002735
     },
     "Kind": "Components.EventHandler",
     "Name": "ondeactivate",
@@ -15665,7 +15665,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15678,7 +15678,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15708,10 +15708,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2344185967877366201,
-      "Data2": 2746365975104183331,
-      "Data3": -1571513806228426375,
-      "Data4": 6651940651754651293
+      "Data1": -4356583400303337907,
+      "Data2": -7323462968778200621,
+      "Data3": -1867124604834895939,
+      "Data4": -2098522991613847949
     },
     "Kind": "Components.EventHandler",
     "Name": "onended",
@@ -15776,7 +15776,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15789,7 +15789,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15819,10 +15819,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 9158643125849043133,
-      "Data2": -6201021921192437455,
-      "Data3": -2089928199990582831,
-      "Data4": -8060747585978053826
+      "Data1": 5060103490678445929,
+      "Data2": 7005350265844891843,
+      "Data3": -7849767590967377311,
+      "Data4": -2854262428857006090
     },
     "Kind": "Components.EventHandler",
     "Name": "onfullscreenchange",
@@ -15887,7 +15887,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -15900,7 +15900,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -15930,10 +15930,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3636559757163009465,
-      "Data2": 6352761114836301299,
-      "Data3": 5206316701969315066,
-      "Data4": 2569020778479584183
+      "Data1": 2502102288272554453,
+      "Data2": -5283439284608143506,
+      "Data3": 2417407467867916016,
+      "Data4": 4864146851330567148
     },
     "Kind": "Components.EventHandler",
     "Name": "onfullscreenerror",
@@ -15998,7 +15998,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16011,7 +16011,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -16041,10 +16041,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3919250906050116312,
-      "Data2": 6885706973210906704,
-      "Data3": -8538366399140284652,
-      "Data4": -1786768427868414393
+      "Data1": -7235629321545670651,
+      "Data2": -3520287454972373647,
+      "Data3": -5233834286800373528,
+      "Data4": 5197410714727482272
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadeddata",
@@ -16109,7 +16109,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16122,7 +16122,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -16152,10 +16152,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8613012540437980871,
-      "Data2": 147122351384398845,
-      "Data3": 1856774676237830314,
-      "Data4": 6640713999626272883
+      "Data1": -995957276744294299,
+      "Data2": 3116833060446238331,
+      "Data3": -2943580760457152630,
+      "Data4": -4153220740004508193
     },
     "Kind": "Components.EventHandler",
     "Name": "onloadedmetadata",
@@ -16220,7 +16220,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16233,7 +16233,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -16263,10 +16263,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5399014111140560609,
-      "Data2": -353412363998079045,
-      "Data3": -7319078823199524454,
-      "Data4": -2436796574007210830
+      "Data1": 7278204787496196656,
+      "Data2": 5803998725531240666,
+      "Data3": -1156050113079857709,
+      "Data4": 1807568933780835228
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerlockchange",
@@ -16331,7 +16331,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16344,7 +16344,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -16374,10 +16374,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 9193187434991595394,
-      "Data2": -6234723380060781587,
-      "Data3": 1395199726995807640,
-      "Data4": -8822208151312471785
+      "Data1": -7205696455227819112,
+      "Data2": -674099050114994563,
+      "Data3": 144597851189118036,
+      "Data4": -6740938346071294703
     },
     "Kind": "Components.EventHandler",
     "Name": "onpointerlockerror",
@@ -16442,7 +16442,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16455,7 +16455,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -16485,10 +16485,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4478337552727333028,
-      "Data2": -5199188449666113108,
-      "Data3": 936190002704592336,
-      "Data4": -4371664989632234587
+      "Data1": 8416938666130319554,
+      "Data2": -2035001792996867357,
+      "Data3": 3542643260341068808,
+      "Data4": -6440717560292220836
     },
     "Kind": "Components.EventHandler",
     "Name": "onreadystatechange",
@@ -16553,7 +16553,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16566,7 +16566,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -16596,10 +16596,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6065002762538873307,
-      "Data2": -1881537748090830469,
-      "Data3": -1414216519278504371,
-      "Data4": -7609052639339449286
+      "Data1": 6190651877575498891,
+      "Data2": -3170630075308667875,
+      "Data3": 2337428653943240841,
+      "Data4": -1477816093891768754
     },
     "Kind": "Components.EventHandler",
     "Name": "onscroll",
@@ -16664,7 +16664,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16677,7 +16677,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -16707,10 +16707,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4794752396900865074,
-      "Data2": 983801204294812451,
-      "Data3": 8481624511358501281,
-      "Data4": -1811443890642684991
+      "Data1": 6817149984814974315,
+      "Data2": 6327142338800890526,
+      "Data3": -6624739487052097006,
+      "Data4": 5153468108754511641
     },
     "Kind": "Components.EventHandler",
     "Name": "ontoggle",
@@ -16775,7 +16775,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "preventDefault",
             "PropertyName": "PreventDefault",
             "TypeName": "System.Boolean",
@@ -16788,7 +16788,7 @@
             }
           },
           {
-            "Flags": 9,
+            "Flags": 4,
             "Name": "stopPropagation",
             "PropertyName": "StopPropagation",
             "TypeName": "System.Boolean",
@@ -19349,10 +19349,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2547456923505382563,
-      "Data2": 3655963090326712735,
-      "Data3": -4585887885469515443,
-      "Data4": 5130250799762830037
+      "Data1": 4095848893251101658,
+      "Data2": 7095660759099598915,
+      "Data3": 4074818485929394365,
+      "Data4": -2519160711708488995
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -19389,7 +19389,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format",
             "TypeName": "System.String",
@@ -19399,7 +19399,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event",
             "TypeName": "System.String",
@@ -19412,7 +19412,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -19422,7 +19422,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -19432,7 +19432,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -19442,7 +19442,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -19466,10 +19466,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2426577197791877298,
-      "Data2": 2319801484607409061,
-      "Data3": -7444408821834356029,
-      "Data4": -705802519540043857
+      "Data1": -5996538139668646109,
+      "Data2": 2045373029965136859,
+      "Data3": 4307347769914950642,
+      "Data4": 2543226126411324726
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -19528,7 +19528,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -19541,7 +19541,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -19554,7 +19554,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -19564,7 +19564,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -19574,7 +19574,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -19584,7 +19584,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -19624,10 +19624,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5296629953616810837,
-      "Data2": -4093685088111528579,
-      "Data3": 2219965747511787436,
-      "Data4": 7251734830701767923
+      "Data1": 466542293352855379,
+      "Data2": -5033285545741002977,
+      "Data3": -3394721656212205416,
+      "Data4": -6572472283128123590
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -19686,7 +19686,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -19699,7 +19699,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -19712,7 +19712,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -19722,7 +19722,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -19732,7 +19732,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -19742,7 +19742,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -19782,10 +19782,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3745027292346248129,
-      "Data2": 4398598393111081527,
-      "Data3": -9214342641530190914,
-      "Data4": -1949799586399534803
+      "Data1": 3170506919249373395,
+      "Data2": 1018512385978236991,
+      "Data3": 3734225937117584397,
+      "Data4": 791755518887306689
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -19856,7 +19856,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_checked",
             "TypeName": "System.String",
@@ -19869,7 +19869,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_checked",
             "TypeName": "System.String",
@@ -19882,7 +19882,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -19892,7 +19892,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -19902,7 +19902,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -19912,7 +19912,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -19953,10 +19953,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5583686679408694583,
-      "Data2": -7689675077086566508,
-      "Data3": -9029154467353079172,
-      "Data4": 8860055275974658431
+      "Data1": -6253599008575979042,
+      "Data2": 8155779216238991574,
+      "Data3": 8258219495524188999,
+      "Data4": -884035277716594599
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20027,7 +20027,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -20040,7 +20040,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -20053,7 +20053,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -20063,7 +20063,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -20073,7 +20073,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -20083,7 +20083,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -20124,10 +20124,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3665792107452341648,
-      "Data2": -2950286082268838723,
-      "Data3": 1197788320748363630,
-      "Data4": -1574686108612459898
+      "Data1": -298776138191175468,
+      "Data2": 4973457183946714198,
+      "Data3": 32020626769099736,
+      "Data4": -1412737024765735553
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20198,7 +20198,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -20211,7 +20211,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -20224,7 +20224,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -20234,7 +20234,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -20244,7 +20244,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -20254,7 +20254,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -20295,10 +20295,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3209209400679949600,
-      "Data2": -4156851956241287052,
-      "Data3": 1100085916922522307,
-      "Data4": -7754050955318421942
+      "Data1": -8169008083961895743,
+      "Data2": 2833654302335495847,
+      "Data3": 2520199558091796661,
+      "Data4": 5318813365013974746
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -20369,7 +20369,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -20382,7 +20382,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -20395,7 +20395,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -20405,7 +20405,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -20415,7 +20415,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -20425,7 +20425,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -20466,10 +20466,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7098171094045713754,
-      "Data2": -420888084567655208,
-      "Data3": 1447093751939011536,
-      "Data4": 8682068219978800316
+      "Data1": -5299109054957582946,
+      "Data2": -3740967826608588698,
+      "Data3": 8338467410658612940,
+      "Data4": -6725136486008214170
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20540,7 +20540,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -20553,7 +20553,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -20566,7 +20566,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -20576,7 +20576,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -20586,7 +20586,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -20596,7 +20596,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -20637,10 +20637,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7677402298699526662,
-      "Data2": 4468601461518000864,
-      "Data3": 6158019250460154035,
-      "Data4": -587592241162559414
+      "Data1": -5684524474336083026,
+      "Data2": 2626264021952403142,
+      "Data3": 5996997674174718747,
+      "Data4": 2807252179272582263
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -20711,7 +20711,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -20724,7 +20724,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -20737,7 +20737,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -20747,7 +20747,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -20757,7 +20757,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -20767,7 +20767,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -20808,10 +20808,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3687194581139634499,
-      "Data2": -8762663645330778258,
-      "Data3": -8824070904297334058,
-      "Data4": -8552185923462016083
+      "Data1": 1520485598862294195,
+      "Data2": -6279071234021800435,
+      "Data3": -2951013314017001509,
+      "Data4": -6460490586746099292
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20882,7 +20882,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -20895,7 +20895,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -20908,7 +20908,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -20918,7 +20918,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -20928,7 +20928,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -20938,7 +20938,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -20979,10 +20979,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5059714314775103489,
-      "Data2": 1327293521721018166,
-      "Data3": -4510807276291794106,
-      "Data4": 817653730198556012
+      "Data1": -6483411256871363975,
+      "Data2": -2612041187000130302,
+      "Data3": 7564385433546545725,
+      "Data4": -2713649863710649408
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -21053,7 +21053,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -21066,7 +21066,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -21079,7 +21079,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -21089,7 +21089,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -21099,7 +21099,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -21109,7 +21109,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -21150,10 +21150,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5834212484292791961,
-      "Data2": 4009634096642979935,
-      "Data3": -4096253746999191689,
-      "Data4": 7554069779368690659
+      "Data1": 3477780512870371365,
+      "Data2": -149576171635976247,
+      "Data3": 6930152676675519705,
+      "Data4": -3527048960804047628
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21224,7 +21224,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -21237,7 +21237,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -21250,7 +21250,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -21260,7 +21260,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -21270,7 +21270,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -21280,7 +21280,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -21321,10 +21321,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4023116238216044322,
-      "Data2": 3117165099682002169,
-      "Data3": -2717969409111394178,
-      "Data4": -8143080698065663853
+      "Data1": 5275162855767900238,
+      "Data2": 8265826823085873948,
+      "Data3": 7221321632398101236,
+      "Data4": 3329765015584778173
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -21395,7 +21395,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -21408,7 +21408,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -21421,7 +21421,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -21431,7 +21431,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -21441,7 +21441,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -21451,7 +21451,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -21492,10 +21492,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7043638682821113751,
-      "Data2": -1326483658813272809,
-      "Data3": -7036897042648021373,
-      "Data4": 5470816099409880176
+      "Data1": 7926007133031391176,
+      "Data2": -1663726639017307554,
+      "Data3": -9046474021071035705,
+      "Data4": 2351212011697945239
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21566,7 +21566,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -21579,7 +21579,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -21592,7 +21592,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -21602,7 +21602,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -21612,7 +21612,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -21622,7 +21622,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -21663,10 +21663,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6811744316995995768,
-      "Data2": -5414804360211248927,
-      "Data3": -4453951647810634348,
-      "Data4": 886773287163331588
+      "Data1": 4008009203625188404,
+      "Data2": -7824498751850248981,
+      "Data3": 5850851042892708961,
+      "Data4": 3639071853392074464
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -21737,7 +21737,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -21750,7 +21750,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -21763,7 +21763,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -21773,7 +21773,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -21783,7 +21783,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -21793,7 +21793,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -21834,10 +21834,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7342514588022929147,
-      "Data2": 2520098179384017294,
-      "Data3": 5305137344295669671,
-      "Data4": -5650869025025447351
+      "Data1": -5652427652805571887,
+      "Data2": 276645436796167009,
+      "Data3": -8778095052184991669,
+      "Data4": -6323932504872608314
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21896,7 +21896,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -21909,7 +21909,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -21922,7 +21922,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -21932,7 +21932,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -21942,7 +21942,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -21952,7 +21952,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -21992,10 +21992,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5489185589772349600,
-      "Data2": -8092430850258932250,
-      "Data3": -1099766548120441109,
-      "Data4": -1105365869257739143
+      "Data1": -1672094992406257557,
+      "Data2": 4860858950926537006,
+      "Data3": -4593112195281473343,
+      "Data4": 4196942314026579988
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -22054,7 +22054,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "format",
             "PropertyName": "Format_value",
             "TypeName": "System.String",
@@ -22067,7 +22067,7 @@
             }
           },
           {
-            "Flags": 5,
+            "Flags": 2,
             "Name": "event",
             "PropertyName": "Event_value",
             "TypeName": "System.String",
@@ -22080,7 +22080,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "culture",
             "PropertyName": "Culture",
             "TypeName": "System.Globalization.CultureInfo",
@@ -22090,7 +22090,7 @@
             }
           },
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22100,7 +22100,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22110,7 +22110,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22150,10 +22150,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7902801635908588553,
-      "Data2": -7119131269338870186,
-      "Data3": -5516060461722253065,
-      "Data4": -7553526477716263102
+      "Data1": -608839932456362570,
+      "Data2": -1728324858749156527,
+      "Data3": -1540940945279203474,
+      "Data4": 7836581487353290584
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -22212,7 +22212,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22222,7 +22222,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22232,7 +22232,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22257,10 +22257,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5861312870489672334,
-      "Data2": 1072360284236984378,
-      "Data3": 1465038738915349766,
-      "Data4": -758192993375450222
+      "Data1": -6036920236051278225,
+      "Data2": -3472697258769368010,
+      "Data3": -3891581491459876065,
+      "Data4": -1911603512388652020
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -22319,7 +22319,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22329,7 +22329,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22339,7 +22339,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22365,10 +22365,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1593203174757561120,
-      "Data2": -9170153580617111146,
-      "Data3": -4238835329803735739,
-      "Data4": -2447550570375941630
+      "Data1": 4778923715445404437,
+      "Data2": -4067921696808137774,
+      "Data3": 7534290945711636941,
+      "Data4": -1677314826726465009
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -22427,7 +22427,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22437,7 +22437,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22447,7 +22447,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22472,10 +22472,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7021665870998541768,
-      "Data2": -211449396784598486,
-      "Data3": 756697293666494595,
-      "Data4": -5928237425663424754
+      "Data1": 944052143144878760,
+      "Data2": 9104550896242468196,
+      "Data3": -7289620235103668788,
+      "Data4": -358130907878398292
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -22534,7 +22534,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22544,7 +22544,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22554,7 +22554,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22580,10 +22580,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4372657282054282491,
-      "Data2": -583457275525515087,
-      "Data3": -5643088099739992584,
-      "Data4": 6156659598775487547
+      "Data1": 1667290583459651722,
+      "Data2": 5081787145703568316,
+      "Data3": -7962690235019127875,
+      "Data4": -1637098860473914007
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -22642,7 +22642,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22652,7 +22652,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22662,7 +22662,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22687,10 +22687,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -852373991718770851,
-      "Data2": -6768808568752554629,
-      "Data3": -4550449352162009414,
-      "Data4": 7156502515304172267
+      "Data1": 757460592764954897,
+      "Data2": 5559049439283507201,
+      "Data3": -3252840577366573949,
+      "Data4": 8894410259471300549
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -22749,7 +22749,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22759,7 +22759,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22769,7 +22769,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22795,10 +22795,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4780332511864168461,
-      "Data2": 4055591594609268856,
-      "Data3": 8574053773524071166,
-      "Data4": -4164497256025449389
+      "Data1": -3670545655329360184,
+      "Data2": 2411450632790445458,
+      "Data3": -8588205372952376847,
+      "Data4": 4878517983159941553
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputRadioGroup<TValue>",
@@ -22857,7 +22857,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22867,7 +22867,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22877,7 +22877,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -22902,10 +22902,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5120107608927520992,
-      "Data2": -8676929300974388261,
-      "Data3": -4640913939374086511,
-      "Data4": 5171627239972733764
+      "Data1": -7109387110239847264,
+      "Data2": 481627538733005005,
+      "Data3": -1128090368807509567,
+      "Data4": -4274879973639364403
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputRadioGroup<TValue>",
@@ -22964,7 +22964,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -22974,7 +22974,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -22984,7 +22984,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -23010,10 +23010,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7717240479753925045,
-      "Data2": 3760097499512770096,
-      "Data3": 2314503678708825097,
-      "Data4": 4253223006047032349
+      "Data1": -7695620428193382463,
+      "Data2": -4288141023751594545,
+      "Data3": -8116282973396334532,
+      "Data4": 7000189305921644739
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -23072,7 +23072,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -23082,7 +23082,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -23092,7 +23092,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -23117,10 +23117,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4082707698626459532,
-      "Data2": 9196199620991272315,
-      "Data3": 7358777225328914390,
-      "Data4": -4885783977991566884
+      "Data1": 9145568286777785071,
+      "Data2": -3644863812474588994,
+      "Data3": -1667522538692797637,
+      "Data4": 5417925299007773362
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -23179,7 +23179,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -23189,7 +23189,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -23199,7 +23199,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -23225,10 +23225,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6502570065496714646,
-      "Data2": -4338099564732839070,
-      "Data3": -7067455880463994328,
-      "Data4": -2338563421722793130
+      "Data1": -7842271683729173247,
+      "Data2": -2461092951482041511,
+      "Data3": 4817887156144512997,
+      "Data4": 3317669729003034890
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -23287,7 +23287,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -23297,7 +23297,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -23307,7 +23307,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -23332,10 +23332,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 336145593370444766,
-      "Data2": -8018113937873195877,
-      "Data3": 6481049298320230924,
-      "Data4": -7782330849591510068
+      "Data1": 7439649666578441291,
+      "Data2": -3070567526282016371,
+      "Data3": 9050135040107020553,
+      "Data4": -8835356833941817359
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -23394,7 +23394,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -23404,7 +23404,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -23414,7 +23414,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -23440,10 +23440,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6962608836774048961,
-      "Data2": -2370593638310796938,
-      "Data3": 3301914968131674416,
-      "Data4": 1681732973519815191
+      "Data1": -2966043973020900573,
+      "Data2": 3806989808257783393,
+      "Data3": -6140167112682543851,
+      "Data4": -8160922286519924890
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -23502,7 +23502,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -23512,7 +23512,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -23522,7 +23522,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",
@@ -23547,10 +23547,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4924944499185463384,
-      "Data2": 4911847736477006484,
-      "Data3": -6192746873612601385,
-      "Data4": -8433760283173773421
+      "Data1": -5154646815264979821,
+      "Data2": -5711962707775543944,
+      "Data3": 403385303275882284,
+      "Data4": -3350744687795252513
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -23609,7 +23609,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 17,
+            "Flags": 8,
             "Name": "get",
             "PropertyName": "Get",
             "TypeName": "System.Object",
@@ -23619,7 +23619,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "set",
             "PropertyName": "Set",
             "TypeName": "System.Delegate",
@@ -23629,7 +23629,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 0,
             "Name": "after",
             "PropertyName": "After",
             "TypeName": "System.Delegate",

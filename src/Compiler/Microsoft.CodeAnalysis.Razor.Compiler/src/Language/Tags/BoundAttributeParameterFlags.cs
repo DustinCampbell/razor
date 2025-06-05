@@ -8,9 +8,8 @@ namespace Microsoft.AspNetCore.Razor.Language;
 [Flags]
 internal enum BoundAttributeParameterFlags : byte
 {
-    CaseSensitive = 1 << 0,
-    IsEnum = 1 << 1,
-    IsStringProperty = 1 << 2,
-    IsBooleanProperty = 1 << 3,
-    IsBindAttributeGetSet = 1 << 4,
+    IsEnum = 1 << 0,
+    IsStringProperty = 1 << 1,
+    IsBooleanProperty = 1 << 2,
+    IsBindAttributeGetSet = 1 << 3,
 }

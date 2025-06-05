@@ -21,7 +21,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
     public string TypeName { get; }
     public string DisplayName { get; }
 
-    public bool CaseSensitive => _flags.IsFlagSet(BoundAttributeParameterFlags.CaseSensitive);
+    public bool CaseSensitive => Parent.CaseSensitive;
     public bool IsEnum => _flags.IsFlagSet(BoundAttributeParameterFlags.IsEnum);
     public bool IsStringProperty => _flags.IsFlagSet(BoundAttributeParameterFlags.IsStringProperty);
     public bool IsBooleanProperty => _flags.IsFlagSet(BoundAttributeParameterFlags.IsBooleanProperty);

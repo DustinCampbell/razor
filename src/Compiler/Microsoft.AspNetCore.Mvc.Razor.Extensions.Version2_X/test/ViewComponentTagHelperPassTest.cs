@@ -71,8 +71,8 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
                 new(ViewComponentTagHelperMetadata.Name, "TagCloud"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("Foo")
-                .TypeName("System.Int32")
-                .Metadata(PropertyName("Foo")))
+                .PropertyName("Foo")
+                .TypeName("System.Int32"))
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
             .Build();
 
@@ -110,8 +110,8 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
                 new(ViewComponentTagHelperMetadata.Name, "TagCloud"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("Foo")
+                .PropertyName("Tags")
                 .TypeName("System.Collections.Generic.Dictionary<System.String, System.Int32>")
-                .Metadata(PropertyName("Tags"))
                 .AsDictionaryAttribute("foo-", "System.Int32"))
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
             .Build();
@@ -147,8 +147,8 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
         var tagHelper1 = TagHelperDescriptorBuilder.Create("PTestTagHelper", "TestAssembly")
             .Metadata(TypeName("PTestTagHelper"))
             .BoundAttributeDescriptor(attribute => attribute
-                .Metadata(PropertyName("Foo"))
                 .Name("Foo")
+                .PropertyName("Foo")
                 .TypeName("System.Int32"))
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
             .Build();
@@ -158,8 +158,8 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
                 TypeName("__Generated__TagCloudViewComponentTagHelper"),
                 new(ViewComponentTagHelperMetadata.Name, "TagCloud"))
             .BoundAttributeDescriptor(attribute => attribute
-                .Metadata(PropertyName("Foo"))
                 .Name("Foo")
+                .PropertyName("Foo")
                 .TypeName("System.Int32"))
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
             .Build();

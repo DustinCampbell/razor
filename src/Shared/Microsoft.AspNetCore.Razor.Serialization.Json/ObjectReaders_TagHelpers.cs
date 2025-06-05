@@ -144,7 +144,8 @@ internal static partial class ObjectReaders
             {
                 var flags = (BoundAttributeFlags)reader.ReadInt32(nameof(BoundAttributeDescriptor.Flags));
                 var kind = reader.ReadNonNullString(nameof(BoundAttributeDescriptor.Kind));
-                var name = reader.ReadString(nameof(BoundAttributeDescriptor.Name));
+                var name = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.Name));
+                var propertyName = reader.ReadNonNullString(nameof(BoundAttributeDescriptor.PropertyName));
                 var typeName = reader.ReadNonNullString(nameof(BoundAttributeDescriptor.TypeName));
                 var indexerNamePrefix = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.IndexerNamePrefix));
                 var indexerTypeName = reader.ReadStringOrNull(nameof(BoundAttributeDescriptor.IndexerTypeName));
@@ -157,7 +158,7 @@ internal static partial class ObjectReaders
                 var diagnostics = reader.ReadImmutableArrayOrEmpty(nameof(BoundAttributeDescriptor.Diagnostics), ReadDiagnostic);
 
                 return new BoundAttributeDescriptor(
-                    flags, Cached(kind), Cached(name)!, Cached(typeName),
+                    flags, Cached(kind), Cached(name)!, Cached(propertyName)!, Cached(typeName),
                     Cached(indexerNamePrefix), Cached(indexerTypeName),
                     documentationObject, Cached(displayName), Cached(containingType),
                     parameters, metadata, diagnostics);

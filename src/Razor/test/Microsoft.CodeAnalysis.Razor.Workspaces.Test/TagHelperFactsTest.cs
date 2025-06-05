@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Xunit;
 using Xunit.Abstractions;
-using static Microsoft.AspNetCore.Razor.Language.CommonMetadata;
 
 namespace Microsoft.VisualStudio.Editor.Razor;
 
@@ -42,29 +41,25 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         ImmutableArray<TagHelperDescriptor> documentDescriptors =
         [
             TagHelperDescriptorBuilder.Create("TestType", "TestAssembly")
-                .TagMatchingRuleDescriptor(rule =>
-                    rule
-                        .RequireTagName("a")
-                        .RequireAttributeDescriptor(attribute => attribute.Name("asp-for")))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
-                        .Name("asp-for")
-                        .TypeName(typeof(string).FullName)
-                        .Metadata(PropertyName("AspFor")))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
-                        .Name("asp-route")
-                        .TypeName(typeof(IDictionary<string, string>).Namespace + "IDictionary<string, string>")
-                        .Metadata(PropertyName("AspRoute"))
-                        .AsDictionaryAttribute("asp-route-", typeof(string).FullName))
+                .TagMatchingRuleDescriptor(rule => rule
+                    .RequireTagName("a")
+                    .RequireAttributeDescriptor(attribute => attribute.Name("asp-for")))
+                .BoundAttributeDescriptor(attribute => attribute
+                    .Name("asp-for")
+                    .PropertyName("AspFor")
+                    .TypeName(typeof(string).FullName))
+                .BoundAttributeDescriptor(attribute => attribute
+                    .Name("asp-route")
+                    .PropertyName("AspRoute")
+                    .TypeName(typeof(IDictionary<string, string>).Namespace + "IDictionary<string, string>")
+                    .AsDictionaryAttribute("asp-route-", typeof(string).FullName))
                 .Build(),
             TagHelperDescriptorBuilder.Create("TestType", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
-                        .Name("asp-for")
-                        .TypeName(typeof(string).FullName)
-                        .Metadata(PropertyName("AspFor")))
+                .BoundAttributeDescriptor(attribute => attribute
+                    .Name("asp-for")
+                    .PropertyName("AspFor")
+                    .TypeName(typeof(string).FullName))
                 .Build(),
         ];
         var documentContext = TagHelperDocumentContext.Create(string.Empty, documentDescriptors);
@@ -89,17 +84,15 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         [
             TagHelperDescriptorBuilder.Create("TestType", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("a"))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
-                        .Name("asp-for")
-                        .TypeName(typeof(string).FullName)
-                        .Metadata(PropertyName("AspFor")))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
-                        .Name("asp-route")
-                        .TypeName(typeof(IDictionary<string, string>).Namespace + "IDictionary<string, string>")
-                        .Metadata(PropertyName("AspRoute"))
-                        .AsDictionaryAttribute("asp-route-", typeof(string).FullName))
+                .BoundAttributeDescriptor(attribute => attribute
+                    .Name("asp-for")
+                    .PropertyName("AspFor")
+                    .TypeName(typeof(string).FullName))
+                .BoundAttributeDescriptor(attribute => attribute
+                    .Name("asp-route")
+                    .PropertyName("AspRoute")
+                    .TypeName(typeof(IDictionary<string, string>).Namespace + "IDictionary<string, string>")
+                    .AsDictionaryAttribute("asp-route-", typeof(string).FullName))
                 .Build()
         ];
         var expectedAttributeDescriptors = new[]
@@ -124,16 +117,14 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         [
             TagHelperDescriptorBuilder.Create("TestType", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
-                        .Name("asp-for")
-                        .TypeName(typeof(string).FullName)
-                        .Metadata(PropertyName("AspFor")))
-                .BoundAttributeDescriptor(attribute =>
-                    attribute
-                        .Name("asp-extra")
-                        .TypeName(typeof(string).FullName)
-                        .Metadata(PropertyName("AspExtra")))
+                .BoundAttributeDescriptor(attribute => attribute
+                    .Name("asp-for")
+                    .PropertyName("AspFor")
+                    .TypeName(typeof(string).FullName))
+                .BoundAttributeDescriptor(attribute => attribute
+                    .Name("asp-extra")
+                    .PropertyName("AspExtra")
+                    .TypeName(typeof(string).FullName))
                 .Build()
         ];
         var expectedAttributeDescriptors = new[]

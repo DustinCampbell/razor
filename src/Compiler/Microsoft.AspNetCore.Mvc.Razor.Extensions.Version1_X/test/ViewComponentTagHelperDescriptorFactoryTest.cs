@@ -33,21 +33,18 @@ public class ViewComponentTagHelperDescriptorFactoryTest
                 TypeName("__Generated__StringParameterViewComponentTagHelper"),
                 new(ViewComponentTagHelperMetadata.Name, "StringParameter"))
             .DisplayName("StringParameterViewComponentTagHelper")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
+            .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("vc:string-parameter")
                 .RequireAttributeDescriptor(attribute => attribute.Name("foo"))
                 .RequireAttributeDescriptor(attribute => attribute.Name("bar")))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("foo")
-                .Metadata(PropertyName("foo"))
+                .PropertyName("foo")
                 .TypeName(typeof(string).FullName)
                 .DisplayName("string StringParameterViewComponentTagHelper.foo"))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("bar")
-                .Metadata(PropertyName("bar"))
+                .PropertyName("bar")
                 .TypeName(typeof(string).FullName)
                 .DisplayName("string StringParameterViewComponentTagHelper.bar"))
             .Build();
@@ -75,29 +72,25 @@ public class ViewComponentTagHelperDescriptorFactoryTest
                 TypeName("__Generated__VariousParameterViewComponentTagHelper"),
                 new(ViewComponentTagHelperMetadata.Name, "VariousParameter"))
             .DisplayName("VariousParameterViewComponentTagHelper")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
+            .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("vc:various-parameter")
                 .RequireAttributeDescriptor(attribute => attribute.Name("test-enum"))
                 .RequireAttributeDescriptor(attribute => attribute.Name("test-string"))
                 .RequireAttributeDescriptor(attribute => attribute.Name("baz")))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("test-enum")
-                .Metadata(PropertyName("testEnum"))
+                .PropertyName("testEnum")
                 .TypeName(typeof(VariousParameterViewComponent).FullName + "." + nameof(VariousParameterViewComponent.TestEnum))
                 .AsEnum()
                 .DisplayName(typeof(VariousParameterViewComponent).FullName + "." + nameof(VariousParameterViewComponent.TestEnum) + " VariousParameterViewComponentTagHelper.testEnum"))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("test-string")
-                .Metadata(PropertyName("testString"))
+                .PropertyName("testString")
                 .TypeName(typeof(string).FullName)
                 .DisplayName("string VariousParameterViewComponentTagHelper.testString"))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("baz")
-                .Metadata(PropertyName("baz"))
+                .PropertyName("baz")
                 .TypeName(typeof(int).FullName)
                 .DisplayName("int VariousParameterViewComponentTagHelper.baz"))
             .Build();
@@ -125,20 +118,17 @@ public class ViewComponentTagHelperDescriptorFactoryTest
                 TypeName("__Generated__GenericParameterViewComponentTagHelper"),
                 new(ViewComponentTagHelperMetadata.Name, "GenericParameter"))
             .DisplayName("GenericParameterViewComponentTagHelper")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
+            .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("vc:generic-parameter")
                 .RequireAttributeDescriptor(attribute => attribute.Name("foo")))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("foo")
-                .Metadata(PropertyName("Foo"))
+                .PropertyName("Foo")
                 .TypeName("System.Collections.Generic.List<System.String>")
                 .DisplayName("System.Collections.Generic.List<System.String> GenericParameterViewComponentTagHelper.Foo"))
-            .BoundAttributeDescriptor(attribute =>
-                attribute
+            .BoundAttributeDescriptor(attribute => attribute
                 .Name("bar")
-                .Metadata(PropertyName("Bar"))
+                .PropertyName("Bar")
                 .TypeName("System.Collections.Generic.Dictionary<System.String, System.Int32>")
                 .AsDictionaryAttribute("bar-", typeof(int).FullName)
                 .DisplayName("System.Collections.Generic.Dictionary<System.String, System.Int32> GenericParameterViewComponentTagHelper.Bar"))

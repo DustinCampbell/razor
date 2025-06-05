@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Generic;
 using Xunit;
 using static Microsoft.AspNetCore.Razor.Language.CommonMetadata;
 
@@ -35,8 +36,8 @@ public class DefaultBoundAttributeDescriptorBuilderTest
 
         var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
         builder
-            .TypeName(typeof(int).FullName)
-            .Metadata(PropertyName("SomeProperty"));
+            .PropertyName("SomeProperty")
+            .TypeName(typeof(int).FullName);
 
         // Act
         var descriptor = builder.Build();
@@ -54,7 +55,7 @@ public class DefaultBoundAttributeDescriptorBuilderTest
         // Arrange
         var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
 
-        var metadata = MetadataCollection.Create(PropertyName("SomeProperty"));
+        var metadata = MetadataCollection.Create(new KeyValuePair<string, string?>("Key", "Value"));
 
         var builder1 = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
         {
@@ -96,8 +97,8 @@ public class DefaultBoundAttributeDescriptorBuilderTest
             TypeName = typeof(int).FullName
         };
 
-        builder1.Metadata.Add(PropertyName("SomeProperty"));
-        builder2.Metadata.Add(PropertyName("SomeProperty"));
+        builder1.Metadata.Add(new KeyValuePair<string, string?>("Key", "Value"));
+        builder2.Metadata.Add(new KeyValuePair<string, string?>("Key", "Value"));
 
         // Act
         var descriptor1 = builder1.Build();

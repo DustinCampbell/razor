@@ -29,6 +29,7 @@ public partial class BoundAttributeDescriptorBuilder
         _caseSensitive = null;
 
         Name = null;
+        PropertyName = null;
         TypeName = null;
         IsEnum = false;
         IsDictionary = false;

@@ -25,8 +25,8 @@ public class DefaultTagHelperOptimizationPassTest : RazorProjectEngineTestBase
             .Metadata(TypeName("TestTagHelper"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("Foo")
-                .TypeName("System.Int32")
-                .Metadata(PropertyName("FooProp")))
+                .PropertyName("FooProp")
+                .TypeName("System.Int32"))
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
             .Build();
 

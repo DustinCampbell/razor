@@ -66,8 +66,8 @@ public class RazorCodeDocumentExtensionsTest(ITestOutputHelper testOutput) : Too
         descriptor.BindAttribute(builder =>
         {
             builder.Name = "asp-int";
+            builder.PropertyName = "AspInt";
             builder.TypeName = typeof(int).FullName;
-            builder.SetMetadata(PropertyName("AspInt"));
         });
         descriptor.SetMetadata(TypeName("TestTagHelper"));
 

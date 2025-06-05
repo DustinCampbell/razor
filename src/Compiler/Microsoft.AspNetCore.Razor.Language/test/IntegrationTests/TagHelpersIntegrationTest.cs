@@ -48,7 +48,7 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
                     {
                         builder => builder
                             .Name("bound")
-                            .Metadata(PropertyName("FooProp"))
+                            .PropertyName("FooProp")
                             .TypeName("System.String"),
                     })
             };
@@ -85,7 +85,7 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
                     {
                         builder => builder
                             .Name("value")
-                            .Metadata(PropertyName("FooProp"))
+                            .PropertyName("FooProp")
                             .TypeName("System.String"),
                     })
             };

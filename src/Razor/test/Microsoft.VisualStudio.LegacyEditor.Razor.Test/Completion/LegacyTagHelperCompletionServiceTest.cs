@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.CodeAnalysis.Razor.Completion;
 using Xunit;
 using Xunit.Abstractions;
-using static Microsoft.AspNetCore.Razor.Language.CommonMetadata;
 
 namespace Microsoft.VisualStudio.LegacyEditor.Razor.Completion;
 
@@ -27,8 +26,8 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .TagMatchingRuleDescriptor(rule => rule
                     .RequireTagName("form"))
                 .BoundAttributeDescriptor(attribute => attribute
+                    .PropertyName("RouteValues")
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
-                    .Metadata(PropertyName("RouteValues"))
                     .AsDictionary("asp-route-", typeof(string).FullName))
                 .Build(),
         ];
@@ -63,8 +62,8 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .RequireTagName("form"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("asp-all-route-data")
+                    .PropertyName("RouteValues")
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
-                    .Metadata(PropertyName("RouteValues"))
                     .AsDictionary("asp-route-", typeof(string).FullName))
                 .Build(),
         ];
@@ -109,7 +108,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("asp-all-route-data")
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
-                    .Metadata(PropertyName("RouteValues"))
+                    .PropertyName("RouteValues")
                     .AsDictionary("asp-route-", typeof(string).FullName))
                 .Build(),
         ];
@@ -146,15 +145,15 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .RequireAttributeDescriptor(attribute => attribute.Name("repeat")))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Visible")))
+                    .PropertyName("Visible")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
             TagHelperDescriptorBuilder.Create("StyleTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("class")
-                    .TypeName(typeof(string).FullName)
-                    .Metadata(PropertyName("Class")))
+                    .PropertyName("Class")
+                    .TypeName(typeof(string).FullName))
                 .Build(),
         ];
 
@@ -193,15 +192,15 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .RequireAttributeDescriptor(attribute => attribute.Name("repeat")))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Visible")))
+                    .PropertyName("Visible")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
             TagHelperDescriptorBuilder.Create("StyleTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("class")
-                    .TypeName(typeof(string).FullName)
-                    .Metadata(PropertyName("Class")))
+                    .PropertyName("Class")
+                    .TypeName(typeof(string).FullName))
                 .Build(),
         ];
 
@@ -242,15 +241,15 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .RequireAttributeDescriptor(attribute => attribute.Name("repeat")))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Visible")))
+                    .PropertyName("Visible")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
             TagHelperDescriptorBuilder.Create("StyleTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("class")
-                    .TypeName(typeof(string).FullName)
-                    .Metadata(PropertyName("Class")))
+                    .PropertyName("Class")
+                    .TypeName(typeof(string).FullName))
                 .Build(),
         ];
 
@@ -329,12 +328,12 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .RequireAttributeDescriptor(attribute => attribute.Name("repeat")))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("repeat")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Repeat")))
+                    .PropertyName("Repeat")
+                    .TypeName(typeof(bool).FullName))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Visible")))
+                    .PropertyName("Visible")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
             TagHelperDescriptorBuilder.Create("StyleTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -342,8 +341,8 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .RequireAttributeDescriptor(attribute => attribute.Name("class")))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("class")
-                    .TypeName(typeof(string).FullName)
-                    .Metadata(PropertyName("Class")))
+                    .PropertyName("Class")
+                    .TypeName(typeof(string).FullName))
                 .Build(),
         ];
 
@@ -378,12 +377,12 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("repeat")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Repeat")))
+                    .PropertyName("Repeat")
+                    .TypeName(typeof(bool).FullName))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Visible")))
+                    .PropertyName("Visible")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
             TagHelperDescriptorBuilder.Create("StyleTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -391,17 +390,18 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .RequireAttributeDescriptor(attribute => attribute.Name("class")))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("class")
-                    .TypeName(typeof(string).FullName)
-                    .Metadata(PropertyName("Class")))
+                    .PropertyName("Class")
+                    .TypeName(typeof(string).FullName))
                 .Build(),
             TagHelperDescriptorBuilder.Create("StyleTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Visible")))
+                    .PropertyName("Visible")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
         ];
+
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
             ["onclick"] = [],
@@ -434,8 +434,8 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("custom"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("repeat")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Repeat")))
+                    .PropertyName("Repeat")
+                    .TypeName(typeof(bool).FullName))
                 .TagOutputHint("div")
                 .Build(),
         ];
@@ -470,8 +470,8 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("custom"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("repeat")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Repeat")))
+                    .PropertyName("Repeat")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
         ];
 
@@ -504,15 +504,15 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("repeat")
-                    .TypeName(typeof(bool).FullName)
-                    .Metadata(PropertyName("Repeat")))
+                    .PropertyName("Repeat")
+                    .TypeName(typeof(bool).FullName))
                 .Build(),
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
             ["class"] = [],
-            ["repeat"] = [..documentDescriptors[0].BoundAttributes]
+            ["repeat"] = [.. documentDescriptors[0].BoundAttributes]
         });
 
         var existingCompletions = new[] { "class" };

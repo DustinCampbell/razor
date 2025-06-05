@@ -18,11 +18,12 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
 
     public override BoundAttributeDescriptor Deserialize(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(12);
+        reader.ReadArrayHeaderAndVerify(13);
 
         var flags = (BoundAttributeFlags)reader.ReadUInt16();
         var kind = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
+        var propertyName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var typeName = CachedStringFormatter.Instance.Deserialize(ref reader, options).AssumeNotNull();
         var indexerNamePrefix = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var indexerTypeName = CachedStringFormatter.Instance.Deserialize(ref reader, options);
@@ -35,7 +36,7 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
         var diagnostics = reader.Deserialize<ImmutableArray<RazorDiagnostic>>(options);
 
         return new BoundAttributeDescriptor(
-            flags, kind, name!, typeName,
+            flags, kind, name, propertyName, typeName,
             indexerNamePrefix, indexerTypeName,
             documentationObject, displayName, containingType,
             parameters, metadata, diagnostics);
@@ -43,11 +44,12 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
 
     public override void Serialize(ref MessagePackWriter writer, BoundAttributeDescriptor value, SerializerCachingOptions options)
     {
-        writer.WriteArrayHeader(12);
+        writer.WriteArrayHeader(13);
 
         writer.Write((ushort)value.Flags);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Kind, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.Name, options);
+        CachedStringFormatter.Instance.Serialize(ref writer, value.PropertyName, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.TypeName, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.IndexerNamePrefix, options);
         CachedStringFormatter.Instance.Serialize(ref writer, value.IndexerTypeName, options);
@@ -62,11 +64,12 @@ internal sealed class BoundAttributeFormatter : ValueFormatter<BoundAttributeDes
 
     public override void Skim(ref MessagePackReader reader, SerializerCachingOptions options)
     {
-        reader.ReadArrayHeaderAndVerify(12);
+        reader.ReadArrayHeaderAndVerify(13);
 
         reader.Skip(); // Flags
         CachedStringFormatter.Instance.Skim(ref reader, options); // Kind;
         CachedStringFormatter.Instance.Skim(ref reader, options); // Name
+        CachedStringFormatter.Instance.Skim(ref reader, options); // PropertyName
         CachedStringFormatter.Instance.Skim(ref reader, options); // TypeName
         CachedStringFormatter.Instance.Skim(ref reader, options); // IndexerNamePrefix
         CachedStringFormatter.Instance.Skim(ref reader, options); // IndexerTypeName

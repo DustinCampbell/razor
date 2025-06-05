@@ -542,8 +542,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         builder.BindAttribute(attribute =>
         {
             attribute.Name = "testAttribute";
+            attribute.PropertyName = "TestAttribute";
             attribute.TypeName = typeof(string).FullName;
-            attribute.SetMetadata(PropertyName("TestAttribute"));
         });
         builder.Metadata(TypeName("TestNamespace.TestTagHelper"));
         var tagHelper = builder.Build();
@@ -569,8 +569,8 @@ public class RazorCompletionListProviderTest : LanguageServerTestBase
         builder.BindAttribute(attribute =>
         {
             attribute.Name = "testAttribute";
+            attribute.PropertyName = "TestAttribute";
             attribute.TypeName = typeof(string).FullName;
-            attribute.SetMetadata(PropertyName("TestAttribute"));
         });
         builder.SetMetadata(TypeName("TestNamespace.TestTagHelper"));
         var tagHelper = builder.Build();

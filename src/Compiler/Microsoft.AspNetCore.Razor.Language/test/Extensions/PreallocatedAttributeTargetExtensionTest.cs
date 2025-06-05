@@ -133,8 +133,8 @@ public class PreallocatedAttributeTargetExtensionTest
         var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
         builder
             .Name("Foo")
-            .TypeName("System.String")
-            .Metadata(PropertyName("FooProp"));
+            .PropertyName("FooProp")
+            .TypeName("System.String");
 
         var descriptor = builder.Build();
 
@@ -176,9 +176,9 @@ __tagHelperExecutionContext.AddTagHelperAttribute(_tagHelper1);
         var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
         builder
             .Name("Foo")
+            .PropertyName("FooProp")
             .TypeName("System.Collections.Generic.Dictionary<System.String, System.String>")
-            .AsDictionaryAttribute("pre-", "System.String")
-            .Metadata(PropertyName("FooProp"));
+            .AsDictionaryAttribute("pre-", "System.String");
 
         var descriptor = builder.Build();
 
@@ -226,9 +226,9 @@ __tagHelperExecutionContext.AddTagHelperAttribute(_tagHelper1);
         var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
         builder
             .Name("Foo")
+            .PropertyName("FooProp")
             .TypeName("System.Collections.Generic.Dictionary<System.String, System.String>")
-            .AsDictionaryAttribute("pre-", "System.String")
-            .Metadata(PropertyName("FooProp"));
+            .AsDictionaryAttribute("pre-", "System.String");
 
         var boundAttribute = builder.Build();
         var tagHelper = tagHelperBuilder.Build();

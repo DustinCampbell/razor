@@ -20,13 +20,13 @@ internal static class SimpleTagHelpers
         builder1.BindAttribute(attribute =>
         {
             attribute.Name = "bool-val";
-            attribute.SetMetadata(PropertyName("BoolVal"));
+            attribute.PropertyName = "BoolVal";
             attribute.TypeName = typeof(bool).FullName;
         });
         builder1.BindAttribute(attribute =>
         {
             attribute.Name = "int-val";
-            attribute.SetMetadata(PropertyName("IntVal"));
+            attribute.PropertyName = "IntVal";
             attribute.TypeName = typeof(int).FullName;
         });
 
@@ -40,7 +40,7 @@ internal static class SimpleTagHelpers
         builder1WithRequiredParent.BindAttribute(attribute =>
         {
             attribute.Name = "attribute";
-            attribute.SetMetadata(PropertyName("Attribute"));
+            attribute.PropertyName = "Attribute";
             attribute.TypeName = typeof(string).FullName;
         });
 
@@ -50,13 +50,13 @@ internal static class SimpleTagHelpers
         builder2.BindAttribute(attribute =>
         {
             attribute.Name = "bool-val";
-            attribute.SetMetadata(PropertyName("BoolVal"));
+            attribute.PropertyName = "BoolVal";
             attribute.TypeName = typeof(bool).FullName;
         });
         builder2.BindAttribute(attribute =>
         {
             attribute.Name = "int-val";
-            attribute.SetMetadata(PropertyName("IntVal"));
+            attribute.PropertyName = "IntVal";
             attribute.TypeName = typeof(int).FullName;
         });
 
@@ -70,19 +70,19 @@ internal static class SimpleTagHelpers
         builder3.BindAttribute(attribute =>
         {
             attribute.Name = "bool-val";
-            attribute.SetMetadata(PropertyName("BoolVal"));
+            attribute.PropertyName = "BoolVal";
             attribute.TypeName = typeof(bool).FullName;
         });
         builder3.BindAttribute(attribute =>
         {
             attribute.Name = "int-val";
-            attribute.SetMetadata(PropertyName("IntVal"));
+            attribute.PropertyName = "IntVal";
             attribute.TypeName = typeof(int).FullName;
         });
         builder3.BindAttribute(attribute =>
         {
             attribute.Name = "Title";
-            attribute.SetMetadata(PropertyName("Title"));
+            attribute.PropertyName = "Title";
             attribute.TypeName = typeof(string).FullName;
         });
 
@@ -116,7 +116,7 @@ internal static class SimpleTagHelpers
         directiveAttribute1.BindAttribute(attribute =>
         {
             attribute.Name = "@test";
-            attribute.SetMetadata(PropertyName("Test"));
+            attribute.PropertyName = "Test";
             attribute.TypeName = typeof(string).FullName;
             attribute.IsDirectiveAttribute = true;
 
@@ -154,7 +154,7 @@ internal static class SimpleTagHelpers
         directiveAttribute2.BindAttribute(attribute =>
         {
             attribute.Name = "@minimized";
-            attribute.SetMetadata(PropertyName("Minimized"));
+            attribute.PropertyName = "Minimized";
             attribute.TypeName = typeof(bool).FullName;
             attribute.IsDirectiveAttribute = true;
 
@@ -194,7 +194,8 @@ internal static class SimpleTagHelpers
         directiveAttribute3.BindAttribute(attribute =>
         {
             attribute.Name = "@onclick";
-            attribute.SetMetadata(PropertyName("onclick"), IsWeaklyTyped);
+            attribute.PropertyName = "onclick";
+            attribute.SetMetadata(IsWeaklyTyped);
             attribute.TypeName = "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Web.MouseEventArgs>";
             attribute.IsDirectiveAttribute = true;
         });
@@ -221,7 +222,7 @@ internal static class SimpleTagHelpers
         htmlTagMutator.BindAttribute(attribute =>
         {
             attribute.Name = "Extra";
-            attribute.SetMetadata(PropertyName("Extra"));
+            attribute.PropertyName = "Extra";
             attribute.TypeName = typeof(bool).FullName;
         });
 

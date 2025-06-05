@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis;
 
@@ -68,26 +68,56 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
 
     internal string GetDebuggerDisplay()
     {
-        var tagName = TagName ?? "*";
-        tagName += TagStructure == TagStructure.WithoutEndTag ? "/" : "";
-        return $"{TagName ?? "*"}[{string.Join(", ", Attributes.Select(a => DescribeAttribute(a)))}]";
-        static string DescribeAttribute(RequiredAttributeDescriptor attribute)
-        {
-            var name = attribute.Name switch
-            {
-                null => "*",
-                var prefix when attribute.NameComparison == RequiredAttributeNameComparison.PrefixMatch => $"^{prefix}",
-                var full => full,
-            };
+        using var _ = StringBuilderPool.GetPooledObject(out var builder);
 
-            var value = attribute.Value switch
-            {
-                null => "",
-                var prefix when attribute.ValueComparison == RequiredAttributeValueComparison.PrefixMatch => $"^={prefix}",
-                var suffix when attribute.ValueComparison == RequiredAttributeValueComparison.SuffixMatch => $"$={suffix}",
-                var full => $"={full}",
-            };
-            return name + value;
+        builder.Append(TagName);
+
+        if (TagStructure == TagStructure.WithoutEndTag)
+        {
+            builder.Append('/');
         }
+
+        var isFirst = true;
+
+        foreach (var attribute in Attributes)
+        {
+            if (isFirst)
+            {
+                isFirst = false;
+            }
+            else
+            {
+                builder.Append(", ");
+            }
+
+            if (attribute.NameComparison == RequiredAttributeNameComparison.PrefixMatch)
+            {
+                builder.Append('^');
+            }
+
+            builder.Append(attribute.Name);
+
+            if (attribute.Value is string value)
+            {
+                switch (attribute.ValueComparison)
+                {
+                    case RequiredAttributeValueComparison.PrefixMatch:
+                        builder.Append("^=");
+                        break;
+
+                    case RequiredAttributeValueComparison.SuffixMatch:
+                        builder.Append("$=");
+                        break;
+
+                    default:
+                        builder.Append('=');
+                        break;
+                }
+
+                builder.Append(value);
+            }
+        }
+
+        return builder.ToString();
     }
 }

@@ -8,5 +8,10 @@ namespace Microsoft.AspNetCore.Razor.Language;
 [Flags]
 internal enum TagMatchingRuleFlags : byte
 {
-    CaseSensitive = 0x1,
+    CaseSensitive = 1 << 0,
+
+    /// <summary>
+    ///  Mask for extracting the <see cref="TagStructure"/> value.
+    /// </summary>
+    TagStructureMask = (1 << 1) | (1 << 2)
 }

@@ -19,16 +19,15 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
 
     public string TagName { get; }
     public string? ParentTag { get; }
-    public TagStructure TagStructure { get; }
     public ImmutableArray<RequiredAttributeDescriptor> Attributes { get; }
 
     public bool CaseSensitive => _flags.IsFlagSet(TagMatchingRuleFlags.CaseSensitive);
+    public TagStructure TagStructure => _flags.GetTagStructure();
 
     internal TagMatchingRuleDescriptor(
         TagMatchingRuleFlags flags,
         string tagName,
         string? parentTag,
-        TagStructure tagStructure,
         ImmutableArray<RequiredAttributeDescriptor> attributes,
         ImmutableArray<RazorDiagnostic> diagnostics)
         : base(diagnostics)
@@ -36,7 +35,6 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
         _flags = flags;
         TagName = tagName;
         ParentTag = parentTag;
-        TagStructure = tagStructure;
         Attributes = attributes.NullToEmpty();
     }
 
@@ -45,7 +43,6 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
         builder.AppendData((byte)_flags);
         builder.AppendData(TagName);
         builder.AppendData(ParentTag);
-        builder.AppendData((int)TagStructure);
 
         foreach (var descriptor in Attributes)
         {

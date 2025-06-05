@@ -110,13 +110,11 @@ internal static partial class ObjectReaders
                 var flags = (TagMatchingRuleFlags)reader.ReadInt32(nameof(TagMatchingRuleDescriptor.Flags));
                 var tagName = reader.ReadNonNullString(nameof(TagMatchingRuleDescriptor.TagName));
                 var parentTag = reader.ReadStringOrNull(nameof(TagMatchingRuleDescriptor.ParentTag));
-                var tagStructure = (TagStructure)reader.ReadInt32OrZero(nameof(TagMatchingRuleDescriptor.TagStructure));
                 var attributes = reader.ReadImmutableArrayOrEmpty(nameof(TagMatchingRuleDescriptor.Attributes), ReadRequiredAttribute);
 
                 var diagnostics = reader.ReadImmutableArrayOrEmpty(nameof(TagMatchingRuleDescriptor.Diagnostics), ReadDiagnostic);
 
-                return new TagMatchingRuleDescriptor(
-                    flags, Cached(tagName), Cached(parentTag), tagStructure, attributes, diagnostics);
+                return new TagMatchingRuleDescriptor(flags, Cached(tagName), Cached(parentTag), attributes, diagnostics);
             }
         }
 

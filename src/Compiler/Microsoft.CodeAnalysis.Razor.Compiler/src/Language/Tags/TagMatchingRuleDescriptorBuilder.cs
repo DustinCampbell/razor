@@ -25,9 +25,14 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
 
     public string? TagName { get; set; }
     public string? ParentTag { get; set; }
-    public TagStructure TagStructure { get; set; }
 
     internal bool CaseSensitive => _parent.CaseSensitive;
+
+    public TagStructure TagStructure
+    {
+        get => _flags.GetTagStructure();
+        set => _flags.SetTagStructure(value);
+    }
 
     public TagHelperObjectBuilderCollection<RequiredAttributeDescriptor, RequiredAttributeDescriptorBuilder> Attributes { get; }
         = new(RequiredAttributeDescriptorBuilder.Pool);
@@ -57,7 +62,6 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
             flags,
             TagName ?? string.Empty,
             ParentTag,
-            TagStructure,
             Attributes.ToImmutable(),
             diagnostics);
     }

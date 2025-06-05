@@ -189,10 +189,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -427938615953074312,
-      "Data2": -2713349138851097289,
-      "Data3": 5857447367905796544,
-      "Data4": -6091002298547161908
+      "Data1": 3479841369405764684,
+      "Data2": -6406824841469514605,
+      "Data3": 8653278388376809499,
+      "Data4": -4084584608858472582
     },
     "Kind": "Components.Component",
     "Name": "BlazorServer_31.Pages.Counter",
@@ -208,7 +208,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "FooVal",
         "PropertyName": "FooVal",
         "TypeName": "System.Int32",
@@ -216,7 +215,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Additional",
         "PropertyName": "Additional",
         "TypeName": "System.String",
@@ -224,7 +222,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "IncrementAmount",
         "PropertyName": "IncrementAmount",
         "TypeName": "System.Int32",
@@ -232,7 +229,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "MoreParams",
         "PropertyName": "MoreParams",
         "TypeName": "System.String",
@@ -246,10 +242,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5581688319875151651,
-      "Data2": -2135461508467549003,
-      "Data3": -2467986045015655624,
-      "Data4": 2884830994360850163
+      "Data1": 8016503175764022414,
+      "Data2": -1763867366662903345,
+      "Data3": -8651425437596840302,
+      "Data4": -7255066886420158162
     },
     "Kind": "Components.Component",
     "Name": "BlazorServer_31.Pages.Counter",
@@ -265,7 +261,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "FooVal",
         "PropertyName": "FooVal",
         "TypeName": "System.Int32",
@@ -273,7 +268,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Additional",
         "PropertyName": "Additional",
         "TypeName": "System.String",
@@ -281,7 +275,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "IncrementAmount",
         "PropertyName": "IncrementAmount",
         "TypeName": "System.Int32",
@@ -289,7 +282,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "MoreParams",
         "PropertyName": "MoreParams",
         "TypeName": "System.String",
@@ -445,10 +437,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8537737099457646112,
-      "Data2": 3944625921545510835,
-      "Data3": 6425536675075411906,
-      "Data4": -9014694318434017548
+      "Data1": -2530770236613814004,
+      "Data2": -7645310165216964689,
+      "Data3": -8006615864896671428,
+      "Data4": 7092364391899863725
     },
     "Kind": "Components.Component",
     "Name": "BlazorServer_31.Shared.MainLayout",
@@ -464,7 +456,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Body",
         "PropertyName": "Body",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -482,10 +473,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6449695639882679486,
-      "Data2": -2846684370921866601,
-      "Data3": -5113538173471944013,
-      "Data4": 2905514846125513027
+      "Data1": 4754360965452793579,
+      "Data2": 4048349258155466426,
+      "Data3": 564171308404513315,
+      "Data4": -8187703788134367623
     },
     "Kind": "Components.Component",
     "Name": "BlazorServer_31.Shared.MainLayout",
@@ -501,7 +492,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Body",
         "PropertyName": "Body",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -620,10 +610,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2541238751881320409,
-      "Data2": 7001414150781307236,
-      "Data3": -4759477885726562623,
-      "Data4": -3277474493827361209
+      "Data1": -7518019851972716410,
+      "Data2": -2723417896991329311,
+      "Data3": 5590362417309015663,
+      "Data4": 2162279638892558498
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.CascadingValue<TValue>",
@@ -640,7 +630,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -652,7 +641,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -664,7 +652,6 @@
       },
       {
         "Flags": 65,
-        "Kind": "Components.Component",
         "Name": "IsFixed",
         "PropertyName": "IsFixed",
         "TypeName": "System.Boolean",
@@ -673,7 +660,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Name",
         "PropertyName": "Name",
         "TypeName": "System.String",
@@ -682,7 +668,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -701,10 +686,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1345196289712171911,
-      "Data2": -995687695123052668,
-      "Data3": 7374582617456927123,
-      "Data4": -3923626856212672781
+      "Data1": 3269322316127214943,
+      "Data2": -3124020603425420596,
+      "Data3": -2848977131507643933,
+      "Data4": -3566069446547224128
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.CascadingValue<TValue>",
@@ -721,7 +706,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -733,7 +717,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -745,7 +728,6 @@
       },
       {
         "Flags": 65,
-        "Kind": "Components.Component",
         "Name": "IsFixed",
         "PropertyName": "IsFixed",
         "TypeName": "System.Boolean",
@@ -754,7 +736,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Name",
         "PropertyName": "Name",
         "TypeName": "System.String",
@@ -763,7 +744,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -836,10 +816,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7026756125673981441,
-      "Data2": -2590611203677043141,
-      "Data3": 7227665752031071286,
-      "Data4": 7926115776562049483
+      "Data1": 8356992767781521849,
+      "Data2": 6106658200580945097,
+      "Data3": -5327525727495352083,
+      "Data4": 1323888109807466056
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.LayoutView",
@@ -856,7 +836,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -868,7 +847,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Layout",
         "PropertyName": "Layout",
         "TypeName": "System.Type",
@@ -883,10 +861,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4521543652974466649,
-      "Data2": 3360967650624710665,
-      "Data3": 4953567557098796526,
-      "Data4": 2131230089002713568
+      "Data1": 4360182396475146149,
+      "Data2": -8401063391935279652,
+      "Data3": 5606273959066095561,
+      "Data4": 3680503099972523322
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.LayoutView",
@@ -903,7 +881,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -915,7 +892,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Layout",
         "PropertyName": "Layout",
         "TypeName": "System.Type",
@@ -984,10 +960,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6321737504330111206,
-      "Data2": -5053297864443763348,
-      "Data3": -5308621964460065768,
-      "Data4": -3754787785530196228
+      "Data1": -2961618104508539807,
+      "Data2": -2135458919754620368,
+      "Data3": -6641971842513715597,
+      "Data4": 808634744918697404
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.RouteView",
@@ -1004,7 +980,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "DefaultLayout",
         "PropertyName": "DefaultLayout",
         "TypeName": "System.Type",
@@ -1013,7 +988,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "RouteData",
         "PropertyName": "RouteData",
         "TypeName": "Microsoft.AspNetCore.Components.RouteData",
@@ -1028,10 +1002,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5355924470232834704,
-      "Data2": 487967107096908666,
-      "Data3": 3177322950760666041,
-      "Data4": -4688480634863005218
+      "Data1": -8695454024253557548,
+      "Data2": -7393687905039562308,
+      "Data3": -5057890686519301328,
+      "Data4": 8729177869420585866
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.RouteView",
@@ -1048,7 +1022,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "DefaultLayout",
         "PropertyName": "DefaultLayout",
         "TypeName": "System.Type",
@@ -1057,7 +1030,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "RouteData",
         "PropertyName": "RouteData",
         "TypeName": "Microsoft.AspNetCore.Components.RouteData",
@@ -1073,10 +1045,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5699422974899886855,
-      "Data2": 7773835574631069153,
-      "Data3": -4252456950257505330,
-      "Data4": 3228366831447271760
+      "Data1": -7995486960759551039,
+      "Data2": 7259942884620414806,
+      "Data3": -579954223989308606,
+      "Data4": -8450361965986157308
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Routing.Router",
@@ -1093,7 +1065,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAssemblies",
         "PropertyName": "AdditionalAssemblies",
         "TypeName": "System.Collections.Generic.IEnumerable<System.Reflection.Assembly>",
@@ -1102,7 +1073,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AppAssembly",
         "PropertyName": "AppAssembly",
         "TypeName": "System.Reflection.Assembly",
@@ -1111,7 +1081,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Found",
         "PropertyName": "Found",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.RouteData>",
@@ -1123,7 +1092,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "NotFound",
         "PropertyName": "NotFound",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -1135,7 +1103,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1153,10 +1120,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4855349512554933383,
-      "Data2": 8911675656018577790,
-      "Data3": -2096909707885360344,
-      "Data4": 5625638059740015764
+      "Data1": 4033301112178491810,
+      "Data2": -8461706146317607149,
+      "Data3": 4991703879807693771,
+      "Data4": 7799203406374211885
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Routing.Router",
@@ -1173,7 +1140,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAssemblies",
         "PropertyName": "AdditionalAssemblies",
         "TypeName": "System.Collections.Generic.IEnumerable<System.Reflection.Assembly>",
@@ -1182,7 +1148,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AppAssembly",
         "PropertyName": "AppAssembly",
         "TypeName": "System.Reflection.Assembly",
@@ -1191,7 +1156,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Found",
         "PropertyName": "Found",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.RouteData>",
@@ -1203,7 +1167,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "NotFound",
         "PropertyName": "NotFound",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -1215,7 +1178,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1234,10 +1196,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -906240706512082221,
-      "Data2": -1793136563542360873,
-      "Data3": 3111549903562145753,
-      "Data4": 7534405529388248708
+      "Data1": -7234541422137724966,
+      "Data2": 3296816229007636455,
+      "Data3": 131595769349938846,
+      "Data4": 3692363215545026251
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Routing.Router.Found",
@@ -1255,7 +1217,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1274,10 +1235,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5770950154316877571,
-      "Data2": 3535843473829013457,
-      "Data3": 5845678650446075893,
-      "Data4": 6640295718750752291
+      "Data1": -7638616200583558546,
+      "Data2": 6514935859788830585,
+      "Data3": -2071710546509871834,
+      "Data4": -6691574982929984679
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Routing.Router.Found",
@@ -1295,7 +1256,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1417,10 +1377,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4130107009397164105,
-      "Data2": -9166973648758201660,
-      "Data3": 6264889767963745811,
-      "Data4": 5513227667747862364
+      "Data1": 4242232625394738742,
+      "Data2": 7517037139245114191,
+      "Data3": -3734775161926929278,
+      "Data4": 1483979238300480619
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView",
@@ -1437,7 +1397,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Authorizing",
         "PropertyName": "Authorizing",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -1449,7 +1408,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "NotAuthorized",
         "PropertyName": "NotAuthorized",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1461,7 +1419,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "DefaultLayout",
         "PropertyName": "DefaultLayout",
         "TypeName": "System.Type",
@@ -1470,7 +1427,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "RouteData",
         "PropertyName": "RouteData",
         "TypeName": "Microsoft.AspNetCore.Components.RouteData",
@@ -1479,7 +1435,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1497,10 +1452,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4107040573019963926,
-      "Data2": -8993692230980680694,
-      "Data3": -2963925820022748715,
-      "Data4": 633378589948852074
+      "Data1": -2866886259045766210,
+      "Data2": -9189682740557461153,
+      "Data3": 4523694437735021528,
+      "Data4": -8096772152536345443
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView",
@@ -1517,7 +1472,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Authorizing",
         "PropertyName": "Authorizing",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -1529,7 +1483,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "NotAuthorized",
         "PropertyName": "NotAuthorized",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1541,7 +1494,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "DefaultLayout",
         "PropertyName": "DefaultLayout",
         "TypeName": "System.Type",
@@ -1550,7 +1502,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "RouteData",
         "PropertyName": "RouteData",
         "TypeName": "Microsoft.AspNetCore.Components.RouteData",
@@ -1559,7 +1510,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1631,10 +1581,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3049365462400752710,
-      "Data2": 5784023515143390050,
-      "Data3": -8955416025130222069,
-      "Data4": 8224685924446538060
+      "Data1": -2258697074355080799,
+      "Data2": 2040723355330658495,
+      "Data3": -6973802657441565699,
+      "Data4": -1454941630419444354
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView.NotAuthorized",
@@ -1652,7 +1602,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1671,10 +1620,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 680461403062485322,
-      "Data2": -7156661349141823795,
-      "Data3": -952511291216619675,
-      "Data4": -7304822307400702393
+      "Data1": -589928881302842589,
+      "Data2": 8491219962683369529,
+      "Data3": -7030591237489249818,
+      "Data4": 6106437770632008177
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView.NotAuthorized",
@@ -1692,7 +1641,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1712,10 +1660,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8339713455348260889,
-      "Data2": -5194696112049591478,
-      "Data3": -4663169491064483737,
-      "Data4": -4405267214964123045
+      "Data1": -4392308251736945530,
+      "Data2": -966009688026683555,
+      "Data3": -3342807660432925615,
+      "Data4": -2677159594725715203
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView",
@@ -1732,7 +1680,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Policy",
         "PropertyName": "Policy",
         "TypeName": "System.String",
@@ -1741,7 +1688,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Roles",
         "PropertyName": "Roles",
         "TypeName": "System.String",
@@ -1750,7 +1696,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Authorized",
         "PropertyName": "Authorized",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1762,7 +1707,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Authorizing",
         "PropertyName": "Authorizing",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -1774,7 +1718,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1786,7 +1729,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "NotAuthorized",
         "PropertyName": "NotAuthorized",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1798,7 +1740,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Resource",
         "PropertyName": "Resource",
         "TypeName": "System.Object",
@@ -1807,7 +1748,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1825,10 +1765,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5856585895343575264,
-      "Data2": -603455836603371958,
-      "Data3": -8511943536196275994,
-      "Data4": 3396585449032109509
+      "Data1": -7702110672939192357,
+      "Data2": 4302839804837107961,
+      "Data3": 4285882574940300895,
+      "Data4": 1070182142963297825
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView",
@@ -1845,7 +1785,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Policy",
         "PropertyName": "Policy",
         "TypeName": "System.String",
@@ -1854,7 +1793,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Roles",
         "PropertyName": "Roles",
         "TypeName": "System.String",
@@ -1863,7 +1801,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Authorized",
         "PropertyName": "Authorized",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1875,7 +1812,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Authorizing",
         "PropertyName": "Authorizing",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -1887,7 +1823,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1899,7 +1834,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "NotAuthorized",
         "PropertyName": "NotAuthorized",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Authorization.AuthenticationState>",
@@ -1911,7 +1845,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Resource",
         "PropertyName": "Resource",
         "TypeName": "System.Object",
@@ -1920,7 +1853,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1939,10 +1871,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4736793524517799995,
-      "Data2": 1556037895205866989,
-      "Data3": 2719189489843546773,
-      "Data4": 7414198237159876541
+      "Data1": -3509858149625384072,
+      "Data2": -681105398667286674,
+      "Data3": 6577118974207501366,
+      "Data4": 5398291176434653204
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView.Authorized",
@@ -1960,7 +1892,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -1979,10 +1910,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -396463435518066952,
-      "Data2": -2356764388795500467,
-      "Data3": -1985820248802707876,
-      "Data4": -3636831035374640359
+      "Data1": 276130978035063818,
+      "Data2": 825954616157566718,
+      "Data3": 7471672643330409275,
+      "Data4": -1777717121996212714
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView.Authorized",
@@ -2000,7 +1931,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2073,10 +2003,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6027488240848823427,
-      "Data2": -3459712540812506479,
-      "Data3": -8686929451357713766,
-      "Data4": -1255319420560112709
+      "Data1": 963573624289017760,
+      "Data2": 1275801380358072483,
+      "Data3": -7145551810235094399,
+      "Data4": -2485032162214982521
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView.ChildContent",
@@ -2094,7 +2024,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2113,10 +2042,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6826668762077485553,
-      "Data2": 8947137013753862741,
-      "Data3": -3849993712250408470,
-      "Data4": -7665875500040519345
+      "Data1": -8143887554847369333,
+      "Data2": 154001683372687977,
+      "Data3": 6045164086446164438,
+      "Data4": 2366742429452622308
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView.ChildContent",
@@ -2134,7 +2063,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2154,10 +2082,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1505627042533507568,
-      "Data2": 8900534148742982375,
-      "Data3": -133767836826468514,
-      "Data4": -809683935833275067
+      "Data1": 1728915472799772825,
+      "Data2": -1087800367613757831,
+      "Data3": 8583039451011977560,
+      "Data4": -3637487006108711854
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView.NotAuthorized",
@@ -2175,7 +2103,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2194,10 +2121,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6634354322468565185,
-      "Data2": -8351543040939932176,
-      "Data3": -199107256921982195,
-      "Data4": 9120948245690937854
+      "Data1": 2137298424899920980,
+      "Data2": -7156000355556778984,
+      "Data3": -7478578188631553404,
+      "Data4": -3251413586015531991
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Authorization.AuthorizeView.NotAuthorized",
@@ -2215,7 +2142,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2235,10 +2161,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4637059698986354489,
-      "Data2": 993269877252580912,
-      "Data3": -3779809303354276562,
-      "Data4": -4472464255553416457
+      "Data1": -3157844549734910504,
+      "Data2": 4481709367080964933,
+      "Data3": -8641678077199353131,
+      "Data4": 7009928261980305206
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState",
@@ -2254,7 +2180,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -2272,10 +2197,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -9012328820994743791,
-      "Data2": 4809464724412619867,
-      "Data3": 3567301324248467693,
-      "Data4": 8146205544988753122
+      "Data1": 996578094249719333,
+      "Data2": -445429711899524679,
+      "Data3": -2606738684676684364,
+      "Data4": -4263600669904117339
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState",
@@ -2291,7 +2216,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -2363,10 +2287,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2693976785090693113,
-      "Data2": -588007553813116466,
-      "Data3": 483824977092939112,
-      "Data4": -4993331088203957942
+      "Data1": -6860688701709697498,
+      "Data2": 5786114098959159466,
+      "Data3": -952263796464307158,
+      "Data4": 2700487642956932171
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.EditForm",
@@ -2383,7 +2307,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -2392,7 +2315,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2404,7 +2326,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "EditContext",
         "PropertyName": "EditContext",
         "TypeName": "Microsoft.AspNetCore.Components.Forms.EditContext",
@@ -2413,7 +2334,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Model",
         "PropertyName": "Model",
         "TypeName": "System.Object",
@@ -2422,7 +2342,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "OnInvalidSubmit",
         "PropertyName": "OnInvalidSubmit",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2434,7 +2353,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "OnSubmit",
         "PropertyName": "OnSubmit",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2446,7 +2364,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "OnValidSubmit",
         "PropertyName": "OnValidSubmit",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2458,7 +2375,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2476,10 +2392,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4885078257818784907,
-      "Data2": 1281930660019875418,
-      "Data3": -3679364922787742001,
-      "Data4": 6860680840385596830
+      "Data1": -3859682441886920060,
+      "Data2": -9046509898879218639,
+      "Data3": 7572252749106101993,
+      "Data4": -3960327972142881130
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.EditForm",
@@ -2496,7 +2412,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -2505,7 +2420,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2517,7 +2431,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "EditContext",
         "PropertyName": "EditContext",
         "TypeName": "Microsoft.AspNetCore.Components.Forms.EditContext",
@@ -2526,7 +2439,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Model",
         "PropertyName": "Model",
         "TypeName": "System.Object",
@@ -2535,7 +2447,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "OnInvalidSubmit",
         "PropertyName": "OnInvalidSubmit",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2547,7 +2458,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "OnSubmit",
         "PropertyName": "OnSubmit",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2559,7 +2469,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "OnValidSubmit",
         "PropertyName": "OnValidSubmit",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<Microsoft.AspNetCore.Components.Forms.EditContext>",
@@ -2571,7 +2480,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2590,10 +2498,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3325795943132728518,
-      "Data2": -5871437482802981747,
-      "Data3": 8532172231164688828,
-      "Data4": -2004190250768226629
+      "Data1": -6712150338255507383,
+      "Data2": -7900221419118106535,
+      "Data3": 1076552084360654226,
+      "Data4": -2876813702280472244
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Forms.EditForm.ChildContent",
@@ -2611,7 +2519,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2630,10 +2537,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 868336022314668197,
-      "Data2": 6370274450148600681,
-      "Data3": -5893541947189497311,
-      "Data4": 8887857919728414303
+      "Data1": -3972039887599937854,
+      "Data2": -8252420811949574702,
+      "Data3": 8573282245742882854,
+      "Data4": 8944071088452787333
     },
     "Kind": "Components.ChildContent",
     "Name": "Microsoft.AspNetCore.Components.Forms.EditForm.ChildContent",
@@ -2651,7 +2558,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.ChildContent",
         "Name": "Context",
         "PropertyName": "Context",
         "TypeName": "System.String",
@@ -2671,10 +2577,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4412230913054415045,
-      "Data2": -3910529704903930249,
-      "Data3": -4352789747467281718,
-      "Data4": 8006911509057357011
+      "Data1": -2907833972128242329,
+      "Data2": 8867878176979608,
+      "Data3": -3827945073989588312,
+      "Data4": 6444475173195838047
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -2691,7 +2597,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -2700,7 +2605,6 @@
       },
       {
         "Flags": 65,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "System.Boolean",
@@ -2709,7 +2613,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<System.Boolean>",
@@ -2721,7 +2624,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<System.Boolean>>",
@@ -2736,10 +2638,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2772798083721118515,
-      "Data2": -6545772129853331402,
-      "Data3": 7622847365074321870,
-      "Data4": 1026981550358387287
+      "Data1": 462694379023366614,
+      "Data2": -3113874756279763398,
+      "Data3": 3495480228288821076,
+      "Data4": 1866450440771088430
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -2756,7 +2658,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -2765,7 +2666,6 @@
       },
       {
         "Flags": 65,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "System.Boolean",
@@ -2774,7 +2674,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<System.Boolean>",
@@ -2786,7 +2685,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<System.Boolean>>",
@@ -2802,10 +2700,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2928380537049563793,
-      "Data2": -5176452371298454996,
-      "Data3": -4989922601038312278,
-      "Data4": 2806745097428752065
+      "Data1": -1477228341425263616,
+      "Data2": -1351514318009001872,
+      "Data3": -5668871216771746372,
+      "Data4": -6918556902431354691
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -2822,7 +2720,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -2834,7 +2731,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "ParsingErrorMessage",
         "PropertyName": "ParsingErrorMessage",
         "TypeName": "System.String",
@@ -2843,7 +2739,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -2852,7 +2747,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -2864,7 +2758,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<TValue>",
@@ -2877,7 +2770,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -2896,10 +2788,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8303552736002426726,
-      "Data2": -8618067156492749331,
-      "Data3": 1354804794546352415,
-      "Data4": 1079311104431179748
+      "Data1": -9042575616853215081,
+      "Data2": 6386191701099366722,
+      "Data3": 1031879994053522306,
+      "Data4": 2519415001787247346
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -2916,7 +2808,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -2928,7 +2819,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "ParsingErrorMessage",
         "PropertyName": "ParsingErrorMessage",
         "TypeName": "System.String",
@@ -2937,7 +2827,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -2946,7 +2835,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -2958,7 +2846,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<TValue>",
@@ -2971,7 +2858,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -2991,10 +2877,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6623622730074005729,
-      "Data2": 1656955496017731191,
-      "Data3": -5402444889708795169,
-      "Data4": 2827852945822140473
+      "Data1": -1784953841122126892,
+      "Data2": 750375714594287237,
+      "Data3": -7402791917094155643,
+      "Data4": 651585209202153100
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -3011,7 +2897,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -3023,7 +2908,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "ParsingErrorMessage",
         "PropertyName": "ParsingErrorMessage",
         "TypeName": "System.String",
@@ -3032,7 +2916,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3041,7 +2924,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -3053,7 +2935,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<TValue>",
@@ -3066,7 +2947,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -3085,10 +2965,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5200134870421769467,
-      "Data2": -2464258234165984625,
-      "Data3": -5482571222968122916,
-      "Data4": -8349641270740994613
+      "Data1": -2192048754071588172,
+      "Data2": -7353560839386386560,
+      "Data3": 3498810940758089482,
+      "Data4": -2745164177825698762
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -3105,7 +2985,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -3117,7 +2996,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "ParsingErrorMessage",
         "PropertyName": "ParsingErrorMessage",
         "TypeName": "System.String",
@@ -3126,7 +3004,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3135,7 +3012,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -3147,7 +3023,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<TValue>",
@@ -3160,7 +3035,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -3180,10 +3054,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3872762718394740634,
-      "Data2": 2797230952447798488,
-      "Data3": -346436043384338437,
-      "Data4": -7350022127915351216
+      "Data1": -1901766256024479114,
+      "Data2": 1011292422468277782,
+      "Data3": 2426437367079804943,
+      "Data4": 2217420256271547523
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -3200,7 +3074,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -3212,7 +3085,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -3224,7 +3096,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3233,7 +3104,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -3245,7 +3115,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<TValue>",
@@ -3258,7 +3127,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -3277,10 +3145,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4399904106102132548,
-      "Data2": -2072291260232035393,
-      "Data3": 8263198548484063570,
-      "Data4": 8784924736796854746
+      "Data1": -5018678895159278943,
+      "Data2": -6026588509766160348,
+      "Data3": -5696331053672130246,
+      "Data4": 5152272048042344241
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -3297,7 +3165,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -3309,7 +3176,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -3321,7 +3187,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3330,7 +3195,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "TValue",
@@ -3342,7 +3206,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<TValue>",
@@ -3355,7 +3218,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -3428,10 +3290,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3809709416722602777,
-      "Data2": -5234126328712099656,
-      "Data3": -9223284102896936936,
-      "Data4": 3263498684284366138
+      "Data1": -894201325928572080,
+      "Data2": -4071641831591834668,
+      "Data3": -8921297161418879324,
+      "Data4": 1811843660234478257
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -3448,7 +3310,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3457,7 +3318,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "System.String",
@@ -3466,7 +3326,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<System.String>",
@@ -3478,7 +3337,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<System.String>>",
@@ -3493,10 +3351,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5942101368973816997,
-      "Data2": -2721537804961382132,
-      "Data3": -5737666429354422451,
-      "Data4": -6574586573398329505
+      "Data1": -3420880103187064240,
+      "Data2": -3048394892958721110,
+      "Data3": 1245548194219777023,
+      "Data4": -8071186954764794788
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -3513,7 +3371,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3522,7 +3379,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "System.String",
@@ -3531,7 +3387,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<System.String>",
@@ -3543,7 +3398,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<System.String>>",
@@ -3559,10 +3413,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3425935804058292814,
-      "Data2": 4639547418089955354,
-      "Data3": 8823718907259208430,
-      "Data4": 6496940341349519089
+      "Data1": -319686015310524467,
+      "Data2": -730357671408325064,
+      "Data3": -7401211343372166245,
+      "Data4": -2002416298762185623
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -3579,7 +3433,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3588,7 +3441,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "System.String",
@@ -3597,7 +3449,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<System.String>",
@@ -3609,7 +3460,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<System.String>>",
@@ -3624,10 +3474,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 32529851981730765,
-      "Data2": 487852845849311073,
-      "Data3": -3449757972657650055,
-      "Data4": 3071020906139000543
+      "Data1": 2181710784639129961,
+      "Data2": 3286709743734444258,
+      "Data3": 4411134205272955524,
+      "Data4": -7129536538336878846
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -3644,7 +3494,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3653,7 +3502,6 @@
       },
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "Value",
         "PropertyName": "Value",
         "TypeName": "System.String",
@@ -3662,7 +3510,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueChanged",
         "PropertyName": "ValueChanged",
         "TypeName": "Microsoft.AspNetCore.Components.EventCallback<System.String>",
@@ -3674,7 +3521,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ValueExpression",
         "PropertyName": "ValueExpression",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<System.String>>",
@@ -3690,10 +3536,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5750719651681131267,
-      "Data2": -8515462856787118024,
-      "Data3": 8598868530176482304,
-      "Data4": -7245469316130006839
+      "Data1": 3899509393288234010,
+      "Data2": 46440184198108444,
+      "Data3": -3360917858462088190,
+      "Data4": 5337046489544872557
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.ValidationMessage<TValue>",
@@ -3710,7 +3556,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -3722,7 +3567,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3731,7 +3575,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "For",
         "PropertyName": "For",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -3750,10 +3593,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1650497001159803460,
-      "Data2": 3866700147490171851,
-      "Data3": -5523108130548394104,
-      "Data4": -3512658076265806045
+      "Data1": 2294496797504597212,
+      "Data2": -2038772220848959746,
+      "Data3": 4079979404041616681,
+      "Data4": 2245764701120695674
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.ValidationMessage<TValue>",
@@ -3770,7 +3613,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "TValue",
         "PropertyName": "TValue",
         "TypeName": "System.Type",
@@ -3782,7 +3624,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3791,7 +3632,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "For",
         "PropertyName": "For",
         "TypeName": "System.Linq.Expressions.Expression<System.Func<TValue>>",
@@ -3811,10 +3651,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -6415009545412482690,
-      "Data2": 1727828631211200,
-      "Data3": -2109886705281149328,
-      "Data4": -4526254370427952000
+      "Data1": -412187014873406852,
+      "Data2": 5639844811603500556,
+      "Data3": -3539070390316538743,
+      "Data4": 680369849133641034
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.ValidationSummary",
@@ -3831,7 +3671,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3840,7 +3679,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Model",
         "PropertyName": "Model",
         "TypeName": "System.Object",
@@ -3855,10 +3693,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 947862085498814840,
-      "Data2": -7956270062690729309,
-      "Data3": -5702639618087776394,
-      "Data4": -781575858623503408
+      "Data1": -5605008517541405141,
+      "Data2": 4822713801654879875,
+      "Data3": 2113618582592561384,
+      "Data4": 6366914077003244757
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Forms.ValidationSummary",
@@ -3875,7 +3713,6 @@
     "BoundAttributes": [
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3884,7 +3721,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "Model",
         "PropertyName": "Model",
         "TypeName": "System.Object",
@@ -3900,10 +3736,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 8909144569784674516,
-      "Data2": 8697365528226030437,
-      "Data3": -3271175301500191101,
-      "Data4": 4396061440581490170
+      "Data1": -1306712057906878364,
+      "Data2": 1198972902456600703,
+      "Data3": 4438611762399656457,
+      "Data4": -9169928525626527681
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Routing.NavLink",
@@ -3920,7 +3756,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "ActiveClass",
         "PropertyName": "ActiveClass",
         "TypeName": "System.String",
@@ -3929,7 +3764,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -3938,7 +3772,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -3950,7 +3783,6 @@
       },
       {
         "Flags": 17,
-        "Kind": "Components.Component",
         "Name": "Match",
         "PropertyName": "Match",
         "TypeName": "Microsoft.AspNetCore.Components.Routing.NavLinkMatch",
@@ -3965,10 +3797,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3383472385112981615,
-      "Data2": -8507725959136085875,
-      "Data3": 4503349020002079355,
-      "Data4": -474350247142095993
+      "Data1": 7077540935880512913,
+      "Data2": 5369351149008423863,
+      "Data3": -4149871500242885262,
+      "Data4": 5824271184663869941
     },
     "Kind": "Components.Component",
     "Name": "Microsoft.AspNetCore.Components.Routing.NavLink",
@@ -3985,7 +3817,6 @@
     "BoundAttributes": [
       {
         "Flags": 33,
-        "Kind": "Components.Component",
         "Name": "ActiveClass",
         "PropertyName": "ActiveClass",
         "TypeName": "System.String",
@@ -3994,7 +3825,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "AdditionalAttributes",
         "PropertyName": "AdditionalAttributes",
         "TypeName": "System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>",
@@ -4003,7 +3833,6 @@
       },
       {
         "Flags": 1,
-        "Kind": "Components.Component",
         "Name": "ChildContent",
         "PropertyName": "ChildContent",
         "TypeName": "Microsoft.AspNetCore.Components.RenderFragment",
@@ -4015,7 +3844,6 @@
       },
       {
         "Flags": 17,
-        "Kind": "Components.Component",
         "Name": "Match",
         "PropertyName": "Match",
         "TypeName": "Microsoft.AspNetCore.Components.Routing.NavLinkMatch",
@@ -4084,10 +3912,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8888000868644176707,
-      "Data2": 3831098094987530919,
-      "Data3": 5415388462649579821,
-      "Data4": -7759899050050844375
+      "Data1": -40857284573240722,
+      "Data2": 4221970737833800650,
+      "Data3": 785375058881976389,
+      "Data4": -8180773291724824088
     },
     "Kind": "Components.EventHandler",
     "Name": "onabort",
@@ -4133,7 +3961,6 @@
     "BoundAttributes": [
       {
         "Flags": 321,
-        "Kind": "Components.EventHandler",
         "Name": "preventDefault",
         "PropertyName": "PreventDefault",
         "TypeName": "System.Boolean",
@@ -4155,7 +3982,6 @@
       },
       {
         "Flags": 65,
-        "Kind": "Components.EventHandler",
         "Name": "stopPropagation",
         "PropertyName": "StopPropagation",
         "TypeName": "System.Boolean",

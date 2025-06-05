@@ -20,16 +20,6 @@ public static class BoundAttributeDescriptorExtensions
         return propertyName;
     }
 
-    public static bool IsDefaultKind(this BoundAttributeDescriptor attribute)
-    {
-        if (attribute == null)
-        {
-            throw new ArgumentNullException(nameof(attribute));
-        }
-
-        return attribute.Kind == TagHelperConventions.DefaultKind;
-    }
-
     internal static bool ExpectsStringValue(this BoundAttributeDescriptor attribute, string name)
     {
         if (attribute.IsStringProperty)
@@ -50,15 +40,5 @@ public static class BoundAttributeDescriptorExtensions
 
         var isIndexerNameMatch = TagHelperMatchingConventions.SatisfiesBoundAttributeIndexer(attribute, name.AsSpan());
         return isIndexerNameMatch && attribute.IsIndexerBooleanProperty;
-    }
-
-    public static bool IsDefaultKind(this BoundAttributeParameterDescriptor parameter)
-    {
-        if (parameter == null)
-        {
-            throw new ArgumentNullException(nameof(parameter));
-        }
-
-        return parameter.Kind == TagHelperConventions.DefaultKind;
     }
 }

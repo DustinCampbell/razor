@@ -13,18 +13,15 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
     [AllowNull]
     private BoundAttributeDescriptorBuilder _parent;
     private BoundAttributeParameterFlags _flags;
-    [AllowNull]
-    private string _kind;
     private DocumentationObject _documentationObject;
 
     private BoundAttributeParameterDescriptorBuilder()
     {
     }
 
-    internal BoundAttributeParameterDescriptorBuilder(BoundAttributeDescriptorBuilder parent, string kind)
+    internal BoundAttributeParameterDescriptorBuilder(BoundAttributeDescriptorBuilder parent)
     {
         _parent = parent;
-        _kind = kind;
     }
 
     public string? Name { get; set; }
@@ -79,7 +76,7 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
         }
 
         return new BoundAttributeParameterDescriptor(
-            flags, _kind, Name, PropertyName, TypeName, _documentationObject, displayName, diagnostics);
+            flags, Name, PropertyName, TypeName, _documentationObject, displayName, diagnostics);
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

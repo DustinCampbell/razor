@@ -15,6 +15,8 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
 {
     private readonly TagMatchingRuleFlags _flags;
 
+    private TagHelperDescriptor? _parent;
+
     internal TagMatchingRuleFlags Flags => _flags;
 
     public string TagName { get; }
@@ -36,6 +38,11 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
         TagName = tagName;
         ParentTag = parentTag;
         Attributes = attributes.NullToEmpty();
+
+        foreach (var attribute in Attributes)
+        {
+            attribute.SetParent(this);
+        }
     }
 
     private protected override void BuildChecksum(in Checksum.Builder builder)
@@ -49,6 +56,19 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
             builder.AppendData(descriptor.Checksum);
         }
     }
+
+    internal void SetParent(TagHelperDescriptor parent)
+    {
+        if (_parent is not null)
+        {
+            ThrowHelper.ThrowInvalidOperationException("Parent can only be set once.");
+        }
+
+        _parent = parent;
+    }
+
+    public TagHelperDescriptor Parent
+        => _parent ?? Assumed.Unreachable<TagHelperDescriptor>($"{nameof(Parent)} not set.");
 
     public IEnumerable<RazorDiagnostic> GetAllDiagnostics()
     {

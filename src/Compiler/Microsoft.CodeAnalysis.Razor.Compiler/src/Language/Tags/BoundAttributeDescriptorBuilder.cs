@@ -35,8 +35,6 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
     [AllowNull]
     private TagHelperDescriptorBuilder _parent;
     private BoundAttributeFlags _flags;
-    [AllowNull]
-    private string _kind;
     private DocumentationObject _documentationObject;
     private MetadataHolder _metadata;
     private bool? _caseSensitive;
@@ -45,10 +43,9 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
     {
     }
 
-    internal BoundAttributeDescriptorBuilder(TagHelperDescriptorBuilder parent, string kind)
+    internal BoundAttributeDescriptorBuilder(TagHelperDescriptorBuilder parent)
     {
         _parent = parent;
-        _kind = kind;
     }
 
     [AllowNull]
@@ -110,12 +107,9 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
     public void BindAttributeParameter(Action<BoundAttributeParameterDescriptorBuilder> configure)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgHelper.ThrowIfNull(configure);
 
-        var builder = BoundAttributeParameterDescriptorBuilder.GetInstance(this, _kind);
+        var builder = BoundAttributeParameterDescriptorBuilder.GetInstance(this);
         configure(builder);
         Parameters.Add(builder);
     }
@@ -143,7 +137,6 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
         return new BoundAttributeDescriptor(
             flags,
-            _kind,
             Name ?? string.Empty,
             PropertyName,
             TypeName,

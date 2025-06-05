@@ -15,9 +15,11 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
     private readonly BoundAttributeFlags _flags;
     private readonly DocumentationObject _documentationObject;
 
+    private TagHelperDescriptor? _parent;
+
     internal BoundAttributeFlags Flags => _flags;
 
-    public string Kind { get; }
+    public string Kind => Parent.Kind;
     public string Name { get; }
     public string? PropertyName { get; }
     public string TypeName { get; }
@@ -42,7 +44,6 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
 
     internal BoundAttributeDescriptor(
         BoundAttributeFlags flags,
-        string kind,
         string name,
         string? propertyName,
         string typeName,
@@ -56,7 +57,6 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
         ImmutableArray<RazorDiagnostic> diagnostics)
         : base(diagnostics)
     {
-        Kind = kind;
         Name = name;
         PropertyName = propertyName;
         TypeName = typeName;
@@ -89,12 +89,16 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
         }
 
         _flags = flags;
+
+        foreach (var parameter in Parameters)
+        {
+            parameter.SetParent(this);
+        }
     }
 
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
         builder.AppendData((ushort)Flags);
-        builder.AppendData(Kind);
         builder.AppendData(Name);
         builder.AppendData(PropertyName);
         builder.AppendData(TypeName);
@@ -112,6 +116,19 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
 
         builder.AppendData(Metadata.Checksum);
     }
+
+    internal void SetParent(TagHelperDescriptor parent)
+    {
+        if (_parent is not null)
+        {
+            ThrowHelper.ThrowInvalidOperationException("Parent can only be set once.");
+        }
+
+        _parent = parent;
+    }
+
+    public TagHelperDescriptor Parent
+        => _parent ?? Assumed.Unreachable<TagHelperDescriptor>($"{nameof(Parent)} not set.");
 
     public string? Documentation => _documentationObject.GetText();
 

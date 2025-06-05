@@ -2430,12 +2430,14 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
 
     private static BoundAttributeDescriptor CreateAttributeFor(string tagHelperTypeFullName, Action<BoundAttributeDescriptorBuilder> configure)
     {
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, tagHelperTypeFullName.Split('.')[^1], "Test");
-        tagHelperBuilder.Metadata(TypeName(tagHelperTypeFullName));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, tagHelperTypeFullName.Split('.')[^1], "Test");
+        builder.Metadata(TypeName(tagHelperTypeFullName));
 
-        var attributeBuilder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        configure(attributeBuilder);
-        return attributeBuilder.Build();
+        builder.BindAttribute(configure);
+
+        var descriptor = builder.Build();
+
+        return descriptor.BoundAttributes.Single();
     }
 
     private const string AdditionalCode =

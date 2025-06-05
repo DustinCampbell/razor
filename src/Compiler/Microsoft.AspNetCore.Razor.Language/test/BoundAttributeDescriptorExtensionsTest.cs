@@ -14,19 +14,20 @@ public class BoundAttributeDescriptorExtensionsTest
     public void IsDefaultKind_ReturnsTrue_IfKindIsDefault()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("IntProperty")
-            .TypeName(typeof(int).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "IntProperty";
+            a.TypeName = typeof(int).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var isDefault = descriptor.IsDefaultKind();
+        var isDefault = descriptor.BoundAttributes[0].IsDefaultKind();
 
         // Assert
         Assert.True(isDefault);
@@ -36,19 +37,20 @@ public class BoundAttributeDescriptorExtensionsTest
     public void IsDefaultKind_ReturnsFalse_IfKindIsNotDefault()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder("other-kind", "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder("other-kind", "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, "other-kind");
-        builder
-            .Name("test")
-            .PropertyName("IntProperty")
-            .TypeName(typeof(int).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "IntProperty";
+            a.TypeName = typeof(int).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var isDefault = descriptor.IsDefaultKind();
+        var isDefault = descriptor.BoundAttributes[0].IsDefaultKind();
 
         // Assert
         Assert.False(isDefault);
@@ -58,19 +60,20 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsStringValue_ReturnsTrue_ForStringProperty()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName(typeof(string).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = typeof(string).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsStringValue("test");
+        var result = descriptor.BoundAttributes[0].ExpectsStringValue("test");
 
         // Assert
         Assert.True(result);
@@ -80,19 +83,20 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsStringValue_ReturnsFalse_ForNonStringProperty()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName(typeof(bool).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = typeof(bool).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsStringValue("test");
+        var result = descriptor.BoundAttributes[0].ExpectsStringValue("test");
 
         // Assert
         Assert.False(result);
@@ -102,20 +106,21 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsStringValue_ReturnsTrue_StringIndexerAndNameMatch()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName("System.Collection.Generic.IDictionary<string, string>")
-            .AsDictionary("prefix-test-", typeof(string).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = "System.Collection.Generic.IDictionary<string, string>";
+            a.AsDictionary("prefix-test-", typeof(string).FullName);
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsStringValue("prefix-test-key");
+        var result = descriptor.BoundAttributes[0].ExpectsStringValue("prefix-test-key");
 
         // Assert
         Assert.True(result);
@@ -125,20 +130,21 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsStringValue_ReturnsFalse_StringIndexerAndNameMismatch()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName("System.Collection.Generic.IDictionary<string, string>")
-            .AsDictionary("prefix-test-", typeof(string).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = "System.Collection.Generic.IDictionary<string, string>";
+            a.AsDictionary("prefix-test-", typeof(string).FullName);
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsStringValue("test");
+        var result = descriptor.BoundAttributes[0].ExpectsStringValue("test");
 
         // Assert
         Assert.False(result);
@@ -148,19 +154,20 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsBooleanValue_ReturnsTrue_ForBooleanProperty()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName(typeof(bool).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = typeof(bool).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsBooleanValue("test");
+        var result = descriptor.BoundAttributes[0].ExpectsBooleanValue("test");
 
         // Assert
         Assert.True(result);
@@ -170,19 +177,20 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsBooleanValue_ReturnsFalse_ForNonBooleanProperty()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName(typeof(int).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = typeof(int).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsBooleanValue("test");
+        var result = descriptor.BoundAttributes[0].ExpectsBooleanValue("test");
 
         // Assert
         Assert.False(result);
@@ -192,20 +200,21 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsBooleanValue_ReturnsTrue_BooleanIndexerAndNameMatch()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName("System.Collection.Generic.IDictionary<string, bool>")
-            .AsDictionary("prefix-test-", typeof(bool).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = "System.Collection.Generic.IDictionary<string, bool>";
+            a.AsDictionary("prefix-test-", typeof(bool).FullName);
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsBooleanValue("prefix-test-key");
+        var result = descriptor.BoundAttributes[0].ExpectsBooleanValue("prefix-test-key");
 
         // Assert
         Assert.True(result);
@@ -215,20 +224,21 @@ public class BoundAttributeDescriptorExtensionsTest
     public void ExpectsBooleanValue_ReturnsFalse_BooleanIndexerAndNameMismatch()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind);
-        builder
-            .Name("test")
-            .PropertyName("BoundProp")
-            .TypeName("System.Collection.Generic.IDictionary<string, bool>")
-            .AsDictionary("prefix-test-", typeof(bool).FullName);
+        builder.BindAttribute(static a =>
+        {
+            a.Name = "test";
+            a.PropertyName = "BoundProp";
+            a.TypeName = "System.Collection.Generic.IDictionary<string, bool>";
+            a.AsDictionary("prefix-test-", typeof(bool).FullName);
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var result = descriptor.ExpectsBooleanValue("test");
+        var result = descriptor.BoundAttributes[0].ExpectsBooleanValue("test");
 
         // Assert
         Assert.False(result);

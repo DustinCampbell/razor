@@ -90,7 +90,6 @@ internal static partial class ObjectWriters
             writer.WriteObject(value, static (writer, value) =>
             {
                 writer.Write(nameof(value.Flags), (ushort)value.Flags);
-                writer.Write(nameof(value.Kind), value.Kind);
                 writer.WriteIfNotDefault(nameof(value.Name), value.Name, defaultValue: string.Empty);
                 writer.WriteIfNotNull(nameof(value.PropertyName), value.PropertyName);
                 writer.Write(nameof(value.TypeName), value.TypeName);
@@ -111,7 +110,6 @@ internal static partial class ObjectWriters
             writer.WriteObject(value, static (writer, value) =>
             {
                 writer.Write(nameof(value.Flags), (byte)value.Flags);
-                writer.Write(nameof(value.Kind), value.Kind);
                 writer.Write(nameof(value.Name), value.Name);
                 writer.Write(nameof(value.PropertyName), value.PropertyName);
                 writer.Write(nameof(value.TypeName), value.TypeName);

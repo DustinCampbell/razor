@@ -15,40 +15,39 @@ public class BoundAttributeDescriptorBuilderTests
         // Arrange
         var expectedDisplayName = "ExpectedDisplayName";
 
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.BindAttribute(a =>
         {
-            PropertyName = "SomeProperty",
-            TypeName = "System.String",
-            DisplayName = expectedDisplayName
-        };
+            a.PropertyName = "SomeProperty";
+            a.TypeName = "System.String";
+            a.DisplayName = expectedDisplayName;
+        });
 
         // Act
         var descriptor = builder.Build();
 
         // Assert
-        Assert.Equal(expectedDisplayName, descriptor.DisplayName);
+        Assert.Equal(expectedDisplayName, descriptor.BoundAttributes[0].DisplayName);
     }
 
     [Fact]
     public void DisplayName_DefaultsToPropertyLookingDisplayName()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        builder.BindAttribute(a =>
         {
-            PropertyName = "SomeProperty",
-            TypeName = typeof(int).FullName
-        };
+            a.PropertyName = "SomeProperty";
+            a.TypeName = typeof(int).FullName;
+        });
 
         // Act
         var descriptor = builder.Build();
 
         // Assert
-        Assert.Equal("int TestTagHelper.SomeProperty", descriptor.DisplayName);
+        Assert.Equal("int TestTagHelper.SomeProperty", descriptor.BoundAttributes[0].DisplayName);
     }
 
     [Fact]
@@ -57,20 +56,20 @@ public class BoundAttributeDescriptorBuilderTests
         // Arrange
         var expectedPropertyName = "IntProperty";
 
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        builder.BindAttribute(a =>
         {
-            Name = "test",
-            PropertyName = expectedPropertyName,
-            TypeName = typeof(int).FullName
-        };
+            a.Name = "test";
+            a.PropertyName = expectedPropertyName;
+            a.TypeName = typeof(int).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var propertyName = descriptor.PropertyName;
+        var propertyName = descriptor.BoundAttributes[0].PropertyName;
 
         // Assert
         Assert.Equal(expectedPropertyName, propertyName);
@@ -80,19 +79,19 @@ public class BoundAttributeDescriptorBuilderTests
     public void PropertyName_ReturnsNullIfNoPropertyName()
     {
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("TestTagHelper"));
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        builder.Metadata(TypeName("TestTagHelper"));
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        builder.BindAttribute(a =>
         {
-            Name = "test",
-            TypeName = typeof(int).FullName
-        };
+            a.Name = "test";
+            a.TypeName = typeof(int).FullName;
+        });
 
         var descriptor = builder.Build();
 
         // Act
-        var propertyName = descriptor.PropertyName;
+        var propertyName = descriptor.BoundAttributes[0].PropertyName;
 
         // Assert
         Assert.Null(propertyName);
@@ -105,31 +104,29 @@ public class BoundAttributeDescriptorBuilderTests
         // they should share the instance.
 
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
 
         var metadata = MetadataCollection.Create(new KeyValuePair<string, string?>("Key", "Value"));
 
-        var builder1 = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        builder.BindAttribute(a =>
         {
-            PropertyName = "SomeProperty1",
-            TypeName = typeof(int).FullName
-        };
+            a.PropertyName = "SomeProperty1";
+            a.TypeName = typeof(int).FullName;
+            a.SetMetadata(metadata);
+        });
 
-        var builder2 = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        builder.BindAttribute(a =>
         {
-            PropertyName = "SomeProperty2",
-            TypeName = typeof(int).FullName
-        };
-
-        builder1.SetMetadata(metadata);
-        builder2.SetMetadata(metadata);
+            a.PropertyName = "SomeProperty2";
+            a.TypeName = typeof(int).FullName;
+            a.SetMetadata(metadata);
+        });
 
         // Act
-        var descriptor1 = builder1.Build();
-        var descriptor2 = builder2.Build();
+        var descriptor = builder.Build();
 
         // Assert
-        Assert.Same(descriptor1.Metadata, descriptor2.Metadata);
+        Assert.Same(descriptor.BoundAttributes[0].Metadata, descriptor.BoundAttributes[1].Metadata);
     }
 
     [Fact]
@@ -139,28 +136,25 @@ public class BoundAttributeDescriptorBuilderTests
         // they do not share the instance.
 
         // Arrange
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
+        var builder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "TestTagHelper", "Test");
 
-        var builder1 = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        builder.BindAttribute(a =>
         {
-            PropertyName = "SomeProperty1",
-            TypeName = typeof(int).FullName
-        };
+            a.PropertyName = "SomeProperty1";
+            a.TypeName = typeof(int).FullName;
+            a.Metadata.Add(new KeyValuePair<string, string?>("Key", "Value"));
+        });
 
-        var builder2 = new BoundAttributeDescriptorBuilder(tagHelperBuilder, TagHelperConventions.DefaultKind)
+        builder.BindAttribute(a =>
         {
-            PropertyName = "SomeProperty2",
-            TypeName = typeof(int).FullName
-        };
+            a.PropertyName = "SomeProperty2";
+            a.TypeName = typeof(int).FullName;
+            a.Metadata.Add(new KeyValuePair<string, string?>("Key", "Value"));
+        });
 
-        builder1.Metadata.Add(new KeyValuePair<string, string?>("Key", "Value"));
-        builder2.Metadata.Add(new KeyValuePair<string, string?>("Key", "Value"));
-
-        // Act
-        var descriptor1 = builder1.Build();
-        var descriptor2 = builder2.Build();
+        var descriptor = builder.Build();
 
         // Assert
-        Assert.NotSame(descriptor1.Metadata, descriptor2.Metadata);
+        Assert.NotSame(descriptor.BoundAttributes[0].Metadata, descriptor.BoundAttributes[1].Metadata);
     }
 }

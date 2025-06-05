@@ -10,6 +10,8 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
 {
     private readonly RequiredAttributeFlags _flags;
 
+    private TagMatchingRuleDescriptor? _parent;
+
     internal RequiredAttributeFlags Flags => _flags;
 
     public string Name { get; }
@@ -44,6 +46,19 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         builder.AppendData(Value);
         builder.AppendData(DisplayName);
     }
+
+    internal void SetParent(TagMatchingRuleDescriptor parent)
+    {
+        if (_parent is not null)
+        {
+            ThrowHelper.ThrowInvalidOperationException("Parent can only be set once.");
+        }
+
+        _parent = parent;
+    }
+
+    public TagMatchingRuleDescriptor Parent
+        => _parent ?? Assumed.Unreachable<TagMatchingRuleDescriptor>($"{nameof(Parent)} not set.");
 
     public override string ToString()
     {

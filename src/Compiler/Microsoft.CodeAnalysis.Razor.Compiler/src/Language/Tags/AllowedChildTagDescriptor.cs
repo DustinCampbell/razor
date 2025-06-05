@@ -8,6 +8,8 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public sealed class AllowedChildTagDescriptor : TagHelperObject<AllowedChildTagDescriptor>
 {
+    private TagHelperDescriptor? _parent;
+
     public string Name { get; }
     public string DisplayName { get; }
 
@@ -23,6 +25,19 @@ public sealed class AllowedChildTagDescriptor : TagHelperObject<AllowedChildTagD
         builder.AppendData(Name);
         builder.AppendData(DisplayName);
     }
+
+    internal void SetParent(TagHelperDescriptor parent)
+    {
+        if (_parent is not null)
+        {
+            ThrowHelper.ThrowInvalidOperationException("Parent can only be set once.");
+        }
+
+        _parent = parent;
+    }
+
+    public TagHelperDescriptor Parent
+        => _parent ?? Assumed.Unreachable<TagHelperDescriptor>($"{nameof(Parent)} not set.");
 
     public override string ToString()
         => DisplayName ?? base.ToString()!;

@@ -78,12 +78,9 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
 
     public void BindAttribute(Action<BoundAttributeDescriptorBuilder> configure)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgHelper.ThrowIfNull(configure);
 
-        var builder = BoundAttributeDescriptorBuilder.GetInstance(this, Kind);
+        var builder = BoundAttributeDescriptorBuilder.GetInstance(this);
         configure(builder);
         BoundAttributes.Add(builder);
     }

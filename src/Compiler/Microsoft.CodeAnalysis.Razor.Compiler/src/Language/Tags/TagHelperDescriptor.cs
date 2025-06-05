@@ -107,6 +107,21 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         }
 
         _flags = flags;
+
+        foreach (var rule in TagMatchingRules)
+        {
+            rule.SetParent(this);
+        }
+
+        foreach (var attribute in BoundAttributes)
+        {
+            attribute.SetParent(this);
+        }
+
+        foreach (var childTag in AllowedChildTags)
+        {
+            childTag.SetParent(this);
+        }
     }
 
     private protected override void BuildChecksum(in Checksum.Builder builder)

@@ -11,9 +11,11 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
     private readonly BoundAttributeParameterFlags _flags;
     private readonly DocumentationObject _documentationObject;
 
+    private BoundAttributeDescriptor? _parent;
+
     internal BoundAttributeParameterFlags Flags => _flags;
 
-    public string Kind { get; }
+    public string Kind => Parent.Kind;
     public string Name { get; }
     public string PropertyName { get; }
     public string TypeName { get; }
@@ -27,7 +29,6 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
 
     internal BoundAttributeParameterDescriptor(
         BoundAttributeParameterFlags flags,
-        string kind,
         string name,
         string propertyName,
         string typeName,
@@ -36,7 +37,6 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         ImmutableArray<RazorDiagnostic> diagnostics)
         : base(diagnostics)
     {
-        Kind = kind;
         Name = name;
         PropertyName = propertyName;
         TypeName = typeName;
@@ -59,7 +59,6 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
         builder.AppendData((byte)Flags);
-        builder.AppendData(Kind);
         builder.AppendData(Name);
         builder.AppendData(PropertyName);
         builder.AppendData(TypeName);
@@ -67,6 +66,19 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
 
         DocumentationObject.AppendToChecksum(in builder);
     }
+
+    internal void SetParent(BoundAttributeDescriptor parent)
+    {
+        if (_parent is not null)
+        {
+            ThrowHelper.ThrowInvalidOperationException("Parent can only be set once.");
+        }
+
+        _parent = parent;
+    }
+
+    public BoundAttributeDescriptor Parent
+        => _parent ?? Assumed.Unreachable<BoundAttributeDescriptor>($"{nameof(Parent)} not set.");
 
     public string? Documentation => _documentationObject.GetText();
 

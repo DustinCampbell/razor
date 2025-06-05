@@ -20319,10 +20319,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3138798599552157215,
-      "Data2": 7804590194113799244,
-      "Data3": 2030147179998120906,
-      "Data4": -4518337586741144199
+      "Data1": -342444800437501641,
+      "Data2": -8840388927792973211,
+      "Data3": -664582309152765104,
+      "Data4": 1485561385367475715
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20401,7 +20401,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -20410,8 +20410,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -20459,10 +20458,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1758867378891711956,
-      "Data2": 6522632470004098663,
-      "Data3": 4499196333331865421,
-      "Data4": -7663053911004383308
+      "Data1": 7335802926487345488,
+      "Data2": -2471651042089677069,
+      "Data3": 4262952881158453825,
+      "Data4": 8230110930705235356
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20565,7 +20564,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -20574,8 +20573,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -20641,10 +20639,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4009878644202504754,
-      "Data2": -2273096823000377265,
-      "Data3": 8060647166799228329,
-      "Data4": -1148765257862824839
+      "Data1": 281116905264913372,
+      "Data2": 1791776532687478464,
+      "Data3": -8660127221582890038,
+      "Data4": 3081529508430623465
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -20747,7 +20745,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -20756,8 +20754,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -20823,10 +20820,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6244387802868772209,
-      "Data2": -1132993258130870115,
-      "Data3": -1262156897577900132,
-      "Data4": 3909725395638388753
+      "Data1": -5815346493524321552,
+      "Data2": -3173344516515490789,
+      "Data3": 7040206355289394031,
+      "Data4": -669012513994327762
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -20941,7 +20938,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -20950,8 +20947,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -21018,10 +21014,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7378155739810046703,
-      "Data2": 5714691831562252095,
-      "Data3": 2266751795502972659,
-      "Data4": 7877270486939728455
+      "Data1": -9037666428120003606,
+      "Data2": -1398781978073174735,
+      "Data3": -766229085244392161,
+      "Data4": 2860493809597595180
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21136,7 +21132,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -21145,8 +21141,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -21213,10 +21208,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2793791193704031501,
-      "Data2": -2016664826427128196,
-      "Data3": -2503443668999925073,
-      "Data4": -2702595264109509077
+      "Data1": 3497786215506123315,
+      "Data2": -8827779369888387368,
+      "Data3": 8537811553250812728,
+      "Data4": -8737138990131539147
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21331,7 +21326,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -21340,8 +21335,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -21408,10 +21402,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1304245939824357664,
-      "Data2": 2022681675065354414,
-      "Data3": 2155993614323032532,
-      "Data4": 6871551969653223870
+      "Data1": 5834091149646719146,
+      "Data2": -942055182354922158,
+      "Data3": 1426617079875045500,
+      "Data4": 4229153991992570724
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -21526,7 +21520,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -21535,8 +21529,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -21603,10 +21596,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5256972649565845424,
-      "Data2": -4527581840867655277,
-      "Data3": 3233382563177214186,
-      "Data4": -3949430612030229513
+      "Data1": 3386971584179998830,
+      "Data2": -6120004014936012524,
+      "Data3": -3474061746915580639,
+      "Data4": -4394488972554976295
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -21721,7 +21714,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -21730,8 +21723,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -21798,10 +21790,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7786168876501412819,
-      "Data2": -7625430540449521788,
-      "Data3": -6280106872885950136,
-      "Data4": 7842274048826408364
+      "Data1": 988198193186164598,
+      "Data2": -6289492259431643794,
+      "Data3": -1236912647688219954,
+      "Data4": -1324529339099940632
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -21916,7 +21908,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -21925,8 +21917,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -21993,10 +21984,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -25844191385169038,
-      "Data2": 2498765751433479451,
-      "Data3": -4827238478501581086,
-      "Data4": -5064443367965486323
+      "Data1": 7536901606634105000,
+      "Data2": -2079077987967442255,
+      "Data3": -4188566890484466076,
+      "Data4": 3712285699211613215
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -22111,7 +22102,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -22120,8 +22111,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -22188,10 +22178,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7437724593748589185,
-      "Data2": 3653509092984778093,
-      "Data3": -620143535021254265,
-      "Data4": 333289807624234782
+      "Data1": 3867639321364774840,
+      "Data2": 6180014575766154141,
+      "Data3": 7492873171177836361,
+      "Data4": 5708598139733775293
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -22306,7 +22296,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -22315,8 +22305,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -22383,10 +22372,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4898538060654862412,
-      "Data2": -8954614663280085414,
-      "Data3": 8309863306389060457,
-      "Data4": -1287099696807803843
+      "Data1": 3483222474896534927,
+      "Data2": -1993435752892075567,
+      "Data3": 4405215443659037656,
+      "Data4": -9114176353411619773
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -22501,7 +22490,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -22510,8 +22499,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -22578,10 +22566,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -5499754208890754500,
-      "Data2": -6687480290773122369,
-      "Data3": -1217231975747603936,
-      "Data4": 3981716796112720138
+      "Data1": 2939032077525123960,
+      "Data2": 3026023106051929798,
+      "Data3": 2723037164718814895,
+      "Data4": -3715115715479374065
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -22696,7 +22684,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -22705,8 +22693,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -22773,10 +22760,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 4982820840324237531,
-      "Data2": -93633623879202838,
-      "Data3": 5952989210334369421,
-      "Data4": 8016819514196085709
+      "Data1": -8548400425487229880,
+      "Data2": -3543385336390546902,
+      "Data3": 7695989397823745378,
+      "Data4": -3648376384996415477
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -22891,7 +22878,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -22900,8 +22887,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -22968,10 +22954,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7883042258521694192,
-      "Data2": 4321225540907455392,
-      "Data3": -1708638670837956970,
-      "Data4": -4113863151326842808
+      "Data1": 3062787812161847168,
+      "Data2": -401324564812588048,
+      "Data3": -3634698359433934942,
+      "Data4": -2109933612714348489
     },
     "Kind": "Components.Bind",
     "Name": "Bind_value",
@@ -23086,7 +23072,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -23095,8 +23081,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -23163,10 +23148,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 6203180722220194888,
-      "Data2": -2535939473971053865,
-      "Data3": -7635478693980717878,
-      "Data4": 5017160434520926200
+      "Data1": 1046213148343160284,
+      "Data2": 3539625019374618884,
+      "Data3": 6358188280585521558,
+      "Data4": -1382455971922450047
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -23269,7 +23254,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -23278,8 +23263,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -23345,10 +23329,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 7648662097186980229,
-      "Data2": 3247270829948478657,
-      "Data3": 4450159233253235444,
-      "Data4": -2784212059630752637
+      "Data1": 139796295794970668,
+      "Data2": 6296027917930079350,
+      "Data3": -5665160274634769589,
+      "Data4": -4308087609552453113
     },
     "Kind": "Components.Bind",
     "Name": "Bind",
@@ -23451,7 +23435,7 @@
             }
           },
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -23460,8 +23444,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -23527,10 +23510,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 5206890330546671267,
-      "Data2": -331063852160871719,
-      "Data3": -1338795921272058610,
-      "Data4": 5108826491708785851
+      "Data1": -734462178244367351,
+      "Data2": -3788849974241063547,
+      "Data3": -2621783037341662784,
+      "Data4": 5062098475690551685
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -23588,7 +23571,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -23597,8 +23580,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -23647,10 +23629,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1606781219859007146,
-      "Data2": -4580023695724252260,
-      "Data3": -8317597305261840930,
-      "Data4": -3252930111925736434
+      "Data1": -2783900439811824795,
+      "Data2": 5048017542099098535,
+      "Data3": 7592339712817515849,
+      "Data4": 6871590844335361900
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputCheckbox",
@@ -23708,7 +23690,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -23717,8 +23699,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -23768,10 +23749,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -8753730548431809287,
-      "Data2": -1943062727455198794,
-      "Data3": -1911728022937619827,
-      "Data4": -3128621400751202991
+      "Data1": -3030156327299623321,
+      "Data2": 2497999561544551299,
+      "Data3": -6450609244225016869,
+      "Data4": 5060973432675759999
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -23829,7 +23810,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -23838,8 +23819,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -23888,10 +23868,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -2739031603570348543,
-      "Data2": -7924800645497089749,
-      "Data3": -1496869921018444770,
-      "Data4": -5881039160961525444
+      "Data1": 1895870580426568148,
+      "Data2": 7895925565471479576,
+      "Data3": -6321644954920112272,
+      "Data4": -561290138901972192
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputDate<TValue>",
@@ -23949,7 +23929,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -23958,8 +23938,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24009,10 +23988,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2221362915840691223,
-      "Data2": -3272322769250192017,
-      "Data3": 689439543051294702,
-      "Data4": 5316178458808262225
+      "Data1": 7084041478074052381,
+      "Data2": 7227497179341216973,
+      "Data3": -5948924166756772435,
+      "Data4": -7967395826609616744
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -24070,7 +24049,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24079,8 +24058,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24129,10 +24107,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -4816008273945124908,
-      "Data2": 3793529470619050953,
-      "Data3": 8920203285118448818,
-      "Data4": 7811230900422447567
+      "Data1": -5385755100956289878,
+      "Data2": 4837268532114941960,
+      "Data3": 2780575429296027608,
+      "Data4": -7072343012750959167
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputNumber<TValue>",
@@ -24190,7 +24168,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24199,8 +24177,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24250,10 +24227,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -7310013586720214876,
-      "Data2": -6342570564988387050,
-      "Data3": -6843614389674830662,
-      "Data4": 8265917133808292611
+      "Data1": 136793971035817747,
+      "Data2": -8104076748321479120,
+      "Data3": 6654005606962410157,
+      "Data4": 96109523406669431
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputRadioGroup<TValue>",
@@ -24311,7 +24288,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24320,8 +24297,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24370,10 +24346,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 1053680618532304079,
-      "Data2": -3456811396014880279,
-      "Data3": -2254230278819575069,
-      "Data4": -4619067684893321378
+      "Data1": -466340536411684299,
+      "Data2": 3334458526281321514,
+      "Data3": 5637430043872650302,
+      "Data4": -3449130571390604083
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputRadioGroup<TValue>",
@@ -24431,7 +24407,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24440,8 +24416,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24491,10 +24466,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 2443209282387333762,
-      "Data2": -7881116795055078863,
-      "Data3": 6580964863586615003,
-      "Data4": -4971410824751019867
+      "Data1": 1398392982758420115,
+      "Data2": 144723369317483464,
+      "Data3": 6278044737927818398,
+      "Data4": -3305379867463969664
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -24552,7 +24527,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24561,8 +24536,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24611,10 +24585,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -3027769120191212554,
-      "Data2": 5270343875596042211,
-      "Data3": -972343990529439203,
-      "Data4": -1533721700583482338
+      "Data1": 8108398603326200717,
+      "Data2": 6977121700783661370,
+      "Data3": 1611100499417582996,
+      "Data4": 4213449230267703237
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputSelect<TValue>",
@@ -24672,7 +24646,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24681,8 +24655,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24732,10 +24705,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -611686279575906501,
-      "Data2": -7632995319717847313,
-      "Data3": -7984859551431636176,
-      "Data4": 5574980588415151753
+      "Data1": -7652283319066113401,
+      "Data2": 817205120841989785,
+      "Data3": -2365430907955830885,
+      "Data4": 3703462784712906359
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -24793,7 +24766,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24802,8 +24775,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24852,10 +24824,10 @@
   },
   {
     "__Checksum": {
-      "Data1": 3582697110628204077,
-      "Data2": -8357535485472594936,
-      "Data3": -2915627559399692961,
-      "Data4": 57278881162045667
+      "Data1": -6928336529238777890,
+      "Data2": -5657903530469481434,
+      "Data3": 5105068678984107740,
+      "Data4": 6482155720368544989
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputText",
@@ -24913,7 +24885,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -24922,8 +24894,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -24973,10 +24944,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -321210663346998499,
-      "Data2": -6476244410576740173,
-      "Data3": 6842474590564941699,
-      "Data4": -8938605360668398473
+      "Data1": -4396801833709921462,
+      "Data2": -263174643585220674,
+      "Data3": -1270428490492367781,
+      "Data4": -4820941981835777323
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -25034,7 +25005,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -25043,8 +25014,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {
@@ -25093,10 +25063,10 @@
   },
   {
     "__Checksum": {
-      "Data1": -1102955970488911101,
-      "Data2": 2586362253671565752,
-      "Data3": 3448859450534341383,
-      "Data4": 634377380610594025
+      "Data1": -6752026831330152417,
+      "Data2": 5945293407708896669,
+      "Data3": -6882511673555658939,
+      "Data4": -4080122321932340880
     },
     "Kind": "Components.Bind",
     "Name": "Microsoft.AspNetCore.Components.Forms.InputTextArea",
@@ -25154,7 +25124,7 @@
         },
         "BoundAttributeParameters": [
           {
-            "Flags": 1,
+            "Flags": 17,
             "Kind": "Components.Bind",
             "Name": "get",
             "TypeName": "System.Object",
@@ -25163,8 +25133,7 @@
               "Id": 8
             },
             "Metadata": {
-              "Common.PropertyName": "Get",
-              "Components.Bind.AlternativeNotation": "True"
+              "Common.PropertyName": "Get"
             }
           },
           {

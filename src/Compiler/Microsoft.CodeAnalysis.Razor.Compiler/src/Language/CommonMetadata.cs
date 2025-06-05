@@ -8,8 +8,6 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public static class CommonMetadata
 {
-    internal static readonly KeyValuePair<string, string?> BindAttributeGetSet
-        = MakeTrue(ComponentMetadata.Bind.BindAttributeGetSet);
     internal static readonly KeyValuePair<string, string?> IsDirectiveAttribute
         = MakeTrue(ComponentMetadata.Common.DirectiveAttribute);
     internal static readonly KeyValuePair<string, string?> IsWeaklyTyped
@@ -43,7 +41,7 @@ public static class CommonMetadata
         public static readonly MetadataCollection Culture = MetadataCollection.Create(PropertyName("Culture"));
         public static readonly MetadataCollection Event = MetadataCollection.Create(PropertyName("Event"));
         public static readonly MetadataCollection Format = MetadataCollection.Create(PropertyName("Format"));
-        public static readonly MetadataCollection Get = MetadataCollection.Create(PropertyName("Get"), BindAttributeGetSet);
+        public static readonly MetadataCollection Get = MetadataCollection.Create(PropertyName("Get"));
         public static readonly MetadataCollection PreventDefault = MetadataCollection.Create(PropertyName("PreventDefault"));
         public static readonly MetadataCollection Set = MetadataCollection.Create(PropertyName("Set"));
         public static readonly MetadataCollection StopPropagation = MetadataCollection.Create(PropertyName("StopPropagation"));

@@ -22,6 +22,7 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
     public bool IsEnum => _flags.IsFlagSet(BoundAttributeParameterFlags.IsEnum);
     public bool IsStringProperty => _flags.IsFlagSet(BoundAttributeParameterFlags.IsStringProperty);
     public bool IsBooleanProperty => _flags.IsFlagSet(BoundAttributeParameterFlags.IsBooleanProperty);
+    public bool IsBindAttributeGetSet => _flags.IsFlagSet(BoundAttributeParameterFlags.IsBindAttributeGetSet);
 
     public MetadataCollection Metadata { get; }
 

@@ -196,6 +196,7 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
                 parameter.TypeName = typeof(object).FullName;
                 parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Get);
 
+                parameter.IsBindAttributeGetSet = true;
                 parameter.SetMetadata(Parameters.Get);
             });
 
@@ -506,6 +507,7 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
                     parameter.TypeName = typeof(object).FullName;
                     parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Get);
 
+                    parameter.IsBindAttributeGetSet = true;
                     parameter.SetMetadata(Parameters.Get);
                 });
 
@@ -679,6 +681,7 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
                         parameter.TypeName = typeof(object).FullName;
                         parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Get);
 
+                        parameter.IsBindAttributeGetSet = true;
                         parameter.SetMetadata(Parameters.Get);
                     });
 

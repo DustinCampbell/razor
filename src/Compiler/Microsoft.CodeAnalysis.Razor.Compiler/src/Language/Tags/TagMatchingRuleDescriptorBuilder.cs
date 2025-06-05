@@ -12,6 +12,7 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
 {
     [AllowNull]
     private TagHelperDescriptorBuilder _parent;
+    private TagMatchingRuleFlags _flags;
 
     private TagMatchingRuleDescriptorBuilder()
     {
@@ -45,11 +46,18 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
 
     private protected override TagMatchingRuleDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var flags = _flags;
+
+        if (CaseSensitive)
+        {
+            flags.SetFlag(TagMatchingRuleFlags.CaseSensitive);
+        }
+
         return new TagMatchingRuleDescriptor(
+            flags,
             TagName ?? string.Empty,
             ParentTag,
             TagStructure,
-            CaseSensitive,
             Attributes.ToImmutable(),
             diagnostics);
     }

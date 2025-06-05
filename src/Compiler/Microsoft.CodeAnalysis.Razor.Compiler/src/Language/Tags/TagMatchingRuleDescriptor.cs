@@ -13,35 +13,39 @@ namespace Microsoft.AspNetCore.Razor.Language;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleDescriptor>
 {
+    private readonly TagMatchingRuleFlags _flags;
+
+    internal TagMatchingRuleFlags Flags => _flags;
+
     public string TagName { get; }
     public string? ParentTag { get; }
     public TagStructure TagStructure { get; }
-    public bool CaseSensitive { get; }
     public ImmutableArray<RequiredAttributeDescriptor> Attributes { get; }
 
+    public bool CaseSensitive => _flags.IsFlagSet(TagMatchingRuleFlags.CaseSensitive);
+
     internal TagMatchingRuleDescriptor(
+        TagMatchingRuleFlags flags,
         string tagName,
         string? parentTag,
         TagStructure tagStructure,
-        bool caseSensitive,
         ImmutableArray<RequiredAttributeDescriptor> attributes,
         ImmutableArray<RazorDiagnostic> diagnostics)
         : base(diagnostics)
     {
+        _flags = flags;
         TagName = tagName;
         ParentTag = parentTag;
         TagStructure = tagStructure;
-        CaseSensitive = caseSensitive;
         Attributes = attributes.NullToEmpty();
     }
 
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
+        builder.AppendData((byte)_flags);
         builder.AppendData(TagName);
         builder.AppendData(ParentTag);
         builder.AppendData((int)TagStructure);
-
-        builder.AppendData(CaseSensitive);
 
         foreach (var descriptor in Attributes)
         {

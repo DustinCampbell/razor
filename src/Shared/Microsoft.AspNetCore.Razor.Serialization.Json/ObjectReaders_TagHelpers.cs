@@ -107,18 +107,16 @@ internal static partial class ObjectReaders
 
             static TagMatchingRuleDescriptor ReadFromProperties(JsonDataReader reader)
             {
+                var flags = (TagMatchingRuleFlags)reader.ReadInt32(nameof(TagMatchingRuleDescriptor.Flags));
                 var tagName = reader.ReadNonNullString(nameof(TagMatchingRuleDescriptor.TagName));
                 var parentTag = reader.ReadStringOrNull(nameof(TagMatchingRuleDescriptor.ParentTag));
                 var tagStructure = (TagStructure)reader.ReadInt32OrZero(nameof(TagMatchingRuleDescriptor.TagStructure));
-                var caseSensitive = reader.ReadBooleanOrTrue(nameof(TagMatchingRuleDescriptor.CaseSensitive));
                 var attributes = reader.ReadImmutableArrayOrEmpty(nameof(TagMatchingRuleDescriptor.Attributes), ReadRequiredAttribute);
 
                 var diagnostics = reader.ReadImmutableArrayOrEmpty(nameof(TagMatchingRuleDescriptor.Diagnostics), ReadDiagnostic);
 
                 return new TagMatchingRuleDescriptor(
-                    Cached(tagName), Cached(parentTag),
-                    tagStructure, caseSensitive,
-                    attributes, diagnostics);
+                    flags, Cached(tagName), Cached(parentTag), tagStructure, attributes, diagnostics);
             }
         }
 

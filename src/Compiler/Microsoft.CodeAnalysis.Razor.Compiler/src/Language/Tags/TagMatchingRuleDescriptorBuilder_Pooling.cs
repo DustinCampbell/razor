@@ -22,6 +22,7 @@ public partial class TagMatchingRuleDescriptorBuilder
     private protected override void Reset()
     {
         _parent = null;
+        _flags = 0;
 
         TagName = null;
         ParentTag = null;

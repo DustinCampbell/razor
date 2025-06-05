@@ -64,10 +64,10 @@ internal static partial class ObjectWriters
         {
             writer.WriteObject(value, static (writer, value) =>
             {
+                writer.Write(nameof(value.Flags), (byte)value.Flags);
                 writer.Write(nameof(value.TagName), value.TagName);
                 writer.WriteIfNotNull(nameof(value.ParentTag), value.ParentTag);
                 writer.WriteIfNotZero(nameof(value.TagStructure), (int)value.TagStructure);
-                writer.WriteIfNotTrue(nameof(value.CaseSensitive), value.CaseSensitive);
                 writer.WriteArrayIfNotDefaultOrEmpty(nameof(value.Attributes), value.Attributes, WriteRequiredAttribute);
                 writer.WriteArrayIfNotDefaultOrEmpty(nameof(value.Diagnostics), value.Diagnostics, Write);
             });

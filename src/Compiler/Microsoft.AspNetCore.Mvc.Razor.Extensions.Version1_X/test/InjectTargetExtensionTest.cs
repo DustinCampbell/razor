@@ -1,13 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
-using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X;
@@ -20,11 +15,9 @@ public class InjectTargetExtensionTest
         // Arrange
         using var context = TestCodeRenderingContext.CreateRuntime();
         var target = new InjectTargetExtension(considerNullabilityEnforcement: false);
-        var node = new InjectIntermediateNode()
-        {
-            TypeName = "PropertyType",
-            MemberName = "PropertyName",
-        };
+        var node = new InjectIntermediateNode(
+            typeName: "PropertyType",
+            memberName: "PropertyName");
 
         // Act
         target.WriteInjectProperty(context, node);
@@ -44,23 +37,21 @@ public class InjectTargetExtensionTest
         // Arrange
         using var context = TestCodeRenderingContext.CreateRuntime();
         var target = new InjectTargetExtension(considerNullabilityEnforcement: true);
-        var node = new InjectIntermediateNode()
-        {
-            TypeName = "PropertyType<ModelType>",
-            MemberName = "PropertyName",
-            TypeSource = new SourceSpan(
+        var node = new InjectIntermediateNode(
+            typeName: "PropertyType<ModelType>",
+            memberName: "PropertyName",
+            typeSource: new SourceSpan(
                 filePath: "test-path",
                 absoluteIndex: 7,
                 lineIndex: 1,
                 characterIndex: 7,
                 length: 23),
-            MemberSource = new SourceSpan(
+            memberSource: new SourceSpan(
                 filePath: "test-path",
                 absoluteIndex: 31,
                 lineIndex: 1,
                 characterIndex: 31,
-                length: 12)
-        };
+                length: 12));
 
         // Act
         target.WriteInjectProperty(context, node);

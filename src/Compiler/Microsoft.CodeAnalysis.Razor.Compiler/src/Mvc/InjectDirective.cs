@@ -91,15 +91,8 @@ public static class InjectDirective
                     }
                 }
 
-                var injectNode = new InjectIntermediateNode()
-                {
-                    TypeName = typeName,
-                    MemberName = memberName,
-                    TypeSource = typeSpan,
-                    MemberSource = memberSpan,
-                    IsMalformed = isMalformed
-                };
-
+                var injectNode = new InjectIntermediateNode(typeName, memberName, typeSpan, memberSpan, isMalformed);
+                
                 visitor.Class.Children.Add(injectNode);
             }
         }

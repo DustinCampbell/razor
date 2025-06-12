@@ -1,27 +1,27 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
-using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions;
 
-public class InjectIntermediateNode : ExtensionIntermediateNode
+public class InjectIntermediateNode(
+    string typeName,
+    string memberName,
+    SourceSpan? typeSource = null,
+    SourceSpan? memberSource = null,
+    bool isMalformed = false)
+    : ExtensionIntermediateNode
 {
-    public string TypeName { get; set; }
+    public string TypeName { get; } = typeName;
+    public SourceSpan? TypeSource { get; } = typeSource;
 
-    public SourceSpan? TypeSource { get; set; }
+    public string MemberName { get; } = memberName;
+    public SourceSpan? MemberSource { get; } = memberSource;
 
-    public string MemberName { get; set; }
-
-    public SourceSpan? MemberSource { get; set; }
-
-    public bool IsMalformed { get; set; }
+    public bool IsMalformed { get; } = isMalformed;
 
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 

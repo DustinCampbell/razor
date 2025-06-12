@@ -20,12 +20,8 @@ public class MetadataAttributeTargetExtensionTest
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorCompiledItemAttributeIntermediateNode()
-        {
-            TypeName = "Foo.Bar",
-            Kind = "test",
-            Identifier = "Foo/Bar",
-        };
+        var node = new RazorCompiledItemAttributeIntermediateNode(
+            typeName: "Foo.Bar", kind: "test", identifier: "Foo/Bar");
 
         // Act
         extension.WriteRazorCompiledItemAttribute(context, node);

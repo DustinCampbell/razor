@@ -1,23 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
-internal sealed class RazorCompiledItemAttributeIntermediateNode : ExtensionIntermediateNode
+internal sealed class RazorCompiledItemAttributeIntermediateNode(string typeName, string kind, string identifier) : ExtensionIntermediateNode
 {
+    public string TypeName { get; } = typeName;
+    public string Kind { get; } = kind;
+    public string Identifier { get; } = identifier;
+
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
-
-    public string TypeName { get; set; }
-
-    public string Kind { get; set; }
-
-    public string Identifier { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => AcceptExtensionNode(this, visitor);

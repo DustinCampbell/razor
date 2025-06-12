@@ -15,13 +15,12 @@ public class LegacySectionTargetExtensionTest
     public void WriteSection_WritesSectionCode_DesignTime()
     {
         // Arrange
-        var node = new SectionIntermediateNode()
+        var node = new SectionIntermediateNode("MySection")
         {
             Children =
                 {
                     new CSharpExpressionIntermediateNode(),
-                },
-            SectionName = "MySection"
+                }
         };
 
         var extension = new LegacySectionTargetExtension()

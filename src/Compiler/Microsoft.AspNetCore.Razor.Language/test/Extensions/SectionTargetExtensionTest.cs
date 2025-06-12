@@ -15,13 +15,12 @@ public class SectionTargetExtensionTest
     public void WriteSection_WritesSectionCode()
     {
         // Arrange
-        var node = new SectionIntermediateNode()
+        var node = new SectionIntermediateNode("MySection")
         {
             Children =
                 {
                     new CSharpExpressionIntermediateNode(),
-                },
-            SectionName = "MySection"
+                }
         };
 
         var extension = new SectionTargetExtension()
@@ -49,13 +48,12 @@ public class SectionTargetExtensionTest
     public void WriteSection_WritesSectionCode_DesignTime()
     {
         // Arrange
-        var node = new SectionIntermediateNode()
+        var node = new SectionIntermediateNode("MySection")
         {
             Children =
                 {
                     new CSharpExpressionIntermediateNode(),
-                },
-            SectionName = "MySection"
+                }
         };
 
         var extension = new SectionTargetExtension()

@@ -46,14 +46,7 @@ public sealed class ComponentTypeInferenceMethodIntermediateNode : IntermediateN
     public IEnumerable<string> GenericTypeConstraints { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitComponentTypeInferenceMethod(this);
-    }
+        => visitor.VisitComponentTypeInferenceMethod(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

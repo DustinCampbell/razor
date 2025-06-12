@@ -56,9 +56,7 @@ internal sealed class CreateNewOnMetadataUpdateAttributePass : IntermediateNodeP
         public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
         public override void Accept(IntermediateNodeVisitor visitor)
-        {
-            AcceptExtensionNode(this, visitor);
-        }
+            => AcceptExtensionNode(this, visitor);
 
         public override void WriteNode(CodeTarget target, CodeRenderingContext context)
         {

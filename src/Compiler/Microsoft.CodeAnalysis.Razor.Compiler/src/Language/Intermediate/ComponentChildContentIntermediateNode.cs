@@ -24,14 +24,7 @@ public sealed class ComponentChildContentIntermediateNode : IntermediateNode
     public string TypeName { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitComponentChildContent(this);
-    }
+        => visitor.VisitComponentChildContent(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

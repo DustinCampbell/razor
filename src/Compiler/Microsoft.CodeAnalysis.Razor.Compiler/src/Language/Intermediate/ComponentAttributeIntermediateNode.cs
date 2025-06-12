@@ -159,14 +159,7 @@ public sealed class ComponentAttributeIntermediateNode : IntermediateNode
     public string GloballyQualifiedTypeName { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitComponentAttribute(this);
-    }
+        => visitor.VisitComponentAttribute(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

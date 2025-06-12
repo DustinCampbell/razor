@@ -22,14 +22,7 @@ internal sealed class PreallocatedTagHelperPropertyValueIntermediateNode : Exten
     public AttributeStructure AttributeStructure { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<PreallocatedTagHelperPropertyValueIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {

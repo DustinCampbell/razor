@@ -19,9 +19,7 @@ public sealed class DirectiveIntermediateNode : IntermediateNode
     public DirectiveDescriptor Directive { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        visitor.VisitDirective(this);
-    }
+        => visitor.VisitDirective(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

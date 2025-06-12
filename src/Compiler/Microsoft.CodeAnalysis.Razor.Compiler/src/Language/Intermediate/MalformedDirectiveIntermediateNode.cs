@@ -19,9 +19,7 @@ public sealed class MalformedDirectiveIntermediateNode : IntermediateNode
     public DirectiveDescriptor Directive { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        visitor.VisitMalformedDirective(this);
-    }
+        => visitor.VisitMalformedDirective(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

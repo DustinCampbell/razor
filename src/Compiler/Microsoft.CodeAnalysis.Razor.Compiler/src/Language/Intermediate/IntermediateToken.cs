@@ -22,14 +22,7 @@ public class IntermediateToken : IntermediateNode
     public static IntermediateToken CreateCSharpToken(string content, SourceSpan? location = null) => new IntermediateToken() { Content = content, Kind = TokenKind.CSharp, Source = location };
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitToken(this);
-    }
+        => visitor.VisitToken(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

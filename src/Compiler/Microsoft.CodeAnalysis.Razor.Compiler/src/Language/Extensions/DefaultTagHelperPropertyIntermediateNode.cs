@@ -54,14 +54,7 @@ public sealed class DefaultTagHelperPropertyIntermediateNode : ExtensionIntermed
     public TagHelperDescriptor TagHelper { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<DefaultTagHelperPropertyIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {

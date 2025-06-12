@@ -14,14 +14,7 @@ public sealed class CSharpExpressionAttributeValueIntermediateNode : Intermediat
     public string Prefix { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitCSharpExpressionAttributeValue(this);
-    }
+        => visitor.VisitCSharpExpressionAttributeValue(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

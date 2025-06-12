@@ -16,9 +16,7 @@ public sealed class DirectiveTokenIntermediateNode : IntermediateNode
     public DirectiveTokenDescriptor DirectiveToken { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        visitor.VisitDirectiveToken(this);
-    }
+        => visitor.VisitDirectiveToken(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

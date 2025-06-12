@@ -39,14 +39,7 @@ public sealed class DefaultTagHelperBodyIntermediateNode : ExtensionIntermediate
     public string TagName { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<DefaultTagHelperBodyIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {

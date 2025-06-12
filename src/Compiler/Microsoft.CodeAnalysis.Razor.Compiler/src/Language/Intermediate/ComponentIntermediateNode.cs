@@ -50,14 +50,7 @@ public sealed class ComponentIntermediateNode : IntermediateNode
     public string TypeName { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitComponent(this);
-    }
+        => visitor.VisitComponent(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

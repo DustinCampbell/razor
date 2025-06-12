@@ -20,14 +20,7 @@ public sealed class SetKeyIntermediateNode : IntermediateNode
     public IntermediateToken KeyValueToken { get; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitSetKey(this);
-    }
+        => visitor.VisitSetKey(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

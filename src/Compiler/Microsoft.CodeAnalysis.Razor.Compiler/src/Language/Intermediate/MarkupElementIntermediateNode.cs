@@ -33,14 +33,7 @@ public sealed class MarkupElementIntermediateNode : IntermediateNode
     public string TagName { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitMarkupElement(this);
-    }
+        => visitor.VisitMarkupElement(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

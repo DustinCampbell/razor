@@ -14,14 +14,7 @@ public sealed class HtmlContentIntermediateNode : IntermediateNode
     public bool HasEncodedContent { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitHtml(this);
-    }
+        => visitor.VisitHtml(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

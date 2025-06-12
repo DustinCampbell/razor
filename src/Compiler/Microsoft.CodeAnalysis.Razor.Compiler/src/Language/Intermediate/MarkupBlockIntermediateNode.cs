@@ -14,14 +14,7 @@ public sealed class MarkupBlockIntermediateNode : IntermediateNode
     public string Content { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitMarkupBlock(this);
-    }
+        => visitor.VisitMarkupBlock(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

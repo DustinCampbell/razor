@@ -28,14 +28,7 @@ public sealed class ClassDeclarationIntermediateNode : MemberDeclarationIntermed
     public bool NullableContext { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitClassDeclaration(this);
-    }
+        => visitor.VisitClassDeclaration(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

@@ -10,14 +10,7 @@ public sealed class FormNameIntermediateNode : IntermediateNode
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitFormName(this);
-    }
+        => visitor.VisitFormName(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

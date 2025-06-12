@@ -24,14 +24,7 @@ public sealed class TagHelperPropertyIntermediateNode : IntermediateNode
     public SourceSpan? OriginalAttributeSpan { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitTagHelperProperty(this);
-    }
+        => visitor.VisitTagHelperProperty(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

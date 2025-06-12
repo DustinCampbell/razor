@@ -26,14 +26,7 @@ public sealed class TagHelperDirectiveAttributeIntermediateNode : IntermediateNo
     public bool IsIndexerNameMatch { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitTagHelperDirectiveAttribute(this);
-    }
+        => visitor.VisitTagHelperDirectiveAttribute(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

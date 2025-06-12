@@ -212,8 +212,6 @@ public class DefaultRazorIntermediateNodeBuilderTest
         public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
         public override void Accept(IntermediateNodeVisitor visitor)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 }

@@ -19,14 +19,7 @@ public sealed class DocumentIntermediateNode : IntermediateNode
     public CodeTarget Target { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitDocument(this);
-    }
+        => visitor.VisitDocument(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

@@ -18,14 +18,7 @@ public sealed class UsingDirectiveIntermediateNode : IntermediateNode
     public bool HasExplicitSemicolon { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitUsingDirective(this);
-    }
+        => visitor.VisitUsingDirective(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

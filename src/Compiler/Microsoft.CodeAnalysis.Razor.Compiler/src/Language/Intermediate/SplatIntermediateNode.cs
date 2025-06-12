@@ -12,14 +12,7 @@ public sealed class SplatIntermediateNode : IntermediateNode
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitSplat(this);
-    }
+        => visitor.VisitSplat(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

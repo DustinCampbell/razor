@@ -12,7 +12,8 @@ internal sealed class RouteAttributeExtensionNode(string template) : ExtensionIn
 
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
-    public override void Accept(IntermediateNodeVisitor visitor) => AcceptExtensionNode(this, visitor);
+    public override void Accept(IntermediateNodeVisitor visitor)
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {

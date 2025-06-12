@@ -23,14 +23,7 @@ public sealed class FieldDeclarationIntermediateNode : MemberDeclarationIntermed
     public bool IsTagHelperField { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitFieldDeclaration(this);
-    }
+        => visitor.VisitFieldDeclaration(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

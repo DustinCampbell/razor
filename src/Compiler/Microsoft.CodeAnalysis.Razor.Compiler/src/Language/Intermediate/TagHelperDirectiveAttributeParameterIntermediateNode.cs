@@ -30,14 +30,7 @@ public sealed class TagHelperDirectiveAttributeParameterIntermediateNode : Inter
     public SourceSpan? OriginalAttributeSpan { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitTagHelperDirectiveAttributeParameter(this);
-    }
+        => visitor.VisitTagHelperDirectiveAttributeParameter(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

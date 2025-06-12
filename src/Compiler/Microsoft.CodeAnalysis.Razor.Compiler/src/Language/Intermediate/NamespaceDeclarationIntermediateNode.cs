@@ -18,14 +18,7 @@ public sealed class NamespaceDeclarationIntermediateNode : IntermediateNode
     public bool IsGenericTyped { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitNamespaceDeclaration(this);
-    }
+        => visitor.VisitNamespaceDeclaration(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

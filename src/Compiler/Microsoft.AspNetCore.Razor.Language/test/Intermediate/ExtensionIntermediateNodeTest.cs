@@ -48,10 +48,8 @@ public class ExtensionIntermediateNodeTest
         public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
         public override void Accept(IntermediateNodeVisitor visitor)
-        {
             // This is the standard visitor boilerplate for an extension node.
-            AcceptExtensionNode<TestExtensionIntermediateNode>(this, visitor);
-        }
+            => AcceptExtensionNode(this, visitor);
 
         public override void WriteNode(CodeTarget target, CodeRenderingContext context)
         {

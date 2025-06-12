@@ -44,14 +44,7 @@ public sealed class ComponentTypeArgumentIntermediateNode : IntermediateNode
     public IntermediateToken Value { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitComponentTypeArgument(this);
-    }
+        => visitor.VisitComponentTypeArgument(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

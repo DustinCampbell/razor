@@ -15,14 +15,7 @@ internal sealed class DesignTimeDirectiveIntermediateNode : ExtensionIntermediat
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<DesignTimeDirectiveIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {

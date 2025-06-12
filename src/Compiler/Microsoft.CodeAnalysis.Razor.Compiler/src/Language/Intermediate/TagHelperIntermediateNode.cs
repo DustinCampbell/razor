@@ -38,14 +38,7 @@ public sealed class TagHelperIntermediateNode : IntermediateNode
     }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitTagHelper(this);
-    }
+        => visitor.VisitTagHelper(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

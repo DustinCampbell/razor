@@ -42,14 +42,7 @@ public sealed class ReferenceCaptureIntermediateNode : IntermediateNode
     public string TypeName => $"global::System.Action<{FieldTypeName}>";
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitReferenceCapture(this);
-    }
+        => visitor.VisitReferenceCapture(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

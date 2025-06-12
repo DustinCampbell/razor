@@ -11,12 +11,5 @@ public sealed class RenderModeIntermediateNode : IntermediateNode
     public override IntermediateNodeCollection Children { get; } = new();
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitRenderMode(this);
-    }
+        => visitor.VisitRenderMode(this);
 }

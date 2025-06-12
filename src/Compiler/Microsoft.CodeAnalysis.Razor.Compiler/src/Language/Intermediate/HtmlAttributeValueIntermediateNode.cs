@@ -14,14 +14,7 @@ public sealed class HtmlAttributeValueIntermediateNode : IntermediateNode
     public string Prefix { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitHtmlAttributeValue(this);
-    }
+        => visitor.VisitHtmlAttributeValue(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

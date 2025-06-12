@@ -21,12 +21,5 @@ public sealed class PropertyDeclarationIntermediateNode : MemberDeclarationInter
     public string PropertyExpression { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitPropertyDeclaration(this);
-    }
+        => visitor.VisitPropertyDeclaration(this);
 }

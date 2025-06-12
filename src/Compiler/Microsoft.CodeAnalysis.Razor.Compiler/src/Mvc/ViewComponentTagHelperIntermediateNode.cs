@@ -19,14 +19,7 @@ public sealed class ViewComponentTagHelperIntermediateNode : ExtensionIntermedia
     public TagHelperDescriptor TagHelper { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<ViewComponentTagHelperIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {

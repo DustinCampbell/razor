@@ -502,9 +502,7 @@ public class IntermediateNodeReferenceTest
         public override IntermediateNodeCollection Children { get; }
 
         public override void Accept(IntermediateNodeVisitor visitor)
-        {
-            throw new System.NotImplementedException();
-        }
+            => throw new NotImplementedException();
 
         public override string ToString() => Name;
     }

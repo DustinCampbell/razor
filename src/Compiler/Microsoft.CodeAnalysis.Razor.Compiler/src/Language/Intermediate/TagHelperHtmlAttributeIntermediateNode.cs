@@ -16,14 +16,7 @@ public sealed class TagHelperHtmlAttributeIntermediateNode : IntermediateNode
     public AttributeStructure AttributeStructure { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitTagHelperHtmlAttribute(this);
-    }
+        => visitor.VisitTagHelperHtmlAttribute(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

@@ -43,14 +43,7 @@ internal sealed class PreallocatedTagHelperHtmlAttributeValueIntermediateNode : 
     public AttributeStructure AttributeStructure { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<PreallocatedTagHelperHtmlAttributeValueIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {

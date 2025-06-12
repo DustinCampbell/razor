@@ -129,9 +129,7 @@ public class IntermediateNodeWalkerTest
         public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
         public override void Accept(IntermediateNodeVisitor visitor)
-        {
-            ((DerivedIntermediateNodeWalker)visitor).VisitBasic(this);
-        }
+            => ((DerivedIntermediateNodeWalker)visitor).VisitBasic(this);
 
         public override string ToString()
         {

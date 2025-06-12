@@ -25,14 +25,7 @@ public sealed class MethodDeclarationIntermediateNode : MemberDeclarationInterme
     public bool IsPrimaryMethod { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitMethodDeclaration(this);
-    }
+        => visitor.VisitMethodDeclaration(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

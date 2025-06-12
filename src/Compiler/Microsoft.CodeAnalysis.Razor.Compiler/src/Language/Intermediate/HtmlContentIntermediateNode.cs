@@ -17,7 +17,5 @@ public sealed class HtmlContentIntermediateNode : IntermediateNode
         => visitor.VisitHtml(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
-    {
-        formatter.WriteChildren(Children);
-    }
+        => formatter.WriteChildren(Children);
 }

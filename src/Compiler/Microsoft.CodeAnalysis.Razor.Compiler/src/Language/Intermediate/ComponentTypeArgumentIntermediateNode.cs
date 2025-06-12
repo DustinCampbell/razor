@@ -48,11 +48,6 @@ public sealed class ComponentTypeArgumentIntermediateNode : IntermediateNode
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         formatter.WriteContent(TypeParameterName);
 
         formatter.WriteProperty(nameof(BoundAttribute), BoundAttribute?.DisplayName);

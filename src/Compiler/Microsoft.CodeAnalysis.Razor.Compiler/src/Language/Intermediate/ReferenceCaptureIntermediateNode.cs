@@ -46,11 +46,6 @@ public sealed class ReferenceCaptureIntermediateNode : IntermediateNode
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         formatter.WriteContent(IdentifierToken?.Content);
 
         formatter.WriteProperty(nameof(IdentifierToken), IdentifierToken?.Content);

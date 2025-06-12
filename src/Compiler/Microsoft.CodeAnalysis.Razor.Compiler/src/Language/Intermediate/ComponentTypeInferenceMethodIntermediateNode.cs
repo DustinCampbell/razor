@@ -50,11 +50,6 @@ public sealed class ComponentTypeInferenceMethodIntermediateNode : IntermediateN
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         formatter.WriteContent(Component?.TagName);
 
         formatter.WriteProperty(nameof(Component), Component?.Component?.DisplayName);

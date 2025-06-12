@@ -15,7 +15,5 @@ public sealed class CSharpExpressionIntermediateNode : IntermediateNode
         => visitor.VisitCSharpExpression(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
-    {
-        formatter.WriteChildren(Children);
-    }
+        => formatter.WriteChildren(Children);
 }

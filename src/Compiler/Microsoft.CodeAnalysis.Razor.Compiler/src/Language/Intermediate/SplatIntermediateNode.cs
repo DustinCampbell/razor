@@ -16,11 +16,6 @@ public sealed class SplatIntermediateNode : IntermediateNode
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         // No properties => do nothing
     }
 }

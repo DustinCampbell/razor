@@ -17,12 +17,5 @@ public sealed class MarkupBlockIntermediateNode : IntermediateNode
         => visitor.VisitMarkupBlock(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
-    {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
-        formatter.WriteContent(Content);
-    }
+        => formatter.WriteContent(Content);
 }

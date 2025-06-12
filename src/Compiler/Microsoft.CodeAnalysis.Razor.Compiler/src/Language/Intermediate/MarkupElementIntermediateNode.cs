@@ -37,11 +37,6 @@ public sealed class MarkupElementIntermediateNode : IntermediateNode
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         formatter.WriteContent(TagName);
 
         formatter.WriteProperty(nameof(TagName), TagName);

@@ -24,11 +24,6 @@ public sealed class SetKeyIntermediateNode : IntermediateNode
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         formatter.WriteContent(KeyValueToken.Content);
 
         formatter.WriteProperty(nameof(KeyValueToken), KeyValueToken.Content);

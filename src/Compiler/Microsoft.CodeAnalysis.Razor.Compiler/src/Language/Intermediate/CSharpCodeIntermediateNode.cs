@@ -15,7 +15,5 @@ public sealed class CSharpCodeIntermediateNode : IntermediateNode
         => visitor.VisitCSharpCode(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
-    {
-        formatter.WriteChildren(Children);
-    }
+        => formatter.WriteChildren(Children);
 }

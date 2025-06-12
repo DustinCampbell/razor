@@ -1,9 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -14,22 +11,31 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 /// </summary>
 public class RazorCompiledItemMetadataAttributeIntermediateNode : ExtensionIntermediateNode
 {
+    /// <summary>
+    /// Gets the attribute key.
+    /// </summary>
+    public string Key { get; }
+
+    /// <summary>
+    /// Gets the attribute value.
+    /// </summary>
+    public string Value { get; }
+
+    /// <summary>
+    /// Gets an optional string syntax for the <see cref="Value"/>
+    /// </summary>
+    public string? ValueStringSyntax { get; }
+
+    public RazorCompiledItemMetadataAttributeIntermediateNode(
+        string key, string value, string? valueStringSyntax = null, SourceSpan? source = null)
+    {
+        Key = key;
+        Value = value;
+        ValueStringSyntax = valueStringSyntax;
+        Source = source;
+    }
+
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
-
-    /// <summary>
-    /// Gets or sets the attribute key.
-    /// </summary>
-    public string Key { get; set; }
-
-    /// <summary>
-    /// Gets or sets the attribute value.
-    /// </summary>
-    public string Value { get; set; }
-
-    /// <summary>
-    /// Gets or sets an optional string syntax for the <see cref="Value"/>
-    /// </summary>
-    public string ValueStringSyntax { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => AcceptExtensionNode(this, visitor);

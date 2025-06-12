@@ -17,6 +17,7 @@ public class MetadataAttributeTargetExtensionTest
         {
             CompiledItemAttributeName = "global::TestItem",
         };
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorCompiledItemAttributeIntermediateNode()
@@ -46,6 +47,7 @@ public class MetadataAttributeTargetExtensionTest
         {
             SourceChecksumAttributeName = "global::TestChecksum",
         };
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorSourceChecksumAttributeIntermediateNode(
@@ -73,13 +75,10 @@ public class MetadataAttributeTargetExtensionTest
         {
             CompiledItemMetadataAttributeName = "global::TestItemMetadata",
         };
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorCompiledItemMetadataAttributeIntermediateNode
-        {
-            Key = "key",
-            Value = "value",
-        };
+        var node = new RazorCompiledItemMetadataAttributeIntermediateNode("key", "value");
 
         // Act
         extension.WriteRazorCompiledItemMetadataAttribute(context, node);
@@ -100,13 +99,10 @@ public class MetadataAttributeTargetExtensionTest
         {
             CompiledItemMetadataAttributeName = "global::TestItemMetadata",
         };
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorCompiledItemMetadataAttributeIntermediateNode
-        {
-            Key = "\"test\" key",
-            Value = @"""test"" value",
-        };
+        var node = new RazorCompiledItemMetadataAttributeIntermediateNode("\"test\" key", @"""test"" value");
 
         // Act
         extension.WriteRazorCompiledItemMetadataAttribute(context, node);

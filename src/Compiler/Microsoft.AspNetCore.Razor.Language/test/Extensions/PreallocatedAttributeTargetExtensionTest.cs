@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Xunit;
@@ -100,13 +98,11 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new PreallocatedTagHelperPropertyValueIntermediateNode()
-        {
-            AttributeName = "Foo",
-            Value = "Bar",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            VariableName = "_tagHelper1",
-        };
+        var node = new PreallocatedTagHelperPropertyValueIntermediateNode(
+            variableName: "_tagHelper1",
+            attributeName: "Foo",
+            value: "Bar",
+            attributeStructure: AttributeStructure.DoubleQuotes);
 
         // Act
         extension.WriteTagHelperPropertyValue(context, node);

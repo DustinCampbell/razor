@@ -131,13 +131,12 @@ internal class PreallocatedTagHelperAttributeOptimizationPass : IntermediateNode
             {
                 var variableCount = _classDeclaration.Children.Count - _variableCountOffset;
                 var preAllocatedAttributeVariableName = PreAllocatedAttributeVariablePrefix + variableCount;
-                declaration = new PreallocatedTagHelperPropertyValueIntermediateNode()
-                {
-                    VariableName = preAllocatedAttributeVariableName,
-                    AttributeName = node.AttributeName,
-                    Value = plainTextValue,
-                    AttributeStructure = node.AttributeStructure,
-                };
+                declaration = new PreallocatedTagHelperPropertyValueIntermediateNode(
+                    variableName: preAllocatedAttributeVariableName,
+                    attributeName: node.AttributeName,
+                    value: plainTextValue,
+                    attributeStructure: node.AttributeStructure);
+
                 _classDeclaration.Children.Insert(_preallocatedDeclarationCount++, declaration);
             }
 

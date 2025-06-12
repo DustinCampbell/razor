@@ -17,13 +17,11 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode()
-        {
-            AttributeName = "Foo",
-            Value = "Bar",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            VariableName = "MyProp"
-        };
+        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode(
+            variableName: "MyProp",
+            attributeName: "Foo",
+            value: "Bar",
+            AttributeStructure.DoubleQuotes);
 
         // Act
         extension.WriteTagHelperHtmlAttributeValue(context, node);
@@ -44,13 +42,11 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode()
-        {
-            AttributeName = "Foo",
-            Value = "Bar",
-            AttributeStructure = AttributeStructure.Minimized,
-            VariableName = "_tagHelper1"
-        };
+        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode(
+            variableName: "_tagHelper1",
+            attributeName: "Foo",
+            value: "Bar",
+            AttributeStructure.Minimized);
 
         // Act
         extension.WriteTagHelperHtmlAttributeValue(context, node);

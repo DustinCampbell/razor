@@ -619,8 +619,6 @@ Render Children
             => visitor.VisitDefault(this);
 
         public override void WriteNode(CodeTarget target, CodeRenderingContext context)
-        {
-            context.CodeWriter.WriteLine("MyExtensionNode");
-        }
+            => context.CodeWriter.WriteLine("MyExtensionNode");
     }
 }

@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Xunit;
@@ -52,9 +50,7 @@ public class ExtensionIntermediateNodeTest
             => AcceptExtensionNode(this, visitor);
 
         public override void WriteNode(CodeTarget target, CodeRenderingContext context)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 
     private class StandardVisitor : IntermediateNodeVisitor
@@ -67,7 +63,10 @@ public class ExtensionIntermediateNodeTest
             WasStandardMethodCalled = true;
         }
 
+        // Don't remove this method's parameter. It's here to verify that this method is not called.
+#pragma warning disable IDE0060 // Remove unused parameter
         public void VisitExtension(TestExtensionIntermediateNode node)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             WasSpecificMethodCalled = true;
         }

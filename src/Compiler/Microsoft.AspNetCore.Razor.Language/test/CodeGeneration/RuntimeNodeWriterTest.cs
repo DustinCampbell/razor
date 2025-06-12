@@ -715,8 +715,6 @@ if(@true){ }
             => visitor.VisitDefault(this);
 
         public override void WriteNode(CodeTarget target, CodeRenderingContext context)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 }

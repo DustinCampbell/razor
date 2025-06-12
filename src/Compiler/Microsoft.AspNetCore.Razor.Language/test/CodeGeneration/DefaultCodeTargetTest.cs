@@ -1,9 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System.Linq;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
@@ -18,8 +15,8 @@ public class DefaultCodeTargetTest
 
         var extensions = new ICodeTargetExtension[]
         {
-                new MyExtension2(),
-                new MyExtension1(),
+            new MyExtension2(),
+            new MyExtension1(),
         };
 
         // Act
@@ -34,7 +31,7 @@ public class DefaultCodeTargetTest
     {
         // Arrange
         var options = RazorCodeGenerationOptions.DesignTimeDefault;
-        var target = new DefaultCodeTarget(options, Enumerable.Empty<ICodeTargetExtension>());
+        var target = new DefaultCodeTarget(options, extensions: []);
 
         // Act
         var writer = target.CreateNodeWriter();
@@ -48,7 +45,7 @@ public class DefaultCodeTargetTest
     {
         // Arrange
         var options = RazorCodeGenerationOptions.Default;
-        var target = new DefaultCodeTarget(options, Enumerable.Empty<ICodeTargetExtension>());
+        var target = new DefaultCodeTarget(options, extensions: []);
 
         // Act
         var writer = target.CreateNodeWriter();
@@ -65,8 +62,8 @@ public class DefaultCodeTargetTest
 
         var extensions = new ICodeTargetExtension[]
         {
-                new MyExtension2(),
-                new MyExtension1(),
+            new MyExtension2(),
+            new MyExtension1(),
         };
 
         var target = new DefaultCodeTarget(options, extensions);
@@ -86,8 +83,8 @@ public class DefaultCodeTargetTest
 
         var extensions = new ICodeTargetExtension[]
         {
-                new MyExtension2(),
-                new MyExtension2(),
+            new MyExtension2(),
+            new MyExtension2(),
         };
 
         var target = new DefaultCodeTarget(options, extensions);
@@ -107,8 +104,8 @@ public class DefaultCodeTargetTest
 
         var extensions = new ICodeTargetExtension[]
         {
-                new MyExtension2(),
-                new MyExtension1(),
+            new MyExtension2(),
+            new MyExtension1(),
         };
 
         var target = new DefaultCodeTarget(options, extensions);
@@ -128,10 +125,10 @@ public class DefaultCodeTargetTest
 
         var extensions = new ICodeTargetExtension[]
         {
-                new MyExtension2(),
-                new MyExtension1(),
-                new MyExtension2(),
-                new MyExtension1(),
+            new MyExtension2(),
+            new MyExtension1(),
+            new MyExtension2(),
+            new MyExtension1(),
         };
 
         var target = new DefaultCodeTarget(options, extensions);
@@ -152,8 +149,8 @@ public class DefaultCodeTargetTest
 
         var extensions = new ICodeTargetExtension[]
         {
-                new MyExtension2(),
-                new MyExtension2(),
+            new MyExtension2(),
+            new MyExtension2(),
         };
 
         var target = new DefaultCodeTarget(options, extensions);

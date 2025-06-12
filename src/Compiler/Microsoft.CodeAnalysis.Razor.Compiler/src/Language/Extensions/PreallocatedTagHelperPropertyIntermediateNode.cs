@@ -1,54 +1,37 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
-internal sealed class PreallocatedTagHelperPropertyIntermediateNode : ExtensionIntermediateNode
+internal sealed class PreallocatedTagHelperPropertyIntermediateNode(
+    string attributeName,
+    string fieldName,
+    string propertyName,
+    string variableName,
+    BoundAttributeDescriptor boundAttribute,
+    TagHelperDescriptor tagHelper,
+    bool isIndexerNameMatch = false)
+    : ExtensionIntermediateNode
 {
-    public PreallocatedTagHelperPropertyIntermediateNode()
-    {
-    }
-
-    public PreallocatedTagHelperPropertyIntermediateNode(DefaultTagHelperPropertyIntermediateNode propertyNode)
-    {
-        if (propertyNode == null)
-        {
-            throw new ArgumentNullException(nameof(propertyNode));
-        }
-
-        AttributeName = propertyNode.AttributeName;
-        AttributeStructure = propertyNode.AttributeStructure;
-        BoundAttribute = propertyNode.BoundAttribute;
-        FieldName = propertyNode.FieldName;
-        IsIndexerNameMatch = propertyNode.IsIndexerNameMatch;
-        PropertyName = propertyNode.PropertyName;
-        Source = propertyNode.Source;
-        TagHelper = propertyNode.TagHelper;
-    }
+    public string AttributeName { get; } = attributeName;
+    public string FieldName { get; } = fieldName;
+    public string PropertyName { get; } = propertyName;
+    public string VariableName { get; } = variableName;
+    public bool IsIndexerNameMatch { get; } = isIndexerNameMatch;
+    public BoundAttributeDescriptor BoundAttribute { get; } = boundAttribute;
+    public TagHelperDescriptor TagHelper { get; } = tagHelper;
 
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
-    public string AttributeName { get; set; }
-
-    public AttributeStructure AttributeStructure { get; set; }
-
-    public BoundAttributeDescriptor BoundAttribute { get; set; }
-
-    public string FieldName { get; set; }
-
-    public bool IsIndexerNameMatch { get; set; }
-
-    public string PropertyName { get; set; }
-
-    public TagHelperDescriptor TagHelper { get; set; }
-
-    public string VariableName { get; set; }
+    public PreallocatedTagHelperPropertyIntermediateNode(DefaultTagHelperPropertyIntermediateNode node, string variableName)
+        : this(node.AttributeName, node.FieldName, node.PropertyName, variableName,
+               node.BoundAttribute, node.TagHelper, node.IsIndexerNameMatch)
+    {
+        Source = node.Source;
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => AcceptExtensionNode(this, visitor);
@@ -68,12 +51,11 @@ internal sealed class PreallocatedTagHelperPropertyIntermediateNode : ExtensionI
         formatter.WriteContent(AttributeName);
 
         formatter.WriteProperty(nameof(AttributeName), AttributeName);
-        formatter.WriteProperty(nameof(AttributeStructure), AttributeStructure.ToString());
-        formatter.WriteProperty(nameof(BoundAttribute), BoundAttribute?.DisplayName);
+        formatter.WriteProperty(nameof(BoundAttribute), BoundAttribute.DisplayName);
         formatter.WriteProperty(nameof(FieldName), FieldName);
         formatter.WriteProperty(nameof(IsIndexerNameMatch), IsIndexerNameMatch.ToString());
         formatter.WriteProperty(nameof(PropertyName), PropertyName);
-        formatter.WriteProperty(nameof(TagHelper), TagHelper?.DisplayName);
+        formatter.WriteProperty(nameof(TagHelper), TagHelper.DisplayName);
         formatter.WriteProperty(nameof(VariableName), VariableName);
     }
 }

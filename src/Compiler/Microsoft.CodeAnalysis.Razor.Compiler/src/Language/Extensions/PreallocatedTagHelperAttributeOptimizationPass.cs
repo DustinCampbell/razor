@@ -140,10 +140,7 @@ internal class PreallocatedTagHelperAttributeOptimizationPass : IntermediateNode
                 _classDeclaration.Children.Insert(_preallocatedDeclarationCount++, declaration);
             }
 
-            var setPreallocatedProperty = new PreallocatedTagHelperPropertyIntermediateNode(node)
-            {
-                VariableName = declaration.VariableName,
-            };
+            var setPreallocatedProperty = new PreallocatedTagHelperPropertyIntermediateNode(node, declaration.VariableName);
 
             var nodeIndex = Parent.Children.IndexOf(node);
             Parent.Children[nodeIndex] = setPreallocatedProperty;

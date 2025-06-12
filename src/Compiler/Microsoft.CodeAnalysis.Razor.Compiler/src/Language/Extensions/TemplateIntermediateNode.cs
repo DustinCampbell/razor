@@ -18,20 +18,8 @@ public sealed class TemplateIntermediateNode : ExtensionIntermediateNode
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
+        if (!TryGetExtensionAndReportIfMissing<ITemplateTargetExtension>(target, context, out var extension))
         {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        var extension = target.GetExtension<ITemplateTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<ITemplateTargetExtension>(context);
             return;
         }
 

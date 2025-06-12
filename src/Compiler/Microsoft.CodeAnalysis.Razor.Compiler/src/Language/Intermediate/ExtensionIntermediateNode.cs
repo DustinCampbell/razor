@@ -33,17 +33,12 @@ public abstract class ExtensionIntermediateNode : IntermediateNode
             return true;
         }
 
-        ReportMissingCodeTargetExtension<T>(context);
+        context.AddDiagnostic(
+            RazorDiagnosticFactory.CreateCodeTarget_UnsupportedExtension(
+                documentKind: context.DocumentKind ?? string.Empty,
+                extensionType: typeof(T)));
 
         result = null;
         return false;
-    }
-
-    protected static void ReportMissingCodeTargetExtension<TDependency>(CodeRenderingContext context)
-    {
-        context.AddDiagnostic(
-            RazorDiagnosticFactory.CreateCodeTarget_UnsupportedExtension(
-                context.DocumentKind ?? string.Empty,
-                typeof(TDependency)));
     }
 }

@@ -47,20 +47,8 @@ internal sealed class PreallocatedTagHelperHtmlAttributeValueIntermediateNode : 
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
+        if (!TryGetExtensionAndReportIfMissing<IPreallocatedAttributeTargetExtension>(target, context, out var extension))
         {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        var extension = target.GetExtension<IPreallocatedAttributeTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<IPreallocatedAttributeTargetExtension>(context);
             return;
         }
 

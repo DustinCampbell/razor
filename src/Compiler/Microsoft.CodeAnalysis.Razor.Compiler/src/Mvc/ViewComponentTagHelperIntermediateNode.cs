@@ -23,20 +23,8 @@ public sealed class ViewComponentTagHelperIntermediateNode : ExtensionIntermedia
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
+        if (!TryGetExtensionAndReportIfMissing<IViewComponentTagHelperTargetExtension>(target, context, out var extension))
         {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        var extension = target.GetExtension<IViewComponentTagHelperTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<IViewComponentTagHelperTargetExtension>(context);
             return;
         }
 

@@ -18,20 +18,8 @@ public sealed class DefaultTagHelperExecuteIntermediateNode : ExtensionIntermedi
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
+        if (!TryGetExtensionAndReportIfMissing<IDefaultTagHelperTargetExtension>(target, context, out var extension))
         {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        var extension = target.GetExtension<IDefaultTagHelperTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<IDefaultTagHelperTargetExtension>(context);
             return;
         }
 

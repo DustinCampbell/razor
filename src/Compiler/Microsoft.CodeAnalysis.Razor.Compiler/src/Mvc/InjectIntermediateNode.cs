@@ -6,6 +6,7 @@
 using System;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions;
@@ -29,20 +30,8 @@ public class InjectIntermediateNode : ExtensionIntermediateNode
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
+        if (!TryGetExtensionAndReportIfMissing<IInjectTargetExtension>(target, context, out var extension))
         {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        var extension = target.GetExtension<IInjectTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<IInjectTargetExtension>(context);
             return;
         }
 

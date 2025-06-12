@@ -36,20 +36,8 @@ public class RazorCompiledItemMetadataAttributeIntermediateNode : ExtensionInter
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
+        if (!TryGetExtensionAndReportIfMissing<IMetadataAttributeTargetExtension>(target, context, out var extension))
         {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        var extension = target.GetExtension<IMetadataAttributeTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<IMetadataAttributeTargetExtension>(context);
             return;
         }
 

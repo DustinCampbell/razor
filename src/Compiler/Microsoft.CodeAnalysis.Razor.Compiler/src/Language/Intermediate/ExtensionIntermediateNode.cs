@@ -1,9 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -15,28 +13,37 @@ public abstract class ExtensionIntermediateNode : IntermediateNode
     protected static void AcceptExtensionNode<TNode>(TNode node, IntermediateNodeVisitor visitor)
         where TNode : ExtensionIntermediateNode
     {
-        var typedVisitor = visitor as IExtensionIntermediateNodeVisitor<TNode>;
-        if (typedVisitor == null)
-        {
-            visitor.VisitExtension(node);
-        }
-        else
+        if (visitor is IExtensionIntermediateNodeVisitor<TNode> typedVisitor)
         {
             typedVisitor.VisitExtension(node);
         }
+        else
+        {
+            visitor.VisitExtension(node);
+        }
     }
 
-    protected void ReportMissingCodeTargetExtension<TDependency>(CodeRenderingContext context)
+    protected static bool TryGetExtensionAndReportIfMissing<T>(
+        CodeTarget target, CodeRenderingContext context, [NotNullWhen(true)] out T? result)
+        where T : class, ICodeTargetExtension
     {
-        if (context == null)
+        if (target.GetExtension<T>() is T extension)
         {
-            throw new ArgumentNullException(nameof(context));
+            result = extension;
+            return true;
         }
 
-        var documentKind = context.DocumentKind ?? string.Empty;
+        ReportMissingCodeTargetExtension<T>(context);
+
+        result = null;
+        return false;
+    }
+
+    protected static void ReportMissingCodeTargetExtension<TDependency>(CodeRenderingContext context)
+    {
         context.AddDiagnostic(
             RazorDiagnosticFactory.CreateCodeTarget_UnsupportedExtension(
-                documentKind,
+                context.DocumentKind ?? string.Empty,
                 typeof(TDependency)));
     }
 }

@@ -1,22 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions;
 
-public sealed class ViewComponentTagHelperIntermediateNode : ExtensionIntermediateNode
+public sealed class ViewComponentTagHelperIntermediateNode(string className, TagHelperDescriptor tagHelper) : ExtensionIntermediateNode
 {
-    public override IntermediateNodeCollection Children { get; } = IntermediateNodeCollection.ReadOnly;
+    public string ClassName { get; } = className;
+    public TagHelperDescriptor TagHelper { get; } = tagHelper;
 
-    public string ClassName { get; set; }
-
-    public TagHelperDescriptor TagHelper { get; set; }
+    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => AcceptExtensionNode(this, visitor);

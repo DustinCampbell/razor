@@ -30,11 +30,7 @@ public class ViewComponentTagHelperTargetExtensionTest
 
         var extension = new ViewComponentTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
-        var node = new ViewComponentTagHelperIntermediateNode()
-        {
-            ClassName = "__Generated__TagCloudViewComponentTagHelper",
-            TagHelper = tagHelper
-        };
+        var node = new ViewComponentTagHelperIntermediateNode("__Generated__TagCloudViewComponentTagHelper", tagHelper);
 
         // Act
         extension.WriteViewComponentTagHelper(context, node);
@@ -85,11 +81,7 @@ public class __Generated__TagCloudViewComponentTagHelper : Microsoft.AspNetCore.
 
         var extension = new ViewComponentTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
-        var node = new ViewComponentTagHelperIntermediateNode()
-        {
-            ClassName = "__Generated__TagCloudViewComponentTagHelper",
-            TagHelper = tagHelper
-        };
+        var node = new ViewComponentTagHelperIntermediateNode("__Generated__TagCloudViewComponentTagHelper", tagHelper);
 
         // Act
         extension.WriteViewComponentTagHelper(context, node);

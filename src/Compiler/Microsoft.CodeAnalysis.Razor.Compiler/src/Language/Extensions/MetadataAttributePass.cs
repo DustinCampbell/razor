@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Components;
@@ -14,7 +12,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 // meaningful information.
 internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizationPass
 {
-    private IMetadataIdentifierFeature _identifierFeature;
+    private IMetadataIdentifierFeature? _identifierFeature;
 
     protected override void OnInitialized()
     {
@@ -80,7 +78,7 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
         // Now we need to add a [RazorSourceChecksum] for the source and for each import
         // these are class attributes, so we need to find the insertion point to put them
         // right before the class.
-        var insert = (int?)null;
+        var insert = -1;
         for (var j = 0; j < @namespace.Children.Count; j++)
         {
             if (object.ReferenceEquals(@namespace.Children[j], @class))
@@ -90,7 +88,7 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
             }
         }
 
-        if (insert == null)
+        if (insert < 0)
         {
             // Can't find a place to put the attributes, just bail.
             return;
@@ -111,12 +109,8 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
             return;
         }
 
-        @namespace.Children.Insert((int)insert++, new RazorSourceChecksumAttributeIntermediateNode()
-        {
-            Checksum = checksum,
-            ChecksumAlgorithm = checksumAlgorithm,
-            Identifier = identifier,
-        });
+        @namespace.Children.Insert(insert++,
+            new RazorSourceChecksumAttributeIntermediateNode(checksum, checksumAlgorithm, identifier));
 
         // Now process the checksums of the imports
         Debug.Assert(_identifierFeature != null);
@@ -133,12 +127,8 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
                 continue;
             }
 
-            @namespace.Children.Insert((int)insert++, new RazorSourceChecksumAttributeIntermediateNode()
-            {
-                Checksum = checksum,
-                ChecksumAlgorithm = checksumAlgorithm,
-                Identifier = identifier,
-            });
+            @namespace.Children.Insert(insert++,
+                new RazorSourceChecksumAttributeIntermediateNode(checksum, checksumAlgorithm, identifier));
         }
     }
 }

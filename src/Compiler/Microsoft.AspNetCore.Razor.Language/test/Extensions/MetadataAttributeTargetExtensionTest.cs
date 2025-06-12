@@ -1,10 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
+using Microsoft.CodeAnalysis.Text;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
@@ -50,12 +48,10 @@ public class MetadataAttributeTargetExtensionTest
         };
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorSourceChecksumAttributeIntermediateNode()
-        {
-            ChecksumAlgorithm = CodeAnalysis.Text.SourceHashAlgorithm.Sha256,
-            Checksum = ImmutableArray.Create((byte)'t', (byte)'e', (byte)'s', (byte)'t'),
-            Identifier = "Foo/Bar",
-        };
+        var node = new RazorSourceChecksumAttributeIntermediateNode(
+            checksum: [(byte)'t', (byte)'e', (byte)'s', (byte)'t'],
+            checksumAlgorithm: SourceHashAlgorithm.Sha256,
+            identifier: "Foo/Bar");
 
         // Act
         extension.WriteRazorSourceChecksumAttribute(context, node);

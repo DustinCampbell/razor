@@ -84,10 +84,7 @@ internal class PreallocatedTagHelperAttributeOptimizationPass : IntermediateNode
                 _classDeclaration.Children.Insert(_preallocatedDeclarationCount++, declaration);
             }
 
-            var addPreAllocatedAttribute = new PreallocatedTagHelperHtmlAttributeIntermediateNode
-            {
-                VariableName = declaration.VariableName,
-            };
+            var addPreAllocatedAttribute = new PreallocatedTagHelperHtmlAttributeIntermediateNode(declaration.VariableName);
 
             var nodeIndex = Parent.Children.IndexOf(node);
             Parent.Children[nodeIndex] = addPreAllocatedAttribute;

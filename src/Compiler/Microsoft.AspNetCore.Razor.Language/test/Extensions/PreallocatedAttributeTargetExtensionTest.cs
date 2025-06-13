@@ -68,10 +68,8 @@ public class PreallocatedAttributeTargetExtensionTest
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new PreallocatedTagHelperHtmlAttributeIntermediateNode()
-        {
-            VariableName = "_tagHelper1"
-        };
+        var node = new PreallocatedTagHelperHtmlAttributeIntermediateNode("_tagHelper1");
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 

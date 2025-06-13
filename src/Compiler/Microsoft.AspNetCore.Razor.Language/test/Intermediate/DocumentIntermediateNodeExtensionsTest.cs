@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -54,10 +52,7 @@ public class DocumentIntermediateNodeExtensionsTest
     {
         // Arrange
         var document = new DocumentIntermediateNode();
-        var @namespace = new NamespaceDeclarationIntermediateNode
-        {
-            IsPrimaryNamespace = true
-        };
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary();
 
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Add(@namespace);
@@ -77,7 +72,7 @@ public class DocumentIntermediateNodeExtensionsTest
         var directive2 = DirectiveDescriptor.CreateSingleLineDirective("test");
 
         var document = new DocumentIntermediateNode();
-        var @namespace = new NamespaceDeclarationIntermediateNode();
+        var @namespace = new NamespaceDeclarationIntermediateNode(content: null!);
 
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Push(@namespace);

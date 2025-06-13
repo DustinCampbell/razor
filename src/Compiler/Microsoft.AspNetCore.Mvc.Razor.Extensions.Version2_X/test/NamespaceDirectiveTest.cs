@@ -130,7 +130,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         builder.Add(new DirectiveTokenIntermediateNode() { Content = "WebApplication.Account" });
         builder.Pop();
 
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "default" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("default");
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode() { ClassName = "default" };
@@ -177,7 +177,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         builder.Add(new DirectiveTokenIntermediateNode() { Content = "WebApplication.Account.Manage" });
         builder.Pop();
 
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "default" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("default");
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode() { ClassName = "default" };
@@ -214,7 +214,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         builder.Add(new DirectiveTokenIntermediateNode() { Content = "WebApplication.Account" });
         builder.Pop();
 
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "default" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("default");
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode() { ClassName = "default" };
@@ -261,7 +261,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         builder.Add(new DirectiveTokenIntermediateNode() { Content = "WebApplication.Account.Manage" });
         builder.Pop();
 
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "default" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("default");
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode() { ClassName = "default" };
@@ -298,7 +298,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         builder.Add(new DirectiveTokenIntermediateNode() { Content = "WebApplication.Account" });
         builder.Pop();
 
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "default" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("default");
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode() { ClassName = "default" };
@@ -333,7 +333,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         builder.Add(new DirectiveTokenIntermediateNode() { Content = "WebApplication.Account" });
         builder.Pop();
 
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "default" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("default");
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode() { ClassName = "default" };

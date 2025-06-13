@@ -134,10 +134,7 @@ public class DefaultDocumentWriterTest
         // Arrange
         var document = new DocumentIntermediateNode();
         var builder = IntermediateNodeBuilder.Create(document);
-        builder.Add(new NamespaceDeclarationIntermediateNode()
-        {
-            Content = "TestNamespace",
-        });
+        builder.Add(new NamespaceDeclarationIntermediateNode("TestNamespace"));
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();
         var options = RazorCodeGenerationOptions.Default;

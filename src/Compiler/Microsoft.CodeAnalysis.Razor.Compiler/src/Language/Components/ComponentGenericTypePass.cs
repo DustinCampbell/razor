@@ -433,12 +433,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 .FirstOrDefault(n => n.IsGenericTyped);
             if (namespaceNode == null)
             {
-                namespaceNode = new NamespaceDeclarationIntermediateNode()
-                {
-                    Content = @namespace,
-                    IsGenericTyped = true,
-                };
-
+                namespaceNode = new NamespaceDeclarationIntermediateNode(@namespace, isGenericTyped: true);
                 documentNode.Children.Add(namespaceNode);
             }
 

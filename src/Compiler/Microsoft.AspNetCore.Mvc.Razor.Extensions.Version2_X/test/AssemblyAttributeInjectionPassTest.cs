@@ -33,11 +33,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
         var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
-        var @namespace = new NamespaceDeclarationIntermediateNode()
-        {
-            Content = string.Empty,
-            IsPrimaryNamespace = true,
-        };
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary(string.Empty);
 
         builder.Push(@namespace);
 
@@ -57,7 +53,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
         var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "SomeNamespace" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("SomeNamespace");
         builder.Push(@namespace);
 
         // Act
@@ -77,11 +73,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
-        var @namespace = new NamespaceDeclarationIntermediateNode()
-        {
-            Content = "SomeNamespace",
-            IsPrimaryNamespace = true,
-        };
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary("SomeNamespace");
 
         builder.Push(@namespace);
 
@@ -110,7 +102,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
-        var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "SomeNamespace" };
+        var @namespace = new NamespaceDeclarationIntermediateNode("SomeNamespace");
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode
@@ -143,11 +135,8 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
-        var @namespace = new NamespaceDeclarationIntermediateNode
-        {
-            Content = "SomeNamespace",
-            IsPrimaryNamespace = true,
-        };
+
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary("SomeNamespace");
 
         builder.Push(@namespace);
 
@@ -184,11 +173,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
-        var @namespace = new NamespaceDeclarationIntermediateNode
-        {
-            Content = "SomeNamespace",
-            IsPrimaryNamespace = true,
-        };
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary("SomeNamespace");
 
         builder.Push(@namespace);
         var @class = new ClassDeclarationIntermediateNode
@@ -231,11 +216,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
-        var @namespace = new NamespaceDeclarationIntermediateNode
-        {
-            Content = "SomeNamespace",
-            IsPrimaryNamespace = true,
-        };
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary("SomeNamespace");
 
         builder.Push(@namespace);
 
@@ -286,11 +267,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         builder.Add(pageDirective);
 
-        var @namespace = new NamespaceDeclarationIntermediateNode
-        {
-            Content = "SomeNamespace",
-            IsPrimaryNamespace = true,
-        };
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary("SomeNamespace");
 
         builder.Push(@namespace);
 
@@ -335,11 +312,8 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
-        var @namespace = new NamespaceDeclarationIntermediateNode
-        {
-            Content = "SomeNamespace",
-            IsPrimaryNamespace = true,
-        };
+        var @namespace = NamespaceDeclarationIntermediateNode.CreatePrimary("SomeNamespace");
+
         builder.Push(@namespace);
 
         var @class = new ClassDeclarationIntermediateNode

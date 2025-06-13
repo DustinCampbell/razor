@@ -1,45 +1,52 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
-using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.Language.Components;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class ReferenceCaptureIntermediateNode : IntermediateNode
 {
+    private const string ElementReferenceTypeName = $"global::{ComponentsApi.ElementReference.FullTypeName}";
+    private const string ActionOfElementReferenceTypeName = $"global::System.Action<{ElementReferenceTypeName}>";
+
+    public IntermediateToken IdentifierToken { get; }
+
+    private string? _componentCaptureTypeName;
+    public string? ComponentCaptureTypeName => _componentCaptureTypeName;
+
+    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
+
+    [MemberNotNullWhen(true, nameof(ComponentCaptureTypeName))]
+    public bool IsComponentCapture => _componentCaptureTypeName != null;
+
+    public string TypeName => IsComponentCapture
+        ? $"global::System.Action<{ComponentCaptureTypeName}>"
+        : ActionOfElementReferenceTypeName;
+
     public ReferenceCaptureIntermediateNode(IntermediateToken identifierToken)
     {
-        IdentifierToken = identifierToken ?? throw new ArgumentNullException(nameof(identifierToken));
+        ArgHelper.ThrowIfNull(identifierToken);
+
+        IdentifierToken = identifierToken;
         Source = IdentifierToken.Source;
     }
 
     public ReferenceCaptureIntermediateNode(IntermediateToken identifierToken, string componentCaptureTypeName)
         : this(identifierToken)
     {
-        if (string.IsNullOrEmpty(componentCaptureTypeName))
-        {
-            throw new ArgumentException("Cannot be null or empty", nameof(componentCaptureTypeName));
-        }
+        ArgHelper.ThrowIfNullOrEmpty(componentCaptureTypeName);
 
-        IsComponentCapture = true;
-        ComponentCaptureTypeName = componentCaptureTypeName;
+        _componentCaptureTypeName = componentCaptureTypeName;
     }
 
-    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
+    public void SetComponentCaptureTypeName(string newName)
+    {
+        ArgHelper.ThrowIfNullOrEmpty(newName);
 
-    public IntermediateToken IdentifierToken { get; }
-
-    public bool IsComponentCapture { get; }
-
-    public string ComponentCaptureTypeName { get; set; }
-
-    public string FieldTypeName => IsComponentCapture ? ComponentCaptureTypeName : $"global::{ComponentsApi.ElementReference.FullTypeName}";
-
-    public string TypeName => $"global::System.Action<{FieldTypeName}>";
+        _componentCaptureTypeName = newName;
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => visitor.VisitReferenceCapture(this);

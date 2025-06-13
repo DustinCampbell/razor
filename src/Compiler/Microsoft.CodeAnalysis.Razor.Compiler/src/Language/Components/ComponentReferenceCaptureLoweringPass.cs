@@ -52,15 +52,10 @@ internal class ComponentReferenceCaptureLoweringPass : ComponentIntermediateNode
 
         // Determine whether this is an element capture or a component capture, and
         // if applicable the type name that will appear in the resulting capture code
-        var componentTagHelper = (parent as ComponentIntermediateNode)?.Component;
-        if (componentTagHelper != null)
-        {
-            return new ReferenceCaptureIntermediateNode(identifierToken, componentTagHelper.GetTypeName());
-        }
-        else
-        {
-            return new ReferenceCaptureIntermediateNode(identifierToken);
-        }
+
+        return parent is ComponentIntermediateNode { Component: { } componentTagHelper }
+            ? new ReferenceCaptureIntermediateNode(identifierToken, componentTagHelper.GetTypeName())
+            : new ReferenceCaptureIntermediateNode(identifierToken);
     }
 
     private IntermediateToken DetermineIdentifierToken(TagHelperDirectiveAttributeIntermediateNode attributeNode)

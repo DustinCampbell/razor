@@ -1119,11 +1119,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else
             {
-                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode()
-                {
-                    AttributeName = attributeName,
-                    AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure
-                };
+                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode(attributeName, node.TagHelperAttributeInfo.AttributeStructure);
 
                 _builder.Add(addHtmlAttribute);
             }
@@ -1170,11 +1166,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else
             {
-                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode()
-                {
-                    AttributeName = attributeName,
-                    AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure
-                };
+                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode(attributeName, node.TagHelperAttributeInfo.AttributeStructure);
 
                 _builder.Push(addHtmlAttribute);
                 VisitAttributeValue(attributeValueNode);
@@ -1904,11 +1896,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else
             {
-                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode()
-                {
-                    AttributeName = attributeName,
-                    AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure
-                };
+                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode(attributeName, node.TagHelperAttributeInfo.AttributeStructure);
 
                 _builder.Add(addHtmlAttribute);
             }
@@ -1996,11 +1984,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else
             {
-                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode()
-                {
-                    AttributeName = attributeName,
-                    AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure
-                };
+                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode(attributeName, node.TagHelperAttributeInfo.AttributeStructure);
 
                 _builder.Add(addHtmlAttribute);
             }
@@ -2046,11 +2030,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else
             {
-                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode()
-                {
-                    AttributeName = attributeName,
-                    AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure
-                };
+                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode(attributeName, node.TagHelperAttributeInfo.AttributeStructure);
 
                 _builder.Push(addHtmlAttribute);
                 VisitAttributeValue(attributeValueNode);
@@ -2125,11 +2105,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
             else
             {
-                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode()
-                {
-                    AttributeName = attributeName,
-                    AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure
-                };
+                var addHtmlAttribute = new TagHelperHtmlAttributeIntermediateNode(attributeName, node.TagHelperAttributeInfo.AttributeStructure);
 
                 _builder.Push(addHtmlAttribute);
                 VisitAttributeValue(attributeValueNode);

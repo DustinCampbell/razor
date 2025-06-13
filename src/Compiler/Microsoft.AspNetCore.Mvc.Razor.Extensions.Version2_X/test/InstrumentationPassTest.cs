@@ -170,7 +170,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
 
         builder.Push(new TagHelperIntermediateNode(tagName: null!, tagMode: 0));
 
-        builder.Push(new TagHelperHtmlAttributeIntermediateNode());
+        builder.Push(new TagHelperHtmlAttributeIntermediateNode(attributeName: null!, attributeStructure: 0));
 
         builder.Push(new CSharpExpressionIntermediateNode()
         {

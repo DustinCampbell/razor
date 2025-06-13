@@ -1,9 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
@@ -11,32 +8,25 @@ using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
-internal class ComponentInjectIntermediateNode : ExtensionIntermediateNode
+internal sealed class ComponentInjectIntermediateNode(
+    string typeName,
+    string? memberName,
+    SourceSpan? typeSpan,
+    SourceSpan? memberSpan,
+    bool isMalformed)
+    : ExtensionIntermediateNode
 {
-    private static readonly IList<string> _injectedPropertyModifiers = new[]
-    {
-            $"[global::{ComponentsApi.InjectAttribute.FullTypeName}]",
-            "private" // Encapsulation is the default
-        };
+    private static readonly IList<string> _injectedPropertyModifiers =
+    [
+        $"[global::{ComponentsApi.InjectAttribute.FullTypeName}]",
+        "private" // Encapsulation is the default
+    ];
 
-    public ComponentInjectIntermediateNode(string typeName, string memberName, SourceSpan? typeSpan, SourceSpan? memberSpan, bool isMalformed)
-    {
-        TypeName = typeName;
-        MemberName = memberName;
-        TypeSpan = typeSpan;
-        MemberSpan = memberSpan;
-        IsMalformed = isMalformed;
-     }
-
-    public string TypeName { get; }
-
-    public string MemberName { get; }
-
-    public SourceSpan? TypeSpan { get; }
-
-    public SourceSpan? MemberSpan { get; }
-
-    public bool IsMalformed { get; }
+    public string TypeName { get; } = typeName;
+    public string? MemberName { get; } = memberName;
+    public SourceSpan? TypeSpan { get; } = typeSpan;
+    public SourceSpan? MemberSpan { get; } = memberSpan;
+    public bool IsMalformed { get; } = isMalformed;
 
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
@@ -45,16 +35,6 @@ internal class ComponentInjectIntermediateNode : ExtensionIntermediateNode
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
         if (TypeName == string.Empty && TypeSpan.HasValue && !context.Options.DesignTime)
         {
             // if we don't even have a type name, just emit an empty mapped region so that intellisense still works
@@ -62,10 +42,10 @@ internal class ComponentInjectIntermediateNode : ExtensionIntermediateNode
         }
         else
         {
-            var memberName = MemberName ?? "Member_" + DefaultTagHelperTargetExtension.GetDeterministicId(context);
-
             if (!context.Options.DesignTime || !IsMalformed)
             {
+                var memberName = MemberName ?? "Member_" + DefaultTagHelperTargetExtension.GetDeterministicId(context);
+
                 context.CodeWriter.WriteAutoPropertyDeclaration(
                     _injectedPropertyModifiers,
                     TypeName,

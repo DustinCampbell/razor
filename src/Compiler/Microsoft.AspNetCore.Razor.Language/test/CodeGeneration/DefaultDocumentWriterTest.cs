@@ -314,22 +314,13 @@ public class DefaultDocumentWriterTest
         // Arrange
         var document = new DocumentIntermediateNode();
         var builder = IntermediateNodeBuilder.Create(document);
-        builder.Add(new MethodDeclarationIntermediateNode()
-        {
-            Modifiers =
-                {
-                    "internal",
-                    "virtual",
-                    "async",
-                },
-            MethodName = "TestMethod",
-            Parameters =
-                {
-                    new MethodParameter(modifiers: ["readonly", "ref"], parameterName: "a", typeName: "int"),
-                    new MethodParameter(parameterName: "b", typeName: "string")
-                },
-            ReturnType = "string",
-        });
+        builder.Add(new MethodDeclarationIntermediateNode(
+            modifiers: ["internal", "virtual", "async"],
+            methodName: "TestMethod",
+            parameters: [
+                new(modifiers: ["readonly", "ref"], parameterName: "a", typeName: "int"),
+                new(parameterName: "b", typeName: "string")],
+            returnType: "string"));
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();
         var options = RazorCodeGenerationOptions.Default;

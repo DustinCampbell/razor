@@ -1,10 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
@@ -12,17 +10,52 @@ namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class MethodDeclarationIntermediateNode : MemberDeclarationIntermediateNode
 {
+    private ImmutableArray<string> _modifiers;
+    private ImmutableArray<MethodParameter> _parameters;
+
+    public ImmutableArray<string> Modifiers => _modifiers;
+    public string? MethodName { get; set; }
+    public ImmutableArray<MethodParameter> Parameters => _parameters;
+    public string? ReturnType { get; set; }
+    public bool IsPrimaryMethod { get; }
+
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
-    public IList<string> Modifiers { get; } = new List<string>();
+    public MethodDeclarationIntermediateNode(
+        ImmutableArray<string> modifiers,
+        string methodName,
+        ImmutableArray<MethodParameter> parameters,
+        string returnType)
+    {
+        _modifiers = modifiers.NullToEmpty();
+        _parameters = parameters.NullToEmpty();
+        MethodName = methodName;
+        ReturnType = returnType;
+    }
 
-    public string MethodName { get; set; }
+    private MethodDeclarationIntermediateNode(bool isPrimaryMethod)
+    {
+        _modifiers = [];
+        _parameters = [];
+        IsPrimaryMethod = isPrimaryMethod;
+    }
 
-    public IList<MethodParameter> Parameters { get; } = new List<MethodParameter>();
+    public static MethodDeclarationIntermediateNode CreatePrimary()
+        => new(isPrimaryMethod: true);
 
-    public string ReturnType { get; set; }
+    public void ClearModifiers() => SetModifiers([]);
 
-    public bool IsPrimaryMethod { get; set; }
+    public void SetModifiers(params ImmutableArray<string> modifiers)
+    {
+        _modifiers = modifiers.NullToEmpty();
+    }
+
+    public void ClearParameters() => SetParameters([]);
+
+    public void SetParameters(params ImmutableArray<MethodParameter> parameters)
+    {
+        _parameters = parameters.NullToEmpty();
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => visitor.VisitMethodDeclaration(this);
@@ -33,7 +66,7 @@ public sealed class MethodDeclarationIntermediateNode : MemberDeclarationInterme
 
         formatter.WriteProperty(nameof(MethodName), MethodName);
         formatter.WriteProperty(nameof(Modifiers), string.Join(", ", Modifiers));
-        formatter.WriteProperty(nameof(Parameters), string.Join(", ", Parameters.Select(FormatMethodParameter)));
+        formatter.WriteProperty(nameof(Parameters), string.Join(", ", Parameters, static p => FormatMethodParameter(p)));
         formatter.WriteProperty(nameof(ReturnType), ReturnType);
     }
 

@@ -60,10 +60,7 @@ public abstract class DocumentClassifierPassBase : IntermediateNodePassBase, IRa
             IsPrimaryClass = true
         };
 
-        var method = new MethodDeclarationIntermediateNode
-        {
-            IsPrimaryMethod = true
-        };
+        var method = MethodDeclarationIntermediateNode.CreatePrimary();
 
         var documentBuilder = IntermediateNodeBuilder.Create(documentNode);
 

@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -358,11 +356,18 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
         // Arrange
         var extension = new DefaultTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
-        {
-            BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
-            IsIndexerNameMatch = false,
-        };
+
+        // Note: DefaultTagHelperTargetExtension.RenderTagHelperAttributeInline() only uses
+        // the BoundAttribute and IsIndexerNameMatch properties.
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: null!,
+            fieldName: null!,
+            propertyName: null!,
+            attributeStructure: 0,
+            boundAttribute: IntPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: null!,
+            isIndexerNameMatch: false);
+
         var expectedLocation = new SourceSpan(100, 10);
         var expectedDiagnostic = RazorDiagnosticFactory.CreateTagHelper_CodeBlocksNotSupportedInAttributes(expectedLocation);
 
@@ -380,11 +385,18 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
         // Arrange
         var extension = new DefaultTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
-        {
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            IsIndexerNameMatch = true,
-        };
+
+        // Note: DefaultTagHelperTargetExtension.RenderTagHelperAttributeInline() only uses
+        // the BoundAttribute and IsIndexerNameMatch properties.
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: null!,
+            fieldName: null!,
+            propertyName: null!,
+            attributeStructure: 0,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: null!,
+            isIndexerNameMatch: true);
+
         var expectedLocation = new SourceSpan(100, 10);
         var expectedDiagnostic = RazorDiagnosticFactory.CreateTagHelper_InlineMarkupBlocksNotSupportedInAttributes(expectedLocation, "System.Int32");
 
@@ -402,11 +414,18 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
         // Arrange
         var extension = new DefaultTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
-        {
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            IsIndexerNameMatch = false,
-        };
+
+        // Note: DefaultTagHelperTargetExtension.RenderTagHelperAttributeInline() only uses
+        // the BoundAttribute and IsIndexerNameMatch properties.
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: null!,
+            fieldName: null!,
+            propertyName: null!,
+            attributeStructure: 0,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: null!,
+            isIndexerNameMatch: false);
+
         var expectedLocation = new SourceSpan(100, 10);
         var expectedDiagnostic = RazorDiagnosticFactory.CreateTagHelper_InlineMarkupBlocksNotSupportedInAttributes(
             expectedLocation,
@@ -428,15 +447,15 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "StringProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: StringPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: StringPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = StringPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "StringProp",
-            TagHelper = StringPropertyTagHelper,
             Children =
                 {
                     new HtmlContentIntermediateNode()
@@ -445,6 +464,7 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -469,15 +489,15 @@ __InputTagHelper.StringProp = ""value"";
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "StringProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: StringPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: StringPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = StringPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "StringProp",
-            TagHelper = StringPropertyTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -486,6 +506,7 @@ __InputTagHelper.StringProp = ""value"";
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -510,15 +531,15 @@ __InputTagHelper.StringProp = string.Empty;
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: IntPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "IntProp",
-            TagHelper = IntPropertyTagHelper,
             Source = Span,
             Children =
                 {
@@ -528,6 +549,7 @@ __InputTagHelper.StringProp = string.Empty;
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -560,24 +582,29 @@ __InputTagHelper.IntProp = 32;
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node1 = new DefaultTagHelperPropertyIntermediateNode()
+
+        // We only look at the attribute name here.
+        var node1 = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__OtherTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: 0,
+            boundAttribute: null!,
+            tagHelper: null!,
+            isIndexerNameMatch: false);
+
+        var node2 = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: IntPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            // We only look at the attribute name here.
-            AttributeName = "bound",
-            FieldName = "__OtherTagHelper",
-            PropertyName = "IntProp",
-        };
-        var node2 = new DefaultTagHelperPropertyIntermediateNode()
-        {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "IntProp",
-            TagHelper = IntPropertyTagHelper,
             Source = Span,
         };
+
         tagHelperNode.Children.Add(node1);
         tagHelperNode.Children.Add(node2);
         Push(context, tagHelperNode);
@@ -602,15 +629,15 @@ __InputTagHelper.IntProp = 32;
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: IntPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "IntProp",
-            TagHelper = IntPropertyTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -619,6 +646,7 @@ __InputTagHelper.IntProp = 32;
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -642,15 +670,16 @@ __InputTagHelper.IntProp = 32;
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "foo-bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntIndexer",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: IntIndexerTagHelper,
+            isIndexerNameMatch: true)
         {
-            AttributeName = "foo-bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = true,
-            PropertyName = "IntIndexer",
-            TagHelper = IntIndexerTagHelper,
             Source = Span,
             Children =
                 {
@@ -660,6 +689,7 @@ __InputTagHelper.IntProp = 32;
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -690,15 +720,15 @@ __InputTagHelper.IntIndexer[""bound""] = 32;
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "foo-bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntIndexer",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: IntIndexerTagHelper,
+            isIndexerNameMatch: true)
         {
-            AttributeName = "foo-bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = true,
-            PropertyName = "IntIndexer",
-            TagHelper = IntIndexerTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -707,6 +737,7 @@ __InputTagHelper.IntIndexer[""bound""] = 32;
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -730,15 +761,15 @@ __InputTagHelper.IntIndexer[""bound""] = 32;
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "StringProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: StringPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: StringPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = StringPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "StringProp",
-            TagHelper = StringPropertyTagHelper,
             Children =
                 {
                     new HtmlContentIntermediateNode()
@@ -747,6 +778,7 @@ __InputTagHelper.IntIndexer[""bound""] = 32;
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -776,15 +808,15 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.St
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: IntPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "IntProp",
-            TagHelper = IntPropertyTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -793,6 +825,7 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.St
                     }
                 },
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -827,24 +860,29 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.In
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node1 = new DefaultTagHelperPropertyIntermediateNode()
+
+        // We only look at the attribute name here.
+        var node1 = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__OtherTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: 0,
+            boundAttribute: null!,
+            tagHelper: null!,
+            isIndexerNameMatch: false);
+        
+        var node2 = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: IntPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            // We only look at the attribute name here.
-            AttributeName = "bound",
-            FieldName = "__OtherTagHelper",
-            PropertyName = "IntProp",
-        };
-        var node2 = new DefaultTagHelperPropertyIntermediateNode()
-        {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "IntProp",
-            TagHelper = IntPropertyTagHelper,
             Source = Span,
         };
+
         tagHelperNode.Children.Add(node1);
         tagHelperNode.Children.Add(node2);
         Push(context, tagHelperNode);
@@ -869,15 +907,15 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.In
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntProp",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntPropertyTagHelper.BoundAttributes.Single(),
+            tagHelper: IntPropertyTagHelper,
+            isIndexerNameMatch: false)
         {
-            AttributeName = "bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = false,
-            PropertyName = "IntProp",
-            TagHelper = IntPropertyTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -886,6 +924,7 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.In
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -910,15 +949,15 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.In
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "foo-bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntIndexer",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: IntIndexerTagHelper,
+            isIndexerNameMatch: true)
         {
-            AttributeName = "foo-bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = true,
-            PropertyName = "IntIndexer",
-            TagHelper = IntIndexerTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -927,6 +966,7 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.In
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -963,15 +1003,16 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""foo-bound"", __InputTagHelpe
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node1 = new DefaultTagHelperPropertyIntermediateNode()
+
+        var node1 = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "foo-first",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntIndexer",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: IntIndexerTagHelper,
+            isIndexerNameMatch: true)
         {
-            AttributeName = "foo-first",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = true,
-            PropertyName = "IntIndexer",
-            TagHelper = IntIndexerTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -980,15 +1021,16 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""foo-bound"", __InputTagHelpe
                     }
                 }
         };
-        var node2 = new DefaultTagHelperPropertyIntermediateNode()
+
+        var node2 = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "foo-bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntIndexer",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: IntIndexerTagHelper,
+            isIndexerNameMatch: true)
         {
-            AttributeName = "foo-bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = true,
-            PropertyName = "IntIndexer",
-            TagHelper = IntIndexerTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -997,6 +1039,7 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""foo-bound"", __InputTagHelpe
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node1);
         tagHelperNode.Children.Add(node2);
         Push(context, tagHelperNode);
@@ -1030,15 +1073,16 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""foo-bound"", __InputTagHelpe
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperPropertyIntermediateNode()
+
+        var node = new DefaultTagHelperPropertyIntermediateNode(
+            attributeName: "foo-bound",
+            fieldName: "__InputTagHelper",
+            propertyName: "IntIndexer",
+            attributeStructure: AttributeStructure.DoubleQuotes,
+            boundAttribute: IntIndexerTagHelper.BoundAttributes.Single(),
+            tagHelper: IntIndexerTagHelper,
+            isIndexerNameMatch: true)
         {
-            AttributeName = "foo-bound",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
-            FieldName = "__InputTagHelper",
-            IsIndexerNameMatch = true,
-            PropertyName = "IntIndexer",
-            TagHelper = IntIndexerTagHelper,
             Children =
                 {
                     new CSharpExpressionIntermediateNode()
@@ -1047,6 +1091,7 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""foo-bound"", __InputTagHelpe
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -1155,7 +1200,7 @@ private global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeMana
         string tagName,
         string typeName,
         string assemblyName,
-        IEnumerable<Action<BoundAttributeDescriptorBuilder>> attributes = null)
+        IEnumerable<Action<BoundAttributeDescriptorBuilder>>? attributes = null)
     {
         var builder = TagHelperDescriptorBuilder.Create(typeName, assemblyName);
         builder.Metadata(TypeName(typeName));

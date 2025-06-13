@@ -238,10 +238,8 @@ __tagHelperExecutionContext = __tagHelperScopeManager.End();
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperHtmlAttributeIntermediateNode()
+        var node = new DefaultTagHelperHtmlAttributeIntermediateNode("name", AttributeStructure.DoubleQuotes)
         {
-            AttributeName = "name",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
             Children =
                 {
                     new HtmlAttributeValueIntermediateNode()
@@ -254,6 +252,7 @@ __tagHelperExecutionContext = __tagHelperScopeManager.End();
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -278,10 +277,8 @@ Render Children
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperHtmlAttributeIntermediateNode()
+        var node = new DefaultTagHelperHtmlAttributeIntermediateNode("name", AttributeStructure.DoubleQuotes)
         {
-            AttributeName = "name",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
             Children =
                 {
                     new HtmlAttributeIntermediateNode()
@@ -290,6 +287,7 @@ Render Children
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -316,10 +314,8 @@ __tagHelperExecutionContext.AddHtmlAttribute(""name"", Html.Raw(__tagHelperStrin
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperHtmlAttributeIntermediateNode()
+        var node = new DefaultTagHelperHtmlAttributeIntermediateNode("name", AttributeStructure.DoubleQuotes)
         {
-            AttributeName = "name",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
             Children =
                 {
                     new HtmlAttributeValueIntermediateNode()
@@ -332,6 +328,7 @@ __tagHelperExecutionContext.AddHtmlAttribute(""name"", Html.Raw(__tagHelperStrin
                     }
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 

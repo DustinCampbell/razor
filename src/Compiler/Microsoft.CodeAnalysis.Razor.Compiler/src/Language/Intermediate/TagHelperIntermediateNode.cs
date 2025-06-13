@@ -1,41 +1,23 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
-public sealed class TagHelperIntermediateNode : IntermediateNode
+public sealed class TagHelperIntermediateNode(
+    string tagName,
+    TagMode tagMode,
+    ImmutableArray<TagHelperDescriptor> tagHelpers = default)
+    : IntermediateNode
 {
+    public string TagName { get; } = tagName;
+    public TagMode TagMode { get; } = tagMode;
+    public ImmutableArray<TagHelperDescriptor> TagHelpers { get; } = tagHelpers.NullToEmpty();
+
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
-
-    public TagMode TagMode { get; set; }
-
-    public string TagName { get; set; }
-
-    public IList<TagHelperDescriptor> TagHelpers { get; } = new List<TagHelperDescriptor>();
-
-    public TagHelperBodyIntermediateNode Body => Children.OfType<TagHelperBodyIntermediateNode>().SingleOrDefault();
-
-    public IEnumerable<TagHelperPropertyIntermediateNode> Properties
-    {
-        get
-        {
-            return Children.OfType<TagHelperPropertyIntermediateNode>();
-        }
-    }
-
-    public IEnumerable<TagHelperHtmlAttributeIntermediateNode> HtmlAttributes
-    {
-        get
-        {
-            return Children.OfType<TagHelperHtmlAttributeIntermediateNode>();
-        }
-    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => visitor.VisitTagHelper(this);
@@ -44,7 +26,7 @@ public sealed class TagHelperIntermediateNode : IntermediateNode
     {
         formatter.WriteContent(TagName);
 
-        formatter.WriteProperty(nameof(TagHelpers), string.Join(", ", TagHelpers.Select(t => t.DisplayName)));
+        formatter.WriteProperty(nameof(TagHelpers), string.Join(", ", TagHelpers, static t => t.DisplayName));
         formatter.WriteProperty(nameof(TagMode), TagMode.ToString());
         formatter.WriteProperty(nameof(TagName), TagName);
     }

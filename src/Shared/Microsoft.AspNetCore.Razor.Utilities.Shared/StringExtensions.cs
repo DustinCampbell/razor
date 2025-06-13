@@ -1,7 +1,9 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT license. See License.txt in the project root for license information.
 
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 #if !NET
 using Microsoft.AspNetCore.Razor;
@@ -553,6 +555,38 @@ internal static class StringExtensions
 #else
         return text.Length > 0 && text[^1] == value;
 #endif
+    }
+
+    extension(string)
+    {
+        public static string Join<T>(string? separator, ImmutableArray<T> values, Func<T, string> selector)
+            => Join(separator, values.AsSpan(), selector);
+
+        public static string Join<T>(string? separator, ReadOnlySpan<T> values, Func<T, string> selector)
+        {
+            if (values.IsEmpty)
+            {
+                return string.Empty;
+            }
+
+            var first = selector(values[0]);
+
+            if (values.Length == 1)
+            {
+                return first;
+            }
+
+            using var _ = StringBuilderPool.GetPooledObject(out var builder);
+            builder.Append(first);
+
+            for (var i = 1; i < values.Length; i++)
+            {
+                builder.Append(separator);
+                builder.Append(selector(values[i]));
+            }
+
+            return builder.ToString();
+        }
     }
 
 #if !NET

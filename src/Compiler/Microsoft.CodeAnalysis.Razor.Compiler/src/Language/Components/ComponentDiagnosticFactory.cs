@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -70,9 +71,15 @@ internal static class ComponentDiagnosticFactory
             "Multiple components use the tag '{0}'. Components: {1}",
             RazorDiagnosticSeverity.Error);
 
+    public static RazorDiagnostic Create_MultipleComponents(SourceSpan? span, string tagName, ImmutableArray<TagHelperDescriptor> components)
+    {
+        var componentNames = string.Join(", ", components, static c => c.DisplayName);
+        return RazorDiagnostic.Create(MultipleComponents, span, tagName, componentNames);
+    }
+
     public static RazorDiagnostic Create_MultipleComponents(SourceSpan? span, string tagName, IEnumerable<TagHelperDescriptor> components)
     {
-        var componentNames = string.Join(", ", components.Select(c => c.DisplayName));
+        var componentNames = string.Join(", ", components.Select(static c => c.DisplayName));
         return RazorDiagnostic.Create(MultipleComponents, span, tagName, componentNames);
     }
 

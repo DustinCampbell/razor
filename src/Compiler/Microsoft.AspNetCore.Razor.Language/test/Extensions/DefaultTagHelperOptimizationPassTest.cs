@@ -62,7 +62,6 @@ public class DefaultTagHelperOptimizationPassTest : RazorProjectEngineTestBase
         var create = Assert.IsType<DefaultTagHelperCreateIntermediateNode>(tagHelperNode.Children[1]);
         Assert.Equal("__TestTagHelper", create.FieldName);
         Assert.Equal("TestTagHelper", create.TypeName);
-        Assert.Equal(tagHelper, create.TagHelper);
 
         var property = Assert.IsType<DefaultTagHelperPropertyIntermediateNode>(tagHelperNode.Children[2]);
         Assert.Equal("foo", property.AttributeName);

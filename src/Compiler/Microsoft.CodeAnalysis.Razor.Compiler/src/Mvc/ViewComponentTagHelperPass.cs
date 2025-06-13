@@ -85,12 +85,9 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         }
 
         // Now i has the right insertion point.
-        node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode()
-        {
-            FieldName = context.GetFieldName(tagHelper),
-            TagHelper = tagHelper,
-            TypeName = context.GetFullyQualifiedName(tagHelper),
-        });
+        node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode(
+            fieldName: context.GetFieldName(tagHelper),
+            typeName: context.GetFullyQualifiedName(tagHelper)));
 
         // Now we need to rewrite any set property nodes to use the default runtime.
         for (i = 0; i < node.Children.Count; i++)

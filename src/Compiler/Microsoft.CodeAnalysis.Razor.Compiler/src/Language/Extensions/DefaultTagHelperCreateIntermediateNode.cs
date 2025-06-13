@@ -1,23 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
-public sealed class DefaultTagHelperCreateIntermediateNode : ExtensionIntermediateNode
+public sealed class DefaultTagHelperCreateIntermediateNode(string fieldName, string typeName) : ExtensionIntermediateNode
 {
-    public override IntermediateNodeCollection Children { get; } = IntermediateNodeCollection.ReadOnly;
+    public string FieldName { get; } = fieldName;
+    public string TypeName { get; } = typeName;
 
-    public string FieldName { get; set; }
-
-    public TagHelperDescriptor TagHelper { get; set; }
-
-    public string TypeName { get; set; }
+    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => AcceptExtensionNode(this, visitor);
@@ -37,7 +31,6 @@ public sealed class DefaultTagHelperCreateIntermediateNode : ExtensionIntermedia
         formatter.WriteContent(TypeName);
 
         formatter.WriteProperty(nameof(FieldName), FieldName);
-        formatter.WriteProperty(nameof(TagHelper), TagHelper?.DisplayName);
         formatter.WriteProperty(nameof(TypeName), TypeName);
     }
 }

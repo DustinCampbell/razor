@@ -1,29 +1,26 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
-
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
-public sealed class TagHelperDirectiveAttributeIntermediateNode : IntermediateNode
+public sealed class TagHelperDirectiveAttributeIntermediateNode(
+    string attributeName,
+    string originalAttributeName,
+    AttributeStructure attributeStructure,
+    BoundAttributeDescriptor boundAttribute,
+    TagHelperDescriptor tagHelper,
+    bool isIndexerNameMatch,
+    SourceSpan? originalAttributeSpan = null) : IntermediateNode
 {
+    public string AttributeName { get; } = attributeName;
+    public string OriginalAttributeName { get; } = originalAttributeName;
+    public SourceSpan? OriginalAttributeSpan { get; } = originalAttributeSpan;
+    public AttributeStructure AttributeStructure { get; } = attributeStructure;
+    public BoundAttributeDescriptor BoundAttribute { get; } = boundAttribute;
+    public TagHelperDescriptor TagHelper { get; } = tagHelper;
+    public bool IsIndexerNameMatch { get; } = isIndexerNameMatch;
+
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
-
-    public string AttributeName { get; set; }
-
-    public string OriginalAttributeName { get; set; }
-
-    public SourceSpan? OriginalAttributeSpan { get; set; }
-
-    public AttributeStructure AttributeStructure { get; set; }
-
-    public BoundAttributeDescriptor BoundAttribute { get; set; }
-
-    public TagHelperDescriptor TagHelper { get; set; }
-
-    public bool IsIndexerNameMatch { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => visitor.VisitTagHelperDirectiveAttribute(this);

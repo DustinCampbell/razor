@@ -1963,16 +1963,13 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                                 return;
                             }
 
-                            attributeNode = new TagHelperDirectiveAttributeIntermediateNode()
-                            {
-                                AttributeName = actualAttributeName,
-                                OriginalAttributeName = attributeName,
-                                BoundAttribute = associatedAttributeDescriptor,
-                                TagHelper = associatedDescriptor,
-                                AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
-                                Source = null,
-                                IsIndexerNameMatch = indexerMatch,
-                            };
+                            attributeNode = new TagHelperDirectiveAttributeIntermediateNode(
+                                attributeName: actualAttributeName,
+                                originalAttributeName: attributeName,
+                                attributeStructure: node.TagHelperAttributeInfo.AttributeStructure,
+                                boundAttribute: associatedAttributeDescriptor,
+                                tagHelper: associatedDescriptor,
+                                isIndexerNameMatch: indexerMatch);
                         }
 
                         _builder.Add(attributeNode);
@@ -2081,16 +2078,16 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                         }
                         else
                         {
-                            attributeNode = new TagHelperDirectiveAttributeIntermediateNode()
+                            attributeNode = new TagHelperDirectiveAttributeIntermediateNode(
+                                attributeName: actualAttributeName,
+                                originalAttributeName: attributeName,
+                                attributeStructure: node.TagHelperAttributeInfo.AttributeStructure,
+                                boundAttribute: associatedAttributeDescriptor,
+                                tagHelper: associatedDescriptor,
+                                isIndexerNameMatch: indexerMatch,
+                                originalAttributeSpan: BuildSourceSpanFromNode(node.Name))
                             {
-                                AttributeName = actualAttributeName,
-                                OriginalAttributeName = attributeName,
-                                BoundAttribute = associatedAttributeDescriptor,
-                                TagHelper = associatedDescriptor,
-                                AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
-                                Source = BuildSourceSpanFromNode(attributeValueNode),
-                                IsIndexerNameMatch = indexerMatch,
-                                OriginalAttributeSpan = BuildSourceSpanFromNode(node.Name)
+                                Source = BuildSourceSpanFromNode(attributeValueNode)
                             };
                         }
 

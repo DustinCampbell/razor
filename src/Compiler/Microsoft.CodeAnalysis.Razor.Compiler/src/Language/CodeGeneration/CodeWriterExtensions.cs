@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -365,7 +366,13 @@ internal static class CodeWriterExtensions
             .WriteEndMethodInvocation(endLine);
     }
 
-    public static CodeWriter WritePropertyDeclaration(this CodeWriter writer, IList<string> modifiers, IntermediateToken type, string propertyName, string propertyExpression, CodeRenderingContext context)
+    public static CodeWriter WritePropertyDeclaration(
+        this CodeWriter writer,
+        ImmutableArray<string> modifiers,
+        IntermediateToken type,
+        string propertyName,
+        string propertyExpression,
+        CodeRenderingContext context)
     {
         WritePropertyDeclarationPreamble(writer, modifiers, type.Content, propertyName, type.Source, propertySpan: null, context);
         writer.Write(" => ");
@@ -374,9 +381,8 @@ internal static class CodeWriterExtensions
         return writer;
     }
 
-    public static CodeWriter WriteAutoPropertyDeclaration(this CodeWriter writer, IList<string> modifiers, string typeName, string propertyName, SourceSpan? typeSpan = null, SourceSpan? propertySpan = null, CodeRenderingContext context = null, bool privateSetter = false, bool defaultValue = false)
+    public static CodeWriter WriteAutoPropertyDeclaration(this CodeWriter writer, ImmutableArray<string> modifiers, string typeName, string propertyName, SourceSpan? typeSpan = null, SourceSpan? propertySpan = null, CodeRenderingContext context = null, bool privateSetter = false, bool defaultValue = false)
     {
-        ArgHelper.ThrowIfNull(modifiers);
         ArgHelper.ThrowIfNull(typeName);
         ArgHelper.ThrowIfNull(propertyName);
 
@@ -398,11 +404,13 @@ internal static class CodeWriterExtensions
         return writer;
     }
 
-    private static void WritePropertyDeclarationPreamble(CodeWriter writer, IList<string> modifiers, string typeName, string propertyName, SourceSpan? typeSpan, SourceSpan? propertySpan, CodeRenderingContext context)
+    private static void WritePropertyDeclarationPreamble(CodeWriter writer, ImmutableArray<string> modifiers, string typeName, string propertyName, SourceSpan? typeSpan, SourceSpan? propertySpan, CodeRenderingContext context)
     {
-        for (var i = 0; i < modifiers.Count; i++)
+        modifiers = modifiers.NullToEmpty();
+
+        foreach (var modifier in modifiers)
         {
-            writer.Write(modifiers[i]);
+            writer.Write(modifier);
             writer.Write(" ");
         }
 

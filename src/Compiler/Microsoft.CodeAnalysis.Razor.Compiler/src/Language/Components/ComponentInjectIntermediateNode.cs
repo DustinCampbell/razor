@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -16,7 +16,7 @@ internal sealed class ComponentInjectIntermediateNode(
     bool isMalformed)
     : ExtensionIntermediateNode
 {
-    private static readonly IList<string> _injectedPropertyModifiers =
+    private static readonly ImmutableArray<string> s_injectedPropertyModifiers =
     [
         $"[global::{ComponentsApi.InjectAttribute.FullTypeName}]",
         "private" // Encapsulation is the default
@@ -47,7 +47,7 @@ internal sealed class ComponentInjectIntermediateNode(
                 var memberName = MemberName ?? "Member_" + DefaultTagHelperTargetExtension.GetDeterministicId(context);
 
                 context.CodeWriter.WriteAutoPropertyDeclaration(
-                    _injectedPropertyModifiers,
+                    s_injectedPropertyModifiers,
                     TypeName,
                     memberName,
                     TypeSpan,

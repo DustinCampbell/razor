@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -366,7 +364,7 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter();
 
         // Act
-        writer.WriteAutoPropertyDeclaration(new[] { "public" }, "global::System.String", "MyString");
+        writer.WriteAutoPropertyDeclaration(["public"], "global::System.String", "MyString");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -383,7 +381,7 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter();
 
         // Act
-        writer.WriteAutoPropertyDeclaration(new[] { "public", "static" }, "global::System.String", "MyString");
+        writer.WriteAutoPropertyDeclaration(["public", "static"], "global::System.String", "MyString");
 
         // Assert
         var output = writer.GetText().ToString();

@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.CodeAnalysis.Text;
@@ -422,17 +420,11 @@ public class DefaultDocumentWriterTest
         // Arrange
         var document = new DocumentIntermediateNode();
         var builder = IntermediateNodeBuilder.Create(document);
-        builder.Add(new PropertyDeclarationIntermediateNode()
-        {
-            Modifiers =
-                {
-                    "internal",
-                    "virtual",
-                },
-            PropertyName = "Foo",
-            PropertyType = IntermediateToken.CreateCSharpToken("string"),
-            PropertyExpression = "default"
-        });
+        builder.Add(new PropertyDeclarationIntermediateNode(
+            modifiers: ["internal", "virtual"],
+            propertyName: "Foo",
+            propertyType: IntermediateToken.CreateCSharpToken("string"),
+            propertyExpression: "default"));
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();
         var options = RazorCodeGenerationOptions.Default;

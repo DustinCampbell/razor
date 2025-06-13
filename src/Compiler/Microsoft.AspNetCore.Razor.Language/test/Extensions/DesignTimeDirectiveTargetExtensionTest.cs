@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Xunit;
@@ -49,6 +47,7 @@ private void __RazorDirectiveTokenHelpers__() {
             Content = "System.String",
             DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Type),
         };
+
         node.Children.Add(token);
 
         // Act
@@ -90,6 +89,7 @@ System.String __typeHelper = default!;
             Content = "System.Collections.Generic",
             DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Namespace),
         };
+
         node.Children.Add(token);
 
         // Act
@@ -131,6 +131,7 @@ global::System.Object __typeHelper = nameof(System.Collections.Generic);
             Content = "Foo",
             DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Member),
         };
+
         node.Children.Add(token);
 
         // Act
@@ -172,12 +173,14 @@ global::System.Object Foo = null!;
             Content = "Value",
             DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.String),
         };
+
         var tokenWithQuotedContent = new DirectiveTokenIntermediateNode()
         {
             Source = new SourceSpan("test.cshtml", 0, 0, 0, 5),
             Content = "\"Value\"",
             DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.String),
         };
+
         node.Children.Add(token);
         node.Children.Add(tokenWithQuotedContent);
 
@@ -230,6 +233,7 @@ global::System.Object __typeHelper = ""Value"";
             Content = "true",
             DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Boolean),
         };
+
         node.Children.Add(token);
 
         // Act
@@ -270,6 +274,7 @@ global::System.Boolean __typeHelper = true;
             Content = "Value",
             DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.String),
         };
+
         node.Children.Add(token);
 
         // Act

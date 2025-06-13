@@ -90,11 +90,7 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
             if (node.Children[i] is TagHelperBodyIntermediateNode bodyNode)
             {
                 // We only expect one body node.
-                node.Children[i] = new DefaultTagHelperBodyIntermediateNode(bodyNode)
-                {
-                    TagMode = node.TagMode,
-                    TagName = node.TagName,
-                };
+                node.Children[i] = new DefaultTagHelperBodyIntermediateNode(bodyNode, node.TagMode, node.TagName);
                 break;
             }
         }

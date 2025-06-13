@@ -1,42 +1,26 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
-public sealed class DefaultTagHelperBodyIntermediateNode : ExtensionIntermediateNode
+public sealed class DefaultTagHelperBodyIntermediateNode(TagMode tagMode, string tagName) : ExtensionIntermediateNode
 {
-    public DefaultTagHelperBodyIntermediateNode()
-    {
-    }
-
-    public DefaultTagHelperBodyIntermediateNode(TagHelperBodyIntermediateNode bodyNode)
-    {
-        if (bodyNode == null)
-        {
-            throw new ArgumentNullException(nameof(bodyNode));
-        }
-
-        Source = bodyNode.Source;
-
-        for (var i = 0; i < bodyNode.Children.Count; i++)
-        {
-            Children.Add(bodyNode.Children[i]);
-        }
-
-        AddDiagnosticsFromNode(bodyNode);
-    }
+    public TagMode TagMode { get; } = tagMode;
+    public string TagName { get; } = tagName;
 
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
-    public TagMode TagMode { get; set; }
+    public DefaultTagHelperBodyIntermediateNode(TagHelperBodyIntermediateNode node, TagMode tagMode, string tagName)
+        : this(tagMode, tagName)
+    {
+        Source = node.Source;
+        Children.AddRange(node.Children);
 
-    public string TagName { get; set; }
+        AddDiagnosticsFromNode(node);
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => AcceptExtensionNode(this, visitor);

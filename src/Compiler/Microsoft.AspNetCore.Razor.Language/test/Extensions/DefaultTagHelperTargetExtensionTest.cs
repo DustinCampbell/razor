@@ -62,13 +62,16 @@ public class DefaultTagHelperTargetExtensionTest : RazorProjectEngineTestBase
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperBodyIntermediateNode()
+
+        // Node: TagMode and TagName are not accessed for design-time.
+        var node = new DefaultTagHelperBodyIntermediateNode(tagMode: 0, tagName: null!)
         {
             Children =
                 {
                     new CSharpExpressionIntermediateNode(),
                 }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -92,15 +95,14 @@ public class DefaultTagHelperTargetExtensionTest : RazorProjectEngineTestBase
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperBodyIntermediateNode()
+        var node = new DefaultTagHelperBodyIntermediateNode(TagMode.SelfClosing, "p")
         {
             Children =
                 {
                     new CSharpExpressionIntermediateNode(),
-                },
-            TagMode = TagMode.SelfClosing,
-            TagName = "p",
+                }
         };
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 

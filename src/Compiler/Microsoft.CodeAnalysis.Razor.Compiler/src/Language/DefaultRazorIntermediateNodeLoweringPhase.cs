@@ -1114,15 +1114,12 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                         return;
                     }
 
-                    var setTagHelperProperty = new TagHelperPropertyIntermediateNode()
-                    {
-                        AttributeName = attributeName,
-                        BoundAttribute = associatedAttributeDescriptor,
-                        TagHelper = associatedDescriptor,
-                        AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
-                        Source = null,
-                        IsIndexerNameMatch = TagHelperMatchingConventions.SatisfiesBoundAttributeIndexer(associatedAttributeDescriptor, attributeName.AsSpan()),
-                    };
+                    var setTagHelperProperty = new TagHelperPropertyIntermediateNode(
+                        attributeName,
+                        node.TagHelperAttributeInfo.AttributeStructure,
+                        associatedAttributeDescriptor,
+                        associatedDescriptor,
+                        isIndexerNameMatch: TagHelperMatchingConventions.SatisfiesBoundAttributeIndexer(associatedAttributeDescriptor, attributeName.AsSpan()));
 
                     _builder.Add(setTagHelperProperty);
                 }
@@ -1163,14 +1160,14 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             {
                 foreach (var (associatedDescriptor, associatedAttributeDescriptor) in associatedDescriptorsWithSatisfyingAttribute)
                 {
-                    var setTagHelperProperty = new TagHelperPropertyIntermediateNode()
+                    var setTagHelperProperty = new TagHelperPropertyIntermediateNode(
+                        attributeName,
+                        node.TagHelperAttributeInfo.AttributeStructure,
+                        associatedAttributeDescriptor,
+                        associatedDescriptor,
+                        isIndexerNameMatch: TagHelperMatchingConventions.SatisfiesBoundAttributeIndexer(associatedAttributeDescriptor, attributeName.AsSpan()))
                     {
-                        AttributeName = attributeName,
-                        BoundAttribute = associatedAttributeDescriptor,
-                        TagHelper = associatedDescriptor,
-                        AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
                         Source = BuildSourceSpanFromNode(attributeValueNode),
-                        IsIndexerNameMatch = TagHelperMatchingConventions.SatisfiesBoundAttributeIndexer(associatedAttributeDescriptor, attributeName.AsSpan()),
                     };
 
                     _builder.Push(setTagHelperProperty);
@@ -1907,17 +1904,13 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                             return;
                         }
 
-                        var setTagHelperProperty = new TagHelperPropertyIntermediateNode()
-                        {
-                            AttributeName = attributeName,
-                            BoundAttribute = associatedAttributeDescriptor,
-                            TagHelper = associatedDescriptor,
-                            AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
-                            Source = null,
-                            IsIndexerNameMatch = indexerMatch,
-                        };
-
-                        setTagHelperProperty.OriginalAttributeSpan = BuildSourceSpanFromNode(node.Name);
+                        var setTagHelperProperty = new TagHelperPropertyIntermediateNode(
+                            attributeName,
+                            node.TagHelperAttributeInfo.AttributeStructure,
+                            associatedAttributeDescriptor,
+                            associatedDescriptor,
+                            indexerMatch,
+                            originalAttributeSpan: BuildSourceSpanFromNode(node.Name));
 
                         _builder.Add(setTagHelperProperty);
                     }
@@ -2048,17 +2041,16 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                         out _,
                         out _))
                     {
-                        var setTagHelperProperty = new TagHelperPropertyIntermediateNode()
+                        var setTagHelperProperty = new TagHelperPropertyIntermediateNode(
+                            attributeName,
+                            node.TagHelperAttributeInfo.AttributeStructure,
+                            associatedAttributeDescriptor,
+                            associatedDescriptor,
+                            indexerMatch,
+                            originalAttributeSpan: BuildSourceSpanFromNode(node.Name))
                         {
-                            AttributeName = attributeName,
-                            BoundAttribute = associatedAttributeDescriptor,
-                            TagHelper = associatedDescriptor,
-                            AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
-                            Source = BuildSourceSpanFromNode(attributeValueNode),
-                            IsIndexerNameMatch = indexerMatch,
+                            Source = BuildSourceSpanFromNode(attributeValueNode)
                         };
-
-                        setTagHelperProperty.OriginalAttributeSpan = BuildSourceSpanFromNode(node.Name);
 
                         _builder.Push(setTagHelperProperty);
                         VisitAttributeValue(attributeValueNode);

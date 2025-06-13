@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Xunit;
@@ -71,9 +69,9 @@ public class GenericTypeNameRewriterTest
         // Arrange
         var visitor = new GenericTypeNameRewriter(new Dictionary<string, ComponentTypeArgumentIntermediateNode>()
             {
-                { "TItem1", new ComponentTypeArgumentIntermediateNode(new() { Children = { IntermediateToken.CreateCSharpToken("Type1") } })},
-                { "TItem2", new ComponentTypeArgumentIntermediateNode(new() { Children = { IntermediateToken.CreateCSharpToken("Type2") } })},
-                { "TItem3", new ComponentTypeArgumentIntermediateNode(new() { Children = { IntermediateToken.CreateCSharpToken(null) } })},
+                { "TItem1", new ComponentTypeArgumentIntermediateNode(CreateTagHelperPropertyNode("Type1")) },
+                { "TItem2", new ComponentTypeArgumentIntermediateNode(CreateTagHelperPropertyNode("Type2")) },
+                { "TItem3", new ComponentTypeArgumentIntermediateNode(CreateTagHelperPropertyNode(null)) }
             });
 
         // Act
@@ -81,5 +79,13 @@ public class GenericTypeNameRewriterTest
 
         // Assert
         Assert.Equal(expected, actual.ToString());
+
+        static TagHelperPropertyIntermediateNode CreateTagHelperPropertyNode(string? content)
+        {
+            return new(attributeName: null!, attributeStructure: 0, boundAttribute: null!, tagHelper: null!)
+            {
+                Children = { IntermediateToken.CreateCSharpToken(content) }
+            };
+        }
     }
 }

@@ -1,33 +1,43 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
-
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class TagHelperDirectiveAttributeParameterIntermediateNode : IntermediateNode
 {
+    public string AttributeName { get; }
+    public string AttributeNameWithoutParameter { get; }
+    public string OriginalAttributeName { get; }
+    public SourceSpan? OriginalAttributeSpan { get; }
+    public AttributeStructure AttributeStructure { get; }
+    public BoundAttributeParameterDescriptor BoundAttributeParameter { get; }
+    public BoundAttributeDescriptor BoundAttribute { get; }
+    public TagHelperDescriptor TagHelper { get; }
+    public bool IsIndexerNameMatch { get; }
+
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
-    public string AttributeName { get; set; }
-
-    public string AttributeNameWithoutParameter { get; set; }
-
-    public string OriginalAttributeName { get; set; }
-
-    public AttributeStructure AttributeStructure { get; set; }
-
-    public BoundAttributeParameterDescriptor BoundAttributeParameter { get; set; }
-
-    public BoundAttributeDescriptor BoundAttribute { get; set; }
-
-    public TagHelperDescriptor TagHelper { get; set; }
-
-    public bool IsIndexerNameMatch { get; set; }
-
-    public SourceSpan? OriginalAttributeSpan { get; set; }
+    public TagHelperDirectiveAttributeParameterIntermediateNode(
+        string attributeName,
+        string attributeNameWithoutParameter,
+        string originalAttributeName,
+        AttributeStructure attributeStructure,
+        BoundAttributeParameterDescriptor boundAttributeParameter,
+        BoundAttributeDescriptor boundAttribute,
+        TagHelperDescriptor tagHelper,
+        bool isIndexerNameMatch,
+        SourceSpan? originalAttributeSpan = null)
+    {
+        AttributeName = attributeName;
+        AttributeNameWithoutParameter = attributeNameWithoutParameter;
+        OriginalAttributeName = originalAttributeName;
+        AttributeStructure = attributeStructure;
+        BoundAttributeParameter = boundAttributeParameter;
+        BoundAttribute = boundAttribute;
+        TagHelper = tagHelper;
+        IsIndexerNameMatch = isIndexerNameMatch;
+        OriginalAttributeSpan = originalAttributeSpan;
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => visitor.VisitTagHelperDirectiveAttributeParameter(this);

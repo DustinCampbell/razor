@@ -1944,18 +1944,15 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                                 return;
                             }
 
-                            attributeNode = new TagHelperDirectiveAttributeParameterIntermediateNode()
-                            {
-                                AttributeName = actualAttributeName,
-                                AttributeNameWithoutParameter = attributeNameWithoutParameter.ToString(),
-                                OriginalAttributeName = attributeName,
-                                BoundAttributeParameter = associatedAttributeParameterDescriptor,
-                                BoundAttribute = associatedAttributeDescriptor,
-                                TagHelper = associatedDescriptor,
-                                IsIndexerNameMatch = indexerMatch,
-                                AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
-                                Source = null,
-                            };
+                            attributeNode = new TagHelperDirectiveAttributeParameterIntermediateNode(
+                                attributeName: actualAttributeName,
+                                attributeNameWithoutParameter: attributeNameWithoutParameter.ToString(),
+                                originalAttributeName: attributeName,
+                                attributeStructure: node.TagHelperAttributeInfo.AttributeStructure,
+                                boundAttributeParameter: associatedAttributeParameterDescriptor,
+                                boundAttribute: associatedAttributeDescriptor,
+                                tagHelper: associatedDescriptor,
+                                isIndexerNameMatch: indexerMatch);
                         }
                         else
                         {
@@ -2068,18 +2065,18 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                         if (parameterMatch &&
                             TagHelperMatchingConventions.TryGetBoundAttributeParameter(actualAttributeName, out var attributeNameWithoutParameter))
                         {
-                            attributeNode = new TagHelperDirectiveAttributeParameterIntermediateNode()
+                            attributeNode = new TagHelperDirectiveAttributeParameterIntermediateNode(
+                                attributeName: actualAttributeName,
+                                attributeNameWithoutParameter: attributeNameWithoutParameter.ToString(),
+                                originalAttributeName: attributeName,
+                                attributeStructure: node.TagHelperAttributeInfo.AttributeStructure,
+                                boundAttributeParameter: associatedAttributeParameterDescriptor,
+                                boundAttribute: associatedAttributeDescriptor,
+                                tagHelper: associatedDescriptor,
+                                isIndexerNameMatch: indexerMatch,
+                                originalAttributeSpan: BuildSourceSpanFromNode(node.Name))
                             {
-                                AttributeName = actualAttributeName,
-                                AttributeNameWithoutParameter = attributeNameWithoutParameter.ToString(),
-                                OriginalAttributeName = attributeName,
-                                BoundAttributeParameter = associatedAttributeParameterDescriptor,
-                                BoundAttribute = associatedAttributeDescriptor,
-                                TagHelper = associatedDescriptor,
-                                IsIndexerNameMatch = indexerMatch,
-                                AttributeStructure = node.TagHelperAttributeInfo.AttributeStructure,
-                                Source = BuildSourceSpanFromNode(attributeValueNode),
-                                OriginalAttributeSpan = BuildSourceSpanFromNode(node.Name)
+                                Source = BuildSourceSpanFromNode(attributeValueNode)
                             };
                         }
                         else

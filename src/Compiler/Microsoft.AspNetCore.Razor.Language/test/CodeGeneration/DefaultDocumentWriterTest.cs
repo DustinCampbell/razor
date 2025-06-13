@@ -325,21 +325,8 @@ public class DefaultDocumentWriterTest
             MethodName = "TestMethod",
             Parameters =
                 {
-                    new MethodParameter()
-                    {
-                        Modifiers =
-                        {
-                            "readonly",
-                            "ref",
-                        },
-                        ParameterName = "a",
-                        TypeName = "int",
-                    },
-                    new MethodParameter()
-                    {
-                        ParameterName = "b",
-                        TypeName = "string",
-                    }
+                    new MethodParameter(modifiers: ["readonly", "ref"], parameterName: "a", typeName: "int"),
+                    new MethodParameter(parameterName: "b", typeName: "string")
                 },
             ReturnType = "string",
         });

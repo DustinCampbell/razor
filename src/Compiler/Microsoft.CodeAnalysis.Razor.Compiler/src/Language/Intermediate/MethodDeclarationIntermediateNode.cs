@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -39,10 +39,11 @@ public sealed class MethodDeclarationIntermediateNode : MemberDeclarationInterme
 
     private static string FormatMethodParameter(MethodParameter parameter)
     {
-        var builder = new StringBuilder();
-        for (var i = 0; i < parameter.Modifiers.Count; i++)
+        using var _ = StringBuilderPool.GetPooledObject(out var builder);
+
+        foreach (var modifier in parameter.Modifiers)
         {
-            builder.Append(parameter.Modifiers[i]);
+            builder.Append(modifier);
             builder.Append(' ');
         }
 

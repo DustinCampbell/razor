@@ -25,10 +25,7 @@ public class RuntimeNodeWriterTest : RazorProjectEngineTestBase
         var writer = new RuntimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new UsingDirectiveIntermediateNode()
-        {
-            Content = "System",
-        };
+        var node = new UsingDirectiveIntermediateNode("System");
 
         // Act
         writer.WriteUsingDirective(context, node);
@@ -49,9 +46,8 @@ public class RuntimeNodeWriterTest : RazorProjectEngineTestBase
         var writer = new RuntimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new UsingDirectiveIntermediateNode()
+        var node = new UsingDirectiveIntermediateNode("System")
         {
-            Content = "System",
             Source = new SourceSpan("test.cshtml", 0, 0, 0, 3)
         };
 
@@ -80,9 +76,8 @@ using System
         var writer = new RuntimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new UsingDirectiveIntermediateNode()
+        var node = new UsingDirectiveIntermediateNode("System")
         {
-            Content = "System",
             Source = new SourceSpan("test.cshtml", 0, 0, 0, 3),
             AppendLineDefaultAndHidden = true
         };

@@ -102,9 +102,8 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
         UsingDirectiveIntermediateNode lastDirective = null;
         foreach (var reference in usingReferences)
         {
-            var @using = new UsingDirectiveIntermediateNode()
+            var @using = new UsingDirectiveIntermediateNode(reference.Namespace)
             {
-                Content = reference.Namespace,
                 Source = reference.Source,
                 HasExplicitSemicolon = reference.HasExplicitSemicolon
             };

@@ -24,10 +24,7 @@ public class DesignTimeNodeWriterTest : RazorProjectEngineTestBase
         var writer = new DesignTimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
-        var node = new UsingDirectiveIntermediateNode()
-        {
-            Content = "System"
-        };
+        var node = new UsingDirectiveIntermediateNode("System");
 
         // Act
         writer.WriteUsingDirective(context, node);
@@ -51,9 +48,8 @@ public class DesignTimeNodeWriterTest : RazorProjectEngineTestBase
         var originalSpan = new SourceSpan("test.cshtml", 0, 0, 0, 6);
         var generatedSpan = new SourceSpan(null, 38 + Environment.NewLine.Length * 3, 3, 0, 6);
         var expectedSourceMapping = new SourceMapping(originalSpan, generatedSpan);
-        var node = new UsingDirectiveIntermediateNode()
+        var node = new UsingDirectiveIntermediateNode("System")
         {
-            Content = "System",
             Source = originalSpan
         };
 
@@ -87,9 +83,8 @@ using System;
         var originalSpan = new SourceSpan("test.cshtml", 0, 0, 0, 6);
         var generatedSpan = new SourceSpan(null, 38 + Environment.NewLine.Length * 3, 3, 0, 6);
         var expectedSourceMapping = new SourceMapping(originalSpan, generatedSpan);
-        var node = new UsingDirectiveIntermediateNode()
+        var node = new UsingDirectiveIntermediateNode("System")
         {
-            Content = "System",
             Source = originalSpan,
             AppendLineDefaultAndHidden = true
         };

@@ -126,7 +126,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
-        builder.Add(new UsingDirectiveIntermediateNode());
+        builder.Add(new UsingDirectiveIntermediateNode(null!));
 
         // Act
         ProjectEngine.ExecutePass<TestDocumentClassifierPass>(codeDocument, documentNode);

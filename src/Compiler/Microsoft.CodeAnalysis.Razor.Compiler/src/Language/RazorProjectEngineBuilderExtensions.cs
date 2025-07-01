@@ -115,8 +115,8 @@ public static class RazorProjectEngineBuilderExtensions
         ArgHelper.ThrowIfNull(builder);
         ArgHelper.ThrowIfNull(extension);
 
-        var targetExtensionFeature = builder.GetOrCreateFeature<IRazorTargetExtensionFeature, DefaultRazorTargetExtensionFeature>();
-        targetExtensionFeature.TargetExtensions.Add(extension);
+        var targetExtensionFeature = builder.GetOrCreateFeature<IRazorTargetExtensionFeature, RazorTargetExtensionFeature>();
+        targetExtensionFeature.AddTargetExtension(extension);
 
         return builder;
     }

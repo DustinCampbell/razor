@@ -373,9 +373,9 @@ public sealed class RazorProjectEngine
         features.Add(new EliminateMethodBodyPass());
 
         // Default Code Target Extensions
-        var targetExtensionFeature = new DefaultRazorTargetExtensionFeature();
+        var targetExtensionFeature = new RazorTargetExtensionFeature();
         features.Add(targetExtensionFeature);
-        targetExtensionFeature.TargetExtensions.Add(new DefaultTagHelperTargetExtension());
+        targetExtensionFeature.AddTargetExtension(new DefaultTagHelperTargetExtension());
 
         // Default configuration
         var configurationFeature = new DefaultDocumentClassifierPassFeature();

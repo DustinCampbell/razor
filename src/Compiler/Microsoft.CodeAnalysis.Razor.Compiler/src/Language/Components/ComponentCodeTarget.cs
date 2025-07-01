@@ -1,10 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
@@ -14,17 +11,17 @@ internal class ComponentCodeTarget : CodeTarget
     private readonly RazorCodeGenerationOptions _options;
     private readonly RazorLanguageVersion _version;
 
-    public ComponentCodeTarget(RazorCodeGenerationOptions options, RazorLanguageVersion version, IEnumerable<ICodeTargetExtension> extensions)
+    public ComponentCodeTarget(RazorCodeGenerationOptions options, RazorLanguageVersion version, ImmutableArray<ICodeTargetExtension> extensions)
     {
         _options = options;
         _version = version;
 
         // Components provide some built-in target extensions that don't apply to
         // legacy documents.
-        Extensions = new[] { new ComponentTemplateTargetExtension(), }.Concat(extensions).ToArray();
+        Extensions = [new ComponentTemplateTargetExtension(), .. extensions,];
     }
 
-    public ICodeTargetExtension[] Extensions { get; }
+    public ImmutableArray<ICodeTargetExtension> Extensions { get; }
 
     public override IntermediateNodeWriter CreateNodeWriter()
     {
@@ -35,24 +32,22 @@ internal class ComponentCodeTarget : CodeTarget
 
     public override TExtension GetExtension<TExtension>()
     {
-        for (var i = 0; i < Extensions.Length; i++)
+        foreach (var extension in Extensions)
         {
-            var match = Extensions[i] as TExtension;
-            if (match != null)
+            if (extension is TExtension match)
             {
                 return match;
             }
         }
 
-        return null;
+        return null!;
     }
 
     public override bool HasExtension<TExtension>()
     {
-        for (var i = 0; i < Extensions.Length; i++)
+        foreach (var extension in Extensions)
         {
-            var match = Extensions[i] as TExtension;
-            if (match != null)
+            if (extension is TExtension)
             {
                 return true;
             }

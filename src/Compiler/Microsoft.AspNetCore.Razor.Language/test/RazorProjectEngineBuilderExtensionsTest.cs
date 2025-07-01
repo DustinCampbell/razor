@@ -52,7 +52,7 @@ public class RazorProjectEngineBuilderExtensionsTest
     {
         // Arrange
         var builder = new RazorProjectEngineBuilder(RazorConfiguration.Default, Mock.Of<RazorProjectFileSystem>());
-        var codeTargetExtensionFeature = new DefaultRazorTargetExtensionFeature();
+        var codeTargetExtensionFeature = new RazorTargetExtensionFeature();
         builder.Features.Add(codeTargetExtensionFeature);
         var expectedExtension = Mock.Of<ICodeTargetExtension>();
 

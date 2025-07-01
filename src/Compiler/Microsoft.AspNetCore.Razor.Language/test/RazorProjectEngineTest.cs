@@ -76,7 +76,6 @@ public class RazorProjectEngineTest
             feature => Assert.IsType<DefaultDirectiveSyntaxTreePass>(feature),
             feature => Assert.IsType<DefaultDocumentClassifierPass>(feature),
             feature => Assert.IsType<DefaultDocumentClassifierPassFeature>(feature),
-            feature => Assert.IsType<DefaultRazorTargetExtensionFeature>(feature),
             feature => Assert.IsType<DefaultTagHelperOptimizationPass>(feature),
             feature => Assert.IsType<DesignTimeDirectivePass>(feature),
             feature => Assert.IsType<DirectiveRemovalOptimizationPass>(feature),
@@ -87,6 +86,7 @@ public class RazorProjectEngineTest
             feature => Assert.IsType<InheritsDirectivePass>(feature),
             feature => Assert.IsType<MetadataAttributePass>(feature),
             feature => Assert.IsType<PreallocatedTagHelperAttributeOptimizationPass>(feature),
+            feature => Assert.IsType<RazorTargetExtensionFeature>(feature),
             feature => Assert.IsType<ViewCssScopePass>(feature));
     }
 

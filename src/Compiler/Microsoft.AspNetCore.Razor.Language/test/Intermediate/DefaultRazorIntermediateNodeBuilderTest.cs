@@ -193,7 +193,7 @@ public class DefaultRazorIntermediateNodeBuilderTest
         // Arrange
         var builder = new DefaultRazorIntermediateNodeBuilder();
 
-        var document = new DocumentIntermediateNode();
+        var document = new DocumentIntermediateNode(RazorCodeGenerationOptions.Default);
         builder.Push(document);
 
         var node = new BasicIntermediateNode();

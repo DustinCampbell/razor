@@ -36,8 +36,8 @@ public abstract class DocumentClassifierPassBase : IntermediateNodePassBase, IRa
             return;
         }
 
-        documentNode.DocumentKind = DocumentKind;
-        documentNode.Target = CreateTarget(codeDocument, documentNode.Options);
+        documentNode.SetDocumentKind(DocumentKind);
+        documentNode.SetTarget(CreateTarget(codeDocument, documentNode.Options));
         if (documentNode.Target == null)
         {
             throw new InvalidOperationException($"{nameof(CreateTarget)} must return a non-null {nameof(CodeTarget)}.");

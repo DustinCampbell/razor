@@ -17,7 +17,7 @@ public class InheritsDirectivePassTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateCodeDocument("@inherits Hello<World[]>");
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         documentNode.Children.Add(new DirectiveIntermediateNode() { Directive = FunctionsDirective.Directive });
 
         // Act

@@ -28,7 +28,7 @@ public class SectionDirectivePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("@section Header { <p>Hello World</p> }");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var docuemntNode = new DocumentIntermediateNode();
+        var docuemntNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         docuemntNode.Children.Add(new DirectiveIntermediateNode() { Directive = SectionDirective.Directive, });
 
         // Act

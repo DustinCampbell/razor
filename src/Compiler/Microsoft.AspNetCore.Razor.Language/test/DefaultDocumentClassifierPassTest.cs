@@ -19,10 +19,9 @@ public class DefaultDocumentClassifierPassTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "ignore",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "ignore"
         };
 
         // Act
@@ -39,10 +38,7 @@ public class DefaultDocumentClassifierPassTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         // Act
         ProjectEngine.ExecutePass<DefaultDocumentClassifierPass>(codeDocument, documentNode);

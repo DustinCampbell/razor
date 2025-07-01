@@ -118,7 +118,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("ignored", filePath: "/Account/Manage/AddUser.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
         builder.Push(new DirectiveIntermediateNode()
@@ -154,7 +154,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("ignored", filePath: "/Account/Manage/AddUser.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
         // This will be ignored.
@@ -202,7 +202,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("ignored", filePath: "/Account/Manage-Info/Add+User.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
         builder.Push(new DirectiveIntermediateNode()
@@ -238,7 +238,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("ignored", filePath: "/Account/Manage/AddUser.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
         // This will be ignored.
@@ -286,7 +286,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("ignored", filePath: "/Account/Manage/AddUser.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
         builder.Push(new DirectiveIntermediateNode()
@@ -321,7 +321,7 @@ public class NamespaceDirectiveTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("ignored", filePath: "/Account/Manage/AddUser.cshtml");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
         builder.Push(new DirectiveIntermediateNode()

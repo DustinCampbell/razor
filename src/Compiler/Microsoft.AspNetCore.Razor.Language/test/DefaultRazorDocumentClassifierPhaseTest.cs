@@ -64,9 +64,9 @@ public class DefaultRazorDocumentClassifierPhaseTest
 
         // We're going to set up mocks to simulate a sequence of passes. We don't care about
         // what's in the nodes, we're just going to look at the identity via strict mocks.
-        var originalNode = new DocumentIntermediateNode();
-        var firstPassNode = new DocumentIntermediateNode();
-        var secondPassNode = new DocumentIntermediateNode();
+        var originalNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
+        var firstPassNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
+        var secondPassNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         codeDocument.SetDocumentNode(originalNode);
 
         var firstPass = new Mock<IRazorDocumentClassifierPass>(MockBehavior.Strict);

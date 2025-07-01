@@ -17,7 +17,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyDesignTimeCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -45,7 +45,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -79,7 +79,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -107,7 +107,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -138,7 +138,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -164,7 +164,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -209,7 +209,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -254,7 +254,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -279,7 +279,7 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 

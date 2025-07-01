@@ -24,7 +24,7 @@ public class FunctionsDirectivePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("@functions { var value = true; }");
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         documentNode.Children.Add(new DirectiveIntermediateNode() { Directive = FunctionsDirective.Directive });
 
         // Act

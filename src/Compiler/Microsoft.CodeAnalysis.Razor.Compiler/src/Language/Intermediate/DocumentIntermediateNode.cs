@@ -1,32 +1,50 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
-public sealed class DocumentIntermediateNode : IntermediateNode
+public sealed class DocumentIntermediateNode(RazorCodeGenerationOptions options) : IntermediateNode
 {
-    public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
+    private string? _documentKind;
+    private CodeTarget? _target;
 
-    public string DocumentKind { get; set; }
+    public override IntermediateNodeCollection Children { get; } = new();
 
-    public RazorCodeGenerationOptions Options { get; set; }
+    public RazorCodeGenerationOptions Options { get; } = options;
 
-    public CodeTarget Target { get; set; }
+    public string? DocumentKind
+    {
+        get => _documentKind;
+        init => _documentKind = value;
+    }
+
+    public CodeTarget? Target
+    {
+        get => _target;
+        init => _target = value;
+    }
+
+    public void SetDocumentKind(string documentKind)
+    {
+        Debug.Assert(!string.IsNullOrEmpty(documentKind), "DocumentKind must not be null or empty.");
+        Debug.Assert(_documentKind is null, "DocumentKind should only be set once.");
+
+        _documentKind = documentKind;
+    }
+
+    public void SetTarget(CodeTarget target)
+    {
+        Debug.Assert(target is not null, "Target must not be null.");
+        Debug.Assert(_target is null, "Target should only be set once.");
+
+        _target = target;
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitDocument(this);
-    }
+        => visitor.VisitDocument(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {

@@ -19,10 +19,9 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "ignore",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "ignore"
         };
 
         // Act
@@ -39,10 +38,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         // Act
         ProjectEngine.ExecutePass<TestDocumentClassifierPass>(codeDocument, documentNode, () => new() { ShouldMatch = false });
@@ -72,10 +68,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
 
         var codeDocument = projectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         ICodeTargetExtension[]? extensions = null;
 
@@ -96,10 +89,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         // Act
         ProjectEngine.ExecutePass<TestDocumentClassifierPass>(codeDocument, documentNode);
@@ -120,10 +110,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
         builder.Add(new UsingDirectiveIntermediateNode());
@@ -145,10 +132,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
         builder.Add(new HtmlContentIntermediateNode());
@@ -173,10 +157,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
         builder.Add(new HtmlContentIntermediateNode());
@@ -208,10 +189,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
         builder.Add(new HtmlContentIntermediateNode());

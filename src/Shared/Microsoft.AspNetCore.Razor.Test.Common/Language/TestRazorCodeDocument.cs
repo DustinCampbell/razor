@@ -9,6 +9,11 @@ public static class TestRazorCodeDocument
         => RazorCodeDocument.Create(
             source: TestRazorSourceDocument.Create(content: string.Empty));
 
+    public static RazorCodeDocument CreateEmpty(RazorCodeGenerationOptions codeGenerationOptions)
+        => RazorCodeDocument.Create(
+            source: TestRazorSourceDocument.Create(content: string.Empty),
+            codeGenerationOptions: codeGenerationOptions);
+
     public static RazorCodeDocument Create(string content, bool normalizeNewLines = false)
         => RazorCodeDocument.Create(
             source: TestRazorSourceDocument.Create(content, normalizeNewLines: normalizeNewLines));

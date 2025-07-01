@@ -30,10 +30,8 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
         // This might not have been set if there are no tag helpers.
         var tagHelperContext = codeDocument.GetTagHelperContext();
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
         var builder = IntermediateNodeBuilder.Create(documentNode);
-
-        documentNode.Options = codeDocument.CodeGenerationOptions;
 
         // The import documents should be inserted logically before the main document.
         var imports = codeDocument.GetImportSyntaxTrees();

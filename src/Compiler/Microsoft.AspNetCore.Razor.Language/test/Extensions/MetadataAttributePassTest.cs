@@ -18,7 +18,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         // Arrange
         var source = TestRazorSourceDocument.Create();
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         // Act
         ProjectEngine.ExecutePass<MetadataAttributePass>(codeDocument, documentNode);
@@ -42,10 +42,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create();
         var codeDocument = projectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode()
-        {
-            Options = codeDocument.CodeGenerationOptions
-        };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         // Act
         projectEngine.ExecutePass<MetadataAttributePass>(codeDocument, documentNode);
@@ -69,10 +66,9 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create();
         var codeDocument = projectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = ComponentDocumentClassifierPass.ComponentDocumentKind,
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = ComponentDocumentClassifierPass.ComponentDocumentKind
         };
 
         // Act
@@ -89,10 +85,9 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create();
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "test",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "test"
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -138,10 +133,9 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create();
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "test",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "test"
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -174,7 +168,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create();
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode();
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
         var @namespace = new NamespaceDeclarationIntermediateNode
@@ -207,10 +201,9 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("", RazorSourceDocumentProperties.Default);
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "test",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "test"
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -244,10 +237,9 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("", RazorSourceDocumentProperties.Create(null, "Foo\\Bar.cshtml"));
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "test",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "test"
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -292,10 +284,9 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var importSource = TestRazorSourceDocument.Create("@using System", RazorSourceDocumentProperties.Create(null, "Foo\\Import.cshtml"));
         var codeDocument = ProjectEngine.CreateCodeDocument(source, [importSource]);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "test",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "test"
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -352,10 +343,9 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         var importSource = TestRazorSourceDocument.Create("@using System", RazorSourceDocumentProperties.Create(null, "Foo\\Import.cshtml"));
         var codeDocument = projectEngine.CreateCodeDocument(source, [importSource]);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "test",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "test"
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);

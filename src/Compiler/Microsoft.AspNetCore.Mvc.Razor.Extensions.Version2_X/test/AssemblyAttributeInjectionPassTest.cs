@@ -16,7 +16,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         // Act
         ProjectEngine.ExecutePass<AssemblyAttributeInjectionPass>(codeDocument, documentNode);
@@ -30,7 +30,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
         var @namespace = new NamespaceDeclarationIntermediateNode()
@@ -54,7 +54,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
         var @namespace = new NamespaceDeclarationIntermediateNode() { Content = "SomeNamespace" };
@@ -73,7 +73,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions);
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
 
@@ -103,10 +103,9 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
     {
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = "Default",
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = "Default"
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -136,10 +135,9 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
         var source = TestRazorSourceDocument.Create("test", RazorSourceDocumentProperties.Create(filePath: null, relativePath: "/Views/Index.cshtml"));
         var codeDocument = ProjectEngine.CreateDesignTimeCodeDocument(source);
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind,
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -176,10 +174,9 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var expectedAttribute = "[assembly:global::Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute(@\"/Views/Index.cshtml\", typeof(SomeNamespace.SomeName))]";
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind,
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -223,10 +220,9 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var expectedAttribute = "[assembly:global::Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute(@\"/test/\"\"Index.cshtml\", typeof(SomeNamespace.SomeName))]";
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind,
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -271,10 +267,9 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var expectedAttribute = "[assembly:global::Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.RazorPageAttribute(@\"/Views/Index.cshtml\", typeof(SomeNamespace.SomeName), null)]";
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = RazorPageDocumentClassifierPass.RazorPageDocumentKind,
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = RazorPageDocumentClassifierPass.RazorPageDocumentKind
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);
@@ -327,10 +322,9 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         var expectedAttribute = "[assembly:global::Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute(@\"/test/\"\"Index.cshtml\", typeof(SomeNamespace.SomeName))]";
 
-        var documentNode = new DocumentIntermediateNode()
+        var documentNode = new DocumentIntermediateNode(codeDocument.CodeGenerationOptions)
         {
-            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind,
-            Options = codeDocument.CodeGenerationOptions
+            DocumentKind = MvcViewDocumentClassifierPass.MvcViewDocumentKind
         };
 
         var builder = IntermediateNodeBuilder.Create(documentNode);

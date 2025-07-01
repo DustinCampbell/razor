@@ -29,7 +29,7 @@ public sealed class CodeRenderingContext : IDisposable
     private IntermediateNodeVisitor? _visitor;
     public IntermediateNodeVisitor Visitor => _visitor.AssumeNotNull();
 
-    public string DocumentKind => _documentNode.DocumentKind;
+    public string? DocumentKind => _documentNode.DocumentKind;
 
     public CodeRenderingContext(
         IntermediateNodeWriter nodeWriter,

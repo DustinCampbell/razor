@@ -13,7 +13,7 @@ public class DocumentIntermediateNodeExtensionsTest
     public void FindPrimaryClass_FindsClassWithAnnotation()
     {
         // Arrange
-        var document = new DocumentIntermediateNode();
+        var document = new DocumentIntermediateNode(RazorCodeGenerationOptions.Default);
         var @class = new ClassDeclarationIntermediateNode
         {
             IsPrimaryClass = true
@@ -33,7 +33,7 @@ public class DocumentIntermediateNodeExtensionsTest
     public void FindPrimaryMethod_FindsMethodWithAnnotation()
     {
         // Arrange
-        var document = new DocumentIntermediateNode();
+        var document = new DocumentIntermediateNode(RazorCodeGenerationOptions.Default);
         var method = new MethodDeclarationIntermediateNode
         {
             IsPrimaryMethod = true
@@ -53,7 +53,7 @@ public class DocumentIntermediateNodeExtensionsTest
     public void FindPrimaryNamespace_FindsNamespaceWithAnnotation()
     {
         // Arrange
-        var document = new DocumentIntermediateNode();
+        var document = new DocumentIntermediateNode(RazorCodeGenerationOptions.Default);
         var @namespace = new NamespaceDeclarationIntermediateNode
         {
             IsPrimaryNamespace = true
@@ -76,7 +76,7 @@ public class DocumentIntermediateNodeExtensionsTest
         var directive = DirectiveDescriptor.CreateSingleLineDirective("test");
         var directive2 = DirectiveDescriptor.CreateSingleLineDirective("test");
 
-        var document = new DocumentIntermediateNode();
+        var document = new DocumentIntermediateNode(RazorCodeGenerationOptions.Default);
         var @namespace = new NamespaceDeclarationIntermediateNode();
 
         var builder = IntermediateNodeBuilder.Create(document);

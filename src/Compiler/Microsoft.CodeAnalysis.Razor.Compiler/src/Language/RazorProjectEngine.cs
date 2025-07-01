@@ -358,7 +358,6 @@ public sealed class RazorProjectEngine
 
         // General extensibility
         features.Add(new ConfigureDirectivesFeature());
-        features.Add(new DefaultMetadataIdentifierFeature());
 
         // Syntax Tree passes
         features.Add(new DefaultDirectiveSyntaxTreePass());

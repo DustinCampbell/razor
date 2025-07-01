@@ -5,26 +5,16 @@ using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
-public class DefaultMetadataIdentifierFeatureTest : RazorProjectEngineTestBase
+public class RazorSourceDocumentExtensionsTest
 {
-    protected override RazorLanguageVersion Version => RazorLanguageVersion.Latest;
-
-    protected override void ConfigureProjectEngine(RazorProjectEngineBuilder builder)
-    {
-        builder.Features.Add(new DefaultMetadataIdentifierFeature());
-    }
-
     [Fact]
     public void GetIdentifier_ReturnsNull_ForNullRelativePath()
     {
         // Arrange
         var source = TestRazorSourceDocument.Create("content", filePath: "Test.cshtml", relativePath: null);
-        var codeDocument = ProjectEngine.CreateCodeDocument(source);
-
-        Assert.True(ProjectEngine.Engine.TryGetFeature<IMetadataIdentifierFeature>(out var feature));
 
         // Act
-        var result = feature.GetIdentifier(codeDocument, source);
+        var result = source.GetIdentifier();
 
         // Assert
         Assert.Null(result);
@@ -35,12 +25,9 @@ public class DefaultMetadataIdentifierFeatureTest : RazorProjectEngineTestBase
     {
         // Arrange
         var source = TestRazorSourceDocument.Create("content", filePath: "Test.cshtml", relativePath: string.Empty);
-        var codeDocument = ProjectEngine.CreateCodeDocument(source);
-
-        Assert.True(ProjectEngine.Engine.TryGetFeature<IMetadataIdentifierFeature>(out var feature));
 
         // Act
-        var result = feature.GetIdentifier(codeDocument, source);
+        var result = source.GetIdentifier();
 
         // Assert
         Assert.Null(result);
@@ -55,13 +42,10 @@ public class DefaultMetadataIdentifierFeatureTest : RazorProjectEngineTestBase
     public void GetIdentifier_SanitizesRelativePath(string relativePath, string expected)
     {
         // Arrange
-        var sourceDocument = TestRazorSourceDocument.Create("content", filePath: "Test.cshtml", relativePath: relativePath);
-        var codeDocument = ProjectEngine.CreateCodeDocument(sourceDocument);
-
-        Assert.True(ProjectEngine.Engine.TryGetFeature<IMetadataIdentifierFeature>(out var feature));
+        var source = TestRazorSourceDocument.Create("content", filePath: "Test.cshtml", relativePath: relativePath);
 
         // Act
-        var result = feature.GetIdentifier(codeDocument, sourceDocument);
+        var result = source.GetIdentifier();
 
         // Assert
         Assert.Equal(expected, result);

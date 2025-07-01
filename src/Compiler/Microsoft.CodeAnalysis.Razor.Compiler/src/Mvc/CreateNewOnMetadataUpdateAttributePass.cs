@@ -3,7 +3,6 @@
 
 #nullable disable
 
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
@@ -34,8 +33,7 @@ internal sealed class CreateNewOnMetadataUpdateAttributePass : IntermediateNodeP
             return;
         }
 
-        var identifierFeature = Engine.GetFeatures<IMetadataIdentifierFeature>().First();
-        var identifier = identifierFeature.GetIdentifier(codeDocument, codeDocument.Source);
+        var identifier = codeDocument.Source.GetIdentifier();
 
         var metadataAttributeNode = new CreateNewOnMetadataUpdateAttributeIntermediateNode();
         // Metadata attributes need to be inserted right before the class declaration.

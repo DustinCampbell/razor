@@ -12,11 +12,6 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
 {
     protected override RazorLanguageVersion Version => RazorLanguageVersion.Latest;
 
-    protected override void ConfigureProjectEngine(RazorProjectEngineBuilder builder)
-    {
-        builder.Features.Add(new DefaultMetadataIdentifierFeature());
-    }
-
     [Fact]
     public void Execute_NullCodeGenerationOptions_Noops()
     {

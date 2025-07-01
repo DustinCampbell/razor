@@ -4,7 +4,6 @@
 #nullable disable
 
 using System;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.CodeAnalysis.Text;
@@ -15,14 +14,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 // meaningful information.
 internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizationPass
 {
-    private IMetadataIdentifierFeature _identifierFeature;
-
-    protected override void OnInitialized()
-    {
-        Engine.TryGetFeature(out _identifierFeature);
-        Debug.Assert(_identifierFeature is not null);
-    }
-
     protected override void ExecuteCore(RazorCodeDocument codeDocument, DocumentIntermediateNode documentNode)
     {
         if (documentNode.Options == null || documentNode.Options.SuppressMetadataAttributes)
@@ -61,10 +52,8 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
             return;
         }
 
-        Debug.Assert(_identifierFeature != null);
-
         var sourceDocument = codeDocument.Source;
-        var identifier = _identifierFeature.GetIdentifier(codeDocument, sourceDocument);
+        var identifier = sourceDocument.GetIdentifier();
         if (identifier == null)
         {
             // No identifier. Skip
@@ -124,7 +113,7 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
         {
             checksum = import.Text.GetChecksum();
             checksumAlgorithm = import.Text.ChecksumAlgorithm;
-            identifier = _identifierFeature.GetIdentifier(codeDocument, import);
+            identifier = import.GetIdentifier();
 
             if (checksum.IsEmpty || checksumAlgorithm is SourceHashAlgorithm.None || identifier == null)
             {

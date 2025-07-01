@@ -19,13 +19,11 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode()
-        {
-            AttributeName = "Foo",
-            Value = "Bar",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            VariableName = "MyProp"
-        };
+        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode(
+            variableName: "MyProp",
+            attributeName: "Foo",
+            value: "Bar",
+            attributeStructure: AttributeStructure.DoubleQuotes);
 
         // Act
         extension.WriteTagHelperHtmlAttributeValue(context, node);
@@ -46,23 +44,21 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode()
-        {
-            AttributeName = "Foo",
-            Value = "Bar",
-            AttributeStructure = AttributeStructure.Minimized,
-            VariableName = "_tagHelper1"
-        };
+        var node = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode(
+            variableName: "_tagHelper1",
+            attributeName: "Foo",
+            value: "Bar",
+            attributeStructure: AttributeStructure.Minimized);
 
         // Act
         extension.WriteTagHelperHtmlAttributeValue(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
+        var csharpText = context.CodeWriter.GetText().ToString();
         Assert.Equal(
 @"private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute _tagHelper1 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute(""Foo"");
 ",
-            csharp,
+            csharpText,
             ignoreLineEndingDifferences: true);
     }
 
@@ -74,10 +70,8 @@ public class PreallocatedAttributeTargetExtensionTest
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new PreallocatedTagHelperHtmlAttributeIntermediateNode()
-        {
-            VariableName = "_tagHelper1"
-        };
+        var node = new PreallocatedTagHelperHtmlAttributeIntermediateNode(variableName: "_tagHelper1");
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -100,13 +94,11 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new PreallocatedTagHelperPropertyValueIntermediateNode()
-        {
-            AttributeName = "Foo",
-            Value = "Bar",
-            AttributeStructure = AttributeStructure.DoubleQuotes,
-            VariableName = "_tagHelper1",
-        };
+        var node = new PreallocatedTagHelperPropertyValueIntermediateNode(
+            variableName: "_tagHelper1",
+            attributeName: "Foo",
+            value: "Bar",
+            attributeStructure: AttributeStructure.DoubleQuotes);
 
         // Act
         extension.WriteTagHelperPropertyValue(context, node);
@@ -127,26 +119,28 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "FooTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("FooTagHelper"));
+        var tagHelper = TagHelperDescriptorBuilder.Create(TagHelperConventions.DefaultKind, "FooTagHelper", "Test")
+            .Metadata(TypeName("FooTagHelper"))
+            .BoundAttributeDescriptor(attribute => attribute
+                .Name("Foo")
+                .TypeName("System.String")
+                .Metadata(PropertyName("FooProp")))
+            .Build();
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder);
-        builder
-            .Name("Foo")
-            .TypeName("System.String")
-            .Metadata(PropertyName("FooProp"));
-
-        var descriptor = builder.Build();
+        var boundAttribute = tagHelper.BoundAttributes[0];
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new PreallocatedTagHelperPropertyIntermediateNode()
-        {
-            AttributeName = descriptor.Name,
-            BoundAttribute = descriptor,
-            FieldName = "__FooTagHelper",
-            PropertyName = "FooProp",
-            VariableName = "_tagHelper1",
-        };
+
+        var node = new PreallocatedTagHelperPropertyIntermediateNode(
+            attributeName: boundAttribute.Name,
+            attributeStructure: 0,
+            boundAttribute: boundAttribute,
+            fieldName: "__FooTagHelper",
+            isIndexerNameMatch: false,
+            propertyName: "FooProp",
+            tagHelper,
+            variableName: "_tagHelper1");
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -170,29 +164,29 @@ __tagHelperExecutionContext.AddTagHelperAttribute(_tagHelper1);
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "FooTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("FooTagHelper"));
+        var tagHelper = TagHelperDescriptorBuilder.Create(TagHelperConventions.DefaultKind, "FooTagHelper", "Test")
+            .Metadata(TypeName("FooTagHelper"))
+            .BoundAttributeDescriptor(attribute => attribute
+                .Name("Foo")
+                .TypeName("System.Collections.Generic.Dictionary<System.String, System.String>")
+                .AsDictionaryAttribute("pre-", "System.String")
+                .Metadata(PropertyName("FooProp")))
+            .Build();
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder);
-        builder
-            .Name("Foo")
-            .TypeName("System.Collections.Generic.Dictionary<System.String, System.String>")
-            .AsDictionaryAttribute("pre-", "System.String")
-            .Metadata(PropertyName("FooProp"));
-
-        var descriptor = builder.Build();
+        var boundAttribute = tagHelper.BoundAttributes[0];
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new PreallocatedTagHelperPropertyIntermediateNode()
-        {
-            AttributeName = "pre-Foo",
-            FieldName = "__FooTagHelper",
-            VariableName = "_tagHelper1",
-            BoundAttribute = descriptor,
-            IsIndexerNameMatch = true,
-            PropertyName = "FooProp",
-            TagHelper = tagHelperBuilder.Build(),
-        };
+
+        var node = new PreallocatedTagHelperPropertyIntermediateNode(
+            attributeName: "pre-Foo",
+            attributeStructure: 0,
+            boundAttribute,
+            fieldName: "__FooTagHelper",
+            isIndexerNameMatch: true,
+            propertyName: "FooProp",
+            tagHelper,
+            variableName: "_tagHelper1");
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -220,40 +214,39 @@ __tagHelperExecutionContext.AddTagHelperAttribute(_tagHelper1);
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var tagHelperBuilder = new TagHelperDescriptorBuilder(TagHelperConventions.DefaultKind, "FooTagHelper", "Test");
-        tagHelperBuilder.Metadata(TypeName("FooTagHelper"));
+        var tagHelper = TagHelperDescriptorBuilder.Create(TagHelperConventions.DefaultKind, "FooTagHelper", "Test")
+            .Metadata(TypeName("FooTagHelper"))
+            .BoundAttributeDescriptor(attribute => attribute
+                .Name("Foo")
+                .TypeName("System.Collections.Generic.Dictionary<System.String, System.String>")
+                .AsDictionaryAttribute("pre-", "System.String")
+                .Metadata(PropertyName("FooProp")))
+            .Build();
 
-        var builder = new BoundAttributeDescriptorBuilder(tagHelperBuilder);
-        builder
-            .Name("Foo")
-            .TypeName("System.Collections.Generic.Dictionary<System.String, System.String>")
-            .AsDictionaryAttribute("pre-", "System.String")
-            .Metadata(PropertyName("FooProp"));
-
-        var boundAttribute = builder.Build();
-        var tagHelper = tagHelperBuilder.Build();
+        var boundAttribute = tagHelper.BoundAttributes[0];
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node1 = new PreallocatedTagHelperPropertyIntermediateNode()
-        {
-            AttributeName = "pre-Bar",
-            FieldName = "__FooTagHelper",
-            VariableName = "_tagHelper0s",
-            BoundAttribute = boundAttribute,
-            IsIndexerNameMatch = true,
-            PropertyName = "FooProp",
-            TagHelper = tagHelper,
-        };
-        var node2 = new PreallocatedTagHelperPropertyIntermediateNode()
-        {
-            AttributeName = "pre-Foo",
-            FieldName = "__FooTagHelper",
-            VariableName = "_tagHelper1",
-            BoundAttribute = boundAttribute,
-            IsIndexerNameMatch = true,
-            PropertyName = "FooProp",
-            TagHelper = tagHelper,
-        };
+
+        var node1 = new PreallocatedTagHelperPropertyIntermediateNode(
+            attributeName: "pre-Bar",
+            attributeStructure: 0,
+            boundAttribute,
+            fieldName: "__FooTagHelper",
+            isIndexerNameMatch: true,
+            propertyName: "FooProp",
+            tagHelper,
+            variableName: "_tagHelper0s");
+
+        var node2 = new PreallocatedTagHelperPropertyIntermediateNode(
+            attributeName: "pre-Foo",
+            attributeStructure: 0,
+            boundAttribute,
+            fieldName: "__FooTagHelper",
+            isIndexerNameMatch: true,
+            propertyName: "FooProp",
+            tagHelper,
+            variableName: "_tagHelper1");
+
         tagHelperNode.Children.Add(node1);
         tagHelperNode.Children.Add(node2);
         Push(context, tagHelperNode);

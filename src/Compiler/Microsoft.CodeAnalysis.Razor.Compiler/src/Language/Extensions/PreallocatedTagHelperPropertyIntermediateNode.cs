@@ -1,9 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -11,67 +8,51 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
 internal sealed class PreallocatedTagHelperPropertyIntermediateNode : ExtensionIntermediateNode
 {
-    public PreallocatedTagHelperPropertyIntermediateNode()
-    {
-    }
-
-    public PreallocatedTagHelperPropertyIntermediateNode(DefaultTagHelperPropertyIntermediateNode propertyNode)
-    {
-        if (propertyNode == null)
-        {
-            throw new ArgumentNullException(nameof(propertyNode));
-        }
-
-        AttributeName = propertyNode.AttributeName;
-        AttributeStructure = propertyNode.AttributeStructure;
-        BoundAttribute = propertyNode.BoundAttribute;
-        FieldName = propertyNode.FieldName;
-        IsIndexerNameMatch = propertyNode.IsIndexerNameMatch;
-        PropertyName = propertyNode.PropertyName;
-        Source = propertyNode.Source;
-        TagHelper = propertyNode.TagHelper;
-    }
-
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
-    public string AttributeName { get; set; }
+    public string AttributeName { get; }
+    public AttributeStructure AttributeStructure { get; }
+    public BoundAttributeDescriptor BoundAttribute { get; }
+    public string FieldName { get; }
+    public bool IsIndexerNameMatch { get; }
+    public string PropertyName { get; }
+    public TagHelperDescriptor TagHelper { get; }
+    public string VariableName { get; }
 
-    public AttributeStructure AttributeStructure { get; set; }
+    public PreallocatedTagHelperPropertyIntermediateNode(
+        string attributeName,
+        AttributeStructure attributeStructure,
+        BoundAttributeDescriptor boundAttribute,
+        string fieldName,
+        bool isIndexerNameMatch,
+        string propertyName,
+        TagHelperDescriptor tagHelper,
+        string variableName,
+        SourceSpan? source = null)
+    {
+        AttributeName = attributeName;
+        AttributeStructure = attributeStructure;
+        BoundAttribute = boundAttribute;
+        FieldName = fieldName;
+        IsIndexerNameMatch = isIndexerNameMatch;
+        PropertyName = propertyName;
+        TagHelper = tagHelper;
+        VariableName = variableName;
+        Source = source;
+    }
 
-    public BoundAttributeDescriptor BoundAttribute { get; set; }
-
-    public string FieldName { get; set; }
-
-    public bool IsIndexerNameMatch { get; set; }
-
-    public string PropertyName { get; set; }
-
-    public TagHelperDescriptor TagHelper { get; set; }
-
-    public string VariableName { get; set; }
+    public PreallocatedTagHelperPropertyIntermediateNode(DefaultTagHelperPropertyIntermediateNode propertyNode, string variableName)
+        : this(propertyNode.AttributeName, propertyNode.AttributeStructure, propertyNode.BoundAttribute,
+              propertyNode.FieldName, propertyNode.IsIndexerNameMatch, propertyNode.PropertyName,
+              propertyNode.TagHelper, variableName, propertyNode.Source)
+    {
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<PreallocatedTagHelperPropertyIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
         var extension = target.GetExtension<IPreallocatedAttributeTargetExtension>();
         if (extension == null)
         {

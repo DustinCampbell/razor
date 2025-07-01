@@ -1,42 +1,22 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
-internal sealed class PreallocatedTagHelperHtmlAttributeIntermediateNode : ExtensionIntermediateNode
+internal sealed class PreallocatedTagHelperHtmlAttributeIntermediateNode(string variableName) : ExtensionIntermediateNode
 {
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
-    public string VariableName { get; set; }
+    public string VariableName { get; } = variableName;
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<PreallocatedTagHelperHtmlAttributeIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
         var extension = target.GetExtension<IPreallocatedAttributeTargetExtension>();
         if (extension == null)
         {

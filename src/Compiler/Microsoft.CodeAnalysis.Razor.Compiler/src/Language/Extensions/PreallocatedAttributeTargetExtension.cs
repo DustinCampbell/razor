@@ -54,7 +54,7 @@ internal class PreallocatedAttributeTargetExtension : IPreallocatedAttributeTarg
 
     public void WriteTagHelperHtmlAttribute(CodeRenderingContext context, PreallocatedTagHelperHtmlAttributeIntermediateNode node)
     {
-        if (context.Parent as TagHelperIntermediateNode == null)
+        if (context.Parent is not TagHelperIntermediateNode)
         {
             var message = Resources.FormatIntermediateNodes_InvalidParentNode(node.GetType(), typeof(TagHelperIntermediateNode));
             throw new InvalidOperationException(message);

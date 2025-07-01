@@ -78,20 +78,16 @@ internal class PreallocatedTagHelperAttributeOptimizationPass : IntermediateNode
             {
                 var variableCount = _classDeclaration.Children.Count - _variableCountOffset;
                 var preAllocatedAttributeVariableName = PreAllocatedAttributeVariablePrefix + variableCount;
-                declaration = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode
-                {
-                    VariableName = preAllocatedAttributeVariableName,
-                    AttributeName = node.AttributeName,
-                    Value = plainTextValue,
-                    AttributeStructure = node.AttributeStructure,
-                };
+                declaration = new PreallocatedTagHelperHtmlAttributeValueIntermediateNode(
+                    variableName: preAllocatedAttributeVariableName,
+                    attributeName: node.AttributeName,
+                    value: plainTextValue,
+                    attributeStructure: node.AttributeStructure);
+
                 _classDeclaration.Children.Insert(_preallocatedDeclarationCount++, declaration);
             }
 
-            var addPreAllocatedAttribute = new PreallocatedTagHelperHtmlAttributeIntermediateNode
-            {
-                VariableName = declaration.VariableName,
-            };
+            var addPreAllocatedAttribute = new PreallocatedTagHelperHtmlAttributeIntermediateNode(declaration.VariableName);
 
             var nodeIndex = Parent.Children.IndexOf(node);
             Parent.Children[nodeIndex] = addPreAllocatedAttribute;
@@ -131,20 +127,16 @@ internal class PreallocatedTagHelperAttributeOptimizationPass : IntermediateNode
             {
                 var variableCount = _classDeclaration.Children.Count - _variableCountOffset;
                 var preAllocatedAttributeVariableName = PreAllocatedAttributeVariablePrefix + variableCount;
-                declaration = new PreallocatedTagHelperPropertyValueIntermediateNode()
-                {
-                    VariableName = preAllocatedAttributeVariableName,
-                    AttributeName = node.AttributeName,
-                    Value = plainTextValue,
-                    AttributeStructure = node.AttributeStructure,
-                };
+                declaration = new PreallocatedTagHelperPropertyValueIntermediateNode(
+                    variableName: preAllocatedAttributeVariableName,
+                    attributeName: node.AttributeName,
+                    value: plainTextValue,
+                    attributeStructure: node.AttributeStructure);
+
                 _classDeclaration.Children.Insert(_preallocatedDeclarationCount++, declaration);
             }
 
-            var setPreallocatedProperty = new PreallocatedTagHelperPropertyIntermediateNode(node)
-            {
-                VariableName = declaration.VariableName,
-            };
+            var setPreallocatedProperty = new PreallocatedTagHelperPropertyIntermediateNode(node, variableName: declaration.VariableName);
 
             var nodeIndex = Parent.Children.IndexOf(node);
             Parent.Children[nodeIndex] = setPreallocatedProperty;

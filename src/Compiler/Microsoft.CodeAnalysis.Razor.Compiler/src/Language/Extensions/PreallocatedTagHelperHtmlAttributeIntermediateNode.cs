@@ -1,8 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using static Microsoft.AspNetCore.Razor.Language.Extensions.Constants;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -17,14 +19,14 @@ internal sealed class PreallocatedTagHelperHtmlAttributeIntermediateNode(string 
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        var extension = target.GetExtension<IPreallocatedAttributeTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<IPreallocatedAttributeTargetExtension>(context);
-            return;
-        }
+        Debug.Assert(
+            context.Parent is TagHelperIntermediateNode,
+            message: Resources.FormatIntermediateNodes_InvalidParentNode(GetType(), typeof(TagHelperIntermediateNode)));
 
-        extension.WriteTagHelperHtmlAttribute(context, this);
+        context.CodeWriter
+            .WriteStartInstanceMethodInvocation(ExecutionContextVariableName, ExecutionContextAddHtmlAttributeMethodName)
+            .Write(VariableName)
+            .WriteEndMethodInvocation();
     }
 
     public override void FormatNode(IntermediateNodeFormatter formatter)

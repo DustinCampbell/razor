@@ -113,8 +113,7 @@ public class RazorProjectEngineTest
         Assert.Collection(
             extensions,
             extension => Assert.IsType<DefaultTagHelperTargetExtension>(extension),
-            extension => Assert.IsType<DesignTimeDirectiveTargetExtension>(extension),
-            extension => Assert.IsType<PreallocatedAttributeTargetExtension>(extension));
+            extension => Assert.IsType<DesignTimeDirectiveTargetExtension>(extension));
     }
 
     [Fact]

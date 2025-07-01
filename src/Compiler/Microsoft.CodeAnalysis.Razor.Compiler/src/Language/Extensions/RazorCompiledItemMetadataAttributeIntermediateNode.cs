@@ -11,8 +11,6 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 /// </summary>
 public sealed class RazorCompiledItemMetadataAttributeIntermediateNode : ExtensionIntermediateNode
 {
-    public const string AttributeName = "global::Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute";
-
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     /// <summary>
@@ -47,7 +45,7 @@ public sealed class RazorCompiledItemMetadataAttributeIntermediateNode : Extensi
         var writer = context.CodeWriter;
 
         // [assembly: global::...RazorCompiledItemAttribute(@"{Key}", @"{Value}")]
-        writer.Write($"[{AttributeName}(");
+        writer.Write($"[{Constants.RazorCompiledItemMetadataAttributeTypeName}(");
         writer.WriteStringLiteral(Key);
         writer.Write(", ");
 

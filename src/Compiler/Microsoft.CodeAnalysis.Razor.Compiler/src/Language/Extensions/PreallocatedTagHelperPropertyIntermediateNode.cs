@@ -1,8 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using static Microsoft.AspNetCore.Razor.Language.Extensions.Constants;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -53,14 +56,69 @@ internal sealed class PreallocatedTagHelperPropertyIntermediateNode : ExtensionI
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        var extension = target.GetExtension<IPreallocatedAttributeTargetExtension>();
-        if (extension == null)
+        Debug.Assert(
+            context.Parent is TagHelperIntermediateNode,
+            message: Resources.FormatIntermediateNodes_InvalidParentNode(GetType(), typeof(TagHelperIntermediateNode)));
+
+        var tagHelperNode = (TagHelperIntermediateNode)context.Parent;
+
+        // Ensure that the property we're trying to set has initialized its dictionary bound properties.
+        if (IsIndexerNameMatch && ReferenceEquals(FindFirstUseOfIndexer(tagHelperNode), this))
         {
-            ReportMissingCodeTargetExtension<IPreallocatedAttributeTargetExtension>(context);
-            return;
+            // Throw a reasonable Exception at runtime if the dictionary property is null.
+            context.CodeWriter.WriteLine($"if ({FieldName}.{PropertyName} == null)");
+
+            using (context.CodeWriter.BuildScope())
+            {
+                // System is in Host.NamespaceImports for all MVC scenarios. No need to generate FullName
+                // of InvalidOperationException type.
+                context.CodeWriter
+                    .Write("throw ")
+                    .WriteStartNewObject(nameof(InvalidOperationException))
+                    .WriteStartMethodInvocation(FormatInvalidIndexerAssignmentMethodName)
+                    .WriteStringLiteral(AttributeName)
+                    .WriteParameterSeparator()
+                    .WriteStringLiteral(TagHelper.GetTypeName())
+                    .WriteParameterSeparator()
+                    .WriteStringLiteral(PropertyName)
+                    .WriteEndMethodInvocation(endLine: false)   // End of method call
+                    .WriteEndMethodInvocation();   // End of new expression / throw statement
+            }
         }
 
-        extension.WriteTagHelperProperty(context, this);
+        context.CodeWriter.Write($"{FieldName}.{PropertyName}");
+
+        if (IsIndexerNameMatch && BoundAttribute.IndexerNamePrefix is string indexerNamePrefix)
+        {
+            var dictionaryKey = AttributeName.AsMemory()[indexerNamePrefix.Length..];
+            context.CodeWriter.Write($"[\"{dictionaryKey}\"]");
+        }
+
+        context.CodeWriter
+            .WriteLine($" = (string){VariableName}.Value;")
+            .WriteStartInstanceMethodInvocation(ExecutionContextVariableName, ExecutionContextAddTagHelperAttributeMethodName)
+            .Write(VariableName)
+            .WriteEndMethodInvocation();
+    }
+
+    private PreallocatedTagHelperPropertyIntermediateNode FindFirstUseOfIndexer(TagHelperIntermediateNode tagHelperNode)
+    {
+        Debug.Assert(tagHelperNode.Children.Contains(this));
+        Debug.Assert(IsIndexerNameMatch);
+
+        foreach (var child in tagHelperNode.Children)
+        {
+            if (child is PreallocatedTagHelperPropertyIntermediateNode otherPropertyNode &&
+                otherPropertyNode.TagHelper == TagHelper &&
+                otherPropertyNode.BoundAttribute == BoundAttribute &&
+                otherPropertyNode.IsIndexerNameMatch)
+            {
+                return otherPropertyNode;
+            }
+        }
+
+        // This is unreachable, we should find 'propertyNode' in the list of children.
+        return Assumed.Unreachable<PreallocatedTagHelperPropertyIntermediateNode>();
     }
 
     public override void FormatNode(IntermediateNodeFormatter formatter)

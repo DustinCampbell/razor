@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -11,8 +10,6 @@ internal sealed class RazorCompiledItemAttributeIntermediateNode(
     string typeName, string kind, string identifier)
     : ExtensionIntermediateNode
 {
-    public const string AttributeName = "global::Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute";
-
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     public string TypeName { get; } = typeName;
@@ -26,7 +23,7 @@ internal sealed class RazorCompiledItemAttributeIntermediateNode(
     {
         // [assembly: global::...RazorCompiledItem(typeof({TypeName}), @"{Kind}", @"{Identifier}")]
         context.CodeWriter.WriteLine($"""
-            [assembly: {AttributeName}(typeof({TypeName}), @"{Kind}", @"{Identifier}")]
+            [assembly: {Constants.RazorCompiledItemAttributeTypeName}(typeof({TypeName}), @"{Kind}", @"{Identifier}")]
             """);
     }
 

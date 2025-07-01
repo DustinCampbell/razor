@@ -377,7 +377,6 @@ public sealed class RazorProjectEngine
         var targetExtensionFeature = new DefaultRazorTargetExtensionFeature();
         features.Add(targetExtensionFeature);
         targetExtensionFeature.TargetExtensions.Add(new DefaultTagHelperTargetExtension());
-        targetExtensionFeature.TargetExtensions.Add(new PreallocatedAttributeTargetExtension());
         targetExtensionFeature.TargetExtensions.Add(new DesignTimeDirectiveTargetExtension());
 
         // Default configuration

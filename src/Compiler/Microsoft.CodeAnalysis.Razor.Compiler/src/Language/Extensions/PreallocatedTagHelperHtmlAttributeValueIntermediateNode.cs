@@ -3,6 +3,7 @@
 
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using static Microsoft.AspNetCore.Razor.Language.Extensions.Constants;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -22,14 +23,23 @@ internal sealed class PreallocatedTagHelperHtmlAttributeValueIntermediateNode(
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        var extension = target.GetExtension<IPreallocatedAttributeTargetExtension>();
-        if (extension == null)
+        context.CodeWriter
+            .Write($"private static readonly {TagHelperAttributeTypeName} {VariableName} = ")
+            .WriteStartNewObject(TagHelperAttributeTypeName)
+            .WriteStringLiteral(AttributeName);
+
+        if (AttributeStructure != AttributeStructure.Minimized)
         {
-            ReportMissingCodeTargetExtension<IPreallocatedAttributeTargetExtension>(context);
-            return;
+            context.CodeWriter
+                .WriteParameterSeparator()
+                .WriteStartNewObject(EncodedHtmlStringTypeName)
+                .WriteStringLiteral(Value)
+                .WriteEndMethodInvocation(endLine: false)
+                .WriteParameterSeparator()
+                .Write($"{HtmlAttributeValueStyleTypeName}.{AttributeStructure}");
         }
 
-        extension.WriteTagHelperHtmlAttributeValue(context, this);
+        context.CodeWriter.WriteEndMethodInvocation();
     }
 
     public override void FormatNode(IntermediateNodeFormatter formatter)

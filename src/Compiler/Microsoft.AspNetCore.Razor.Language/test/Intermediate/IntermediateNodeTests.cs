@@ -332,8 +332,278 @@ public class IntermediateNodeTests
             csharpText);
     }
 
+
+
     private static void Push(CodeRenderingContext context, TagHelperIntermediateNode node)
     {
         context.PushAncestor(node);
+    }
+    [Fact]
+    public void WriteDesignTimeDirective_NoChildren_WritesEmptyMethod_WithPragma()
+    {
+        // Arrange
+        using var context = TestCodeRenderingContext.CreateDesignTime();
+
+        var node = new DesignTimeDirectiveIntermediateNode();
+
+        // Act
+        node.WriteNode(target: null!, context);
+
+        // Assert
+        var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
+        Assert.Equal($$"""
+            #pragma warning disable 219
+            private void __RazorDirectiveTokenHelpers__() {
+            }
+            #pragma warning restore 219
+            """,
+            csharpText);
+    }
+
+    [Fact]
+    public void WriteDesignTimeDirective_WithTypeToken_WritesLambda()
+    {
+        // Arrange
+        using var context = TestCodeRenderingContext.CreateDesignTime();
+
+        var node = new DesignTimeDirectiveIntermediateNode();
+        var token = new DirectiveTokenIntermediateNode()
+        {
+            Source = new SourceSpan("test.cshtml", 0, 0, 0, 5),
+            Content = "System.String",
+            DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Type),
+        };
+
+        node.Children.Add(token);
+
+        // Act
+        node.WriteNode(target: null!, context);
+
+        // Assert
+        var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
+        Assert.Equal($$"""
+            #pragma warning disable 219
+            private void __RazorDirectiveTokenHelpers__() {
+            ((global::System.Action)(() => {
+            #nullable restore
+            #line 1 "test.cshtml"
+            System.String __typeHelper = default!;
+
+            #line default
+            #line hidden
+            #nullable disable
+            }
+            ))();
+            }
+            #pragma warning restore 219
+            """,
+            csharpText);
+    }
+
+    [Fact]
+    public void WriteDesignTimeDirective_WithNamespaceToken_WritesLambda()
+    {
+        // Arrange
+        using var context = TestCodeRenderingContext.CreateDesignTime();
+
+        var node = new DesignTimeDirectiveIntermediateNode();
+        var token = new DirectiveTokenIntermediateNode()
+        {
+            Source = new SourceSpan("test.cshtml", 0, 0, 0, 5),
+            Content = "System.Collections.Generic",
+            DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Namespace),
+        };
+
+        node.Children.Add(token);
+
+        // Act
+        node.WriteNode(target: null!, context);
+
+        // Assert
+        var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
+        Assert.Equal($$"""
+            #pragma warning disable 219
+            private void __RazorDirectiveTokenHelpers__() {
+            ((global::System.Action)(() => {
+            #nullable restore
+            #line 1 "test.cshtml"
+            global::System.Object __typeHelper = nameof(System.Collections.Generic);
+
+            #line default
+            #line hidden
+            #nullable disable
+            }
+            ))();
+            }
+            #pragma warning restore 219
+            """,
+            csharpText);
+    }
+
+    [Fact]
+    public void WriteDesignTimeDirective_WithMemberToken_WritesLambda()
+    {
+        // Arrange
+        using var context = TestCodeRenderingContext.CreateDesignTime();
+
+        var node = new DesignTimeDirectiveIntermediateNode();
+        var token = new DirectiveTokenIntermediateNode()
+        {
+            Source = new SourceSpan("test.cshtml", 0, 0, 0, 5),
+            Content = "Foo",
+            DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Member),
+        };
+
+        node.Children.Add(token);
+
+        // Act
+        node.WriteNode(target: null!, context);
+
+        // Assert
+        var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
+        Assert.Equal($$"""
+            #pragma warning disable 219
+            private void __RazorDirectiveTokenHelpers__() {
+            ((global::System.Action)(() => {
+            #nullable restore
+            #line 1 "test.cshtml"
+            global::System.Object Foo = null!;
+
+            #line default
+            #line hidden
+            #nullable disable
+            }
+            ))();
+            }
+            #pragma warning restore 219
+            """,
+            csharpText);
+    }
+
+    [Fact]
+    public void WriteDesignTimeDirective_WithStringToken_WritesLambda()
+    {
+        // Arrange
+        using var context = TestCodeRenderingContext.CreateDesignTime();
+
+        var node = new DesignTimeDirectiveIntermediateNode();
+        var token = new DirectiveTokenIntermediateNode()
+        {
+            Source = new SourceSpan("test.cshtml", 0, 0, 0, 5),
+            Content = "Value",
+            DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.String),
+        };
+
+        var tokenWithQuotedContent = new DirectiveTokenIntermediateNode()
+        {
+            Source = new SourceSpan("test.cshtml", 0, 0, 0, 5),
+            Content = "\"Value\"",
+            DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.String),
+        };
+
+        node.Children.Add(token);
+        node.Children.Add(tokenWithQuotedContent);
+
+        // Act
+        node.WriteNode(target: null!, context);
+
+        // Assert
+        var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
+        Assert.Equal($$"""
+            #pragma warning disable 219
+            private void __RazorDirectiveTokenHelpers__() {
+            ((global::System.Action)(() => {
+            #nullable restore
+            #line 1 "test.cshtml"
+            global::System.Object __typeHelper = "Value";
+
+            #line default
+            #line hidden
+            #nullable disable
+            }
+            ))();
+            ((global::System.Action)(() => {
+            #nullable restore
+            #line 1 "test.cshtml"
+            global::System.Object __typeHelper = "Value";
+
+            #line default
+            #line hidden
+            #nullable disable
+            }
+            ))();
+            }
+            #pragma warning restore 219
+            """,
+            csharpText);
+    }
+
+    [Fact]
+    public void WriteDesignTimeDirective_WithBooleanToken_WritesLambda()
+    {
+        // Arrange
+        using var context = TestCodeRenderingContext.CreateDesignTime();
+
+        var node = new DesignTimeDirectiveIntermediateNode();
+        var token = new DirectiveTokenIntermediateNode()
+        {
+            Source = new SourceSpan("test.cshtml", 0, 0, 0, 5),
+            Content = "true",
+            DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.Boolean),
+        };
+
+        node.Children.Add(token);
+
+        // Act
+        node.WriteNode(target: null!, context);
+
+        // Assert
+        var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
+        Assert.Equal($$"""
+            #pragma warning disable 219
+            private void __RazorDirectiveTokenHelpers__() {
+            ((global::System.Action)(() => {
+            #nullable restore
+            #line 1 "test.cshtml"
+            global::System.Boolean __typeHelper = true;
+
+            #line default
+            #line hidden
+            #nullable disable
+            }
+            ))();
+            }
+            #pragma warning restore 219
+            """,
+            csharpText);
+    }
+
+    [Fact]
+    public void WriteDesignTimeDirective_ChildrenWithNoSource_WritesEmptyMethod_WithPragma()
+    {
+        // Arrange
+        using var context = TestCodeRenderingContext.CreateDesignTime();
+
+        var node = new DesignTimeDirectiveIntermediateNode();
+        var token = new DirectiveTokenIntermediateNode()
+        {
+            Content = "Value",
+            DirectiveToken = DirectiveTokenDescriptor.CreateToken(DirectiveTokenKind.String),
+        };
+
+        node.Children.Add(token);
+
+        // Act
+        node.WriteNode(target: null!, context);
+
+        // Assert
+        var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
+        Assert.Equal($$"""
+            #pragma warning disable 219
+            private void __RazorDirectiveTokenHelpers__() {
+            }
+            #pragma warning restore 219
+            """,
+            csharpText);
     }
 }

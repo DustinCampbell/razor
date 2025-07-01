@@ -112,8 +112,7 @@ public class RazorProjectEngineTest
         var extensions = feature.TargetExtensions.OrderBy(f => f.GetType().Name).ToArray();
         Assert.Collection(
             extensions,
-            extension => Assert.IsType<DefaultTagHelperTargetExtension>(extension),
-            extension => Assert.IsType<DesignTimeDirectiveTargetExtension>(extension));
+            extension => Assert.IsType<DefaultTagHelperTargetExtension>(extension));
     }
 
     [Fact]

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
+using Microsoft.CodeAnalysis.Text;
 using Xunit;
 using static Microsoft.AspNetCore.Razor.Language.Extensions.MetadataAttributeTargetExtension;
 
@@ -16,12 +17,10 @@ public class MetadataAttributeTargetExtensionTest
         var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorCompiledItemAttributeIntermediateNode()
-        {
-            TypeName = "Foo.Bar",
-            Kind = "test",
-            Identifier = "Foo/Bar",
-        };
+        var node = new RazorCompiledItemAttributeIntermediateNode(
+            typeName: "Foo.Bar",
+            kind: "test",
+            identifier: "Foo/Bar");
 
         // Act
         extension.WriteRazorCompiledItemAttribute(context, node);
@@ -41,12 +40,10 @@ public class MetadataAttributeTargetExtensionTest
         var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorSourceChecksumAttributeIntermediateNode()
-        {
-            ChecksumAlgorithm = CodeAnalysis.Text.SourceHashAlgorithm.Sha256,
-            Checksum = [(byte)'t', (byte)'e', (byte)'s', (byte)'t'],
-            Identifier = "Foo/Bar",
-        };
+        var node = new RazorSourceChecksumAttributeIntermediateNode(
+            checksum: [(byte)'t', (byte)'e', (byte)'s', (byte)'t'],
+            checksumAlgorithm: SourceHashAlgorithm.Sha256,
+            identifier: "Foo/Bar");
 
         // Act
         extension.WriteRazorSourceChecksumAttribute(context, node);
@@ -66,11 +63,7 @@ public class MetadataAttributeTargetExtensionTest
         var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorCompiledItemMetadataAttributeIntermediateNode
-        {
-            Key = "key",
-            Value = "value",
-        };
+        var node = new RazorCompiledItemMetadataAttributeIntermediateNode(key: "key", value: "value");
 
         // Act
         extension.WriteRazorCompiledItemMetadataAttribute(context, node);
@@ -90,11 +83,7 @@ public class MetadataAttributeTargetExtensionTest
         var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var node = new RazorCompiledItemMetadataAttributeIntermediateNode
-        {
-            Key = "\"test\" key",
-            Value = @"""test"" value",
-        };
+        var node = new RazorCompiledItemMetadataAttributeIntermediateNode(key: @"""test"" key", value: @"""test"" value");
 
         // Act
         extension.WriteRazorCompiledItemMetadataAttribute(context, node);

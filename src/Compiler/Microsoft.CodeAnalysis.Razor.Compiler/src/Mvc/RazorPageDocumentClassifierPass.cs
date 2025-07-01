@@ -125,13 +125,12 @@ public class RazorPageDocumentClassifierPass : DocumentClassifierPassBase
             return;
         }
 
-        var metadataAttributeNode = new RazorCompiledItemMetadataAttributeIntermediateNode
-        {
-            Key = RouteTemplateKey,
-            Value = pageDirective.RouteTemplate,
-            Source = pageDirective.Source,
-            ValueStringSyntax = "Route"
-        };
+        var metadataAttributeNode = new RazorCompiledItemMetadataAttributeIntermediateNode(
+            key: RouteTemplateKey,
+            value: pageDirective.RouteTemplate,
+            valueStringSyntax: "Route",
+            source: pageDirective.Source);
+
         // Metadata attributes need to be inserted right before the class declaration.
         @namespace.Children.Insert(classIndex, metadataAttributeNode);
     }

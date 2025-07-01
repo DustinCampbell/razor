@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -60,7 +61,10 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
             return;
         }
 
-        var identifier = _identifierFeature?.GetIdentifier(codeDocument, codeDocument.Source);
+        Debug.Assert(_identifierFeature != null);
+
+        var sourceDocument = codeDocument.Source;
+        var identifier = _identifierFeature.GetIdentifier(codeDocument, sourceDocument);
         if (identifier == null)
         {
             // No identifier. Skip
@@ -68,29 +72,29 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
         }
 
         // [RazorCompiledItem] is an [assembly: ... ] attribute, so it needs to be applied at the global scope.
-        documentNode.Children.Insert(0, new RazorCompiledItemAttributeIntermediateNode()
-        {
-            TypeName = string.IsNullOrEmpty(@namespace.Content)
-                ? @class.ClassName
-                : @namespace.Content + "." + @class.ClassName,
-            Kind = documentNode.DocumentKind,
-            Identifier = identifier,
-        });
+        var compiledItemAttributeNode = new RazorCompiledItemAttributeIntermediateNode(
+            typeName: !@namespace.Content.IsNullOrEmpty()
+                ? $"{@namespace.Content}.{@class.ClassName}"
+                : @class.ClassName,
+            kind: documentNode.DocumentKind,
+            identifier);
+
+        documentNode.Children.Insert(0, compiledItemAttributeNode);
 
         // Now we need to add a [RazorSourceChecksum] for the source and for each import
         // these are class attributes, so we need to find the insertion point to put them
         // right before the class.
-        var insert = (int?)null;
+        var insert = -1;
         for (var j = 0; j < @namespace.Children.Count; j++)
         {
-            if (object.ReferenceEquals(@namespace.Children[j], @class))
+            if (ReferenceEquals(@namespace.Children[j], @class))
             {
                 insert = j;
                 break;
             }
         }
 
-        if (insert == null)
+        if (insert < 0)
         {
             // Can't find a place to put the attributes, just bail.
             return;
@@ -103,23 +107,18 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
         }
 
         // Checksum of the main source
-        var checksum = codeDocument.Source.Text.GetChecksum();
-        var checksumAlgorithm = codeDocument.Source.Text.ChecksumAlgorithm;
-        if (checksum == null || checksum.Length == 0 || checksumAlgorithm is CodeAnalysis.Text.SourceHashAlgorithm.None)
+        var checksum = sourceDocument.Text.GetChecksum();
+        var checksumAlgorithm = sourceDocument.Text.ChecksumAlgorithm;
+        if (checksum.IsEmpty || checksumAlgorithm is SourceHashAlgorithm.None)
         {
             // Don't generate anything unless we have all of the required information.
             return;
         }
 
-        @namespace.Children.Insert((int)insert++, new RazorSourceChecksumAttributeIntermediateNode()
-        {
-            Checksum = checksum,
-            ChecksumAlgorithm = checksumAlgorithm,
-            Identifier = identifier,
-        });
+        var sourceChecksumAttributeNode = new RazorSourceChecksumAttributeIntermediateNode(checksum, checksumAlgorithm, identifier);
+        @namespace.Children.Insert(insert++, sourceChecksumAttributeNode);
 
         // Now process the checksums of the imports
-        Debug.Assert(_identifierFeature != null);
 
         foreach (var import in codeDocument.Imports)
         {
@@ -127,18 +126,14 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
             checksumAlgorithm = import.Text.ChecksumAlgorithm;
             identifier = _identifierFeature.GetIdentifier(codeDocument, import);
 
-            if (checksum == null || checksum.Length == 0 || checksumAlgorithm == CodeAnalysis.Text.SourceHashAlgorithm.None || identifier == null)
+            if (checksum.IsEmpty || checksumAlgorithm is SourceHashAlgorithm.None || identifier == null)
             {
                 // It's ok to skip an import if we don't have all of the required information.
                 continue;
             }
 
-            @namespace.Children.Insert((int)insert++, new RazorSourceChecksumAttributeIntermediateNode()
-            {
-                Checksum = checksum,
-                ChecksumAlgorithm = checksumAlgorithm,
-                Identifier = identifier,
-            });
+            var importSourceChecksumAttributeNode = new RazorSourceChecksumAttributeIntermediateNode(checksum, checksumAlgorithm, identifier);
+            @namespace.Children.Insert(insert++, importSourceChecksumAttributeNode);
         }
     }
 }

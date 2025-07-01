@@ -2,19 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
-using static Microsoft.AspNetCore.Razor.Language.Extensions.MetadataAttributeTargetExtension;
 
-namespace Microsoft.AspNetCore.Razor.Language.Extensions;
+namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
-public class MetadataAttributeTargetExtensionTest
+public class IntermediateNodeTests
 {
     [Fact]
     public void WriteRazorCompiledItemAttribute_RendersCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorCompiledItemAttributeIntermediateNode(
@@ -23,12 +22,12 @@ public class MetadataAttributeTargetExtensionTest
             identifier: "Foo/Bar");
 
         // Act
-        extension.WriteRazorCompiledItemAttribute(context, node);
+        node.WriteNode(target: null!, context);
 
         // Assert
         var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
         Assert.Equal($"""
-            [assembly: {CompiledItemAttributeName}(typeof(Foo.Bar), @"test", @"Foo/Bar")]
+            [assembly: {RazorCompiledItemAttributeIntermediateNode.AttributeName}(typeof(Foo.Bar), @"test", @"Foo/Bar")]
             """,
             csharpText);
     }
@@ -37,7 +36,6 @@ public class MetadataAttributeTargetExtensionTest
     public void WriteRazorSourceChecksumAttribute_RendersCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorSourceChecksumAttributeIntermediateNode(
@@ -46,12 +44,12 @@ public class MetadataAttributeTargetExtensionTest
             identifier: "Foo/Bar");
 
         // Act
-        extension.WriteRazorSourceChecksumAttribute(context, node);
+        node.WriteNode(target: null!, context);
 
         // Assert
         var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
         Assert.Equal($"""
-            [{SourceChecksumAttributeName}(@"Sha256", @"74657374", @"Foo/Bar")]
+            [{RazorSourceChecksumAttributeIntermediateNode.AttributeName}(@"Sha256", @"74657374", @"Foo/Bar")]
             """,
             csharpText);
     }
@@ -60,18 +58,17 @@ public class MetadataAttributeTargetExtensionTest
     public void WriteRazorCompiledItemAttributeMetadata_RendersCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorCompiledItemMetadataAttributeIntermediateNode(key: "key", value: "value");
 
         // Act
-        extension.WriteRazorCompiledItemMetadataAttribute(context, node);
+        node.WriteNode(target: null!, context);
 
         // Assert
         var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
         Assert.Equal($"""
-            [{CompiledItemMetadataAttributeName}("key", "value")]
+            [{RazorCompiledItemMetadataAttributeIntermediateNode.AttributeName}("key", "value")]
             """,
             csharpText);
     }
@@ -80,19 +77,19 @@ public class MetadataAttributeTargetExtensionTest
     public void WriteRazorCompiledItemAttributeMetadata_EscapesKeysAndValuesCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorCompiledItemMetadataAttributeIntermediateNode(key: @"""test"" key", value: @"""test"" value");
 
         // Act
-        extension.WriteRazorCompiledItemMetadataAttribute(context, node);
+        node.WriteNode(target: null!, context);
 
         // Assert
         var csharpText = context.CodeWriter.GetText().ToString().TrimEnd();
         Assert.Equal($"""
-            [{CompiledItemMetadataAttributeName}("\"test\" key", "\"test\" value")]
+            [{RazorCompiledItemMetadataAttributeIntermediateNode.AttributeName}("\"test\" key", "\"test\" value")]
             """,
             csharpText);
     }
+
 }

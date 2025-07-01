@@ -114,7 +114,6 @@ public class RazorProjectEngineTest
             extensions,
             extension => Assert.IsType<DefaultTagHelperTargetExtension>(extension),
             extension => Assert.IsType<DesignTimeDirectiveTargetExtension>(extension),
-            extension => Assert.IsType<MetadataAttributeTargetExtension>(extension),
             extension => Assert.IsType<PreallocatedAttributeTargetExtension>(extension));
     }
 

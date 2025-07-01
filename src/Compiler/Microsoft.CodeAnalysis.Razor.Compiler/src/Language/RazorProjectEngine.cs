@@ -376,7 +376,6 @@ public sealed class RazorProjectEngine
         // Default Code Target Extensions
         var targetExtensionFeature = new DefaultRazorTargetExtensionFeature();
         features.Add(targetExtensionFeature);
-        targetExtensionFeature.TargetExtensions.Add(new MetadataAttributeTargetExtension());
         targetExtensionFeature.TargetExtensions.Add(new DefaultTagHelperTargetExtension());
         targetExtensionFeature.TargetExtensions.Add(new PreallocatedAttributeTargetExtension());
         targetExtensionFeature.TargetExtensions.Add(new DesignTimeDirectiveTargetExtension());

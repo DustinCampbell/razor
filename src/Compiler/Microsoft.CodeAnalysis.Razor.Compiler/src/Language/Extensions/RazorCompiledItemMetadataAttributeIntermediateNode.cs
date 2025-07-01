@@ -11,6 +11,8 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 /// </summary>
 public sealed class RazorCompiledItemMetadataAttributeIntermediateNode : ExtensionIntermediateNode
 {
+    public const string AttributeName = "global::Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute";
+
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     /// <summary>
@@ -42,14 +44,34 @@ public sealed class RazorCompiledItemMetadataAttributeIntermediateNode : Extensi
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        var extension = target.GetExtension<IMetadataAttributeTargetExtension>();
-        if (extension == null)
+        var writer = context.CodeWriter;
+
+        // [assembly: global::...RazorCompiledItemAttribute(@"{Key}", @"{Value}")]
+        writer.Write($"[{AttributeName}(");
+        writer.WriteStringLiteral(Key);
+        writer.Write(", ");
+
+        if (!context.Options.DesignTime && Source is SourceSpan source)
         {
-            ReportMissingCodeTargetExtension<IMetadataAttributeTargetExtension>(context);
-            return;
+            writer.WriteLine();
+
+            if (ValueStringSyntax is string valueString)
+            {
+                writer.WriteLine($"// language={valueString}");
+            }
+
+            using (writer.BuildEnhancedLinePragma(source, context))
+            {
+                context.AddSourceMappingFor(this);
+                writer.WriteStringLiteral(Value);
+            }
+        }
+        else
+        {
+            writer.WriteStringLiteral(Value);
         }
 
-        extension.WriteRazorCompiledItemMetadataAttribute(context, this);
+        writer.WriteLine(")]");
     }
 
     public override void FormatNode(IntermediateNodeFormatter formatter)

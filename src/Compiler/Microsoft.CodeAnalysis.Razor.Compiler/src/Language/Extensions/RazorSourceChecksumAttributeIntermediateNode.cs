@@ -12,6 +12,8 @@ internal sealed class RazorSourceChecksumAttributeIntermediateNode(
     ImmutableArray<byte> checksum, SourceHashAlgorithm checksumAlgorithm, string identifier)
     : ExtensionIntermediateNode
 {
+    public const string AttributeName = "global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute";
+
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     public ImmutableArray<byte> Checksum { get; } = checksum;
@@ -23,13 +25,9 @@ internal sealed class RazorSourceChecksumAttributeIntermediateNode(
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        var extension = target.GetExtension<IMetadataAttributeTargetExtension>();
-        if (extension == null)
-        {
-            ReportMissingCodeTargetExtension<IMetadataAttributeTargetExtension>(context);
-            return;
-        }
-
-        extension.WriteRazorSourceChecksumAttribute(context, this);
+        // [global::...RazorSourceChecksum(@"{ChecksumAlgorithm}", @"{Checksum}", @"{Identifier}")]
+        context.CodeWriter.WriteLine($"""
+            [{AttributeName}(@"{ChecksumAlgorithm.ToString()}", @"{ChecksumUtilities.BytesToString(Checksum)}", @"{Identifier}")]
+            """);
     }
 }

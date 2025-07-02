@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.CodeAnalysis.Text;
@@ -180,7 +178,7 @@ public class DefaultDocumentWriterTest
                 "internal"
             },
             BaseType = new BaseTypeWithModel("TestBase"),
-            Interfaces = [IntermediateToken.CreateCSharpToken("IFoo"), IntermediateToken.CreateCSharpToken("IBar")],
+            Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = new List<TypeParameter>
             {
                 new TypeParameter() { ParameterName = "TKey", },
@@ -227,7 +225,7 @@ public class DefaultDocumentWriterTest
                 "internal"
             },
             BaseType = new BaseTypeWithModel("TestBase"),
-            Interfaces = [IntermediateToken.CreateCSharpToken("IFoo"), IntermediateToken.CreateCSharpToken("IBar")],
+            Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = new List<TypeParameter>
             {
                 new TypeParameter() { ParameterName = "TKey", },
@@ -277,7 +275,7 @@ public class DefaultDocumentWriterTest
                     "internal"
                 },
             BaseType = new BaseTypeWithModel("TestBase"),
-            Interfaces = [IntermediateToken.CreateCSharpToken("IFoo"), IntermediateToken.CreateCSharpToken("IBar")],
+            Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = new List<TypeParameter>
                 {
                     new TypeParameter() { ParameterName = "TKey", Constraints = "where TKey : class" },
@@ -430,7 +428,7 @@ public class DefaultDocumentWriterTest
                     "virtual",
                 },
             PropertyName = "Foo",
-            PropertyType = IntermediateToken.CreateCSharpToken("string"),
+            PropertyType = IntermediateNodeFactory.CSharpToken("string"),
             PropertyExpression = "default"
         });
 

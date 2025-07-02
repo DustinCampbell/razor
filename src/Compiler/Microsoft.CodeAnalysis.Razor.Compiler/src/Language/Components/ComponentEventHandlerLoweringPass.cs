@@ -176,20 +176,11 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
         tokens.SetCapacityIfLarger(original.Length + 2);
 
         tokens.Add(
-            new IntermediateToken()
-            {
-                Content = $"global::{ComponentsApi.EventCallback.FactoryAccessor}.{ComponentsApi.EventCallbackFactory.CreateMethod}<{TypeNameHelper.GetGloballyQualifiedNameIfNeeded(eventArgsType)}>(this, ",
-                Kind = TokenKind.CSharp
-            });
+            IntermediateNodeFactory.CSharpToken($"global::{ComponentsApi.EventCallback.FactoryAccessor}.{ComponentsApi.EventCallbackFactory.CreateMethod}<{TypeNameHelper.GetGloballyQualifiedNameIfNeeded(eventArgsType)}>(this, "));
 
         tokens.AddRange(original);
 
-        tokens.Add(
-            new IntermediateToken()
-            {
-                Content = $")",
-                Kind = TokenKind.CSharp
-            });
+        tokens.Add(IntermediateNodeFactory.CSharpToken(")"));
 
         var attributeName = node.AttributeName;
 
@@ -246,7 +237,7 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
         {
             // See comments in TemplateDiagnosticPass
             node.AddDiagnostic(ComponentDiagnosticFactory.Create_TemplateInvalidLocation(template.Source));
-            return [new IntermediateToken() { Kind = TokenKind.CSharp, Content = string.Empty }];
+            return [IntermediateNodeFactory.CSharpToken(string.Empty)];
         }
 
         if (node.Children.Count == 1 && node.Children[0] is HtmlContentIntermediateNode htmlContentNode)
@@ -256,7 +247,7 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
             var tokens = htmlContentNode.FindDescendantNodes<IntermediateToken>();
 
             var content = "\"" + string.Join(string.Empty, tokens.Select(t => t.Content.Replace("\"", "\\\""))) + "\"";
-            return [new IntermediateToken() { Content = content, Kind = TokenKind.CSharp }];
+            return [IntermediateNodeFactory.CSharpToken(content)];
         }
 
         return node.FindDescendantNodes<IntermediateToken>();

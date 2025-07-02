@@ -1173,11 +1173,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
                 Children =
                     {
                         node.IdentifierToken,
-                        new IntermediateToken
-                        {
-                            Kind = TokenKind.CSharp,
-                            Content = $" = default({captureTypeName}){nullSuppression};"
-                        }
+                        IntermediateNodeFactory.CSharpToken($" = default({captureTypeName}){nullSuppression};")
                     }
             });
         }
@@ -1197,11 +1193,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
                     Children =
                         {
                             node.IdentifierToken,
-                            new IntermediateToken
-                            {
-                                Kind = TokenKind.CSharp,
-                                Content = $" = {refCaptureParamName};"
-                            }
+                            IntermediateNodeFactory.CSharpToken($" = {refCaptureParamName};")
                         }
                 });
             }
@@ -1216,21 +1208,13 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         {
             Children =
             {
-                new IntermediateToken
-                {
-                    Kind = TokenKind.CSharp,
-                    Content = $"{DesignTimeVariable} = (global::{ComponentsApi.IComponentRenderMode.FullTypeName})(" 
-                },
+                IntermediateNodeFactory.CSharpToken($"{DesignTimeVariable} = (global::{ComponentsApi.IComponentRenderMode.FullTypeName})("),
                 new CSharpCodeIntermediateNode
                 {
                     Source = node.Source,
                     Children = { node.Children[0] }
                 },
-                new IntermediateToken
-                {
-                    Kind = TokenKind.CSharp,
-                    Content = ");"
-                }
+                IntermediateNodeFactory.CSharpToken(");")
             }
         });
     }

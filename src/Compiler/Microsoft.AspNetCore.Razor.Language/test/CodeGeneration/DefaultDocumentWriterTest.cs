@@ -174,7 +174,7 @@ public class DefaultDocumentWriterTest
         {
             Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
-            Interfaces = [IntermediateToken.CreateCSharpToken("IFoo"), IntermediateToken.CreateCSharpToken("IBar")],
+            Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = [
                 new TypeParameter("TKey"),
                 new TypeParameter("TValue")
@@ -217,7 +217,7 @@ public class DefaultDocumentWriterTest
         {
             Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
-            Interfaces = [IntermediateToken.CreateCSharpToken("IFoo"), IntermediateToken.CreateCSharpToken("IBar")],
+            Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = [
                 new TypeParameter("TKey"),
                 new TypeParameter("TValue")
@@ -263,7 +263,7 @@ public class DefaultDocumentWriterTest
         {
             Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
-            Interfaces = [IntermediateToken.CreateCSharpToken("IFoo"), IntermediateToken.CreateCSharpToken("IBar")],
+            Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = [
                 new TypeParameter("TKey", constraints: "where TKey : class"),
                 new TypeParameter("TValue", constraints: "where TValue : class")
@@ -384,7 +384,7 @@ public class DefaultDocumentWriterTest
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Add(new PropertyDeclarationIntermediateNode(
             propertyName: "Foo",
-            propertyType: IntermediateToken.CreateCSharpToken("string"),
+            propertyType: IntermediateNodeFactory.CSharpToken("string"),
             propertyExpression: "default",
             modifiers: ["internal", "virtual"]));
 

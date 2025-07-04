@@ -246,7 +246,7 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
             // an expression.
             var tokens = htmlContentNode.FindDescendantNodes<IntermediateToken>();
 
-            var content = "\"" + string.Join(string.Empty, tokens.Select(t => t.Content.Replace("\"", "\\\""))) + "\"";
+            var content = "\"" + string.Join(string.Empty, tokens.Select(t => t.Content.ToString().Replace("\"", "\\\""))) + "\"";
             return [IntermediateNodeFactory.CSharpToken(content)];
         }
 

@@ -88,15 +88,14 @@ internal class ComponentMarkupEncodingPass : ComponentIntermediateNodePassBase, 
             for (var i = 0; i < node.Children.Count; i++)
             {
                 var child = node.Children[i];
-                if (!(child is IntermediateToken token) || !token.IsHtml || string.IsNullOrEmpty(token.Content))
+                if (!(child is IntermediateToken token) || !token.IsHtml || Content.IsNullOrEmpty(token.Content))
                 {
                     // We only care about Html tokens.
                     continue;
                 }
 
-                for (var j = 0; j < token.Content.Length; j++)
+                foreach (var ch in token.Content)
                 {
-                    var ch = token.Content[j];
                     // ASCII range is 0 - 127
                     if (ch > 127 || EncodedCharacters.Contains(ch))
                     {
@@ -112,13 +111,13 @@ internal class ComponentMarkupEncodingPass : ComponentIntermediateNodePassBase, 
             for (var i = 0; i < node.Children.Count; i++)
             {
                 var child = node.Children[i];
-                if (!(child is IntermediateToken token) || !token.IsHtml || string.IsNullOrEmpty(token.Content))
+                if (!(child is IntermediateToken token) || !token.IsHtml || Content.IsNullOrEmpty(token.Content))
                 {
                     // We only care about Html tokens.
                     continue;
                 }
 
-                if (TryDecodeHtmlEntities(token.Content, out var decoded))
+                if (TryDecodeHtmlEntities(token.Content.ToString(), out var decoded))
                 {
                     decodedContent[i] = decoded;
                 }
@@ -134,7 +133,7 @@ internal class ComponentMarkupEncodingPass : ComponentIntermediateNodePassBase, 
             for (var i = 0; i < node.Children.Count; i++)
             {
                 var child = node.Children[i];
-                if (!(child is IntermediateToken token) || !token.IsHtml || string.IsNullOrEmpty(token.Content))
+                if (!(child is IntermediateToken token) || !token.IsHtml || Content.IsNullOrEmpty(token.Content))
                 {
                     // We only care about Html tokens.
                     continue;

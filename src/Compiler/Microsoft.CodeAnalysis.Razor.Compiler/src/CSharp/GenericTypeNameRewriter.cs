@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
-using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -66,7 +65,7 @@ internal class GenericTypeNameRewriter : TypeNameRewriter
                     // compared to leaving the type parameter in place.
                     //
                     // We add our own diagnostics for missing/invalid type parameters anyway.
-                    var replacement = binding?.Value?.Content ?? "object";
+                    var replacement = binding?.Value?.Content.ToString() ?? "object";
                     return identifier.Update(SyntaxFactory.Identifier(replacement).WithTriviaFrom(identifier.Identifier));
                 }
             }

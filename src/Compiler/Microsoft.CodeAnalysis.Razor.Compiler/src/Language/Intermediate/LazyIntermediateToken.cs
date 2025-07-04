@@ -12,7 +12,7 @@ internal class LazyIntermediateToken : IntermediateToken
     public object FactoryArgument { get; set; }
     public Func<object, string> ContentFactory { get; set; }
 
-    public override string Content
+    public override Content Content
     {
         get
         {

@@ -42,7 +42,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         for (var i = 0; i < node.Children.Count; i++)
         {
             var token = node.Children[i] as IntermediateToken;
-            if (token == null || !string.IsNullOrWhiteSpace(token.Content))
+            if (token == null || !Content.IsNullOrWhiteSpace(token.Content))
             {
                 isWhitespaceStatement = false;
                 break;

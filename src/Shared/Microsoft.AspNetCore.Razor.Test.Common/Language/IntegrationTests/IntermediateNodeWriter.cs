@@ -39,7 +39,7 @@ public class IntermediateNodeWriter :
 
     public override void VisitClassDeclaration(ClassDeclarationIntermediateNode node)
     {
-        var entries = new List<string>()
+        var entries = new List<Content>()
         {
             string.Join(" ", node.Modifiers),
             node.ClassName,
@@ -178,12 +178,12 @@ public class IntermediateNodeWriter :
 
     public override void VisitReferenceCapture(ReferenceCaptureIntermediateNode node)
     {
-        WriteContentNode(node, node.IdentifierToken?.Content);
+        WriteContentNode(node, node.IdentifierToken?.Content ?? Content.Empty);
     }
 
     public override void VisitSetKey(SetKeyIntermediateNode node)
     {
-        WriteContentNode(node, node.KeyValueToken?.Content);
+        WriteContentNode(node, node.KeyValueToken?.Content ?? Content.Empty);
     }
 
     public override void VisitPropertyDeclaration(PropertyDeclarationIntermediateNode node)
@@ -246,7 +246,7 @@ public class IntermediateNodeWriter :
         WriteSourceRange(node);
     }
 
-    protected void WriteContentNode(IntermediateNode node, params string[] content)
+    protected void WriteContentNode(IntermediateNode node, params Content[] content)
     {
         WriteIndent();
         WriteName(node);
@@ -362,7 +362,7 @@ public class IntermediateNodeWriter :
         }
     }
 
-    protected void WriteContent(string content)
+    protected void WriteContent(Content content)
     {
         if (content == null)
         {
@@ -372,6 +372,6 @@ public class IntermediateNodeWriter :
         // We explicitly escape newlines in node content so that the IR can be compared line-by-line. The escaped
         // newline cannot be platform specific so we need to drop the windows \r.
         // Also, escape our separator so we can search for ` - `to find delimiters.
-        _writer.Write(content.Replace("\r", string.Empty).Replace("\n", "\\n").Replace(" - ", "\\-"));
+        _writer.Write(content.ToString().Replace("\r", string.Empty).Replace("\n", "\\n").Replace(" - ", "\\-"));
     }
 }

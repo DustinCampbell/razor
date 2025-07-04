@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Buffers;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
@@ -36,4 +38,45 @@ internal static class PooledArrayBuilderExtensions
 #pragma warning disable RS0042
         => ref Unsafe.AsRef(in builder);
 #pragma warning restore RS0042
+
+    public static string CreateString(this ref readonly PooledArrayBuilder<ReadOnlyMemory<char>> builder)
+    {
+        if (builder.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        if (builder.Count == 1)
+        {
+            return builder[0].ToString();
+        }
+
+        var length = 0;
+
+        foreach (var item in builder)
+        {
+            length += item.Length;
+        }
+
+        if (length == 0)
+        {
+            return string.Empty;
+        }
+
+        using var _ = ArrayPool<ReadOnlyMemory<char>>.Shared.GetPooledArray(length, out var array);
+        builder.CopyTo(array);
+
+        return string.Create(length, (array, length), static (span, state) =>
+        {
+            var source = state.array.AsSpan(0, state.length);
+
+            foreach (var item in source)
+            {
+                item.Span.CopyTo(span);
+                span = span[item.Length..];
+            }
+
+            Debug.Assert(span.IsEmpty, "Not all characters were written to the span.");
+        });
+    }
 }

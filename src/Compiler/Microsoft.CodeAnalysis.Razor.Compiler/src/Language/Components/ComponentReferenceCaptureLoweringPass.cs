@@ -80,6 +80,6 @@ internal class ComponentReferenceCaptureLoweringPass : ComponentIntermediateNode
             }
         }
 
-        return !string.IsNullOrWhiteSpace(foundToken?.Content) ? foundToken : null;
+        return !Content.IsNullOrWhiteSpace(foundToken?.Content) ? foundToken : null;
     }
 }

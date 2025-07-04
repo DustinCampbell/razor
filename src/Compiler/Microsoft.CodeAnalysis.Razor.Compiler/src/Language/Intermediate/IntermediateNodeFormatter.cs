@@ -30,14 +30,12 @@ public sealed class IntermediateNodeFormatter(
 
     private static readonly Dictionary<Type, string> s_nodeTypeToShortNameMap = [];
 
-    private static readonly char[] s_charsToEscape = ['\r', '\n', '\t'];
-
     private readonly StringBuilder _builder = builder;
     private readonly FormatterMode Mode = mode;
     private readonly bool _includeSource = includeSource;
 
-    private readonly Dictionary<string, string> _properties = new(StringComparer.Ordinal);
-    private string? _content;
+    private readonly Dictionary<string, Content> _properties = new(StringComparer.Ordinal);
+    private Content _content;
 
     private static string GetNodeShortName(IntermediateNode node)
     {
@@ -78,21 +76,21 @@ public sealed class IntermediateNodeFormatter(
         _builder.Append('"');
     }
 
-    public void WriteContent(string? content)
+    public void WriteContent(Content? content)
     {
-        if (content != null)
+        if (content is Content contentValue)
         {
-            _content = content;
+            _content = contentValue;
         }
     }
 
-    public void WriteProperty(string key, string? value)
+    public void WriteProperty(string key, Content? value)
     {
         Debug.Assert(key != null);
 
-        if (value != null)
+        if (value is Content contentValue)
         {
-            _properties.Add(key, value);
+            _properties.Add(key, contentValue);
         }
     }
 
@@ -141,16 +139,16 @@ public sealed class IntermediateNodeFormatter(
             _builder.Append(" }");
         }
 
-        _content = null;
+        _content = default;
         _properties.Clear();
     }
 
     [MemberNotNullWhen(true, nameof(_content))]
     private bool ShouldWriteContent()
-        => _content != null && (_properties.Count == 0 || Mode == FormatterMode.PreferContent);
+        => !_content.IsEmpty && (_properties.Count == 0 || Mode == FormatterMode.PreferContent);
 
     private bool ShouldWriteProperties()
-        => _properties.Count > 0 && (_content == null || Mode == FormatterMode.PreferContent);
+        => _properties.Count > 0 && (_content.IsEmpty || Mode == FormatterMode.PreferContent);
 
     public void FormatTree(IntermediateNode node)
     {
@@ -168,37 +166,28 @@ public sealed class IntermediateNodeFormatter(
         _builder.AppendLine();
     }
 
-    private void WriteEscaped(string content)
+    private void WriteEscaped(Content content)
     {
-        var startIndex = 0;
-        int charToEscapeIndex;
-
-        while ((charToEscapeIndex = content.IndexOfAny(s_charsToEscape, startIndex)) >= 0)
+        foreach (var ch in content)
         {
-            if (startIndex < charToEscapeIndex)
-            {
-                _builder.Append(content, startIndex, charToEscapeIndex - startIndex);
-            }
-
-            switch (content[charToEscapeIndex])
+            switch (ch)
             {
                 case '\r':
                     _builder.Append("\\r");
                     break;
+
                 case '\n':
                     _builder.Append("\\n");
                     break;
+
                 case '\t':
                     _builder.Append("\\t");
                     break;
+
+                default:
+                    _builder.Append(ch);
+                    break;
             }
-
-            startIndex = charToEscapeIndex + 1;
-        }
-
-        if (startIndex < content.Length)
-        {
-            _builder.Append(content, startIndex, content.Length - startIndex);
         }
     }
 

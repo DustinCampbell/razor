@@ -113,7 +113,7 @@ internal static class NodeAssert
         {
             var token = Assert.IsAssignableFrom<IntermediateToken>(contentNode.Children[i]);
             Assert.Equal(TokenKind.Html, token.Kind);
-            Assert.True(string.IsNullOrWhiteSpace(token.Content));
+            Assert.True(Intermediate.Content.IsNullOrWhiteSpace(token.Content));
         }
 
         return contentNode;

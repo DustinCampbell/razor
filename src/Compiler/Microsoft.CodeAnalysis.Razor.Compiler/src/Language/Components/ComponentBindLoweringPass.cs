@@ -383,7 +383,7 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         }
 
         var original = GetAttributeContent(bindEntry.GetEffectiveBindNode());
-        if (string.IsNullOrEmpty(original.Content))
+        if (Content.IsNullOrEmpty(original.Content))
         {
             // This can happen in error cases, the parser will already have flagged this
             // as an error, so ignore it.
@@ -737,7 +737,7 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         {
             if (node.Children[0] is HtmlContentIntermediateNode html)
             {
-                text = GetAttributeContent(html).Content;
+                text = GetAttributeContent(html).Content.ToString();
                 return true;
             }
 
@@ -886,13 +886,13 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
         valueExpressionTokens.Add(IntermediateNodeFactory.CSharpToken($"global::{ComponentsApi.BindConverter.FormatValue}("));
         valueExpressionTokens.Add(original);
 
-        if (!string.IsNullOrEmpty(format?.Content))
+        if (!Content.IsNullOrEmpty(format?.Content))
         {
             valueExpressionTokens.Add(IntermediateNodeFactory.CSharpToken(", format: "));
             valueExpressionTokens.Add(format);
         }
 
-        if (!string.IsNullOrEmpty(culture?.Content))
+        if (!Content.IsNullOrEmpty(culture?.Content))
         {
             valueExpressionTokens.Add(IntermediateNodeFactory.CSharpToken(", culture: "));
             valueExpressionTokens.Add(culture);

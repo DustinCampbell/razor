@@ -105,7 +105,7 @@ internal class ComponentWhitespacePass : ComponentIntermediateNodePassBase, IRaz
             switch (node)
             {
                 case IntermediateToken intermediateToken:
-                    shouldRemoveNode = string.IsNullOrWhiteSpace(intermediateToken.Content);
+                    shouldRemoveNode = Content.IsNullOrWhiteSpace(intermediateToken.Content);
                     shouldContinueIteration = shouldRemoveNode;
                     break;
 

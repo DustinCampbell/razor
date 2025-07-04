@@ -11,7 +11,7 @@ public class IntermediateToken : IntermediateNode
 {
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
-    public virtual string Content { get; set; }
+    public virtual Content Content { get; set; }
 
     public bool IsCSharp => Kind == TokenKind.CSharp;
 

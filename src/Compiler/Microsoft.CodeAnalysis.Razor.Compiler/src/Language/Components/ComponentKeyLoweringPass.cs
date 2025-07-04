@@ -70,6 +70,6 @@ internal class ComponentKeyLoweringPass : ComponentIntermediateNodePassBase, IRa
             }
         }
 
-        return !string.IsNullOrWhiteSpace(foundToken?.Content) ? foundToken : null;
+        return !Content.IsNullOrWhiteSpace(foundToken?.Content) ? foundToken : null;
     }
 }

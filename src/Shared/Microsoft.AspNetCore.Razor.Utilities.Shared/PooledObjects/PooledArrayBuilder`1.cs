@@ -622,6 +622,47 @@ internal partial struct PooledArrayBuilder<T> : IDisposable
     public void RemoveAt(Index index)
         => RemoveAt(index.GetOffset(Count));
 
+    public readonly void CopyTo(Span<T> destination)
+    {
+        if (Count == 0)
+        {
+            return;
+        }
+
+        if (TryGetBuilder(out var builder))
+        {
+            builder.CopyTo(destination);
+            return;
+        }
+
+        ArgHelper.ThrowIfDestinationTooShort(destination, _inlineCount);
+
+        switch (_inlineCount)
+        {
+            case 1:
+                destination[0] = _element0;
+                break;
+
+            case 2:
+                destination[0] = _element0;
+                destination[1] = _element1;
+                break;
+
+            case 3:
+                destination[0] = _element0;
+                destination[1] = _element1;
+                destination[2] = _element2;
+                break;
+
+            default:
+                destination[0] = _element0;
+                destination[1] = _element1;
+                destination[2] = _element2;
+                destination[3] = _element3;
+                break;
+        }
+    }
+
     /// <summary>
     ///  Returns the current contents as an <see cref="ImmutableArray{T}"/> and sets
     ///  the collection to a zero length array.

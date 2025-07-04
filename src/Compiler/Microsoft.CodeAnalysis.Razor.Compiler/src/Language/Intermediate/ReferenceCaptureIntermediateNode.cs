@@ -4,7 +4,6 @@
 #nullable disable
 
 using System;
-using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Components;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;

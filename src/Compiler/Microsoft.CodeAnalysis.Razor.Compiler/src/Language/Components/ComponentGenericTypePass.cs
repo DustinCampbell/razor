@@ -294,7 +294,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             var missing = new List<BoundAttributeDescriptor>();
             foreach (var (_, binding) in bindings)
             {
-                if (binding.Node == null ||string.IsNullOrWhiteSpace(binding.Content?.Content))
+                if (binding.Node == null || Content.IsNullOrWhiteSpace(binding.Content?.Content))
                 {
                     missing.Add(binding.Attribute);
                 }
@@ -347,7 +347,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     {
                         attribute.HasExplicitTypeName = true;
                     }
-                    else if(attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
+                    else if (attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
                     {
                         Debug.Assert(attribute.TypeName is not null);
                         var typeParameters = ParseTypeParameters(attribute.TypeName);

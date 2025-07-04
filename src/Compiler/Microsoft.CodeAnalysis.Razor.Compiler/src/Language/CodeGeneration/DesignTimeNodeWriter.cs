@@ -212,7 +212,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
             if (node.Children[i] is IntermediateToken token && token.IsCSharp)
             {
                 IDisposable linePragmaScope = null;
-                var isWhitespaceStatement = string.IsNullOrWhiteSpace(token.Content);
+                var isWhitespaceStatement = Content.IsNullOrWhiteSpace(token.Content);
 
                 if (token.Source != null)
                 {

@@ -53,7 +53,7 @@ internal class ViewCssScopePass : IntermediateNodePassBase, IRazorOptimizationPa
 
         static bool IsValidElement(IntermediateToken token, IntermediateToken? previousToken)
         {
-            var content = token.Content.AsSpan();
+            var content = token.Content.ToString().AsSpan();
 
             // `<!tag` is lowered into separate nodes `<` and `tag`, we process the latter.
             if (previousToken?.Content == "<" && content is [not '<', ..])

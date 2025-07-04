@@ -346,7 +346,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
                 if (n is HtmlContentIntermediateNode html &&
                     html.Children.Count == 1 &&
                     html.Children[0] is IntermediateToken token &&
-                    string.IsNullOrWhiteSpace(token.Content))
+                    Content.IsNullOrWhiteSpace(token.Content))
                 {
                     return true;
                 }

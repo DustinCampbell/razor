@@ -83,7 +83,7 @@ public class RuntimeNodeWriter : IntermediateNodeWriter
         for (var i = 0; i < node.Children.Count; i++)
         {
             var token = node.Children[i] as IntermediateToken;
-            if (token == null || !string.IsNullOrWhiteSpace(token.Content))
+            if (token == null || !Content.IsNullOrWhiteSpace(token.Content))
             {
                 isWhitespaceStatement = false;
                 break;
@@ -258,10 +258,11 @@ public class RuntimeNodeWriter : IntermediateNodeWriter
         {
             if (child is IntermediateToken token && token.IsHtml)
             {
-                var htmlContent = token.Content.AsMemory();
-
-                htmlContentBuilder.Add(htmlContent);
-                length += htmlContent.Length;
+                foreach (var htmlContent in token.Content.AllParts)
+                {
+                    htmlContentBuilder.Add(htmlContent);
+                    length += htmlContent.Length;
+                }
             }
         }
 

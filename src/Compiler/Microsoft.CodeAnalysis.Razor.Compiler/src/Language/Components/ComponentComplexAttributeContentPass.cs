@@ -59,17 +59,19 @@ internal class ComponentComplexAttributeContentPass : ComponentIntermediateNodeP
             // This case can be hit for a 'string' attribute
             issueDiagnostic = true;
         }
-        else if (node.Children is [CSharpExpressionIntermediateNode { Children.Count: > 1 } cSharpNode])
+        else if (node.Children is [CSharpExpressionIntermediateNode { Children.Count: > 1 } csharpNode])
         {
             // This case can be hit when the attribute has an explicit @ inside, which
             // 'escapes' any special sugar we provide for codegen.
             //
             // There's a special case here for explicit expressions. See https://github.com/aspnet/Razor/issues/2203
             // handling this case as a tactical matter since it's important for lambdas.
-            if (cSharpNode.Children is [IntermediateToken { Content: "(" }, _, IntermediateToken { Content: ")" }])
+            if (csharpNode.Children.Count == 3 &&
+                csharpNode.Children[0] is IntermediateToken token1 && token1.Content.ToString() == "(" &&
+                csharpNode.Children[2] is IntermediateToken token2 && token2.Content.ToString() == ")")
             {
-                cSharpNode.Children.RemoveAt(2);
-                cSharpNode.Children.RemoveAt(0);
+                csharpNode.Children.RemoveAt(2);
+                csharpNode.Children.RemoveAt(0);
             }
             else
             {

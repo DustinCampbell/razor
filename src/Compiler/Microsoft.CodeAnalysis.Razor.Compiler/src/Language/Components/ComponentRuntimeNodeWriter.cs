@@ -106,7 +106,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
 
             if (firstCSharpChild is not null)
             {
-                context.CodeWriter.Write(firstCSharpChild.Content ?? string.Empty);
+                context.CodeWriter.Write(firstCSharpChild.Content);
             }
         }
 
@@ -1227,13 +1227,13 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
     {
         if (token.Source?.FilePath == null)
         {
-            context.CodeWriter.Write(token.Content ?? string.Empty);
+            context.CodeWriter.Write(token.Content);
             return;
         }
 
         using (context.BuildEnhancedLinePragma(token.Source))
         {
-            context.CodeWriter.Write(token.Content ?? string.Empty);
+            context.CodeWriter.Write(token.Content);
         }
     }
 }

@@ -197,8 +197,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
             node =>
             {
                 var csharpCode = Assert.IsType<CSharpCodeIntermediateNode>(node);
-                var token = Assert.IsAssignableFrom<IntermediateToken>(Assert.Single(csharpCode.Children));
-                Assert.Equal(TokenKind.CSharp, token.Kind);
+                var token = Assert.IsAssignableFrom<CSharpIntermediateToken>(Assert.Single(csharpCode.Children));
                 Assert.Equal(expectedAttribute, token.Content);
             },
             node => Assert.Same(@namespace, node));
@@ -243,8 +242,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
             node =>
             {
                 var csharpCode = Assert.IsType<CSharpCodeIntermediateNode>(node);
-                var token = Assert.IsAssignableFrom<IntermediateToken>(Assert.Single(csharpCode.Children));
-                Assert.Equal(TokenKind.CSharp, token.Kind);
+                var token = Assert.IsAssignableFrom<CSharpIntermediateToken>(Assert.Single(csharpCode.Children));
                 Assert.Equal(expectedAttribute, token.Content);
             },
             node => Assert.Same(@namespace, node));
@@ -297,8 +295,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
             node =>
             {
                 var csharpCode = Assert.IsType<CSharpCodeIntermediateNode>(node);
-                var token = Assert.IsAssignableFrom<IntermediateToken>(Assert.Single(csharpCode.Children));
-                Assert.Equal(TokenKind.CSharp, token.Kind);
+                var token = Assert.IsAssignableFrom<CSharpIntermediateToken>(Assert.Single(csharpCode.Children));
                 Assert.Equal(expectedAttribute, token.Content);
             },
             node => Assert.Same(@namespace, node));
@@ -343,8 +340,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
             node =>
             {
                 var csharpCode = Assert.IsType<CSharpCodeIntermediateNode>(node);
-                var token = Assert.IsAssignableFrom<IntermediateToken>(Assert.Single(csharpCode.Children));
-                Assert.Equal(TokenKind.CSharp, token.Kind);
+                var token = Assert.IsAssignableFrom<CSharpIntermediateToken>(Assert.Single(csharpCode.Children));
                 Assert.Equal(expectedAttribute, token.Content);
             },
             node => Assert.Same(@namespace, node));

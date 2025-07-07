@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -58,7 +59,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
 
         for (var i = 0; i < node.Children.Count; i++)
         {
-            if (node.Children[i] is IntermediateToken token && token.IsCSharp)
+            if (node.Children[i] is CSharpIntermediateToken token)
             {
                 WriteCSharpToken(context, token);
             }
@@ -96,7 +97,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         //   is another method so a sequence point can be emitted. Unfortunately any trailing C# is not mapped, although in many cases it's uninteresting
         //   such as closing parenthesis.
         // - Error cases: there are no nodes, so we do nothing
-        var firstCSharpChild = node.Children.FirstOrDefault(IsCSharpToken) as IntermediateToken;
+        var firstCSharpChild = node.Children.OfType<CSharpIntermediateToken>().FirstOrDefault();
         using (context.BuildEnhancedLinePragma(firstCSharpChild?.Source, characterOffset: methodInvocation.Length + 2))
         {
             context.CodeWriter
@@ -105,7 +106,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
 
             if (firstCSharpChild is not null)
             {
-                context.CodeWriter.Write(firstCSharpChild.Content);
+                context.CodeWriter.Write(firstCSharpChild.Content ?? string.Empty);
             }
         }
 
@@ -117,9 +118,9 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
             {
                 continue;
             }
-            else if (IsCSharpToken(child))
+            else if (child is CSharpIntermediateToken token)
             {
-                WriteCSharpToken(context, (IntermediateToken)child);
+                WriteCSharpToken(context, token);
             }
             else
             {
@@ -129,8 +130,6 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         }
 
         context.CodeWriter.WriteEndMethodInvocation();
-
-        static bool IsCSharpToken(IntermediateNode n) => n is IntermediateToken token && token.IsCSharp;
     }
 
     public override void WriteCSharpExpressionAttributeValue(CodeRenderingContext context, CSharpExpressionAttributeValueIntermediateNode node)
@@ -713,9 +712,9 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
                     context.CodeWriter.Write("(");
                 }
 
-                for (var i = 0; i < tokens.Count; i++)
+                foreach (var token in tokens)
                 {
-                    WriteCSharpToken(context, tokens[i]);
+                    WriteCSharpToken(context, token);
                 }
 
                 if (canTypeCheck)
@@ -762,9 +761,9 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
                 context.CodeWriter.Write("this");
                 context.CodeWriter.Write(", ");
 
-                for (var i = 0; i < tokens.Count; i++)
+                foreach (var token in tokens)
                 {
-                    WriteCSharpToken(context, tokens[i]);
+                    WriteCSharpToken(context, token);
                 }
 
                 context.CodeWriter.Write(")");
@@ -785,9 +784,9 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
                     context.CodeWriter.Write("(");
                 }
 
-                for (var i = 0; i < tokens.Count; i++)
+                foreach (var token in tokens)
                 {
-                    WriteCSharpToken(context, tokens[i]);
+                    WriteCSharpToken(context, token);
                 }
 
                 if (canTypeCheck && NeedsTypeCheck(node))
@@ -821,10 +820,10 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
             }
         }
 
-        IReadOnlyList<IntermediateToken> GetHtmlTokens(HtmlContentIntermediateNode html)
+        static ImmutableArray<HtmlIntermediateToken> GetHtmlTokens(HtmlContentIntermediateNode html)
         {
             // We generally expect all children to be HTML, this is here just in case.
-            return html.FindDescendantNodes<IntermediateToken>().Where(t => t.IsHtml).ToArray();
+            return html.FindDescendantNodes<HtmlIntermediateToken>();
         }
 
         static bool NeedsTypeCheck(ComponentAttributeIntermediateNode n)
@@ -833,10 +832,10 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         }
     }
 
-    private IReadOnlyList<IntermediateToken> GetCSharpTokens(IntermediateNode node)
+    private static ImmutableArray<CSharpIntermediateToken> GetCSharpTokens(IntermediateNode node)
     {
         // We generally expect all children to be CSharp, this is here just in case.
-        return node.FindDescendantNodes<IntermediateToken>().Where(t => t.IsCSharp).ToArray();
+        return node.FindDescendantNodes<CSharpIntermediateToken>();
     }
 
     public override void WriteComponentChildContent(CodeRenderingContext context, ComponentChildContentIntermediateNode node)
@@ -963,8 +962,6 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
 
     private void WriteSplatInnards(CodeRenderingContext context, SplatIntermediateNode node, bool canTypeCheck)
     {
-        var tokens = GetCSharpTokens(node);
-
         if (canTypeCheck)
         {
             context.CodeWriter.Write(ComponentsApi.RuntimeHelpers.TypeCheck);
@@ -974,9 +971,9 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
             context.CodeWriter.Write("(");
         }
 
-        for (var i = 0; i < tokens.Count; i++)
+        foreach (var token in GetCSharpTokens(node))
         {
-            WriteCSharpToken(context, tokens[i]);
+            WriteCSharpToken(context, token);
         }
 
         if (canTypeCheck)
@@ -1113,10 +1110,9 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         context.CodeWriter.Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture));
         context.CodeWriter.WriteParameterSeparator();
 
-        var tokens = GetCSharpTokens(nameExpression);
-        for (var i = 0; i < tokens.Count; i++)
+        foreach (var token in GetCSharpTokens(nameExpression))
         {
-            WriteCSharpToken(context, tokens[i]);
+            WriteCSharpToken(context, token);
         }
     }
 
@@ -1124,7 +1120,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
     {
         using var _ = StringBuilderPool.GetPooledObject(out var builder);
 
-        var htmlTokens = node.Children.OfType<IntermediateToken>().Where(t => t.IsHtml);
+        var htmlTokens = node.Children.OfType<HtmlIntermediateToken>();
         foreach (var htmlToken in htmlTokens)
         {
             builder.Append(htmlToken.Content);
@@ -1153,7 +1149,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         var hasCSharp = false;
         for (var i = 0; i < tokens.Count; i++)
         {
-            if (tokens[i].IsCSharp)
+            if (tokens[i] is CSharpIntermediateToken)
             {
                 hasCSharp |= true;
             }
@@ -1173,7 +1169,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
             for (var i = 0; i < tokens.Count; i++)
             {
                 var token = tokens[i];
-                if (token.IsCSharp)
+                if (token is CSharpIntermediateToken)
                 {
                     if (!insideCSharp)
                     {
@@ -1231,13 +1227,13 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
     {
         if (token.Source?.FilePath == null)
         {
-            context.CodeWriter.Write(token.Content);
+            context.CodeWriter.Write(token.Content ?? string.Empty);
             return;
         }
 
         using (context.BuildEnhancedLinePragma(token.Source))
         {
-            context.CodeWriter.Write(token.Content);
+            context.CodeWriter.Write(token.Content ?? string.Empty);
         }
     }
 }

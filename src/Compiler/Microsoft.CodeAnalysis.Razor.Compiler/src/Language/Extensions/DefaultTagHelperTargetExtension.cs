@@ -383,9 +383,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
                     var accessor = GetPropertyAccessor(node);
                     var assignmentPrefixLength = accessor.Length + " = ".Length;
                     if (node.BoundAttribute.IsEnum &&
-                        node.Children.Count == 1 &&
-                        node.Children.First() is IntermediateToken token &&
-                        token.IsCSharp)
+                        node.Children is [CSharpIntermediateToken token])
                     {
                         assignmentPrefixLength += $"global::{node.BoundAttribute.TypeName}.".Length;
 
@@ -430,9 +428,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
                 context.CodeWriter.WriteStartAssignment(GetPropertyAccessor(node));
 
                 if (node.BoundAttribute.IsEnum &&
-                    node.Children.Count == 1 &&
-                    node.Children.First() is IntermediateToken token &&
-                    token.IsCSharp)
+                    node.Children is [CSharpIntermediateToken token])
                 {
                     context.CodeWriter
                         .Write("global::")
@@ -635,7 +631,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
         var builder = new StringBuilder();
         for (var i = 0; i < node.Children.Count; i++)
         {
-            if (node.Children[i] is IntermediateToken token && token.IsHtml)
+            if (node.Children[i] is HtmlIntermediateToken token)
             {
                 builder.Append(token.Content);
             }

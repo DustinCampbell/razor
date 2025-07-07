@@ -212,11 +212,11 @@ internal static class CodeRenderingContextExtensions
         {
             if (token.Source is { } source)
             {
-                WriteWithPragma(context, token.Content, source);
+                WriteWithPragma(context, token.Content ?? string.Empty, source);
             }
             else
             {
-                writer.Write(token.Content);
+                writer.Write(token.Content?? string.Empty);
             }
         }
 
@@ -249,7 +249,7 @@ internal static class CodeRenderingContextExtensions
         string propertyName,
         string propertyExpression)
     {
-        context.WritePropertyDeclarationPreamble(modifiers, type.Content, propertyName, type.Source, propertySpan: null);
+        context.WritePropertyDeclarationPreamble(modifiers, type.Content ?? string.Empty, propertyName, type.Source, propertySpan: null);
 
         var writer = context.CodeWriter;
         writer.Write(" => ");

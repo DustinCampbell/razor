@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Razor;
 
 namespace Microsoft.AspNetCore.Razor;
@@ -184,4 +185,135 @@ internal static class ArrayExtensions
         this (TKey key, TValue value)[] array, IEqualityComparer<TKey> keyComparer)
         where TKey : notnull
         => array.ToImmutableDictionary(keySelector: t => t.key, elementSelector: t => t.value, keyComparer);
+
+    public static string ToJoinedString(this string[] array)
+        => array.ToJoinedString(separator: string.Empty);
+
+    public static string ToJoinedString(this string[] array, string separator)
+    {
+        if (array is [])
+        {
+            return string.Empty;
+        }
+
+        var length = 0;
+        var nonEmptyParts = 0;
+
+        foreach (var part in array)
+        {
+            var partSpan = part.AsSpan();
+
+            if (partSpan.Length > 0)
+            {
+                length += partSpan.Length;
+                nonEmptyParts++;
+            }
+        }
+
+        if (nonEmptyParts >= 2)
+        {
+            length += separator.Length * (nonEmptyParts - 1);
+        }
+
+        if (length == 0)
+        {
+            return string.Empty;
+        }
+
+        return string.Create(length, (array, separator), static (span, state) =>
+        {
+            var array = state.array;
+            var separator = state.separator.AsSpan();
+
+            var first = true;
+
+            foreach (var part in array)
+            {
+                var partSpan = part.AsSpan();
+                if (partSpan.Length == 0)
+                {
+                    continue;
+                }
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    separator.CopyTo(span);
+                    span = span[separator.Length..];
+                }
+
+                partSpan.CopyTo(span);
+                span = span[partSpan.Length..];
+            }
+
+            Debug.Assert(span.IsEmpty, "Not all characters were written to the span.");
+        });
+    }
+
+    public static string ToJoinedString(this ReadOnlyMemory<char>[] array)
+        => array.ToJoinedString(separator: string.Empty);
+
+    public static string ToJoinedString(this ReadOnlyMemory<char>[] array, string separator)
+    {
+        if (array is [])
+        {
+            return string.Empty;
+        }
+
+        var length = 0;
+        var nonEmptyParts = 0;
+
+        foreach (var part in array)
+        {
+            if (part.Length > 0)
+            {
+                length += part.Length;
+                nonEmptyParts++;
+            }
+        }
+
+        if (nonEmptyParts >= 2)
+        {
+            length += separator.Length * (nonEmptyParts - 1);
+        }
+
+        if (length == 0)
+        {
+            return string.Empty;
+        }
+
+        return string.Create(length, (array, separator), static (span, state) =>
+        {
+            var array = state.array;
+            var separator = state.separator.AsSpan();
+
+            var first = true;
+
+            foreach (var part in array)
+            {
+                if (part.Length == 0)
+                {
+                    continue;
+                }
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    separator.CopyTo(span);
+                    span = span[separator.Length..];
+                }
+
+                part.Span.CopyTo(span);
+                span = span[part.Length..];
+            }
+
+            Debug.Assert(span.IsEmpty, "Not all characters were written to the span.");
+        });
+    }
 }

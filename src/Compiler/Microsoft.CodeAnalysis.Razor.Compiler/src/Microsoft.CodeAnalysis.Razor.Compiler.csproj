@@ -13,6 +13,7 @@
       RS1036: Specify analyzer banned API enforcement setting
     -->
     <NoWarn>$(NoWarn);RS2008;RS1036</NoWarn>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

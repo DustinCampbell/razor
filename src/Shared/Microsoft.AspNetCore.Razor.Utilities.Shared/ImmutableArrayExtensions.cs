@@ -974,6 +974,136 @@ internal static partial class ImmutableArrayExtensions
         return ~min;
     }
 
+    public static string ToJoinedString(this ImmutableArray<ReadOnlyMemory<char>> array)
+        => array.ToJoinedString(separator: string.Empty);
+
+    public static string ToJoinedString(this ImmutableArray<ReadOnlyMemory<char>> array, string separator)
+    {
+        if (array.IsEmpty)
+        {
+            return string.Empty;
+        }
+
+        var length = 0;
+        var nonEmptyParts = 0;
+
+        foreach (var part in array)
+        {
+            if (part.Length > 0)
+            {
+                length += part.Length;
+                nonEmptyParts++;
+            }
+        }
+
+        if (nonEmptyParts >= 2)
+        {
+            length += separator.Length * (nonEmptyParts - 1);
+        }
+
+        if (length == 0)
+        {
+            return string.Empty;
+        }
+
+        return string.Create(length, (array, separator), static (span, state) =>
+        {
+            var array = state.array;
+            var separator = state.separator.AsSpan();
+
+            var first = true;
+
+            foreach (var part in array)
+            {
+                if (part.IsEmpty)
+                {
+                    continue;
+                }
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    separator.CopyTo(span);
+                    span = span[separator.Length..];
+                }
+
+                part.Span.CopyTo(span);
+                span = span[part.Length..];
+            }
+
+            Debug.Assert(span.IsEmpty, "Not all characters were written to the span.");
+        });
+    }
+
+    public static string ToJoinedString(this ImmutableArray<ReadOnlyMemory<char>>.Builder builder)
+        => builder.ToJoinedString(separator: string.Empty);
+
+    public static string ToJoinedString(this ImmutableArray<ReadOnlyMemory<char>>.Builder builder, string separator)
+    {
+        if (builder.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        var length = 0;
+        var nonEmptyParts = 0;
+
+        for (var i = 0; i < builder.Count; i++)
+        {
+            var part = builder[i];
+
+            if (part.Length > 0)
+            {
+                length += part.Length;
+                nonEmptyParts++;
+            }
+        }
+
+        if (nonEmptyParts >= 2)
+        {
+            length += separator.Length * (nonEmptyParts - 1);
+        }
+
+        if (length == 0)
+        {
+            return string.Empty;
+        }
+
+        return string.Create(length, (builder, separator), static (span, state) =>
+        {
+            var builder = state.builder;
+            var separator = state.separator.AsSpan();
+
+            var first = true;
+
+            foreach (var part in builder)
+            {
+                if (part.IsEmpty)
+                {
+                    continue;
+                }
+
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    separator.CopyTo(span);
+                    span = span[separator.Length..];
+                }
+
+                part.Span.CopyTo(span);
+                span = span[part.Length..];
+            }
+
+            Debug.Assert(span.IsEmpty, "Not all characters were written to the span.");
+        });
+    }
+
     /// <summary>
     ///  Sorts the elements of an <see cref="ImmutableArray{T}"/> in ascending order.
     /// </summary>

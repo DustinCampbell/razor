@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Xunit;
 
@@ -415,5 +416,304 @@ public class ImmutableArrayExtensionsTests
 
         var actual = data.WhereAsArray(static x => x % 2 == 0);
         Assert.Equal<int>(expected, actual);
+    }
+
+    [Fact]
+    public void ToJoinedString_EmptyArray_ReturnsEmptyString()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [];
+        
+        var result = array.ToJoinedString();
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithSeparator_EmptyArray_ReturnsEmptyString()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [];
+        
+        var result = array.ToJoinedString(", ");
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_SingleElement_ReturnsElement()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = ["Hello".AsMemory()];
+        
+        var result = array.ToJoinedString();
+        
+        Assert.Equal("Hello", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithSeparator_SingleElement_ReturnsElement()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = ["Hello".AsMemory()];
+        
+        var result = array.ToJoinedString(", ");
+        
+        Assert.Equal("Hello", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_MultipleElements_ConcatenatesWithoutSeparator()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            "Hello".AsMemory(),
+            "World".AsMemory(),
+            "Test".AsMemory()
+        ];
+        
+        var result = array.ToJoinedString();
+        
+        Assert.Equal("HelloWorldTest", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithSeparator_MultipleElements_ConcatenatesWithSeparator()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            "Hello".AsMemory(),
+            "World".AsMemory(),
+            "Test".AsMemory()
+        ];
+        
+        var result = array.ToJoinedString(", ");
+        
+        Assert.Equal("Hello, World, Test", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithEmptyElements_SkipsEmptyElements()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            "Hello".AsMemory(),
+            ReadOnlyMemory<char>.Empty,
+            "World".AsMemory(),
+            "".AsMemory(),
+            "Test".AsMemory()
+        ];
+        
+        var result = array.ToJoinedString();
+        
+        Assert.Equal("HelloWorldTest", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithSeparator_WithEmptyElements_SkipsEmptyElements()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            "Hello".AsMemory(),
+            ReadOnlyMemory<char>.Empty,
+            "World".AsMemory(),
+            "".AsMemory(),
+            "Test".AsMemory()
+        ];
+        
+        var result = array.ToJoinedString(", ");
+        
+        Assert.Equal("Hello, World, Test", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_AllEmptyElements_ReturnsEmptyString()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            ReadOnlyMemory<char>.Empty,
+            "".AsMemory(),
+            ReadOnlyMemory<char>.Empty
+        ];
+        
+        var result = array.ToJoinedString();
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithSeparator_AllEmptyElements_ReturnsEmptyString()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            ReadOnlyMemory<char>.Empty,
+            "".AsMemory(),
+            ReadOnlyMemory<char>.Empty
+        ];
+        
+        var result = array.ToJoinedString(", ");
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithComplexSeparator_WorksCorrectly()
+    {
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            "A".AsMemory(),
+            "B".AsMemory(),
+            "C".AsMemory()
+        ];
+        
+        var result = array.ToJoinedString(" -> ");
+        
+        Assert.Equal("A -> B -> C", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_WithSubstring_WorksCorrectly()
+    {
+        var source = "HelloWorldTest";
+        ImmutableArray<ReadOnlyMemory<char>> array = [
+            source.AsMemory(0, 5),  // "Hello"
+            source.AsMemory(5, 5),  // "World"
+            source.AsMemory(10, 4)  // "Test"
+        ];
+        
+        var result = array.ToJoinedString(", ");
+        
+        Assert.Equal("Hello, World, Test", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_EmptyBuilder_ReturnsEmptyString()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        
+        var result = builder.ToJoinedString();
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_WithSeparator_EmptyBuilder_ReturnsEmptyString()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        
+        var result = builder.ToJoinedString(", ");
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_SingleElement_ReturnsElement()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add("Hello".AsMemory());
+        
+        var result = builder.ToJoinedString();
+        
+        Assert.Equal("Hello", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_WithSeparator_SingleElement_ReturnsElement()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add("Hello".AsMemory());
+        
+        var result = builder.ToJoinedString(", ");
+        
+        Assert.Equal("Hello", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_MultipleElements_ConcatenatesWithoutSeparator()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add("Hello".AsMemory());
+        builder.Add("World".AsMemory());
+        builder.Add("Test".AsMemory());
+        
+        var result = builder.ToJoinedString();
+        
+        Assert.Equal("HelloWorldTest", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_WithSeparator_MultipleElements_ConcatenatesWithSeparator()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add("Hello".AsMemory());
+        builder.Add("World".AsMemory());
+        builder.Add("Test".AsMemory());
+        
+        var result = builder.ToJoinedString(", ");
+        
+        Assert.Equal("Hello, World, Test", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_WithEmptyElements_SkipsEmptyElements()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add("Hello".AsMemory());
+        builder.Add(ReadOnlyMemory<char>.Empty);
+        builder.Add("World".AsMemory());
+        builder.Add("".AsMemory());
+        builder.Add("Test".AsMemory());
+        
+        var result = builder.ToJoinedString();
+        
+        Assert.Equal("HelloWorldTest", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_WithSeparator_WithEmptyElements_SkipsEmptyElements()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add("Hello".AsMemory());
+        builder.Add(ReadOnlyMemory<char>.Empty);
+        builder.Add("World".AsMemory());
+        builder.Add("".AsMemory());
+        builder.Add("Test".AsMemory());
+        
+        var result = builder.ToJoinedString(", ");
+        
+        Assert.Equal("Hello, World, Test", result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_AllEmptyElements_ReturnsEmptyString()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add(ReadOnlyMemory<char>.Empty);
+        builder.Add("".AsMemory());
+        builder.Add(ReadOnlyMemory<char>.Empty);
+        
+        var result = builder.ToJoinedString();
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_Builder_WithSeparator_AllEmptyElements_ReturnsEmptyString()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+        builder.Add(ReadOnlyMemory<char>.Empty);
+        builder.Add("".AsMemory());
+        builder.Add(ReadOnlyMemory<char>.Empty);
+        
+        var result = builder.ToJoinedString(", ");
+        
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToJoinedString_LargeArray_WorksCorrectly()
+    {
+        var builder = ImmutableArray.CreateBuilder<ReadOnlyMemory<char>>();
+
+        for (var i = 0; i < 1000; i++)
+        {
+            builder.Add(i.ToString().AsMemory());
+        }
+
+        var array = builder.ToImmutable();
+        
+        var result = array.ToJoinedString(",");
+        
+        var expected = string.Join(",", Enumerable.Range(0, 1000));
+        Assert.Equal(expected, result);
     }
 }

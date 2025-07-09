@@ -16,29 +16,12 @@ internal class MetadataAttributeTargetExtension : IMetadataAttributeTargetExtens
 
     public string CompiledItemMetadataAttributeName { get; set; } = "global::Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute";
 
-
     public void WriteRazorCompiledItemAttribute(CodeRenderingContext context, RazorCompiledItemAttributeIntermediateNode node)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        if (node == null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
-
         // [assembly: global::...RazorCompiledItem(typeof({node.TypeName}), @"{node.Kind}", @"{node.Identifier}")]
-        context.CodeWriter.Write("[assembly: ");
-        context.CodeWriter.Write(CompiledItemAttributeName);
-        context.CodeWriter.Write("(typeof(");
-        context.CodeWriter.Write(node.TypeName);
-        context.CodeWriter.Write("), @\"");
-        context.CodeWriter.Write(node.Kind);
-        context.CodeWriter.Write("\", @\"");
-        context.CodeWriter.Write(node.Identifier);
-        context.CodeWriter.WriteLine("\")]");
+        context.CodeWriter.WriteLine($"""
+            [assembly: {CompiledItemAttributeName}(typeof({node.TypeName}), @"{node.Kind}", @"{node.Identifier}")]
+            """);
     }
 
     public void WriteRazorCompiledItemMetadataAttribute(CodeRenderingContext context, RazorCompiledItemMetadataAttributeIntermediateNode node)

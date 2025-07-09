@@ -9,4 +9,5 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("MicrosoftCodeAnalysisReleaseTracking", "RS2008:Enable analyzer release tracking", Justification = "<Pending>", Scope = "member", Target = "~F:Razor.Diagnostics.Analyzers.PooledArrayBuilderAsRefAnalyzer.Rule")]
+[assembly: SuppressMessage("MicrosoftCodeAnalysisReleaseTracking", "RS2008:Enable analyzer release tracking", Justification = "<Pending>", Scope = "member", Target = "~F:Razor.Diagnostics.Analyzers.InterpolatedStringToContentAnalyzer.Rule")]
 [assembly: SuppressMessage("MicrosoftCodeAnalysisReleaseTracking", "RS2008:Enable analyzer release tracking", Justification = "<Pending>", Scope = "member", Target = "~F:Razor.Diagnostics.Analyzers.IRemoteJsonServiceParameterAnalyzer.Rule")]

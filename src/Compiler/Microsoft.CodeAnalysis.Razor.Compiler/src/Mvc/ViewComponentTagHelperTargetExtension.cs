@@ -96,15 +96,11 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         }
     }
 
-    private void WriteConstructorString(CodeRenderingContext context, string className)
+    private void WriteConstructorString(CodeRenderingContext context, Content className)
     {
         var writer = context.CodeWriter;
 
-        writer.Write("public ")
-            .Write(className)
-            .Write("(")
-            .Write($"{ViewComponentHelperTypeName} helper")
-            .WriteLine(")");
+        writer.WriteLine($"public {className}({ViewComponentHelperTypeName} helper)");
 
         using (writer.BuildScope())
         {

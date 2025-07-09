@@ -254,16 +254,21 @@ public class IntermediateNodeWriter :
 
     protected void WriteContentNode(IntermediateNode node, params string[] content)
     {
-        WriteIndent();
-        WriteName(node);
-        WriteSeparator();
-        WriteSourceRange(node);
+        WriteBasicNode(node);
 
         for (var i = 0; i < content.Length; i++)
         {
             WriteSeparator();
             WriteContent(content[i]);
         }
+    }
+
+    protected void WriteContentNode(IntermediateNode node, Content content)
+    {
+        WriteBasicNode(node);
+
+        WriteSeparator();
+        WriteContent(content);
     }
 
     protected void WriteIndent()
@@ -384,5 +389,20 @@ public class IntermediateNodeWriter :
         // newline cannot be platform specific so we need to drop the windows \r.
         // Also, escape our separator so we can search for ` - `to find delimiters.
         _writer.Write(content.Replace("\r", string.Empty).Replace("\n", "\\n").Replace(" - ", "\\-"));
+    }
+
+    protected void WriteContent(Content content)
+    {
+        if (content == null)
+        {
+            return;
+        }
+
+        // We explicitly escape newlines in node content so that the IR can be compared line-by-line. The escaped
+        // newline cannot be platform specific so we need to drop the windows \r.
+        // Also, escape our separator so we can search for ` - `to find delimiters.
+        var contentString = content.ToString();
+
+        _writer.Write(contentString.Replace("\r", string.Empty).Replace("\n", "\\n").Replace(" - ", "\\-"));
     }
 }

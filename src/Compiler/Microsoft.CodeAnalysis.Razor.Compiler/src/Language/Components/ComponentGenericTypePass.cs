@@ -294,7 +294,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             var missing = new List<BoundAttributeDescriptor>();
             foreach (var (_, binding) in bindings)
             {
-                if (binding.Node == null ||string.IsNullOrWhiteSpace(binding.Content?.Content))
+                if (binding.Node == null || string.IsNullOrWhiteSpace(binding.Content?.Content))
                 {
                     missing.Add(binding.Attribute);
                 }
@@ -347,7 +347,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                     {
                         attribute.HasExplicitTypeName = true;
                     }
-                    else if(attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
+                    else if (attribute.BoundAttribute?.IsEventCallbackProperty() ?? false)
                     {
                         Debug.Assert(attribute.TypeName is not null);
                         var typeParameters = ParseTypeParameters(attribute.TypeName);
@@ -413,9 +413,12 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
         private void CreateTypeInferenceMethod(DocumentIntermediateNode documentNode, ComponentIntermediateNode node, List<CascadingGenericTypeParameter>? receivesCascadingGenericTypes)
         {
-            var namespaceName = documentNode.FindPrimaryNamespace().AssumeNotNull().Name;
-            namespaceName = namespaceName.IsNullOrEmpty() ? "__Blazor" : "__Blazor." + namespaceName;
-            namespaceName += "." + documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
+            var namespaceName = documentNode.FindPrimaryNamespace() is { Name.IsEmpty: false } primaryNamespace
+                ? $"__Blazor." + primaryNamespace.Name
+                : "__Blazor";
+
+            var className = documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
+            namespaceName = new Content($"{namespaceName}.{className}");
 
             var genericTypeConstraints = node.Component.BoundAttributes
                 .Where(t => t.Metadata.ContainsKey(ComponentMetadata.Component.TypeParameterConstraintsKey))
@@ -428,7 +431,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 // Method name is generated and guaranteed not to collide, since it's unique for each
                 // component call site.
                 MethodName = $"Create{CSharpIdentifier.SanitizeIdentifier(node.TagName.AsSpanOrDefault())}_{_id++}",
-                FullTypeName = namespaceName + ".TypeInference",
+                FullTypeName = $"{namespaceName}.TypeInference",
 
                 ReceivesCascadingGenericTypes = receivesCascadingGenericTypes,
                 GenericTypeConstraints = genericTypeConstraints

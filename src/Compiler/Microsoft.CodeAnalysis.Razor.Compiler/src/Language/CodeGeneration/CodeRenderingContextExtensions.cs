@@ -55,11 +55,11 @@ internal static class CodeRenderingContextExtensions
         }
     }
 
-    public static CSharpCodeWritingScope BuildNamespace(this CodeRenderingContext context, string? name, SourceSpan? span)
+    public static CSharpCodeWritingScope BuildNamespace(this CodeRenderingContext context, Content name, SourceSpan? span)
     {
         var writer = context.CodeWriter;
 
-        if (name.IsNullOrEmpty())
+        if (name.IsEmpty)
         {
             return new CSharpCodeWritingScope(writer, writeBraces: false);
         }

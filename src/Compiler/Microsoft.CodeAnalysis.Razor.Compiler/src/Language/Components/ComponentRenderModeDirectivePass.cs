@@ -75,9 +75,10 @@ internal sealed class ComponentRenderModeDirectivePass : IntermediateNodePassBas
 
         // generate the attribute usage on top of the class
         var attributeNode = new CSharpCodeIntermediateNode();
-        var namespaceSeparator = @namespace.Name.IsNullOrEmpty() ? string.Empty : ".";
+        var namespaceName = !@namespace.Name.IsEmpty ? @namespace.Name + "." : Content.Empty;
+
         attributeNode.Children.Add(
-            IntermediateNodeFactory.CSharpToken($"[global::{@namespace.Name}{namespaceSeparator}{@class.ClassName}.{GeneratedRenderModeAttributeName}]"));
+            IntermediateNodeFactory.CSharpToken($"[global::{namespaceName}{@class.ClassName}.{GeneratedRenderModeAttributeName}]"));
 
         // Insert the new attribute on top of the class
         var childCount = @namespace.Children.Count;

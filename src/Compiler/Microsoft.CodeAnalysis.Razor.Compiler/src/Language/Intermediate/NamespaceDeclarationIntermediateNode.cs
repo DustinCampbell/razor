@@ -4,25 +4,26 @@
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class NamespaceDeclarationIntermediateNode(
-    string? name = null,
+    Content name = default,
     bool isPrimaryNamespace = false) : IntermediateNode
 {
-    private string? _name = name;
+    private Content _name = name;
     private IntermediateNodeCollection? _children;
 
     public bool IsPrimaryNamespace { get; } = isPrimaryNamespace;
 
-    public string? Name => _name;
+    public Content Name => _name;
 
     public bool IsGenericTyped { get; set; }
 
     public override IntermediateNodeCollection Children
         => _children ??= [];
 
-    public void UpdateName(string? value)
-    {
-        _name = value;
-    }
+    public void UpdateName(Content value)
+        => _name = value;
+
+    public void UpdateName(ref Content.ContentInterpolatedStringHandler handler)
+        => _name = new(ref handler);
 
     public override void Accept(IntermediateNodeVisitor visitor)
         => visitor.VisitNamespaceDeclaration(this);

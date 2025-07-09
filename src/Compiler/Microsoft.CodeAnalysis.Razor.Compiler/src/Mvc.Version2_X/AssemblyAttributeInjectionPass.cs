@@ -35,7 +35,7 @@ public class AssemblyAttributeInjectionPass : IntermediateNodePassBase, IRazorOp
             return;
         }
 
-        var generatedTypeName = @namespace.Name.IsNullOrEmpty()
+        var generatedTypeName = @namespace.Name.IsEmpty
             ? @class.ClassName
             : $"{@namespace.Name}.{@class.ClassName}";
 

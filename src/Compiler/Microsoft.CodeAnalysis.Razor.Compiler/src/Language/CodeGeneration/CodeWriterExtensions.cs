@@ -15,8 +15,6 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 internal static class CodeWriterExtensions
 {
-    private const string InstanceMethodFormat = "{0}.{1}";
-
     private static readonly ReadOnlyMemory<char> s_true = "true".AsMemory();
     private static readonly ReadOnlyMemory<char> s_false = "false".AsMemory();
 
@@ -60,9 +58,9 @@ internal static class CodeWriterExtensions
         return writer.Write(value ? s_true : s_false);
     }
 
-    public static CodeWriter WriteStartAssignment(this CodeWriter writer, string name)
+    public static CodeWriter WriteStartAssignment(this CodeWriter writer, Content name)
     {
-        return writer.Write(name).Write(" = ");
+        return writer.Write($"{name} = ");
     }
 
     public static CodeWriter WriteParameterSeparator(this CodeWriter writer)
@@ -178,19 +176,16 @@ internal static class CodeWriterExtensions
 
     public static CodeWriter WriteStartMethodInvocation(this CodeWriter writer, string methodName)
     {
-        writer.Write(methodName);
-
-        return writer.Write("(");
+        return writer.Write(methodName).Write("(");
     }
 
     public static CodeWriter WriteEndMethodInvocation(this CodeWriter writer)
-    {
-        return WriteEndMethodInvocation(writer, endLine: true);
-    }
+        => WriteEndMethodInvocation(writer, endLine: true);
 
     public static CodeWriter WriteEndMethodInvocation(this CodeWriter writer, bool endLine)
     {
         writer.Write(")");
+
         if (endLine)
         {
             writer.WriteLine(";");
@@ -204,20 +199,16 @@ internal static class CodeWriterExtensions
         this CodeWriter writer,
         string instanceName,
         string methodName,
-        params string[] parameters)
-    {
-        if (instanceName == null)
-        {
-            throw new ArgumentNullException(nameof(instanceName));
-        }
+        params ImmutableArray<Content> arguments)
+        => writer.WriteInstanceMethodInvocation(instanceName, methodName, endLine: true, arguments);
 
-        if (methodName == null)
-        {
-            throw new ArgumentNullException(nameof(methodName));
-        }
-
-        return WriteInstanceMethodInvocation(writer, instanceName, methodName, endLine: true, parameters: parameters);
-    }
+    // Writes a method invocation for the given instance name.
+    public static CodeWriter WriteInstanceMethodInvocation(
+        this CodeWriter writer,
+        string instanceName,
+        string methodName,
+        bool endLine)
+        => writer.WriteMethodInvocation($"{instanceName}.{methodName}", endLine, arguments: []);
 
     // Writes a method invocation for the given instance name.
     public static CodeWriter WriteInstanceMethodInvocation(
@@ -225,41 +216,11 @@ internal static class CodeWriterExtensions
         string instanceName,
         string methodName,
         bool endLine,
-        params string[] parameters)
-    {
-        if (instanceName == null)
-        {
-            throw new ArgumentNullException(nameof(instanceName));
-        }
-
-        if (methodName == null)
-        {
-            throw new ArgumentNullException(nameof(methodName));
-        }
-
-        return WriteMethodInvocation(
-            writer,
-            string.Format(CultureInfo.InvariantCulture, InstanceMethodFormat, instanceName, methodName),
-            endLine,
-            parameters);
-    }
+        params ImmutableArray<Content> arguments)
+        => writer.WriteMethodInvocation($"{instanceName}.{methodName}", endLine, arguments);
 
     public static CodeWriter WriteStartInstanceMethodInvocation(this CodeWriter writer, string instanceName, string methodName)
-    {
-        if (instanceName == null)
-        {
-            throw new ArgumentNullException(nameof(instanceName));
-        }
-
-        if (methodName == null)
-        {
-            throw new ArgumentNullException(nameof(methodName));
-        }
-
-        return WriteStartMethodInvocation(
-            writer,
-            string.Format(CultureInfo.InvariantCulture, InstanceMethodFormat, instanceName, methodName));
-    }
+        => writer.WriteStartMethodInvocation($"{instanceName}.{methodName}");
 
     public static CodeWriter WriteField(
         this CodeWriter writer,
@@ -288,18 +249,19 @@ internal static class CodeWriterExtensions
         return writer;
     }
 
-    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, string methodName, params string[] parameters)
-    {
-        return WriteMethodInvocation(writer, methodName, endLine: true, parameters: parameters);
-    }
+    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, string methodName, params ImmutableArray<Content> arguments)
+        => writer.WriteMethodInvocation(methodName, endLine: true, arguments);
 
-    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, string methodName, bool endLine, params string[] parameters)
-    {
-        return
-            WriteStartMethodInvocation(writer, methodName)
-            .Write(string.Join(", ", parameters))
+    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, string methodName, bool endLine, params ImmutableArray<Content> arguments)
+        => WriteStartMethodInvocation(writer, methodName)
+            .WriteCommaSeparatedList(arguments)
             .WriteEndMethodInvocation(endLine);
-    }
+
+    public static CodeWriter WriteCommaSeparatedList(this CodeWriter writer, params ImmutableArray<Content> items)
+        => writer.WriteSeparatedList(", ", items);
+
+    public static CodeWriter WriteSeparatedList(this CodeWriter writer, Content separator, params ImmutableArray<Content> items)
+        => writer.Write(Content.Join(separator, items));
 
     /// <summary>
     /// Writes an "@" character if the provided identifier needs escaping in c#

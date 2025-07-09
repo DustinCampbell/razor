@@ -80,7 +80,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
 
     public void WriteTagHelperBody(CodeRenderingContext context, DefaultTagHelperBodyIntermediateNode node)
     {
-        if (context.Parent as TagHelperIntermediateNode == null)
+        if (context.Parent is not TagHelperIntermediateNode)
         {
             var message = Resources.FormatIntermediateNodes_InvalidParentNode(node.GetType(), typeof(TagHelperIntermediateNode));
             throw new InvalidOperationException(message);
@@ -125,7 +125,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
 
     public void WriteTagHelperCreate(CodeRenderingContext context, DefaultTagHelperCreateIntermediateNode node)
     {
-        if (context.Parent as TagHelperIntermediateNode == null)
+        if (context.Parent is not TagHelperIntermediateNode)
         {
             var message = Resources.FormatIntermediateNodes_InvalidParentNode(node.GetType(), typeof(TagHelperIntermediateNode));
             throw new InvalidOperationException(message);
@@ -134,20 +134,20 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
         context.CodeWriter
             .WriteStartAssignment(node.FieldName)
             .Write(CreateTagHelperMethodName)
-            .WriteLine("<global::" + node.TypeName + ">();");
+            .WriteLine($"<global::{node.TypeName}>();");
 
         if (!context.Options.DesignTime)
         {
             context.CodeWriter.WriteInstanceMethodInvocation(
                 ExecutionContextVariableName,
                 ExecutionContextAddMethodName,
-                node.FieldName);
+                [node.FieldName]);
         }
     }
 
     public void WriteTagHelperExecute(CodeRenderingContext context, DefaultTagHelperExecuteIntermediateNode node)
     {
-        if (context.Parent as TagHelperIntermediateNode == null)
+        if (context.Parent is not TagHelperIntermediateNode)
         {
             var message = Resources.FormatIntermediateNodes_InvalidParentNode(node.GetType(), typeof(TagHelperIntermediateNode));
             throw new InvalidOperationException(message);
@@ -197,7 +197,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
 
     public void WriteTagHelperHtmlAttribute(CodeRenderingContext context, DefaultTagHelperHtmlAttributeIntermediateNode node)
     {
-        if (context.Parent as TagHelperIntermediateNode == null)
+        if (context.Parent is not TagHelperIntermediateNode)
         {
             var message = Resources.FormatIntermediateNodes_InvalidParentNode(node.GetType(), typeof(TagHelperIntermediateNode));
             throw new InvalidOperationException(message);
@@ -244,7 +244,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
                 context.CodeWriter
                     .WriteMethodInvocation(
                         EndAddHtmlAttributeValuesMethodName,
-                        ExecutionContextVariableName);
+                        [ExecutionContextVariableName]);
             }
             else
             {

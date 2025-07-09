@@ -158,18 +158,18 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
             writer.WriteInstanceMethodInvocation(
                 $"({ViewComponentHelperVariableName} as {IViewContextAwareTypeName})?",
                 IViewContextAwareContextualizeMethodName,
-                new[] { ViewContextPropertyName });
+                [ViewContextPropertyName]);
 
-            var methodParameters = GetMethodParameters(tagHelper);
+            var methodArguments = GetMethodArguments(tagHelper);
             writer.Write("var ")
                 .WriteStartAssignment(TagHelperContentVariableName)
-                .WriteInstanceMethodInvocation($"await {ViewComponentHelperVariableName}", ViewComponentInvokeMethodName, methodParameters);
-            writer.WriteStartAssignment($"{TagHelperOutputVariableName}.{TagHelperOutputTagNamePropertyName}")
+                .WriteInstanceMethodInvocation($"await {ViewComponentHelperVariableName}", ViewComponentInvokeMethodName, methodArguments);
+            writer.WriteStartAssignment(new Content($"{TagHelperOutputVariableName}.{TagHelperOutputTagNamePropertyName}"))
                 .WriteLine("null;");
             writer.WriteInstanceMethodInvocation(
                 $"{TagHelperOutputVariableName}.{TagHelperOutputContentPropertyName}",
                 TagHelperContentSetMethodName,
-                new[] { TagHelperContentVariableName });
+                [TagHelperContentVariableName]);
         }
     }
 
@@ -182,7 +182,7 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
             TagHelperProcessInvokeAsyncArgsMethodName,
             new Dictionary<string, string>() { { TagHelperContextTypeName, TagHelperContextVariableName } }))
         {
-            writer.WriteStartAssignment($"{methodReturnType} args")
+            writer.WriteStartAssignment(new Content($"{methodReturnType} args"))
                 .WriteStartNewObject(methodReturnType)
                 .WriteEndMethodInvocation();
 
@@ -201,12 +201,11 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         }
     }
 
-    private string[] GetMethodParameters(TagHelperDescriptor tagHelper)
-    {
-        var viewComponentName = tagHelper.GetViewComponentName();
-        var methodParameters = new[] { $"\"{viewComponentName}\"", $"{TagHelperProcessInvokeAsyncArgsMethodName}({TagHelperContextVariableName})" };
-        return methodParameters;
-    }
+    private ImmutableArray<Content> GetMethodArguments(TagHelperDescriptor tagHelper)
+        => [
+            new Content($"\"{tagHelper.GetViewComponentName()}\""),
+            new Content($"{TagHelperProcessInvokeAsyncArgsMethodName}({TagHelperContextVariableName})")
+        ];
 
     private void WriteTargetElementString(CodeWriter writer, TagHelperDescriptor tagHelper)
     {

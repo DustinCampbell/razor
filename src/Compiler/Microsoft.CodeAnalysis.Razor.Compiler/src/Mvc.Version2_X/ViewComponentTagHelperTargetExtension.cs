@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X;
 
@@ -150,29 +151,32 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
             writer.WriteInstanceMethodInvocation(
                 $"({ViewComponentHelperVariableName} as {IViewContextAwareTypeName})?",
                 IViewContextAwareContextualizeMethodName,
-                new[] { ViewContextPropertyName });
+                [ViewContextPropertyName]);
 
-            var methodParameters = GetMethodParameters(tagHelper);
+            var methodArguments = GetMethodArguments(tagHelper);
             writer.Write("var ")
                 .WriteStartAssignment(TagHelperContentVariableName)
-                .WriteInstanceMethodInvocation($"await {ViewComponentHelperVariableName}", ViewComponentInvokeMethodName, methodParameters);
-            writer.WriteStartAssignment($"{TagHelperOutputVariableName}.{TagHelperOutputTagNamePropertyName}")
+                .WriteInstanceMethodInvocation($"await {ViewComponentHelperVariableName}", ViewComponentInvokeMethodName, methodArguments);
+            writer.WriteStartAssignment(new Content($"{TagHelperOutputVariableName}.{TagHelperOutputTagNamePropertyName}"))
                 .WriteLine("null;");
             writer.WriteInstanceMethodInvocation(
                 $"{TagHelperOutputVariableName}.{TagHelperOutputContentPropertyName}",
                 TagHelperContentSetMethodName,
-                new[] { TagHelperContentVariableName });
+                [TagHelperContentVariableName]);
         }
     }
 
-    private string[] GetMethodParameters(TagHelperDescriptor tagHelper)
+    private static ImmutableArray<Content> GetMethodArguments(TagHelperDescriptor tagHelper)
     {
-        var propertyNames = tagHelper.BoundAttributes.Select(attribute => attribute.GetPropertyName());
-        var joinedPropertyNames = string.Join(", ", propertyNames);
-        var parametersString = $"new {{ { joinedPropertyNames } }}";
-        var viewComponentName = tagHelper.GetViewComponentName();
-        var methodParameters = new[] { $"\"{viewComponentName}\"", parametersString };
-        return methodParameters;
+        using var builder = new PooledArrayBuilder<Content>();
+
+        builder.Add("new { ");
+        builder.Add(Content.Join(", ", tagHelper.BoundAttributes.Select(static a => a.GetPropertyName())));
+        builder.Add(" }");
+
+        var additionalArguments = builder.ToContent();
+
+        return [new Content($"\"{tagHelper.GetViewComponentName()}\""), additionalArguments];
     }
 
     private void WriteTargetElementString(CodeWriter writer, TagHelperDescriptor tagHelper)

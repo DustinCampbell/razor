@@ -127,11 +127,10 @@ public class DefaultTagHelperTargetExtensionTest : RazorProjectEngineTestBase
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperCreateIntermediateNode()
-        {
-            FieldName = "__TestNamespace_MyTagHelper",
-            TypeName = "TestNamespace.MyTagHelper",
-        };
+        var node = new DefaultTagHelperCreateIntermediateNode(
+            fieldName: "__TestNamespace_MyTagHelper",
+            typeName: "TestNamespace.MyTagHelper");
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 
@@ -155,11 +154,10 @@ public class DefaultTagHelperTargetExtensionTest : RazorProjectEngineTestBase
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
-        var node = new DefaultTagHelperCreateIntermediateNode()
-        {
-            FieldName = "__TestNamespace_MyTagHelper",
-            TypeName = "TestNamespace.MyTagHelper",
-        };
+        var node = new DefaultTagHelperCreateIntermediateNode(
+            fieldName: "__TestNamespace_MyTagHelper",
+            typeName: "TestNamespace.MyTagHelper");
+
         tagHelperNode.Children.Add(node);
         Push(context, tagHelperNode);
 

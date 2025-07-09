@@ -149,12 +149,10 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         }
 
         // Now i has the right insertion point.
-        node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode()
-        {
-            FieldName = context.GetFieldName(tagHelper).ToString(),
-            TagHelper = tagHelper,
-            TypeName = tagHelper.GetTypeName(),
-        });
+        node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode(
+            fieldName: context.GetFieldName(tagHelper),
+            typeName: tagHelper.GetTypeName(),
+            tagHelper));
 
         // Next we need to rewrite any property nodes to use the field and property name for this
         // tag helper.

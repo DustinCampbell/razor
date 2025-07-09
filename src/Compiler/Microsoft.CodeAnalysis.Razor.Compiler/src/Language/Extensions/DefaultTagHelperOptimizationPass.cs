@@ -151,7 +151,7 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         // Now i has the right insertion point.
         node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode()
         {
-            FieldName = context.GetFieldName(tagHelper),
+            FieldName = context.GetFieldName(tagHelper).ToString(),
             TagHelper = tagHelper,
             TypeName = tagHelper.GetTypeName(),
         });
@@ -166,7 +166,7 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
                 // This belongs to the current tag helper, replace it.
                 node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(propertyNode)
                 {
-                    FieldName = context.GetFieldName(tagHelper),
+                    FieldName = context.GetFieldName(tagHelper).ToString(),
                     PropertyName = propertyNode.BoundAttribute.GetPropertyName(),
                 };
             }
@@ -192,8 +192,8 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         }
 
         var fieldNode = new FieldDeclarationIntermediateNode(
-            fieldName: context.GetFieldName(tagHelper),
-            fieldType: "global::" + tagHelper.GetTypeName(),
+            name: context.GetFieldName(tagHelper),
+            typeName: new Content($"global::{tagHelper.GetTypeName()}"),
             modifiers: ["private"],
             isTagHelperField: true);
 
@@ -215,20 +215,20 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
 
     private struct Context
     {
-        private readonly Dictionary<TagHelperDescriptor, string> _tagHelpers;
+        private readonly Dictionary<TagHelperDescriptor, Content> _tagHelpers;
 
         public Context(ClassDeclarationIntermediateNode @class)
         {
             Class = @class;
 
-            _tagHelpers = new Dictionary<TagHelperDescriptor, string>();
+            _tagHelpers = new Dictionary<TagHelperDescriptor, Content>();
         }
 
         public ClassDeclarationIntermediateNode Class { get; }
 
-        public IEnumerable<TagHelperDescriptor> TagHelpers => _tagHelpers.Keys;
+        public readonly IEnumerable<TagHelperDescriptor> TagHelpers => _tagHelpers.Keys;
 
-        public bool Add(TagHelperDescriptor tagHelper)
+        public readonly bool Add(TagHelperDescriptor tagHelper)
         {
             if (_tagHelpers.ContainsKey(tagHelper))
             {
@@ -239,14 +239,14 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
             return true;
         }
 
-        public string GetFieldName(TagHelperDescriptor tagHelper)
+        public readonly Content GetFieldName(TagHelperDescriptor tagHelper)
         {
             return _tagHelpers[tagHelper];
         }
 
-        private static string GenerateFieldName(TagHelperDescriptor tagHelper)
+        private static Content GenerateFieldName(TagHelperDescriptor tagHelper)
         {
-            return "__" + tagHelper.GetTypeName().Replace('.', '_');
+            return new Content($"__{tagHelper.GetTypeName().Replace('.', '_')}");
         }
     }
 }

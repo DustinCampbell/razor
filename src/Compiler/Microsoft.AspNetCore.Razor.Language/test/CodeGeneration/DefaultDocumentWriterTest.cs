@@ -343,8 +343,8 @@ public class DefaultDocumentWriterTest
         var document = new DocumentIntermediateNode();
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Add(new FieldDeclarationIntermediateNode(
-            fieldName: "_foo",
-            fieldType: "string",
+            name: "_foo",
+            typeName: "string",
             modifiers: ["internal", "readonly"]));
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();

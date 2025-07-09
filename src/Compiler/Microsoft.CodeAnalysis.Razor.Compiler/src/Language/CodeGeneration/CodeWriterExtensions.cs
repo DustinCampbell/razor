@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
@@ -264,31 +265,24 @@ internal static class CodeWriterExtensions
         this CodeWriter writer,
         ImmutableArray<string> suppressWarnings,
         ImmutableArray<string> modifiers,
-        string typeName,
-        string fieldName)
+        Content typeName,
+        Content fieldName)
     {
-        for (var i = 0; i < suppressWarnings.Length; i++)
+        foreach (var suppressWarning in suppressWarnings)
         {
-            writer.Write("#pragma warning disable ");
-            writer.WriteLine(suppressWarnings[i]);
+            writer.WriteLine($"#pragma warning disable {suppressWarning}");
         }
 
-        for (var i = 0; i < modifiers.Length; i++)
+        foreach (var modifier in modifiers)
         {
-            writer.Write(modifiers[i]);
-            writer.Write(" ");
+            writer.Write($"{modifier} ");
         }
 
-        writer.Write(typeName);
-        writer.Write(" ");
-        writer.Write(fieldName);
-        writer.Write(";");
-        writer.WriteLine();
+        writer.WriteLine($"{typeName} {fieldName};");
 
         for (var i = suppressWarnings.Length - 1; i >= 0; i--)
         {
-            writer.Write("#pragma warning restore ");
-            writer.WriteLine(suppressWarnings[i]);
+            writer.WriteLine($"#pragma warning restore {suppressWarnings[i]}");
         }
 
         return writer;

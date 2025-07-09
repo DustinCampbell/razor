@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
@@ -43,6 +44,10 @@ public sealed partial class CodeWriter
 
             switch (value)
             {
+                case Content content:
+                    content.WriteTo(_writer);
+                    break;
+
                 case ReadOnlyMemory<char> memory:
                     _writer.Write(memory);
                     break;

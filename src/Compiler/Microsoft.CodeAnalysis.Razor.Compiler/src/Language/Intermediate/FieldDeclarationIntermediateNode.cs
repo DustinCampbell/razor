@@ -6,14 +6,14 @@ using System.Collections.Immutable;
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class FieldDeclarationIntermediateNode(
-    string fieldName,
-    string fieldType,
+    Content name,
+    Content typeName,
     ImmutableArray<string> modifiers,
     ImmutableArray<string> suppressWarnings,
     bool isTagHelperField = false) : MemberDeclarationIntermediateNode
 {
-    public string FieldName { get; } = fieldName;
-    public string FieldType { get; } = fieldType;
+    public Content Name { get; } = name;
+    public Content TypeName { get; } = typeName;
 
     public bool IsTagHelperField { get; } = isTagHelperField;
 
@@ -23,11 +23,11 @@ public sealed class FieldDeclarationIntermediateNode(
     public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     public FieldDeclarationIntermediateNode(
-        string fieldName,
-        string fieldType,
+        Content name,
+        Content typeName,
         ImmutableArray<string> modifiers,
         bool isTagHelperField = false)
-        : this(fieldName, fieldType, modifiers, suppressWarnings: [], isTagHelperField)
+        : this(name, typeName, modifiers, suppressWarnings: [], isTagHelperField)
     {
     }
 
@@ -36,10 +36,10 @@ public sealed class FieldDeclarationIntermediateNode(
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        formatter.WriteContent(FieldName);
+        formatter.WriteContent(Name);
 
-        formatter.WriteProperty(nameof(FieldName), FieldName);
-        formatter.WriteProperty(nameof(FieldType), FieldType);
+        formatter.WriteProperty(nameof(Name), Name);
+        formatter.WriteProperty(nameof(TypeName), TypeName);
         formatter.WriteProperty(nameof(Modifiers), string.Join(" ", Modifiers));
     }
 }

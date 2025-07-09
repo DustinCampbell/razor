@@ -124,8 +124,8 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         }
 
         var fieldNode = new FieldDeclarationIntermediateNode(
-            fieldName: context.GetFieldName(tagHelper).ToString(),
-            fieldType: $"global::{context.GetFullyQualifiedName(tagHelper)}",
+            name: context.GetFieldName(tagHelper),
+            typeName: new Content($"global::{context.GetFullyQualifiedName(tagHelper)}"),
             modifiers: ["private"],
             isTagHelperField: true);
 

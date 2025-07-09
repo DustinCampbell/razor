@@ -4,13 +4,13 @@
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class TypeParameter(
-    string parameterName,
-    SourceSpan? parameterNameSource = null,
-    string? constraints = null,
+    Content name,
+    SourceSpan? nameSource = null,
+    Content constraints = default,
     SourceSpan? constraintsSource = null)
 {
-    public string ParameterName { get; } = parameterName;
-    public SourceSpan? ParameterNameSource { get; } = parameterNameSource;
-    public string? Constraints { get; } = constraints;
+    public Content Name { get; } = name;
+    public SourceSpan? NameSource { get; } = nameSource;
+    public Content Constraints { get; } = constraints;
     public SourceSpan? ConstraintsSource { get; } = constraintsSource;
 }

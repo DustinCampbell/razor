@@ -70,6 +70,6 @@ public sealed class ClassDeclarationIntermediateNode(
         formatter.WriteProperty(nameof(Name), Name);
         formatter.WriteProperty(nameof(Interfaces), string.Join(", ", Interfaces.Select(i => i.Content)));
         formatter.WriteProperty(nameof(Modifiers), string.Join(", ", Modifiers));
-        formatter.WriteProperty(nameof(TypeParameters), string.Join(", ", TypeParameters.Select(t => t.ParameterName)));
+        formatter.WriteProperty(nameof(TypeParameters), string.Join(", ", TypeParameters.Select(t => t.Name)));
     }
 }

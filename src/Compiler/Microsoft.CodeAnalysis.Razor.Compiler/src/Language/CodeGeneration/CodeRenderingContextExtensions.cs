@@ -124,13 +124,13 @@ internal static class CodeRenderingContextExtensions
                     writer.Write(",");
                 }
 
-                if (typeParameter.ParameterNameSource is { } source)
+                if (typeParameter.NameSource is { } source)
                 {
-                    WriteWithPragma(context, typeParameter.ParameterName, source);
+                    WriteWithPragma(context, typeParameter.Name, source);
                 }
                 else
                 {
-                    writer.Write((string)typeParameter.ParameterName);
+                    writer.Write(typeParameter.Name);
                 }
             }
 
@@ -172,12 +172,14 @@ internal static class CodeRenderingContextExtensions
         }
 
         writer.WriteLine();
-        if (typeParameters != null)
+
+        if (!typeParameters.IsDefaultOrEmpty)
         {
             foreach (var typeParameter in typeParameters)
             {
                 var constraint = typeParameter.Constraints;
-                if (constraint != null)
+
+                if (!constraint.IsEmpty)
                 {
                     if (typeParameter.ConstraintsSource is { } source)
                     {
@@ -186,8 +188,7 @@ internal static class CodeRenderingContextExtensions
                     }
                     else
                     {
-                        writer.Write(constraint);
-                        writer.WriteLine();
+                        writer.WriteLine(constraint);
                     }
                 }
             }
@@ -220,7 +221,7 @@ internal static class CodeRenderingContextExtensions
             }
         }
 
-        static void WriteWithPragma(CodeRenderingContext context, string content, SourceSpan source)
+        static void WriteWithPragma(CodeRenderingContext context, Content content, SourceSpan source)
         {
             var writer = context.CodeWriter;
 

@@ -414,7 +414,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
         private void CreateTypeInferenceMethod(DocumentIntermediateNode documentNode, ComponentIntermediateNode node, List<CascadingGenericTypeParameter>? receivesCascadingGenericTypes)
         {
             var namespaceName = documentNode.FindPrimaryNamespace() is { Name.IsEmpty: false } primaryNamespace
-                ? $"__Blazor." + primaryNamespace.Name
+                ? "__Blazor." + primaryNamespace.Name
                 : "__Blazor";
 
             var className = documentNode.FindPrimaryClass().AssumeNotNull().Name;

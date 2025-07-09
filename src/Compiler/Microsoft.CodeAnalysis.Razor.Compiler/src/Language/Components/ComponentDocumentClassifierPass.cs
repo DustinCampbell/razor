@@ -88,7 +88,7 @@ internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
 
         @class.NullableContext = true;
 
-        @namespace.Content = computedNamespace;
+        @namespace.UpdateName(computedNamespace);
         @namespace.Source = computedNamespaceSpan;
         @class.ClassName = computedClass;
         @class.UpdateModifiers("public", "partial");

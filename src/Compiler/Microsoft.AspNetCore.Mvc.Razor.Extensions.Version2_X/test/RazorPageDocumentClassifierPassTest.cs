@@ -72,10 +72,10 @@ public class RazorPageDocumentClassifierPassTest : RazorProjectEngineTestBase
         var expectedDiagnostic = RazorExtensionsDiagnosticFactory.CreatePageDirective_MustExistAtTheTopOfFile(sourceSpan);
 
         var content = """
-            
+
             @somethingelse
             @page
-            
+
             """;
 
         var codeDocument = ProjectEngine.CreateCodeDocument(content);
@@ -180,7 +180,7 @@ public class RazorPageDocumentClassifierPassTest : RazorProjectEngineTestBase
         var documentNode = processor.GetDocumentNode();
         var namespaceNode = documentNode.GetNamespaceNode();
 
-        Assert.Equal("AspNetCore", namespaceNode.Content);
+        Assert.Equal("AspNetCore", namespaceNode.Name);
     }
 
     [Fact]

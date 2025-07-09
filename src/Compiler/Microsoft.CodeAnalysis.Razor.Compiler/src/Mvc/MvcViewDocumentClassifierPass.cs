@@ -35,11 +35,11 @@ public class MvcViewDocumentClassifierPass : DocumentClassifierPassBase
 
         if (!codeDocument.TryGetNamespace(fallbackToRootNamespace: false, out var namespaceName))
         {
-            @namespace.Content = _useConsolidatedMvcViews ? "AspNetCoreGeneratedDocument" : "AspNetCore";
+            @namespace.UpdateName(_useConsolidatedMvcViews ? "AspNetCoreGeneratedDocument" : "AspNetCore");
         }
         else
         {
-            @namespace.Content = namespaceName;
+            @namespace.UpdateName(namespaceName);
         }
 
         if (!codeDocument.TryComputeClassName(out var className))

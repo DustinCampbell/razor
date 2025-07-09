@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -74,9 +75,9 @@ internal sealed class ComponentRenderModeDirectivePass : IntermediateNodePassBas
 
         // generate the attribute usage on top of the class
         var attributeNode = new CSharpCodeIntermediateNode();
-        var namespaceSeparator = string.IsNullOrEmpty(@namespace.Content) ? string.Empty : ".";
+        var namespaceSeparator = @namespace.Name.IsNullOrEmpty() ? string.Empty : ".";
         attributeNode.Children.Add(
-            IntermediateNodeFactory.CSharpToken($"[global::{@namespace.Content}{namespaceSeparator}{@class.ClassName}.{GeneratedRenderModeAttributeName}]"));
+            IntermediateNodeFactory.CSharpToken($"[global::{@namespace.Name}{namespaceSeparator}{@class.ClassName}.{GeneratedRenderModeAttributeName}]"));
 
         // Insert the new attribute on top of the class
         var childCount = @namespace.Children.Count;

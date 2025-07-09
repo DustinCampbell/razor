@@ -110,7 +110,7 @@ internal class DefaultDocumentWriter(CodeTarget codeTarget, RazorCodeGenerationO
 
         public override void VisitNamespaceDeclaration(NamespaceDeclarationIntermediateNode node)
         {
-            using (_context.BuildNamespace(node.Content, node.Source))
+            using (_context.BuildNamespace(node.Name, node.Source))
             {
                 var writer = CodeWriter;
 

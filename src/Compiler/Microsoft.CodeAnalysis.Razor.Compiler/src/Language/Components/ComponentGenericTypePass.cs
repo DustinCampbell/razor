@@ -413,9 +413,9 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
         private void CreateTypeInferenceMethod(DocumentIntermediateNode documentNode, ComponentIntermediateNode node, List<CascadingGenericTypeParameter>? receivesCascadingGenericTypes)
         {
-            var @namespace = documentNode.FindPrimaryNamespace().AssumeNotNull().Content;
-            @namespace = string.IsNullOrEmpty(@namespace) ? "__Blazor" : "__Blazor." + @namespace;
-            @namespace += "." + documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
+            var namespaceName = documentNode.FindPrimaryNamespace().AssumeNotNull().Name;
+            namespaceName = namespaceName.IsNullOrEmpty() ? "__Blazor" : "__Blazor." + namespaceName;
+            namespaceName += "." + documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
 
             var genericTypeConstraints = node.Component.BoundAttributes
                 .Where(t => t.Metadata.ContainsKey(ComponentMetadata.Component.TypeParameterConstraintsKey))
@@ -428,7 +428,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 // Method name is generated and guaranteed not to collide, since it's unique for each
                 // component call site.
                 MethodName = $"Create{CSharpIdentifier.SanitizeIdentifier(node.TagName.AsSpanOrDefault())}_{_id++}",
-                FullTypeName = @namespace + ".TypeInference",
+                FullTypeName = namespaceName + ".TypeInference",
 
                 ReceivesCascadingGenericTypes = receivesCascadingGenericTypes,
                 GenericTypeConstraints = genericTypeConstraints
@@ -442,9 +442,8 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 .FirstOrDefault(n => n.IsGenericTyped);
             if (namespaceNode == null)
             {
-                namespaceNode = new NamespaceDeclarationIntermediateNode()
+                namespaceNode = new NamespaceDeclarationIntermediateNode(name: namespaceName)
                 {
-                    Content = @namespace,
                     IsGenericTyped = true,
                 };
 

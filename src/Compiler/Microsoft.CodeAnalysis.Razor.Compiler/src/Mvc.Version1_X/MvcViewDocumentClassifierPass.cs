@@ -24,7 +24,7 @@ public class MvcViewDocumentClassifierPass : DocumentClassifierPassBase
     {
         base.OnDocumentStructureCreated(codeDocument, @namespace, @class, method);
 
-        @namespace.Content = "AspNetCore";
+        @namespace.UpdateName("AspNetCore");
 
         var filePath = codeDocument.Source.RelativePath ?? codeDocument.Source.FilePath;
         if (string.IsNullOrEmpty(filePath))

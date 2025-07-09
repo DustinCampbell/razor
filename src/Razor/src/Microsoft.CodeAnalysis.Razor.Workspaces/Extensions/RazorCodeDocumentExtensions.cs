@@ -138,7 +138,7 @@ internal static partial class RazorCodeDocumentExtensions
             .FindDescendantNodes<IntermediateNode>()
             .First(static n => n is NamespaceDeclarationIntermediateNode);
 
-        return namespaceNode.Content == fullyQualifiedNamespace;
+        return namespaceNode.Name == fullyQualifiedNamespace;
     }
 
     public static RazorLanguageKind GetLanguageKind(this RazorCodeDocument codeDocument, int hostDocumentIndex, bool rightAssociative)

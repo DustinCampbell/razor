@@ -6,8 +6,11 @@ using System.Linq;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
-public sealed class ClassDeclarationIntermediateNode(bool isPrimaryClass = false) : MemberDeclarationIntermediateNode
+public sealed class ClassDeclarationIntermediateNode(
+    string? name = null,
+    bool isPrimaryClass = false) : MemberDeclarationIntermediateNode
 {
+    private string? _name = name;
     private IntermediateNodeCollection? _children;
     private ImmutableArray<string> _modifiers = [];
     private ImmutableArray<IntermediateToken> _interfaces = [];
@@ -21,7 +24,7 @@ public sealed class ClassDeclarationIntermediateNode(bool isPrimaryClass = false
         init => _modifiers = value.NullToEmpty();
     }
 
-    public string? ClassName { get; set; }
+    public string? Name => _name;
 
     public BaseTypeWithModel? BaseType { get; set; }
 
@@ -42,6 +45,9 @@ public sealed class ClassDeclarationIntermediateNode(bool isPrimaryClass = false
     public override IntermediateNodeCollection Children
         => _children ??= [];
 
+    public void UpdateName(string? value)
+        => _name = value;
+
     public void UpdateModifiers(params ImmutableArray<string> modifiers)
         => _modifiers = modifiers.NullToEmpty();
 
@@ -56,9 +62,9 @@ public sealed class ClassDeclarationIntermediateNode(bool isPrimaryClass = false
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        formatter.WriteContent(ClassName);
+        formatter.WriteContent(Name);
 
-        formatter.WriteProperty(nameof(ClassName), ClassName);
+        formatter.WriteProperty(nameof(Name), Name);
         formatter.WriteProperty(nameof(Interfaces), string.Join(", ", Interfaces.Select(i => i.Content)));
         formatter.WriteProperty(nameof(Modifiers), string.Join(", ", Modifiers));
         formatter.WriteProperty(nameof(TypeParameters), string.Join(", ", TypeParameters.Select(t => t.ParameterName)));

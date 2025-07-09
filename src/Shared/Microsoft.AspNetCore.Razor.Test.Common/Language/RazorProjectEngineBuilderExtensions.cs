@@ -67,7 +67,7 @@ public static class RazorProjectEngineBuilderExtensions
 
         feature.ConfigureClass.Add((codeDocument, node) =>
         {
-            node.ClassName = testFileName.Replace('/', '_');
+            node.UpdateName(testFileName.Replace('/', '_'));
             node.UpdateModifiers("public");
         });
 

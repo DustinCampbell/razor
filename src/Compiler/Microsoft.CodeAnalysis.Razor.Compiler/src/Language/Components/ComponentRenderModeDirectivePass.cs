@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -37,9 +36,8 @@ internal sealed class ComponentRenderModeDirectivePass : IntermediateNodePassBas
         }
 
         // generate the inner attribute class
-        var classDecl = new ClassDeclarationIntermediateNode()
+        var classDecl = new ClassDeclarationIntermediateNode(name: GeneratedRenderModeAttributeName)
         {
-            ClassName = GeneratedRenderModeAttributeName,
             BaseType = new BaseTypeWithModel($"global::{ComponentsApi.RenderModeAttribute.FullTypeName}"),
             Modifiers = ["private", "sealed"]
         };
@@ -78,7 +76,7 @@ internal sealed class ComponentRenderModeDirectivePass : IntermediateNodePassBas
         var namespaceName = !@namespace.Name.IsEmpty ? @namespace.Name + "." : Content.Empty;
 
         attributeNode.Children.Add(
-            IntermediateNodeFactory.CSharpToken($"[global::{namespaceName}{@class.ClassName}.{GeneratedRenderModeAttributeName}]"));
+            IntermediateNodeFactory.CSharpToken($"[global::{namespaceName}{@class.Name}.{GeneratedRenderModeAttributeName}]"));
 
         // Insert the new attribute on top of the class
         var childCount = @namespace.Children.Count;

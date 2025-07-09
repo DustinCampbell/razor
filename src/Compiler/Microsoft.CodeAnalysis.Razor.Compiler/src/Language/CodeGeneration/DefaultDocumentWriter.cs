@@ -133,11 +133,11 @@ internal class DefaultDocumentWriter(CodeTarget codeTarget, RazorCodeGenerationO
 
         public override void VisitClassDeclaration(ClassDeclarationIntermediateNode node)
         {
-            Debug.Assert(node.ClassName != null);
+            Debug.Assert(node.Name != null);
 
             using (_context.BuildClassDeclaration(
                 node.Modifiers,
-                node.ClassName,
+                node.Name,
                 node.BaseType,
                 node.Interfaces,
                 node.TypeParameters,

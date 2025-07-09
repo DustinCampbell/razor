@@ -102,10 +102,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
         var @namespace = new NamespaceDeclarationIntermediateNode(name: "SomeNamespace");
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "SomeName"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "SomeName", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -135,10 +132,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "SomeName"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "SomeName", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -170,10 +164,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
         var @namespace = new NamespaceDeclarationIntermediateNode(name: "SomeNamespace", isPrimaryNamespace: true);
 
         builder.Push(@namespace);
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "SomeName"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "SomeName", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -212,10 +203,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "SomeName"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "SomeName", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -261,10 +249,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "SomeName"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "SomeName", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -304,10 +289,7 @@ public class AssemblyAttributeInjectionPassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "SomeName"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "SomeName", isPrimaryClass: true);
 
         builder.Add(@class);
 

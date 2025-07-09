@@ -90,7 +90,7 @@ internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
 
         @namespace.UpdateName(computedNamespace);
         @namespace.Source = computedNamespaceSpan;
-        @class.ClassName = computedClass;
+        @class.UpdateName(computedClass);
         @class.UpdateModifiers("public", "partial");
 
         if (codeDocument.FileKind.IsComponentImport())

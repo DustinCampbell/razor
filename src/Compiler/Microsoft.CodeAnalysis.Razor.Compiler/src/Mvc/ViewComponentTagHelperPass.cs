@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
@@ -171,8 +170,8 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
             }
 
             var className = $"__Generated__{tagHelper.GetViewComponentName()}ViewComponentTagHelper";
-            var namespaceSeparator = Namespace.Name.IsEmpty ? string.Empty : ".";
-            var fullyQualifiedName = $"{Namespace.Name}{namespaceSeparator}{Class.ClassName}.{className}";
+            var namespaceName = !Namespace.Name.IsEmpty ? Namespace.Name + "." : Content.Empty;
+            var fullyQualifiedName = $"{namespaceName}{Class.Name}.{className}";
             var fieldName = GenerateFieldName(tagHelper);
 
             _tagHelpers.Add(tagHelper, (className, fullyQualifiedName, fieldName));

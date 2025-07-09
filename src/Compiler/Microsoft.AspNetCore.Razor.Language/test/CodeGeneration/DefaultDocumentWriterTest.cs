@@ -167,7 +167,7 @@ public class DefaultDocumentWriterTest
         // Arrange
         var document = new DocumentIntermediateNode();
         var builder = IntermediateNodeBuilder.Create(document);
-        builder.Add(new ClassDeclarationIntermediateNode()
+        builder.Add(new ClassDeclarationIntermediateNode(name: "TestClass")
         {
             Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
@@ -175,8 +175,7 @@ public class DefaultDocumentWriterTest
             TypeParameters = [
                 new TypeParameter("TKey"),
                 new TypeParameter("TValue")
-            ],
-            ClassName = "TestClass",
+            ]
         });
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();
@@ -210,7 +209,7 @@ public class DefaultDocumentWriterTest
         // Arrange
         var document = new DocumentIntermediateNode();
         var builder = IntermediateNodeBuilder.Create(document);
-        builder.Add(new ClassDeclarationIntermediateNode()
+        builder.Add(new ClassDeclarationIntermediateNode(name: "TestClass")
         {
             Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
@@ -219,8 +218,7 @@ public class DefaultDocumentWriterTest
                 new TypeParameter("TKey"),
                 new TypeParameter("TValue")
             ],
-            ClassName = "TestClass",
-            NullableContext = true,
+            NullableContext = true
         });
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();
@@ -256,7 +254,7 @@ public class DefaultDocumentWriterTest
         // Arrange
         var document = new DocumentIntermediateNode();
         var builder = IntermediateNodeBuilder.Create(document);
-        builder.Add(new ClassDeclarationIntermediateNode()
+        builder.Add(new ClassDeclarationIntermediateNode(name: "TestClass")
         {
             Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
@@ -264,8 +262,7 @@ public class DefaultDocumentWriterTest
             TypeParameters = [
                 new TypeParameter("TKey", constraints: "where TKey : class"),
                 new TypeParameter("TValue", constraints: "where TValue : class")
-            ],
-            ClassName = "TestClass",
+            ]
         });
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();

@@ -105,10 +105,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "Test"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "Test", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -129,7 +126,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
         Assert.Equal("/test.cshtml", checksum.Identifier);
 
         var foundClass = Assert.IsType<ClassDeclarationIntermediateNode>(@namespace.Children[1]);
-        Assert.Equal("Test", foundClass.ClassName);
+        Assert.Equal("Test", foundClass.Name);
     }
 
     [Fact]
@@ -175,10 +172,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "Test"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "Test", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -207,10 +201,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "Test"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "Test", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -239,10 +230,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "Test"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "Test", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -282,10 +270,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "Test"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "Test", isPrimaryClass: true);
 
         builder.Add(@class);
 
@@ -337,10 +322,7 @@ public class MetadataAttributePassTest : RazorProjectEngineTestBase
 
         builder.Push(@namespace);
 
-        var @class = new ClassDeclarationIntermediateNode(isPrimaryClass: true)
-        {
-            ClassName = "Test"
-        };
+        var @class = new ClassDeclarationIntermediateNode(name: "Test", isPrimaryClass: true);
 
         builder.Add(@class);
 

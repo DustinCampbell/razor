@@ -417,7 +417,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 ? $"__Blazor." + primaryNamespace.Name
                 : "__Blazor";
 
-            var className = documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
+            var className = documentNode.FindPrimaryClass().AssumeNotNull().Name;
             namespaceName = new Content($"{namespaceName}.{className}");
 
             var genericTypeConstraints = node.Component.BoundAttributes
@@ -455,14 +455,14 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
             var classNode = namespaceNode.Children
                 .OfType<ClassDeclarationIntermediateNode>()
-                .FirstOrDefault(n => n.ClassName == "TypeInference");
+                .FirstOrDefault(n => n.Name == "TypeInference");
             if (classNode == null)
             {
-                classNode = new ClassDeclarationIntermediateNode()
+                classNode = new ClassDeclarationIntermediateNode(name: "TypeInference")
                 {
-                    ClassName = "TypeInference",
-                    Modifiers = ["internal", "static"],
+                    Modifiers = ["internal", "static"]
                 };
+
                 namespaceNode.Children.Add(classNode);
             }
 

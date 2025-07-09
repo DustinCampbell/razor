@@ -196,7 +196,7 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
         Assert.Equal("TestNamespace", @namespace.Name);
 
         var @class = SingleChild<ClassDeclarationIntermediateNode>(@namespace);
-        Assert.Equal("TestClass", @class.ClassName);
+        Assert.Equal("TestClass", @class.Name);
 
         var method = SingleChild<MethodDeclarationIntermediateNode>(@class);
         Assert.Equal("TestMethod", method.MethodName);
@@ -269,7 +269,11 @@ public class DocumentClassifierPassBaseTest : RazorProjectEngineTestBase
                 @namespace.UpdateName(namespaceName);
             }
 
-            @class.ClassName = Class;
+            if (Class is string className)
+            {
+                @class.UpdateName(className);
+            }
+
             @method.MethodName = Method;
         }
 

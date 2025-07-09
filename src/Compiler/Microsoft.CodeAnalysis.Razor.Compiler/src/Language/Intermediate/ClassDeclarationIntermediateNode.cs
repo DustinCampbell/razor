@@ -7,10 +7,10 @@ using System.Linq;
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class ClassDeclarationIntermediateNode(
-    string? name = null,
+    Content name = default,
     bool isPrimaryClass = false) : MemberDeclarationIntermediateNode
 {
-    private string? _name = name;
+    private Content _name = name;
     private IntermediateNodeCollection? _children;
     private ImmutableArray<string> _modifiers = [];
     private ImmutableArray<IntermediateToken> _interfaces = [];
@@ -24,7 +24,7 @@ public sealed class ClassDeclarationIntermediateNode(
         init => _modifiers = value.NullToEmpty();
     }
 
-    public string? Name => _name;
+    public Content Name => _name;
 
     public BaseTypeWithModel? BaseType { get; set; }
 
@@ -45,8 +45,11 @@ public sealed class ClassDeclarationIntermediateNode(
     public override IntermediateNodeCollection Children
         => _children ??= [];
 
-    public void UpdateName(string? value)
+    public void UpdateName(Content value)
         => _name = value;
+
+    public void UpdateName(ref Content.ContentInterpolatedStringHandler handler)
+        => _name = new(ref handler);
 
     public void UpdateModifiers(params ImmutableArray<string> modifiers)
         => _modifiers = modifiers.NullToEmpty();

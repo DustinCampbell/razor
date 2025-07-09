@@ -85,7 +85,7 @@ internal static class CodeRenderingContextExtensions
     public static CSharpCodeWritingScope BuildClassDeclaration(
         this CodeRenderingContext context,
         ImmutableArray<string> modifiers,
-        string name,
+        Content name,
         BaseTypeWithModel? baseType,
         ImmutableArray<IntermediateToken> interfaces,
         ImmutableArray<TypeParameter> typeParameters,

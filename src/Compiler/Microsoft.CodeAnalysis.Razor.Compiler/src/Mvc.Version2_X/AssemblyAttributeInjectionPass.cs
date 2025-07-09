@@ -29,7 +29,7 @@ public class AssemblyAttributeInjectionPass : IntermediateNodePassBase, IRazorOp
         }
 
         var @class = documentNode.FindPrimaryClass();
-        if (@class == null || @class.Name.IsNullOrEmpty())
+        if (@class == null || @class.Name.IsEmpty)
         {
             // No class node or it's incomplete. Skip.
             return;
@@ -37,7 +37,7 @@ public class AssemblyAttributeInjectionPass : IntermediateNodePassBase, IRazorOp
 
         var generatedTypeName = @namespace.Name.IsEmpty
             ? @class.Name
-            : $"{@namespace.Name}.{@class.Name}";
+            : new Content($"{@namespace.Name}.{@class.Name}");
 
         // The MVC attributes require a relative path to be specified so that we can make a view engine path.
         // We can't use a rooted path because we don't know what the project root is.

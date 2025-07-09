@@ -83,9 +83,9 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         // Now i has the right insertion point.
         node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode()
         {
-            FieldName = context.GetFieldName(tagHelper),
+            FieldName = context.GetFieldName(tagHelper).ToString(),
             TagHelper = tagHelper,
-            TypeName = context.GetFullyQualifiedName(tagHelper),
+            TypeName = context.GetFullyQualifiedName(tagHelper).ToString(),
         });
 
         // Now we need to rewrite any set property nodes to use the default runtime.
@@ -98,7 +98,7 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
                 // that will use our field and property name.
                 node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(propertyNode)
                 {
-                    FieldName = context.GetFieldName(tagHelper),
+                    FieldName = context.GetFieldName(tagHelper).ToString(),
                     PropertyName = propertyNode.BoundAttribute.GetPropertyName(),
                 };
             }
@@ -124,8 +124,8 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         }
 
         var fieldNode = new FieldDeclarationIntermediateNode(
-            fieldName: context.GetFieldName(tagHelper),
-            fieldType: "global::" + context.GetFullyQualifiedName(tagHelper),
+            fieldName: context.GetFieldName(tagHelper).ToString(),
+            fieldType: $"global::{context.GetFullyQualifiedName(tagHelper)}",
             modifiers: ["private"],
             isTagHelperField: true);
 
@@ -136,7 +136,7 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
     {
         var node = new ViewComponentTagHelperIntermediateNode()
         {
-            ClassName = context.GetClassName(tagHelper),
+            ClassName = context.GetClassName(tagHelper).ToString(),
             TagHelper = tagHelper
         };
 
@@ -145,14 +145,14 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
 
     private struct Context
     {
-        private readonly Dictionary<TagHelperDescriptor, (string className, string fullyQualifiedName, string fieldName)> _tagHelpers;
+        private readonly Dictionary<TagHelperDescriptor, (Content className, Content fullyQualifiedName, Content fieldName)> _tagHelpers;
 
         public Context(NamespaceDeclarationIntermediateNode @namespace, ClassDeclarationIntermediateNode @class)
         {
             Namespace = @namespace;
             Class = @class;
 
-            _tagHelpers = new Dictionary<TagHelperDescriptor, (string, string, string)>();
+            _tagHelpers = new Dictionary<TagHelperDescriptor, (Content, Content, Content)>();
         }
 
         public ClassDeclarationIntermediateNode Class { get; }
@@ -169,9 +169,9 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
                 return false;
             }
 
-            var className = $"__Generated__{tagHelper.GetViewComponentName()}ViewComponentTagHelper";
+            var className = new Content($"__Generated__{tagHelper.GetViewComponentName()}ViewComponentTagHelper");
             var namespaceName = !Namespace.Name.IsEmpty ? Namespace.Name + "." : Content.Empty;
-            var fullyQualifiedName = $"{namespaceName}{Class.Name}.{className}";
+            var fullyQualifiedName = new Content($"{namespaceName}{Class.Name}.{className}");
             var fieldName = GenerateFieldName(tagHelper);
 
             _tagHelpers.Add(tagHelper, (className, fullyQualifiedName, fieldName));
@@ -179,24 +179,16 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
             return true;
         }
 
-        public string GetClassName(TagHelperDescriptor taghelper)
-        {
-            return _tagHelpers[taghelper].className;
-        }
+        public readonly Content GetClassName(TagHelperDescriptor tagHelper)
+            => _tagHelpers[tagHelper].className;
 
-        public string GetFullyQualifiedName(TagHelperDescriptor taghelper)
-        {
-            return _tagHelpers[taghelper].fullyQualifiedName;
-        }
+        public readonly Content GetFullyQualifiedName(TagHelperDescriptor tagHelper)
+            => _tagHelpers[tagHelper].fullyQualifiedName;
 
-        public string GetFieldName(TagHelperDescriptor taghelper)
-        {
-            return _tagHelpers[taghelper].fieldName;
-        }
+        public readonly Content GetFieldName(TagHelperDescriptor tagHelper)
+            => _tagHelpers[tagHelper].fieldName;
 
-        private static string GenerateFieldName(TagHelperDescriptor tagHelper)
-        {
-            return $"__{tagHelper.GetViewComponentName()}ViewComponentTagHelper";
-        }
+        private static Content GenerateFieldName(TagHelperDescriptor tagHelper)
+            => new($"__{tagHelper.GetViewComponentName()}ViewComponentTagHelper");
     }
 }

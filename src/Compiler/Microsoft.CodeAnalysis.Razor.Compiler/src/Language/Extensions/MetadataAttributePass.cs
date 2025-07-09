@@ -48,7 +48,7 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
         }
 
         var @class = documentNode.FindPrimaryClass();
-        if (@class == null || @class.Name.IsNullOrEmpty())
+        if (@class == null || @class.Name.IsEmpty)
         {
             // No class node or it's incomplete. Skip.
             return;
@@ -70,9 +70,9 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
         // [RazorCompiledItem] is an [assembly: ... ] attribute, so it needs to be applied at the global scope.
         documentNode.Children.Insert(0, new RazorCompiledItemAttributeIntermediateNode()
         {
-            TypeName = @namespace.Name.IsEmpty
+            TypeName = (@namespace.Name.IsEmpty
                 ? @class.Name
-                : $"{@namespace.Name}.{@class.Name}",
+                : new Content($"{@namespace.Name}.{@class.Name}")).ToString(),
             Kind = documentNode.DocumentKind,
             Identifier = identifier,
         });

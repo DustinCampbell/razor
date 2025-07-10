@@ -354,11 +354,19 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
         // Arrange
         var extension = new DefaultTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
+
         var node = new DefaultTagHelperPropertyIntermediateNode()
         {
             BoundAttribute = IntPropertyTagHelper.BoundAttributes.Single(),
             IsIndexerNameMatch = false,
+
+            AttributeName = null!,
+            AttributeStructure = 0,
+            FieldName = null!,
+            PropertyName = null!,
+            TagHelper = null!
         };
+
         var expectedLocation = new SourceSpan(100, 10);
         var expectedDiagnostic = RazorDiagnosticFactory.CreateTagHelper_CodeBlocksNotSupportedInAttributes(expectedLocation);
 
@@ -376,11 +384,19 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
         // Arrange
         var extension = new DefaultTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
+
         var node = new DefaultTagHelperPropertyIntermediateNode()
         {
             BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
             IsIndexerNameMatch = true,
+
+            AttributeName = null!,
+            AttributeStructure = 0,
+            FieldName = null!,
+            PropertyName = null!,
+            TagHelper = null!
         };
+
         var expectedLocation = new SourceSpan(100, 10);
         var expectedDiagnostic = RazorDiagnosticFactory.CreateTagHelper_InlineMarkupBlocksNotSupportedInAttributes(expectedLocation, "System.Int32");
 
@@ -398,11 +414,19 @@ EndAddHtmlAttributeValues(__tagHelperExecutionContext);
         // Arrange
         var extension = new DefaultTagHelperTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
+
         var node = new DefaultTagHelperPropertyIntermediateNode()
         {
             BoundAttribute = IntIndexerTagHelper.BoundAttributes.Single(),
             IsIndexerNameMatch = false,
+
+            AttributeName = null!,
+            AttributeStructure = 0,
+            FieldName = null!,
+            PropertyName = null!,
+            TagHelper = null!
         };
+
         var expectedLocation = new SourceSpan(100, 10);
         var expectedDiagnostic = RazorDiagnosticFactory.CreateTagHelper_InlineMarkupBlocksNotSupportedInAttributes(
             expectedLocation,
@@ -556,13 +580,20 @@ __InputTagHelper.IntProp = 32;
         using var context = TestCodeRenderingContext.CreateDesignTime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
+
         var node1 = new DefaultTagHelperPropertyIntermediateNode()
         {
             // We only look at the attribute name here.
             AttributeName = "bound",
             FieldName = "__OtherTagHelper",
             PropertyName = "IntProp",
+
+            AttributeStructure = 0,
+            BoundAttribute = null!,
+            IsIndexerNameMatch = false,
+            TagHelper = null!
         };
+
         var node2 = new DefaultTagHelperPropertyIntermediateNode()
         {
             AttributeName = "bound",
@@ -823,13 +854,20 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.In
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var tagHelperNode = new TagHelperIntermediateNode();
+
         var node1 = new DefaultTagHelperPropertyIntermediateNode()
         {
             // We only look at the attribute name here.
             AttributeName = "bound",
             FieldName = "__OtherTagHelper",
             PropertyName = "IntProp",
+
+            AttributeStructure = 0,
+            BoundAttribute = null!,
+            IsIndexerNameMatch = false,
+            TagHelper = null!
         };
+
         var node2 = new DefaultTagHelperPropertyIntermediateNode()
         {
             AttributeName = "bound",
@@ -841,6 +879,7 @@ __tagHelperExecutionContext.AddTagHelperAttribute(""bound"", __InputTagHelper.In
             TagHelper = IntPropertyTagHelper,
             Source = Span,
         };
+
         tagHelperNode.Children.Add(node1);
         tagHelperNode.Children.Add(node2);
         Push(context, tagHelperNode);

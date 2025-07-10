@@ -162,11 +162,10 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
                 propertyNode.TagHelper == tagHelper)
             {
                 // This belongs to the current tag helper, replace it.
-                node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(propertyNode)
-                {
-                    FieldName = context.GetFieldName(tagHelper).ToString(),
-                    PropertyName = propertyNode.BoundAttribute.GetPropertyName(),
-                };
+                node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(
+                    propertyNode,
+                    context.GetFieldName(tagHelper),
+                    propertyNode.BoundAttribute.GetPropertyName());
             }
         }
     }

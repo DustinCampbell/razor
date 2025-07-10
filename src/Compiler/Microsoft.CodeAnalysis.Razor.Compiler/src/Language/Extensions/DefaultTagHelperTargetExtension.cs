@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -616,7 +617,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
         for (var i = 0; i < tagHelperNode.Children.Count; i++)
         {
             if (tagHelperNode.Children[i] is DefaultTagHelperPropertyIntermediateNode otherPropertyNode &&
-                string.Equals(otherPropertyNode.AttributeName, propertyNode.AttributeName, StringComparison.Ordinal))
+                otherPropertyNode.AttributeName == propertyNode.AttributeName)
             {
                 return otherPropertyNode;
             }
@@ -653,16 +654,21 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
         return uniqueId;
     }
 
-    private static string GetPropertyAccessor(DefaultTagHelperPropertyIntermediateNode node)
+    private static Content GetPropertyAccessor(DefaultTagHelperPropertyIntermediateNode node)
     {
-        var propertyAccessor = node.FieldName + "." + node.PropertyName;
+        using var builder = new PooledArrayBuilder<Content>();
+
+        builder.Add(node.FieldName);
+        builder.Add(".");
+        builder.Add(node.PropertyName);
 
         if (node.IsIndexerNameMatch)
         {
-            var dictionaryKey = node.AttributeName.Substring(node.BoundAttribute.IndexerNamePrefix.Length);
-            propertyAccessor += $"[\"{dictionaryKey}\"]";
+            builder.Add("[\"");
+            builder.Add(node.AttributeName.AsMemory(node.BoundAttribute.IndexerNamePrefix.Length));
+            builder.Add("\"]");
         }
 
-        return propertyAccessor;
+        return builder.ToContent();
     }
 }

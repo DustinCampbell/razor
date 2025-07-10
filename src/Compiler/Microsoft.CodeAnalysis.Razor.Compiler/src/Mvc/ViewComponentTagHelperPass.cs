@@ -94,11 +94,10 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
             {
                 // This is a set property for this VCTH - we need to replace it with a node
                 // that will use our field and property name.
-                node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(propertyNode)
-                {
-                    FieldName = context.GetFieldName(tagHelper).ToString(),
-                    PropertyName = propertyNode.BoundAttribute.GetPropertyName(),
-                };
+                node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(
+                    propertyNode,
+                    context.GetFieldName(tagHelper),
+                    propertyNode.BoundAttribute.GetPropertyName());
             }
         }
     }

@@ -382,6 +382,29 @@ public readonly partial record struct Content : IEnumerable<char>
         }
     }
 
+    public bool Contains(char ch)
+    {
+        if (IsEmpty)
+        {
+            return false;
+        }
+
+        if (HasValue)
+        {
+            return _value.Span.IndexOf(ch) >= 0;
+        }
+
+        foreach (var part in AllParts)
+        {
+            if (part.Span.IndexOf(ch) >= 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /// <summary>
     ///  Determines whether this <see cref="Content"/> is equal to the specified string value.
     /// </summary>

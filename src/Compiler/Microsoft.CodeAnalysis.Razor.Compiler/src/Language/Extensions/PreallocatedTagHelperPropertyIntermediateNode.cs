@@ -1,9 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -11,67 +9,42 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
 internal sealed class PreallocatedTagHelperPropertyIntermediateNode : ExtensionIntermediateNode
 {
+    public required string AttributeName { get; init; }
+    public required AttributeStructure AttributeStructure { get; init; }
+    public required BoundAttributeDescriptor BoundAttribute { get; init; }
+    public required Content FieldName { get; init; }
+    public required bool IsIndexerNameMatch { get; init; }
+    public required Content PropertyName { get; init; }
+    public required TagHelperDescriptor TagHelper { get; init; }
+    public required Content VariableName { get; init; }
+
+    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
+
     public PreallocatedTagHelperPropertyIntermediateNode()
     {
     }
 
-    public PreallocatedTagHelperPropertyIntermediateNode(DefaultTagHelperPropertyIntermediateNode propertyNode)
+    [SetsRequiredMembers]
+    public PreallocatedTagHelperPropertyIntermediateNode(
+        DefaultTagHelperPropertyIntermediateNode node,
+        Content variableName)
     {
-        if (propertyNode == null)
-        {
-            throw new ArgumentNullException(nameof(propertyNode));
-        }
-
-        AttributeName = propertyNode.AttributeName;
-        AttributeStructure = propertyNode.AttributeStructure;
-        BoundAttribute = propertyNode.BoundAttribute;
-        FieldName = propertyNode.FieldName;
-        IsIndexerNameMatch = propertyNode.IsIndexerNameMatch;
-        PropertyName = propertyNode.PropertyName;
-        Source = propertyNode.Source;
-        TagHelper = propertyNode.TagHelper;
+        AttributeName = node.AttributeName;
+        AttributeStructure = node.AttributeStructure;
+        BoundAttribute = node.BoundAttribute;
+        FieldName = node.FieldName;
+        IsIndexerNameMatch = node.IsIndexerNameMatch;
+        PropertyName = node.PropertyName;
+        Source = node.Source;
+        TagHelper = node.TagHelper;
+        VariableName = variableName;
     }
-
-    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
-
-    public string AttributeName { get; set; }
-
-    public AttributeStructure AttributeStructure { get; set; }
-
-    public BoundAttributeDescriptor BoundAttribute { get; set; }
-
-    public string FieldName { get; set; }
-
-    public bool IsIndexerNameMatch { get; set; }
-
-    public string PropertyName { get; set; }
-
-    public TagHelperDescriptor TagHelper { get; set; }
-
-    public string VariableName { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode<PreallocatedTagHelperPropertyIntermediateNode>(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
         var extension = target.GetExtension<IPreallocatedAttributeTargetExtension>();
         if (extension == null)
         {

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -28,6 +29,16 @@ public readonly partial record struct Content
             _builder.Dispose();
 
             return result;
+        }
+
+        public void WriteTo(CodeWriter writer)
+        {
+            foreach (var part in _builder.AsMemory().Span)
+            {
+                part.WriteTo(writer);
+            }
+
+            _builder.Dispose();
         }
 
         public void AppendLiteral(string value)

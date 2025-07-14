@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Razor;
@@ -413,9 +414,21 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
         private void CreateTypeInferenceMethod(DocumentIntermediateNode documentNode, ComponentIntermediateNode node, List<CascadingGenericTypeParameter>? receivesCascadingGenericTypes)
         {
-            var @namespace = documentNode.FindPrimaryNamespace().AssumeNotNull().Content;
-            @namespace = string.IsNullOrEmpty(@namespace) ? "__Blazor" : "__Blazor." + @namespace;
-            @namespace += "." + documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
+            var baseNamespaceName = documentNode.FindPrimaryNamespace().AssumeNotNull().Name;
+            var className = documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
+
+            using var builder = new PooledArrayBuilder<Content>();
+            builder.Add("__Blazor.");
+
+            if (!baseNamespaceName.IsEmpty)
+            {
+                builder.Add(baseNamespaceName);
+                builder.Add(".");
+            }
+
+            builder.Add(className);
+
+            var @namespace = builder.ToContent();
 
             var genericTypeConstraints = node.Component.BoundAttributes
                 .Where(t => t.Metadata.ContainsKey(ComponentMetadata.Component.TypeParameterConstraintsKey))
@@ -428,7 +441,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
                 // Method name is generated and guaranteed not to collide, since it's unique for each
                 // component call site.
                 MethodName = $"Create{CSharpIdentifier.SanitizeIdentifier(node.TagName.AsSpanOrDefault())}_{_id++}",
-                FullTypeName = @namespace + ".TypeInference",
+                FullTypeName = new Content($"{@namespace}.TypeInference").ToString(),
 
                 ReceivesCascadingGenericTypes = receivesCascadingGenericTypes,
                 GenericTypeConstraints = genericTypeConstraints
@@ -444,7 +457,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
             {
                 namespaceNode = new NamespaceDeclarationIntermediateNode()
                 {
-                    Content = @namespace,
+                    Name = @namespace,
                     IsGenericTyped = true,
                 };
 

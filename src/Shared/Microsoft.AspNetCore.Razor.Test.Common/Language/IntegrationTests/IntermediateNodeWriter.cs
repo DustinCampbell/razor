@@ -4,7 +4,7 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language.IntegrationTests;
@@ -38,21 +39,29 @@ public class IntermediateNodeWriter :
 
     public override void VisitClassDeclaration(ClassDeclarationIntermediateNode node)
     {
-        var entries = new List<string>()
+        using var entries = new PooledArrayBuilder<Content>();
+
+        entries.Add(Content.Join(" ", node.Modifiers));
+        entries.Add(node.ClassName);
+
+        if (node.BaseType is { } baseType)
         {
-            string.Join(" ", node.Modifiers),
-            node.ClassName,
-            node.BaseType is { } baseType ? $"{baseType.BaseType.Content}{baseType.GreaterThan?.Content}{baseType.ModelType?.Content}{baseType.LessThan?.Content}" : "",
-            string.Join(", ", node.Interfaces.Select(i => i.Content))
-        };
+            entries.Add(new Content($"{baseType.BaseType.Content}{baseType.GreaterThan?.Content}{baseType.ModelType?.Content}{baseType.LessThan?.Content}"));
+        }
+        else
+        {
+            entries.Add(Content.Empty);
+        }
+
+        entries.Add(Content.Join(", ", node.Interfaces.Select(i => i.Content)));
 
         // Avoid adding the type parameters to the baseline if they aren't present.
         if (node.TypeParameters != null && node.TypeParameters.Count > 0)
         {
-            entries.Add(string.Join(", ", node.TypeParameters.Select(p => p.ParameterName)));
+            entries.Add(Content.Join(", ", node.TypeParameters.Select(p => p.ParameterName)));
         }
 
-        WriteContentNode(node, entries.ToArray());
+        WriteContentNode(node, entries.ToImmutableAndClear());
     }
 
     public override void VisitCSharpExpressionAttributeValue(CSharpExpressionAttributeValueIntermediateNode node)
@@ -109,7 +118,7 @@ public class IntermediateNodeWriter :
 
     public override void VisitNamespaceDeclaration(NamespaceDeclarationIntermediateNode node)
     {
-        WriteContentNode(node, node.Content);
+        WriteContentNode(node, node.Name);
     }
 
     public override void VisitMethodDeclaration(MethodDeclarationIntermediateNode node)
@@ -252,18 +261,23 @@ public class IntermediateNodeWriter :
         WriteSourceRange(node);
     }
 
-    protected void WriteContentNode(IntermediateNode node, params string[] content)
+    protected void WriteContentNode(IntermediateNode node, params ImmutableArray<Content> content)
     {
-        WriteIndent();
-        WriteName(node);
-        WriteSeparator();
-        WriteSourceRange(node);
+        WriteBasicNode(node);
 
         for (var i = 0; i < content.Length; i++)
         {
             WriteSeparator();
             WriteContent(content[i]);
         }
+    }
+
+    protected void WriteContentNode(IntermediateNode node, Content content)
+    {
+        WriteBasicNode(node);
+
+        WriteSeparator();
+        WriteContent(content);
     }
 
     protected void WriteIndent()
@@ -373,9 +387,9 @@ public class IntermediateNodeWriter :
         }
     }
 
-    protected void WriteContent(string content)
+    protected void WriteContent(Content content)
     {
-        if (content == null)
+        if (content.IsEmpty)
         {
             return;
         }
@@ -383,6 +397,8 @@ public class IntermediateNodeWriter :
         // We explicitly escape newlines in node content so that the IR can be compared line-by-line. The escaped
         // newline cannot be platform specific so we need to drop the windows \r.
         // Also, escape our separator so we can search for ` - `to find delimiters.
-        _writer.Write(content.Replace("\r", string.Empty).Replace("\n", "\\n").Replace(" - ", "\\-"));
+        var text = content.ToString();
+
+        _writer.Write(text.Replace("\r", string.Empty).Replace("\n", "\\n").Replace(" - ", "\\-"));
     }
 }

@@ -83,9 +83,9 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         // Now i has the right insertion point.
         node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode()
         {
-            FieldName = context.GetFieldName(tagHelper),
+            FieldName = context.GetFieldName(tagHelper).ToString(),
             TagHelper = tagHelper,
-            TypeName = context.GetFullyQualifiedName(tagHelper),
+            TypeName = context.GetFullyQualifiedName(tagHelper).ToString()
         });
 
         // Now we need to rewrite any set property nodes to use the default runtime.
@@ -98,8 +98,8 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
                 // that will use our field and property name.
                 node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(propertyNode)
                 {
-                    FieldName = context.GetFieldName(tagHelper),
-                    PropertyName = propertyNode.BoundAttribute.GetPropertyName(),
+                    FieldName = context.GetFieldName(tagHelper).ToString(),
+                    PropertyName = propertyNode.BoundAttribute.GetPropertyName()
                 };
             }
         }
@@ -126,12 +126,9 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         context.Class.Children.Insert(i, new FieldDeclarationIntermediateNode()
         {
             IsTagHelperField = true,
-            Modifiers =
-                {
-                    "private",
-                },
-            FieldName = context.GetFieldName(tagHelper),
-            FieldType = "global::" + context.GetFullyQualifiedName(tagHelper),
+            Modifiers = { "private" },
+            FieldName = context.GetFieldName(tagHelper).ToString(),
+            FieldType = new Content($"global::{context.GetFullyQualifiedName(tagHelper)}").ToString(),
         });
     }
 
@@ -139,29 +136,28 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
     {
         var node = new ViewComponentTagHelperIntermediateNode()
         {
-            ClassName = context.GetClassName(tagHelper),
+            ClassName = context.GetClassName(tagHelper).ToString(),
             TagHelper = tagHelper
         };
 
         context.Class.Children.Add(node);
     }
 
-    private struct Context
+    private readonly struct Context
     {
-        private readonly Dictionary<TagHelperDescriptor, (string className, string fullyQualifiedName, string fieldName)> _tagHelpers;
+        private readonly Dictionary<TagHelperDescriptor, (Content className, Content fullyQualifiedName, Content fieldName)> _tagHelpers;
 
         public Context(NamespaceDeclarationIntermediateNode @namespace, ClassDeclarationIntermediateNode @class)
         {
             Namespace = @namespace;
             Class = @class;
 
-            _tagHelpers = new Dictionary<TagHelperDescriptor, (string, string, string)>();
+            _tagHelpers = new Dictionary<TagHelperDescriptor, (Content, Content, Content)>();
         }
 
         public ClassDeclarationIntermediateNode Class { get; }
 
         public NamespaceDeclarationIntermediateNode Namespace { get; }
-
 
         public IEnumerable<TagHelperDescriptor> TagHelpers => _tagHelpers.Keys;
 
@@ -173,8 +169,9 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
             }
 
             var className = $"__Generated__{tagHelper.GetViewComponentName()}ViewComponentTagHelper";
-            var namespaceSeparator = string.IsNullOrEmpty(Namespace.Content) ? string.Empty : ".";
-            var fullyQualifiedName = $"{Namespace.Content}{namespaceSeparator}{Class.ClassName}.{className}";
+            var fullyQualifiedName = !Namespace.Name.IsEmpty
+                ? $"{Namespace.Name}.{Class.ClassName}.{className}"
+                : $"{Class.ClassName}.{className}";
             var fieldName = GenerateFieldName(tagHelper);
 
             _tagHelpers.Add(tagHelper, (className, fullyQualifiedName, fieldName));
@@ -182,24 +179,16 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
             return true;
         }
 
-        public string GetClassName(TagHelperDescriptor taghelper)
-        {
-            return _tagHelpers[taghelper].className;
-        }
+        public Content GetClassName(TagHelperDescriptor tagHelper)
+            => _tagHelpers[tagHelper].className;
 
-        public string GetFullyQualifiedName(TagHelperDescriptor taghelper)
-        {
-            return _tagHelpers[taghelper].fullyQualifiedName;
-        }
+        public Content GetFullyQualifiedName(TagHelperDescriptor tagHelper)
+            => _tagHelpers[tagHelper].fullyQualifiedName;
 
-        public string GetFieldName(TagHelperDescriptor taghelper)
-        {
-            return _tagHelpers[taghelper].fieldName;
-        }
+        public Content GetFieldName(TagHelperDescriptor tagHelper)
+            => _tagHelpers[tagHelper].fieldName;
 
-        private static string GenerateFieldName(TagHelperDescriptor tagHelper)
-        {
-            return $"__{tagHelper.GetViewComponentName()}ViewComponentTagHelper";
-        }
+        private static Content GenerateFieldName(TagHelperDescriptor tagHelper)
+            => new Content($"__{tagHelper.GetViewComponentName()}ViewComponentTagHelper");
     }
 }

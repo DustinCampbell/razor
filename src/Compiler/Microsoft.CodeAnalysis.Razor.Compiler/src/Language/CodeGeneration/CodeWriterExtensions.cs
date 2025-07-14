@@ -342,14 +342,15 @@ internal static partial class CodeWriterExtensions
     }
 
 #nullable enable
-    public static CSharpCodeWritingScope BuildNamespace(this CodeWriter writer, string? name, SourceSpan? span, CodeRenderingContext context)
+    public static CSharpCodeWritingScope BuildNamespace(this CodeWriter writer, Content name, SourceSpan? span, CodeRenderingContext context)
     {
-        if (name.IsNullOrEmpty())
+        if (name.IsEmpty)
         {
             return new CSharpCodeWritingScope(writer, writeBraces: false);
         }
 
         writer.Write("namespace ");
+
         if (context.Options.DesignTime || span is null)
         {
             writer.WriteLine(name);

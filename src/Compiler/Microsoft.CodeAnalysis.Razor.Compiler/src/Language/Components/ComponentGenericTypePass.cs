@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Razor;
@@ -286,12 +287,28 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
         private static string GetContent(ComponentAttributeIntermediateNode node)
         {
-            return string.Join(string.Empty, node.FindDescendantNodes<CSharpIntermediateToken>().Select(t => t.Content));
+            using var tokens = new PooledArrayBuilder<CSharpIntermediateToken>();
+            node.CollectDescendantNodes(ref tokens.AsRef());
+
+            if (tokens.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            using var _ = StringBuilderPool.GetPooledObject(out var builder);
+
+            foreach (var token in tokens)
+            {
+                builder.Append(token.Content);
+            }
+
+            return builder.ToString();
         }
 
         private static bool ValidateTypeArguments(ComponentIntermediateNode node, Dictionary<string, Binding> bindings)
         {
-            var missing = new List<BoundAttributeDescriptor>();
+            using var _ = ListPool<BoundAttributeDescriptor>.GetPooledObject(out var missing);
+
             foreach (var (_, binding) in bindings)
             {
                 if (binding.Node == null ||string.IsNullOrWhiteSpace(binding.Content?.Content))

@@ -484,11 +484,9 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
 
             valueNode.AddDiagnosticsFromNode(targetNode);
 
-            valueNode.Children.Add(new CSharpExpressionAttributeValueIntermediateNode());
-            for (var i = 0; i < valueExpressionTokens.Count; i++)
-            {
-                valueNode.Children[0].Children.Add(valueExpressionTokens[i]);
-            }
+            var csharpValueNode = new CSharpExpressionAttributeValueIntermediateNode();
+            csharpValueNode.Children.AddRange(valueExpressionTokens);
+            valueNode.Children.Add(csharpValueNode);
 
             var changeNode = new HtmlAttributeIntermediateNode()
             {
@@ -503,11 +501,9 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
                 EventUpdatesAttributeName = valueAttributeName,
             };
 
-            changeNode.Children.Add(new CSharpExpressionAttributeValueIntermediateNode());
-            for (var i = 0; i < changeExpressionTokens.Count; i++)
-            {
-                changeNode.Children[0].Children.Add(changeExpressionTokens[i]);
-            }
+            var csharpChangeNode = new CSharpExpressionAttributeValueIntermediateNode();
+            csharpChangeNode.Children.AddRange(changeExpressionTokens);
+            changeNode.Children.Add(csharpChangeNode);
 
             return new[] { valueNode, changeNode };
         }
@@ -527,11 +523,10 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
             valueNode.TypeName = valueAttribute?.IsWeaklyTyped() == false ? valueAttribute.TypeName : null;
 
             valueNode.Children.Clear();
-            valueNode.Children.Add(new CSharpExpressionIntermediateNode());
-            for (var i = 0; i < valueExpressionTokens.Count; i++)
-            {
-                valueNode.Children[0].Children.Add(valueExpressionTokens[i]);
-            }
+
+            var csharpValueNode = new CSharpExpressionIntermediateNode();
+            csharpValueNode.Children.AddRange(valueExpressionTokens);
+            valueNode.Children.Add(csharpValueNode);
 
             builder.Add(valueNode);
 
@@ -546,11 +541,10 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
             changeNode.TypeName = changeAttribute?.IsWeaklyTyped() == false ? changeAttribute.TypeName : null;
 
             changeNode.Children.Clear();
-            changeNode.Children.Add(new CSharpExpressionIntermediateNode());
-            for (var i = 0; i < changeExpressionTokens.Count; i++)
-            {
-                changeNode.Children[0].Children.Add(changeExpressionTokens[i]);
-            }
+
+            var csharpChangeNode = new CSharpExpressionIntermediateNode();
+            csharpChangeNode.Children.AddRange(changeExpressionTokens);
+            changeNode.Children.Add(csharpChangeNode);
 
             builder.Add(changeNode);
 
@@ -569,8 +563,10 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
                 expressionNode.TypeName = expressionAttribute.IsWeaklyTyped() ? null : expressionAttribute.TypeName;
 
                 expressionNode.Children.Clear();
-                expressionNode.Children.Add(new CSharpExpressionIntermediateNode());
-                expressionNode.Children[0].Children.Add(IntermediateNodeFactory.CSharpToken($"() => {original.Content}"));
+
+                var csharpExpressionNode = new CSharpExpressionIntermediateNode();
+                csharpExpressionNode.Children.Add(IntermediateNodeFactory.CSharpToken($"() => {original.Content}"));
+                expressionNode.Children.Add(csharpExpressionNode);
 
                 builder.Add(expressionNode);
             }
@@ -971,43 +967,55 @@ internal class ComponentBindLoweringPass : ComponentIntermediateNodePassBase, IR
 
     private static IntermediateToken GetAttributeContent(IntermediateNode node)
     {
-        var nodes = node.FindDescendantNodes<TemplateIntermediateNode>();
-        var template = nodes.Length > 0 ? nodes[0] : default;
-        if (template != null)
+        using var templateNodes = new PooledArrayBuilder<TemplateIntermediateNode>();
+        node.CollectDescendantNodes(ref templateNodes.AsRef());
+
+        if (templateNodes.Count >0)
         {
             // See comments in TemplateDiagnosticPass
-            node.AddDiagnostic(ComponentDiagnosticFactory.Create_TemplateInvalidLocation(template.Source));
+            node.AddDiagnostic(ComponentDiagnosticFactory.Create_TemplateInvalidLocation(templateNodes[0].Source));
             return IntermediateNodeFactory.CSharpToken(string.Empty);
         }
 
-        if (node.Children[0] is HtmlContentIntermediateNode htmlContentNode)
+        switch (node.Children[0])
         {
-            // This case can be hit for a 'string' attribute. We want to turn it into
-            // an expression.
-            var content = "\"" + string.Join(string.Empty, htmlContentNode.Children.OfType<IntermediateToken>().Select(t => t.Content)) + "\"";
-            return IntermediateNodeFactory.CSharpToken(content);
-        }
-        else if (node.Children[0] is CSharpExpressionIntermediateNode csharpNode)
-        {
-            // This case can be hit when the attribute has an explicit @ inside, which
-            // 'escapes' any special sugar we provide for codegen.
-            return GetToken(csharpNode);
-        }
-        else
-        {
-            // This is the common case for 'mixed' content
-            return GetToken(node);
+            case HtmlContentIntermediateNode htmlContentNode:
+                // This case can be hit for a 'string' attribute. We want to turn it into
+                // an expression.
+                var content = "\"" + htmlContentNode.GetContent() + "\"";
+                return IntermediateNodeFactory.CSharpToken(content);
+
+            case CSharpExpressionIntermediateNode csharpNode:
+                // This case can be hit when the attribute has an explicit @ inside, which
+                // 'escapes' any special sugar we provide for codegen.
+                return GetToken(csharpNode);
+
+            default:
+                // This is the common case for 'mixed' content
+                return GetToken(node);
         }
 
-        IntermediateToken GetToken(IntermediateNode parent)
+        static IntermediateToken GetToken(IntermediateNode parent)
         {
-            if (parent.Children.Count == 1 && parent.Children[0] is IntermediateToken token)
+            if (parent.Children is [IntermediateToken singleToken])
             {
-                return token;
+                return singleToken;
             }
 
             // In error cases we won't have a single token, but we still want to generate the code.
-            return IntermediateNodeFactory.CSharpToken(string.Join(string.Empty, parent.Children.OfType<IntermediateToken>().Select(t => t.Content)));
+            using var _ = StringBuilderPool.GetPooledObject(out var builder);
+
+            foreach (var child in parent.Children)
+            {
+                if (child is IntermediateToken token)
+                {
+                    builder.Append(token.Content);
+                }
+            }
+
+            var content = builder.ToString();
+
+            return IntermediateNodeFactory.CSharpToken(content);
         }
     }
 

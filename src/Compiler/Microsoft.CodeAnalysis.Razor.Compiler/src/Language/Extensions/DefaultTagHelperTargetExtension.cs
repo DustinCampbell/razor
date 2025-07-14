@@ -7,7 +7,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -345,9 +344,9 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
                 context.RenderChildren(node);
 
                 context.CodeWriter.WriteStartAssignment(GetPropertyAccessor(node));
-                if (node.Children.Count == 1 && node.Children.First() is HtmlContentIntermediateNode htmlNode)
+                if (node.Children is [HtmlContentIntermediateNode htmlContentNode])
                 {
-                    var content = GetContent(htmlNode);
+                    var content = htmlContentNode.GetContent();
                     context.CodeWriter.WriteStringLiteral(content);
                 }
                 else
@@ -549,9 +548,9 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
     {
         if (node is CSharpExpressionIntermediateNode || node is HtmlContentIntermediateNode)
         {
-            for (var i = 0; i < node.Children.Count; i++)
+            foreach (var child in node.Children)
             {
-                RenderTagHelperAttributeInline(context, property, node.Children[i], span);
+                RenderTagHelperAttributeInline(context, property, child, span);
             }
         }
         else if (node is IntermediateToken token)
@@ -623,20 +622,6 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
 
         // This is unreachable, we should find 'propertyNode' in the list of children.
         throw new InvalidOperationException();
-    }
-
-    private string GetContent(HtmlContentIntermediateNode node)
-    {
-        var builder = new StringBuilder();
-        for (var i = 0; i < node.Children.Count; i++)
-        {
-            if (node.Children[i] is HtmlIntermediateToken token)
-            {
-                builder.Append(token.Content);
-            }
-        }
-
-        return builder.ToString();
     }
 
     // Internal for testing

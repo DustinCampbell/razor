@@ -750,7 +750,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             // Minimized attributes always map to 'true'
             context.CodeWriter.Write("true");
         }
-        else if (node.Children.Count == 1 && node.Children[0] is HtmlContentIntermediateNode)
+        else if (node.Children is [HtmlContentIntermediateNode])
         {
             // We don't actually need the content at designtime, an empty string will do.
             context.CodeWriter.Write("\"\"");
@@ -896,12 +896,6 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             // Weakly typed attributes will have their TypeName set to null.
             return n.BoundAttribute != null && n.TypeName != null;
         }
-    }
-
-    private static ImmutableArray<CSharpIntermediateToken> GetCSharpTokens(IntermediateNode node)
-    {
-        // We generally expect all children to be CSharp, this is here just in case.
-        return node.FindDescendantNodes<CSharpIntermediateToken>();
     }
 
     public override void WriteComponentChildContent(CodeRenderingContext context, ComponentChildContentIntermediateNode node)

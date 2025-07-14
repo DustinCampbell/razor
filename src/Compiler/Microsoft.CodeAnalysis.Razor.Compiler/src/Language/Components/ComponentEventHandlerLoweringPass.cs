@@ -239,13 +239,22 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
             return [IntermediateNodeFactory.CSharpToken(string.Empty)];
         }
 
-        if (node.Children.Count == 1 && node.Children[0] is HtmlContentIntermediateNode htmlContentNode)
+        if (node.Children is [HtmlContentIntermediateNode htmlContentNode])
         {
             // This case can be hit for a 'string' attribute. We want to turn it into
             // an expression.
-            var tokens = htmlContentNode.FindDescendantNodes<IntermediateToken>();
+            using var _ = StringBuilderPool.GetPooledObject(out var builder);
+            builder.Append('"');
 
-            var content = "\"" + string.Join(string.Empty, tokens.Select(t => t.Content.Replace("\"", "\\\""))) + "\"";
+            foreach (var token in htmlContentNode.FindDescendantNodes<HtmlIntermediateToken>())
+            {
+                builder.Append(token.Content.Replace("\"", "\\\""));
+            }
+
+            builder.Append('"');
+
+            var content = builder.ToString();
+
             return [IntermediateNodeFactory.CSharpToken(content)];
         }
 

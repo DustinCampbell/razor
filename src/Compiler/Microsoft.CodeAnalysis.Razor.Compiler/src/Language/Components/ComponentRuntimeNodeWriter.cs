@@ -280,18 +280,8 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
 
     public override void WriteHtmlContent(CodeRenderingContext context, HtmlContentIntermediateNode node)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
-        if (node == null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
-
         // Text node
-        var content = GetHtmlContent(node);
+        var content = node.GetContent();
         var renderApi = ComponentsApi.RenderTreeBuilder.AddContent;
         if (node.HasEncodedContent)
         {
@@ -661,10 +651,10 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
             // Minimized attributes always map to 'true'
             context.CodeWriter.Write("true");
         }
-        else if (node.Children.Count == 1 && node.Children[0] is HtmlContentIntermediateNode htmlNode)
+        else if (node.Children is [HtmlContentIntermediateNode htmlContentNode])
         {
             // This is how string attributes are lowered by default, a single HTML node with a single HTML token.
-            var content = string.Join(string.Empty, GetHtmlTokens(htmlNode).Select(t => t.Content));
+            var content = htmlContentNode.GetContent();
             context.CodeWriter.WriteStringLiteral(content);
         }
         else
@@ -785,18 +775,6 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         {
             return n.BoundAttribute != null && !n.BoundAttribute.IsWeaklyTyped();
         }
-    }
-
-    private static ImmutableArray<HtmlIntermediateToken> GetHtmlTokens(IntermediateNode node)
-    {
-        // We generally expect all children to be HTML, this is here just in case.
-        return node.FindDescendantNodes<HtmlIntermediateToken>();
-    }
-
-    private static ImmutableArray<CSharpIntermediateToken> GetCSharpTokens(IntermediateNode node)
-    {
-        // We generally expect all children to be CSharp, this is here just in case.
-        return node.FindDescendantNodes<CSharpIntermediateToken>();
     }
 
     public override void WriteComponentChildContent(CodeRenderingContext context, ComponentChildContentIntermediateNode node)
@@ -1070,28 +1048,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         context.CodeWriter.Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture));
         context.CodeWriter.WriteParameterSeparator();
 
-        var tokens = GetCSharpTokens(nameExpression);
-        for (var i = 0; i < tokens.Length; i++)
-        {
-            WriteCSharpToken(context, tokens[i]);
-        }
-    }
-
-    private static string GetHtmlContent(HtmlContentIntermediateNode node)
-    {
-        using var _ = StringBuilderPool.GetPooledObject(out var builder);
-
-        var htmlTokens = node.Children.OfType<HtmlIntermediateToken>();
-
-        foreach (var child in node.Children)
-        {
-            if (child is HtmlIntermediateToken htmlToken)
-            {
-                builder.Append(htmlToken.Content);
-            }
-        }
-
-        return builder.ToString();
+        WriteCSharpTokens(context, GetCSharpTokens(nameExpression));
     }
 
     // There are a few cases here, we need to handle:

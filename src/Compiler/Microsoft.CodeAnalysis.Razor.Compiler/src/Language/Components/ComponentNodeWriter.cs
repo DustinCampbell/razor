@@ -5,10 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -57,7 +59,24 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
         // case.
         //
         // We provide an error for this case just to be friendly.
-        var content = string.Join("", node.Children.OfType<IntermediateToken>().Select(t => t.Content));
+        using var tokens = new PooledArrayBuilder<CSharpIntermediateToken>();
+        node.CollectDescendantNodes(ref tokens.AsRef());
+
+        var content = string.Empty;
+
+        if (tokens.Count > 0)
+        {
+
+            using var _ = StringBuilderPool.GetPooledObject(out var builder);
+
+            foreach (var token in tokens)
+            {
+                builder.Append(token.Content);
+            }
+
+            content = builder.ToString();
+        }
+
         context.AddDiagnostic(ComponentDiagnosticFactory.Create_CodeBlockInAttribute(node.Source, content));
         return;
     }
@@ -527,6 +546,12 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
             TypeNameHelper.WriteGloballyQualifiedName(context.CodeWriter, node.TypeName);
         }
     }
+
+    protected static ImmutableArray<CSharpIntermediateToken> GetCSharpTokens(IntermediateNode node)
+        => node.FindDescendantNodes<CSharpIntermediateToken>();
+
+    protected static ImmutableArray<HtmlIntermediateToken> GetHtmlTokens(IntermediateNode node)
+        => node.FindDescendantNodes<HtmlIntermediateToken>();
 
     protected class TypeInferenceMethodParameter
     {

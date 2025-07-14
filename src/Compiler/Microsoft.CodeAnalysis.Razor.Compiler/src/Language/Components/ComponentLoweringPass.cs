@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -317,9 +318,8 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
             // in sequence, since we:
             // a) need to rewrite each child content element
             // b) any significant content outside of a child content is an error
-            for (var i = 0; i < node.Children.Count; i++)
+            foreach (var child in node.Children)
             {
-                var child = node.Children[i];
                 if (IsIgnorableWhitespace(child))
                 {
                     continue;
@@ -341,21 +341,15 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
                 _children.Add(child);
             }
 
-            bool IsIgnorableWhitespace(IntermediateNode n)
+            static bool IsIgnorableWhitespace(IntermediateNode node)
             {
-                if (n is HtmlContentIntermediateNode html &&
-                    html.Children.Count == 1 &&
-                    html.Children[0] is IntermediateToken token &&
-                    string.IsNullOrWhiteSpace(token.Content))
-                {
-                    return true;
-                }
-
-                return false;
+                return node is HtmlContentIntermediateNode { Children: [HtmlIntermediateToken token] } &&
+                       string.IsNullOrWhiteSpace(token.Content);
             }
         }
 
-        private ComponentChildContentIntermediateNode RewriteChildContent(BoundAttributeDescriptor attribute, SourceSpan? source, IntermediateNodeCollection children)
+        private static ComponentChildContentIntermediateNode RewriteChildContent(
+            BoundAttributeDescriptor attribute, SourceSpan? source, IntermediateNodeCollection children)
         {
             var childContent = new ComponentChildContentIntermediateNode()
             {
@@ -367,67 +361,66 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
             // There are two cases here:
             // 1. Implicit child content - the children will be non-taghelper nodes, just accept them
             // 2. Explicit child content - the children will be various tag helper nodes, that need special processing.
-            for (var i = 0; i < children.Count; i++)
+            foreach (var child in children)
             {
-                var child = children[i];
-                if (child is TagHelperBodyIntermediateNode body)
+                switch (child)
                 {
-                    // The body is all of the content we want to render, the rest of the children will
-                    // be the attributes.
-                    for (var j = 0; j < body.Children.Count; j++)
-                    {
-                        childContent.Children.Add(body.Children[j]);
-                    }
-                }
-                else if (child is TagHelperPropertyIntermediateNode property)
-                {
-                    if (property.BoundAttribute.IsChildContentParameterNameProperty())
-                    {
-                        // Check for each child content with a parameter name, that the parameter name is specified
-                        // with literal text. For instance, the following is not allowed and should generate a diagnostic.
-                        //
-                        // <MyComponent><ChildContent Context="@Foo()">...</ChildContent></MyComponent>
-                        if (TryGetAttributeStringContent(property, out var parameterName))
+                    case TagHelperBodyIntermediateNode body:
+                        // The body is all of the content we want to render, the rest of the children will
+                        // be the attributes.
+                        childContent.Children.AddRange(body.Children);
+                        break;
+
+                    case TagHelperPropertyIntermediateNode property:
                         {
-                            childContent.ParameterName = parameterName;
-                            continue;
+                            if (property.BoundAttribute.IsChildContentParameterNameProperty())
+                            {
+                                // Check for each child content with a parameter name, that the parameter name is specified
+                                // with literal text. For instance, the following is not allowed and should generate a diagnostic.
+                                //
+                                // <MyComponent><ChildContent Context="@Foo()">...</ChildContent></MyComponent>
+                                if (TryGetAttributeStringContent(property, out var parameterName))
+                                {
+                                    childContent.ParameterName = parameterName;
+                                    continue;
+                                }
+
+                                // The parameter name is invalid.
+                                childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidParameter(property.Source, property.AttributeName, attribute.Name));
+                                continue;
+                            }
+
+                            // This is an unrecognized tag helper bound attribute. This will practically never happen unless the child content descriptor was misconfigured.
+                            childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidAttribute(property.Source, property.AttributeName, attribute.Name));
+                            break;
                         }
 
-                        // The parameter name is invalid.
-                        childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidParameter(property.Source, property.AttributeName, attribute.Name));
-                        continue;
-                    }
+                    case TagHelperHtmlAttributeIntermediateNode a:
+                        // This is an HTML attribute on a child content.
+                        childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidAttribute(a.Source, a.AttributeName, attribute.Name));
+                        break;
 
-                    // This is an unrecognized tag helper bound attribute. This will practically never happen unless the child content descriptor was misconfigured.
-                    childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidAttribute(property.Source, property.AttributeName, attribute.Name));
-                }
-                else if (child is TagHelperHtmlAttributeIntermediateNode a)
-                {
-                    // This is an HTML attribute on a child content.
-                    childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidAttribute(a.Source, a.AttributeName, attribute.Name));
-                }
-                else if (child is TagHelperDirectiveAttributeIntermediateNode directiveAttribute)
-                {
-                    // We don't support directive attributes inside child content, this is possible if you try to do something like put '@ref' on a child content.
-                    childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidAttribute(directiveAttribute.Source, directiveAttribute.OriginalAttributeName, attribute.Name));
-                }
-                else
-                {
-                    // This is some other kind of node (likely an implicit child content)
-                    childContent.Children.Add(child);
+                    case TagHelperDirectiveAttributeIntermediateNode directiveAttribute:
+                        // We don't support directive attributes inside child content, this is possible if you try to do something like put '@ref' on a child content.
+                        childContent.AddDiagnostic(ComponentDiagnosticFactory.Create_ChildContentHasInvalidAttribute(directiveAttribute.Source, directiveAttribute.OriginalAttributeName, attribute.Name));
+                        break;
+
+                    default:
+                        // This is some other kind of node (likely an implicit child content)
+                        childContent.Children.Add(child);
+                        break;
                 }
             }
 
             return childContent;
         }
 
-        private bool TryGetAttributeStringContent(TagHelperPropertyIntermediateNode property, out string content)
+        private static bool TryGetAttributeStringContent(TagHelperPropertyIntermediateNode property, [NotNullWhen(true)] out string content)
         {
             // The success path looks like - a single HTML Attribute Value node with tokens
-            if (property.Children.Count == 1 &&
-                property.Children[0] is HtmlContentIntermediateNode html)
+            if (property.Children is [HtmlContentIntermediateNode html])
             {
-                content = string.Join(string.Empty, html.Children.OfType<IntermediateToken>().Select(n => n.Content));
+                content = html.GetContent();
                 return true;
             }
 
@@ -440,49 +433,54 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
             var attribute = new ComponentAttributeIntermediateNode(node);
             _children.Add(attribute);
 
+            attribute.Children.Clear();
+
             // Since we don't support complex content, we can rewrite the inside of this
             // node to the rather simpler form that property nodes usually have.
-            for (var i = 0; i < attribute.Children.Count; i++)
+            foreach (var child in node.Children)
             {
-                if (attribute.Children[i] is HtmlAttributeValueIntermediateNode htmlValue)
-                {
-                    var newNode = new HtmlContentIntermediateNode()
-                    {
-                        Source = htmlValue.Source,
-                    };
-                    for (var j = 0; j < htmlValue.Children.Count; j++)
-                    {
-                        newNode.Children.Add(htmlValue.Children[j]);
-                    }
+                attribute.Children.Add(WriteChild(child));
+            }
 
-                    attribute.Children[i] = newNode;
-                }
-                else if (attribute.Children[i] is CSharpExpressionAttributeValueIntermediateNode expressionValue)
+            static IntermediateNode WriteChild(IntermediateNode node)
+            {
+                switch (node)
                 {
-                    var newNode = new CSharpExpressionIntermediateNode()
-                    {
-                        Source = expressionValue.Source,
-                    };
-                    for (var j = 0; j < expressionValue.Children.Count; j++)
-                    {
-                        newNode.Children.Add(expressionValue.Children[j]);
-                    }
+                    case HtmlAttributeValueIntermediateNode htmlValue:
+                        {
+                            var newNode = new HtmlContentIntermediateNode()
+                            {
+                                Source = htmlValue.Source,
+                            };
 
-                    attribute.Children[i] = newNode;
-                }
-                else if (attribute.Children[i] is CSharpCodeAttributeValueIntermediateNode codeValue)
-                {
-                    var newNode = new CSharpExpressionIntermediateNode()
-                    {
-                        Source = codeValue.Source,
-                    };
-                    for (var j = 0; j < codeValue.Children.Count; j++)
-                    {
-                        newNode.Children.Add(codeValue.Children[j]);
-                    }
+                            newNode.Children.AddRange(htmlValue.Children);
+                            return newNode;
+                        }
 
-                    attribute.Children[i] = newNode;
+                    case CSharpExpressionAttributeValueIntermediateNode expressionValue:
+                        {
+                            var newNode = new CSharpExpressionIntermediateNode()
+                            {
+                                Source = expressionValue.Source,
+                            };
+
+                            newNode.Children.AddRange(expressionValue.Children);
+                            return newNode;
+                        }
+
+                    case CSharpCodeAttributeValueIntermediateNode codeValue:
+                        {
+                            var newNode = new CSharpExpressionIntermediateNode()
+                            {
+                                Source = codeValue.Source,
+                            };
+
+                            newNode.Children.AddRange(codeValue.Children);
+                            return newNode;
+                        }
                 }
+
+                return node;
             }
         }
 
@@ -560,10 +558,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
 
         public override void VisitTagHelperBody(TagHelperBodyIntermediateNode node)
         {
-            for (var i = 0; i < node.Children.Count; i++)
-            {
-                _children.Add(node.Children[i]);
-            }
+            _children.AddRange(node.Children);
         }
 
         public override void VisitTagHelperHtmlAttribute(TagHelperHtmlAttributeIntermediateNode node)
@@ -594,36 +589,30 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
                     attribute.Prefix = node.AttributeName + "=\"";
                     attribute.Suffix = "\"";
 
-                    for (var i = 0; i < node.Children.Count; i++)
+                    foreach (var child in node.Children)
                     {
-                        attribute.Children.Add(RewriteAttributeContent(node.Children[i]));
+                        attribute.Children.Add(RewriteAttributeContent(child));
                     }
 
                     break;
             }
 
-            IntermediateNode RewriteAttributeContent(IntermediateNode content)
+            static IntermediateNode RewriteAttributeContent(IntermediateNode node)
             {
-                if (content is HtmlContentIntermediateNode html)
+                if (node is HtmlContentIntermediateNode htmlContentNode)
                 {
                     var value = new HtmlAttributeValueIntermediateNode()
                     {
-                        Source = content.Source,
+                        Source = htmlContentNode.Source,
                     };
 
-                    for (var i = 0; i < html.Children.Count; i++)
-                    {
-                        value.Children.Add(html.Children[i]);
-                    }
-
-
-                    value.AddDiagnosticsFromNode(html);
+                    value.Children.AddRange(htmlContentNode.Children);
+                    value.AddDiagnosticsFromNode(htmlContentNode);
 
                     return value;
                 }
 
-
-                return content;
+                return node;
             }
         }
 

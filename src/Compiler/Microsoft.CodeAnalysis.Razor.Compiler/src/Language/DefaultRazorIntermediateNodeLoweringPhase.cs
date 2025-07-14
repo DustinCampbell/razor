@@ -983,21 +983,19 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
 
             var source = BuildSourceSpanFromNode(node);
-            var currentChildren = _builder.Current.Children;
-            if (currentChildren.Count > 0 && currentChildren[currentChildren.Count - 1] is HtmlContentIntermediateNode)
-            {
-                var existingHtmlContent = (HtmlContentIntermediateNode)currentChildren[currentChildren.Count - 1];
 
+            if (_builder.Current.Children is [.., HtmlContentIntermediateNode existingHtmlContent])
+            {
                 if (existingHtmlContent.Source == null && source == null)
                 {
                     Combine(existingHtmlContent, node);
                     return;
                 }
 
-                if (source != null &&
-                    existingHtmlContent.Source != null &&
-                    existingHtmlContent.Source.Value.FilePath == source.Value.FilePath &&
-                    existingHtmlContent.Source.Value.AbsoluteIndex + existingHtmlContent.Source.Value.Length == source.Value.AbsoluteIndex)
+                if (source is SourceSpan sourceValue &&
+                    existingHtmlContent.Source is SourceSpan htmlContentSourceValue &&
+                    htmlContentSourceValue.FilePath == sourceValue.FilePath &&
+                    htmlContentSourceValue.AbsoluteIndex + htmlContentSourceValue.Length == sourceValue.AbsoluteIndex)
                 {
                     Combine(existingHtmlContent, node);
                     return;

@@ -136,9 +136,9 @@ public sealed class CodeRenderingContext : IDisposable
 
         _ancestorStack.Push(node);
 
-        for (var i = 0; i < node.Children.Count; i++)
+        foreach (var child in node.Children)
         {
-            Visitor.Visit(node.Children[i]);
+            Visitor.Visit(child);
         }
 
         _ancestorStack.Pop();
@@ -152,9 +152,9 @@ public sealed class CodeRenderingContext : IDisposable
         _scopeStack.Push(new ScopeInternal(writer));
         _ancestorStack.Push(node);
 
-        for (var i = 0; i < node.Children.Count; i++)
+        foreach (var child in node.Children)
         {
-            Visitor.Visit(node.Children[i]);
+            Visitor.Visit(child);
         }
 
         _ancestorStack.Pop();

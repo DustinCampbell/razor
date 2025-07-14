@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Xunit;
 
@@ -72,7 +71,7 @@ public class ComponentMarkupEncodingPassTest
 
         // Assert
         var node = documentNode.FindDescendantNodes<HtmlContentIntermediateNode>().Single();
-        Assert.Equal(expected, GetHtmlContent(node));
+        Assert.Equal(expected, node.GetContent());
         Assert.False(node.HasEncodedContent);
     }
 
@@ -93,7 +92,7 @@ The time is ");
 
         // Assert
         var node = documentNode.FindDescendantNodes<HtmlContentIntermediateNode>().Single();
-        Assert.Equal(expected, GetHtmlContent(node));
+        Assert.Equal(expected, node.GetContent());
         Assert.True(node.HasEncodedContent);
     }
 
@@ -112,7 +111,7 @@ The time is ");
 
         // Assert
         var node = documentNode.FindDescendantNodes<HtmlContentIntermediateNode>().Single();
-        Assert.Equal(expected, GetHtmlContent(node));
+        Assert.Equal(expected, node.GetContent());
         Assert.True(node.HasEncodedContent);
     }
 
@@ -131,7 +130,7 @@ The time is ");
 
         // Assert
         var node = documentNode.FindDescendantNodes<HtmlContentIntermediateNode>().Single();
-        Assert.Equal(expected, GetHtmlContent(node));
+        Assert.Equal(expected, node.GetContent());
         Assert.True(node.HasEncodedContent);
     }
 
@@ -150,7 +149,7 @@ The time is ");
 
         // Assert
         var node = documentNode.FindDescendantNodes<HtmlContentIntermediateNode>().Single();
-        Assert.Equal(expected, GetHtmlContent(node));
+        Assert.Equal(expected, node.GetContent());
         Assert.False(node.HasEncodedContent);
     }
 
@@ -169,7 +168,7 @@ The time is ");
 
         // Assert
         var node = documentNode.FindDescendantNodes<HtmlContentIntermediateNode>().Single();
-        Assert.Equal(expected, GetHtmlContent(node));
+        Assert.Equal(expected, node.GetContent());
         Assert.False(node.HasEncodedContent);
     }
 
@@ -207,18 +206,5 @@ The time is ");
         var document = codeDocument.GetRequiredDocumentNode();
         Engine.GetFeatures<ComponentDocumentClassifierPass>().Single().Execute(codeDocument, document);
         return document;
-    }
-
-    private static string GetHtmlContent(HtmlContentIntermediateNode node)
-    {
-        var builder = new StringBuilder();
-        var htmlTokens = node.Children.OfType<HtmlIntermediateToken>();
-
-        foreach (var htmlToken in htmlTokens)
-        {
-            builder.Append(htmlToken.Content);
-        }
-
-        return builder.ToString();
     }
 }

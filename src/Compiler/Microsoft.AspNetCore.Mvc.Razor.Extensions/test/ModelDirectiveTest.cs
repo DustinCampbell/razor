@@ -81,14 +81,15 @@ public class ModelDirectiveTest : RazorProjectEngineTestBase
         // Assert
         var documentNode = processor.GetDocumentNode();
         var classNode = documentNode.GetClassNode();
-        var baseType = classNode.BaseType;
+        var baseTypeNode = classNode.BaseType;
 
-        Assert.Equal("BaseType", baseType.BaseType.Content);
-        Assert.NotNull(baseType.BaseType.Source);
+        Assert.NotNull(baseTypeNode);
+        Assert.Equal("BaseType", baseTypeNode.BaseType.Content);
+        Assert.NotNull(baseTypeNode.BaseType.Source);
 
-        Assert.NotNull(baseType.ModelType);
-        Assert.Equal("Type1", baseType.ModelType.Content);
-        Assert.NotNull(baseType.ModelType.Source);
+        Assert.NotNull(baseTypeNode.ModelType);
+        Assert.Equal("Type1", baseTypeNode.ModelType.Content);
+        Assert.NotNull(baseTypeNode.ModelType.Source);
     }
 
     [Fact]
@@ -109,14 +110,15 @@ public class ModelDirectiveTest : RazorProjectEngineTestBase
         // Assert
         var documentNode = processor.GetDocumentNode();
         var classNode = documentNode.GetClassNode();
-        var baseType = classNode.BaseType;
+        var baseTypeNode = classNode.BaseType;
 
-        Assert.Equal("BaseType", baseType.BaseType.Content);
-        Assert.NotNull(baseType.BaseType.Source);
+        Assert.NotNull(baseTypeNode);
+        Assert.Equal("BaseType", baseTypeNode.BaseType.Content);
+        Assert.NotNull(baseTypeNode.BaseType.Source);
 
-        Assert.NotNull(baseType.ModelType);
-        Assert.Equal("Type1", baseType.ModelType.Content);
-        Assert.NotNull(baseType.ModelType.Source);
+        Assert.NotNull(baseTypeNode.ModelType);
+        Assert.Equal("Type1", baseTypeNode.ModelType.Content);
+        Assert.NotNull(baseTypeNode.ModelType.Source);
     }
 
     [Fact]
@@ -136,13 +138,14 @@ public class ModelDirectiveTest : RazorProjectEngineTestBase
         // Assert
         var documentNode = processor.GetDocumentNode();
         var classNode = documentNode.GetClassNode();
-        var baseType = classNode.BaseType;
+        var baseTypeNode = classNode.BaseType;
 
-        Assert.Equal("BaseType", baseType.BaseType.Content);
-        Assert.NotNull(baseType.BaseType.Source);
+        Assert.NotNull(baseTypeNode);
+        Assert.Equal("BaseType", baseTypeNode.BaseType.Content);
+        Assert.NotNull(baseTypeNode.BaseType.Source);
 
         // ISSUE: https://github.com/dotnet/razor/issues/10987 we don't issue a warning or emit anything for the unused model
-        Assert.Null(baseType.ModelType);
+        Assert.Null(baseTypeNode.ModelType);
     }
 
     [Fact]
@@ -161,14 +164,15 @@ public class ModelDirectiveTest : RazorProjectEngineTestBase
         // Assert
         var documentNode = processor.GetDocumentNode();
         var classNode = documentNode.GetClassNode();
-        var baseType = classNode.BaseType;
+        var baseTypeNode = classNode.BaseType;
 
-        Assert.Equal("BaseType", baseType.BaseType.Content);
-        Assert.NotNull(baseType.BaseType.Source);
+        Assert.NotNull(baseTypeNode);
+        Assert.Equal("BaseType", baseTypeNode.BaseType.Content);
+        Assert.NotNull(baseTypeNode.BaseType.Source);
 
-        Assert.NotNull(baseType.ModelType);
-        Assert.Equal("dynamic", baseType.ModelType.Content);
-        Assert.Null(baseType.ModelType.Source);
+        Assert.NotNull(baseTypeNode.ModelType);
+        Assert.Equal("dynamic", baseTypeNode.ModelType.Content);
+        Assert.Null(baseTypeNode.ModelType.Source);
     }
 
     [Fact]
@@ -188,14 +192,15 @@ public class ModelDirectiveTest : RazorProjectEngineTestBase
         var documentNode = processor.GetDocumentNode();
         var namespaceNode = documentNode.GetNamespaceNode();
         var classNode = documentNode.GetClassNode();
-        var baseType = classNode.BaseType;
+        var baseTypeNode = classNode.BaseType;
 
-        Assert.Equal("BaseType", baseType.BaseType.Content);
-        Assert.Null(baseType.BaseType.Source);
+        Assert.NotNull(baseTypeNode);
+        Assert.Equal("BaseType", baseTypeNode.BaseType.Content);
+        Assert.Null(baseTypeNode.BaseType.Source);
 
-        Assert.NotNull(baseType.ModelType);
-        Assert.Equal("dynamic", baseType.ModelType.Content);
-        Assert.Null(baseType.ModelType.Source);
+        Assert.NotNull(baseTypeNode.ModelType);
+        Assert.Equal("dynamic", baseTypeNode.ModelType.Content);
+        Assert.Null(baseTypeNode.ModelType.Source);
 
         var usingNode = Assert.IsType<UsingDirectiveIntermediateNode>(namespaceNode.Children[0]);
         Assert.Equal($"TModel = global::{typeof(object).FullName}", usingNode.Content);
@@ -219,14 +224,15 @@ public class ModelDirectiveTest : RazorProjectEngineTestBase
         var documentNode = processor.GetDocumentNode();
         var namespaceNode = documentNode.GetNamespaceNode();
         var classNode = documentNode.GetClassNode();
-        var baseType = classNode.BaseType;
+        var baseTypeNode = classNode.BaseType;
 
-        Assert.Equal("BaseType", baseType.BaseType.Content);
-        Assert.Null(baseType.BaseType.Source);
+        Assert.NotNull(baseTypeNode);
+        Assert.Equal("BaseType", baseTypeNode.BaseType.Content);
+        Assert.Null(baseTypeNode.BaseType.Source);
 
-        Assert.NotNull(baseType.ModelType);
-        Assert.Equal("SomeType", baseType.ModelType.Content);
-        Assert.Null(baseType.ModelType.Source);
+        Assert.NotNull(baseTypeNode.ModelType);
+        Assert.Equal("SomeType", baseTypeNode.ModelType.Content);
+        Assert.Null(baseTypeNode.ModelType.Source);
 
         var usingNode = Assert.IsType<UsingDirectiveIntermediateNode>(namespaceNode.Children[0]);
         Assert.Equal($"TModel = global::System.Object", usingNode.Content);

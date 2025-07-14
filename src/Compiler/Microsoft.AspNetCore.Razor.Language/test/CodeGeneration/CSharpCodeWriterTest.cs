@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Roslyn.Test.Utilities;
 using Xunit;
 
@@ -404,7 +403,14 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter(options);
 
         // Act
-        writer.BuildClassDeclaration(Array.Empty<string>(), "C", null, Array.Empty<IntermediateToken>(), Array.Empty<TypeParameter>(), context: null);
+        writer.BuildClassDeclaration(
+            modifiers: [],
+            name: "C",
+            baseType: null,
+            interfaces: [],
+            typeParameters: [],
+            context: null);
+
         writer.WriteField(Array.Empty<string>(), Array.Empty<string>(), "int", "f");
 
         // Assert
@@ -428,7 +434,14 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter(options);
 
         // Act
-        writer.BuildClassDeclaration(Array.Empty<string>(), "C", null, Array.Empty<IntermediateToken>(), Array.Empty<TypeParameter>(), context: null);
+        writer.BuildClassDeclaration(
+            modifiers: [],
+            name: "C",
+            baseType: null,
+            interfaces: [],
+            typeParameters: [],
+            context: null);
+
         writer.WriteField(Array.Empty<string>(), Array.Empty<string>(), "int", "f");
 
         // Assert

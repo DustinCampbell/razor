@@ -369,11 +369,11 @@ internal static partial class CodeWriterExtensions
 
     public static CSharpCodeWritingScope BuildClassDeclaration(
         this CodeWriter writer,
-        IList<string> modifiers,
-        string name,
+        ImmutableArray<Content> modifiers,
+        Content name,
         BaseTypeWithModel baseType,
-        IList<IntermediateToken> interfaces,
-        IList<TypeParameter> typeParameters,
+        ImmutableArray<IntermediateToken> interfaces,
+        ImmutableArray<TypeParameter> typeParameters,
         CodeRenderingContext context,
         bool useNullableContext = false)
     {
@@ -384,35 +384,40 @@ internal static partial class CodeWriterExtensions
             writer.WriteLine("#nullable restore");
         }
 
-        for (var i = 0; i < modifiers.Count; i++)
+        if (!modifiers.IsDefaultOrEmpty)
         {
-            writer.Write(modifiers[i]);
-            writer.Write(" ");
+            foreach (var modifier in modifiers)
+            {
+                writer.Write($"{modifier} ");
+            }
         }
 
-        writer.Write("class ");
-        writer.Write(name);
+        writer.Write($"class {name}");
 
-        if (typeParameters != null && typeParameters.Count > 0)
+        if (!typeParameters.IsDefaultOrEmpty)
         {
             writer.Write("<");
 
-            for (var i = 0; i < typeParameters.Count; i++)
+            var first = true;
+
+            foreach (var typeParameter in typeParameters)
             {
-                var typeParameter = typeParameters[i];
-                if (typeParameter.ParameterNameSource is { } source)
+                if (first)
                 {
-                    WriteWithPragma(writer, typeParameter.ParameterName, context, source);
+                    first = false;
                 }
                 else
                 {
-                    writer.Write(typeParameter.ParameterName);
+                    writer.Write(",");
                 }
 
-                // Write ',' between parameters, but not after them
-                if (i < typeParameters.Count - 1)
+                if (typeParameter.NameSource is { } source)
                 {
-                    writer.Write(",");
+                    WriteWithPragma(writer, typeParameter.Name, context, source);
+                }
+                else
+                {
+                    writer.Write(typeParameter.Name);
                 }
             }
 
@@ -420,7 +425,7 @@ internal static partial class CodeWriterExtensions
         }
 
         var hasBaseType = !string.IsNullOrWhiteSpace(baseType?.BaseType.Content);
-        var hasInterfaces = interfaces != null && interfaces.Count > 0;
+        var hasInterfaces = !interfaces.IsDefaultOrEmpty;
 
         if (hasBaseType || hasInterfaces)
         {
@@ -435,16 +440,17 @@ internal static partial class CodeWriterExtensions
 
                 if (hasInterfaces)
                 {
-                    WriteParameterSeparator(writer);
+                    writer.WriteParameterSeparator();
                 }
             }
 
             if (hasInterfaces)
             {
                 WriteToken(interfaces[0]);
-                for (var i = 1; i < interfaces.Count; i++)
+
+                for (var i = 1; i < interfaces.Length; i++)
                 {
-                    writer.Write(", ");
+                    writer.WriteParameterSeparator();
                     WriteToken(interfaces[i]);
                 }
             }
@@ -499,7 +505,7 @@ internal static partial class CodeWriterExtensions
             }
         }
 
-        static void WriteWithPragma(CodeWriter writer, string content, CodeRenderingContext context, SourceSpan source)
+        static void WriteWithPragma(CodeWriter writer, Content content, CodeRenderingContext context, SourceSpan source)
         {
             if (context.Options.DesignTime)
             {

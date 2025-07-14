@@ -415,7 +415,7 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
         private void CreateTypeInferenceMethod(DocumentIntermediateNode documentNode, ComponentIntermediateNode node, List<CascadingGenericTypeParameter>? receivesCascadingGenericTypes)
         {
             var baseNamespaceName = documentNode.FindPrimaryNamespace().AssumeNotNull().Name;
-            var className = documentNode.FindPrimaryClass().AssumeNotNull().ClassName;
+            var className = documentNode.FindPrimaryClass().AssumeNotNull().Name;
 
             using var builder = new PooledArrayBuilder<Content>();
             builder.Add("__Blazor.");
@@ -466,18 +466,16 @@ internal class ComponentGenericTypePass : ComponentIntermediateNodePassBase, IRa
 
             var classNode = namespaceNode.Children
                 .OfType<ClassDeclarationIntermediateNode>()
-                .FirstOrDefault(n => n.ClassName == "TypeInference");
+                .FirstOrDefault(n => n.Name == "TypeInference");
+
             if (classNode == null)
             {
                 classNode = new ClassDeclarationIntermediateNode()
                 {
-                    ClassName = "TypeInference",
-                    Modifiers =
-                        {
-                            "internal",
-                            "static",
-                        },
+                    Name = "TypeInference",
+                    Modifiers = ["internal", "static"],
                 };
+
                 namespaceNode.Children.Add(classNode);
             }
 

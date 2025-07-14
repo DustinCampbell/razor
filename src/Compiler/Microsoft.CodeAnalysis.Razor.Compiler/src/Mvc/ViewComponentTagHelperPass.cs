@@ -168,10 +168,10 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
                 return false;
             }
 
-            var className = $"__Generated__{tagHelper.GetViewComponentName()}ViewComponentTagHelper";
+            var className = new Content($"__Generated__{tagHelper.GetViewComponentName()}ViewComponentTagHelper");
             var fullyQualifiedName = !Namespace.Name.IsEmpty
-                ? $"{Namespace.Name}.{Class.ClassName}.{className}"
-                : $"{Class.ClassName}.{className}";
+                ? new Content($"{Namespace.Name}.{Class.Name}.{className}")
+                : new Content($"{Class.Name}.{className}");
             var fieldName = GenerateFieldName(tagHelper);
 
             _tagHelpers.Add(tagHelper, (className, fullyQualifiedName, fieldName));
@@ -189,6 +189,6 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
             => _tagHelpers[tagHelper].fieldName;
 
         private static Content GenerateFieldName(TagHelperDescriptor tagHelper)
-            => new Content($"__{tagHelper.GetViewComponentName()}ViewComponentTagHelper");
+            => new($"__{tagHelper.GetViewComponentName()}ViewComponentTagHelper");
     }
 }

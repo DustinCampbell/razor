@@ -38,11 +38,12 @@ internal sealed class ComponentRenderModeDirectivePass : IntermediateNodePassBas
         // generate the inner attribute class
         var classDecl = new ClassDeclarationIntermediateNode()
         {
-            ClassName = GeneratedRenderModeAttributeName,
+            Name = GeneratedRenderModeAttributeName,
             BaseType = new BaseTypeWithModel($"global::{ComponentsApi.RenderModeAttribute.FullTypeName}"),
         };
-        classDecl.Modifiers.Add("private");
-        classDecl.Modifiers.Add("sealed");
+
+        classDecl.Modifiers = ["private", "sealed"];
+
         classDecl.Children.Add(new CSharpCodeIntermediateNode()
         {
             Children =
@@ -75,8 +76,8 @@ internal sealed class ComponentRenderModeDirectivePass : IntermediateNodePassBas
         // generate the attribute usage on top of the class
         var attributeNode = new CSharpCodeIntermediateNode();
         var token = !@namespace.Name.IsEmpty
-            ? IntermediateNodeFactory.CSharpToken($"[global::{@namespace.Name}.{@class.ClassName}.{GeneratedRenderModeAttributeName}]")
-            : IntermediateNodeFactory.CSharpToken($"[global::{@class.ClassName}.{GeneratedRenderModeAttributeName}]");
+            ? IntermediateNodeFactory.CSharpToken($"[global::{@namespace.Name}.{@class.Name}.{GeneratedRenderModeAttributeName}]")
+            : IntermediateNodeFactory.CSharpToken($"[global::{@class.Name}.{GeneratedRenderModeAttributeName}]");
 
         attributeNode.Children.Add(token);
 

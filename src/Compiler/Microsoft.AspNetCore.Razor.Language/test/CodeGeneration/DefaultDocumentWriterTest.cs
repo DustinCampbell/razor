@@ -172,14 +172,14 @@ public class DefaultDocumentWriterTest
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Add(new ClassDeclarationIntermediateNode()
         {
-            Modifiers = { "internal" },
+            Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
             Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory. CSharpToken("IBar")],
             TypeParameters = [
-                new TypeParameter() { ParameterName = "TKey" },
-                new TypeParameter() { ParameterName = "TValue" },
+                new TypeParameter() { Name = "TKey" },
+                new TypeParameter() { Name = "TValue" },
             ],
-            ClassName = "TestClass"
+            Name = "TestClass"
         });
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();
@@ -215,14 +215,14 @@ public class DefaultDocumentWriterTest
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Add(new ClassDeclarationIntermediateNode()
         {
-            Modifiers = { "internal" },
+            Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
             Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = [
-                new TypeParameter() { ParameterName = "TKey" },
-                new TypeParameter() { ParameterName = "TValue" },
+                new TypeParameter() { Name = "TKey" },
+                new TypeParameter() { Name = "TValue" },
             ],
-            ClassName = "TestClass",
+            Name = "TestClass",
             NullableContext = true
         });
 
@@ -261,14 +261,14 @@ public class DefaultDocumentWriterTest
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Add(new ClassDeclarationIntermediateNode()
         {
-            Modifiers = { "internal" },
+            Modifiers = ["internal"],
             BaseType = new BaseTypeWithModel("TestBase"),
             Interfaces = [IntermediateNodeFactory.CSharpToken("IFoo"), IntermediateNodeFactory.CSharpToken("IBar")],
             TypeParameters = [
-                new TypeParameter() { ParameterName = "TKey", Constraints = "where TKey : class" },
-                new TypeParameter() { ParameterName = "TValue", Constraints = "where TValue : class" },
+                new TypeParameter() { Name = "TKey", Constraints = "where TKey : class" },
+                new TypeParameter() { Name = "TValue", Constraints = "where TValue : class" },
             ],
-            ClassName = "TestClass"
+            Name = "TestClass"
         });
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();

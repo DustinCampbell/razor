@@ -42,7 +42,7 @@ public class IntermediateNodeWriter :
         using var entries = new PooledArrayBuilder<Content>();
 
         entries.Add(Content.Join(" ", node.Modifiers));
-        entries.Add(node.ClassName);
+        entries.Add(node.Name);
 
         if (node.BaseType is { } baseType)
         {
@@ -56,9 +56,9 @@ public class IntermediateNodeWriter :
         entries.Add(Content.Join(", ", node.Interfaces.Select(i => i.Content)));
 
         // Avoid adding the type parameters to the baseline if they aren't present.
-        if (node.TypeParameters != null && node.TypeParameters.Count > 0)
+        if (!node.TypeParameters.IsDefaultOrEmpty)
         {
-            entries.Add(Content.Join(", ", node.TypeParameters.Select(p => p.ParameterName)));
+            entries.Add(Content.Join(", ", node.TypeParameters.Select(p => p.Name)));
         }
 
         WriteContentNode(node, entries.ToImmutableAndClear());

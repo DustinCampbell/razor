@@ -3,37 +3,34 @@
 
 #nullable disable
 
-using System;
 using System.Diagnostics;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class ComponentTypeArgumentIntermediateNode : IntermediateNode
 {
-    public ComponentTypeArgumentIntermediateNode(TagHelperPropertyIntermediateNode propertyNode)
+    public static ComponentTypeArgumentIntermediateNode CreateFrom(TagHelperPropertyIntermediateNode node)
     {
-        if (propertyNode == null)
-        {
-            throw new ArgumentNullException(nameof(propertyNode));
-        }
+        return CreateFrom<TagHelperPropertyIntermediateNode, ComponentTypeArgumentIntermediateNode>(
+            node, addChildren: false, addDiagnostics: true,
+            copyProperties: static (node, newNode) =>
+            {
+                newNode.BoundAttribute = node.BoundAttribute;
+                newNode.Source = node.Source;
+                newNode.TagHelper = node.TagHelper;
 
-        BoundAttribute = propertyNode.BoundAttribute;
-        Source = propertyNode.Source;
-        TagHelper = propertyNode.TagHelper;
+                Debug.Assert(node.Children.Count == 1);
 
-        Debug.Assert(propertyNode.Children.Count == 1);
-        Value = propertyNode.Children[0] switch
-        {
-            CSharpIntermediateToken t => t,
-            CSharpExpressionIntermediateNode c => (CSharpIntermediateToken)c.Children[0], // TODO: can we break this in error cases?
-            _ => Assumed.Unreachable<CSharpIntermediateToken>()
-        };
-        Children = [Value];
-
-        AddDiagnosticsFromNode(propertyNode);
+                newNode.Value = node.Children[0] switch
+                {
+                    CSharpIntermediateToken t => t,
+                    CSharpExpressionIntermediateNode c => (CSharpIntermediateToken)c.Children[0], // TODO: can we break this in error cases?
+                    _ => Assumed.Unreachable<CSharpIntermediateToken>()
+                };
+            });
     }
 
-    public override IntermediateNodeCollection Children { get; }
+    public override IntermediateNodeCollection Children { get; } = [];
 
     public BoundAttributeDescriptor BoundAttribute { get; set; }
 
@@ -41,25 +38,28 @@ public sealed class ComponentTypeArgumentIntermediateNode : IntermediateNode
 
     public TagHelperDescriptor TagHelper { get; set; }
 
-    public CSharpIntermediateToken Value { get; set; }
+    public CSharpIntermediateToken Value
+    {
+        get => field;
+        set
+        {
+            field = value;
+
+            // Ensure that Children is always in sync with Value.
+            Children.Clear();
+
+            if (value is not null)
+            {
+                Children.Add(value);
+            }
+        }
+    }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitComponentTypeArgument(this);
-    }
+        => visitor.VisitComponentTypeArgument(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         formatter.WriteContent(TypeParameterName);
 
         formatter.WriteProperty(nameof(BoundAttribute), BoundAttribute?.DisplayName);

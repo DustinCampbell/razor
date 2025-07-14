@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -42,6 +43,27 @@ public abstract class IntermediateNode
             _diagnosticsBuilder.AddRange(node.Diagnostics);
             _diagnostics = null;
         }
+    }
+
+    protected static TTo CreateFrom<TFrom, TTo>(
+        TFrom node, bool addChildren, bool addDiagnostics, Action<TFrom, TTo> copyProperties)
+        where TFrom : IntermediateNode
+        where TTo : IntermediateNode, new()
+    {
+        var newNode = new TTo();
+        copyProperties(node, newNode);
+
+        if (addChildren)
+        {
+            newNode.Children.AddRange(node.Children);
+        }
+
+        if (addDiagnostics)
+        {
+            newNode.AddDiagnosticsFromNode(node);
+        }
+
+        return newNode;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]

@@ -430,19 +430,17 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
 
         public override void VisitTagHelperHtmlAttribute(TagHelperHtmlAttributeIntermediateNode node)
         {
-            var attribute = new ComponentAttributeIntermediateNode(node);
+            var attribute = ComponentAttributeIntermediateNode.CreateFrom(node, addChildren: false);
             _children.Add(attribute);
-
-            attribute.Children.Clear();
 
             // Since we don't support complex content, we can rewrite the inside of this
             // node to the rather simpler form that property nodes usually have.
             foreach (var child in node.Children)
             {
-                attribute.Children.Add(WriteChild(child));
+                attribute.Children.Add(RewriteChild(child));
             }
 
-            static IntermediateNode WriteChild(IntermediateNode node)
+            static IntermediateNode RewriteChild(IntermediateNode node)
             {
                 switch (node)
                 {
@@ -499,7 +497,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
             // that get passed to the component, it needs special code generation support.
             if (node.TagHelper.IsGenericTypedComponent() && node.BoundAttribute.IsTypeParameterProperty())
             {
-                _children.Add(new ComponentTypeArgumentIntermediateNode(node));
+                _children.Add(ComponentTypeArgumentIntermediateNode.CreateFrom(node));
                 return;
             }
 
@@ -522,7 +520,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
                 return;
             }
 
-            _children.Add(new ComponentAttributeIntermediateNode(node));
+            _children.Add(ComponentAttributeIntermediateNode.CreateFrom(node));
         }
 
         public override void VisitTagHelperDirectiveAttribute(TagHelperDirectiveAttributeIntermediateNode node)
@@ -621,7 +619,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
             // Each 'tag helper property' belongs to a specific tag helper. We want to handle
             // the cases for components, but leave others alone. This allows our other passes
             // to handle those cases.
-            _children.Add(node.TagHelper.IsComponentTagHelper ? (IntermediateNode)new ComponentAttributeIntermediateNode(node) : node);
+            _children.Add(node.TagHelper.IsComponentTagHelper ? ComponentAttributeIntermediateNode.CreateFrom(node) : node);
         }
 
         public override void VisitTagHelperDirectiveAttribute(TagHelperDirectiveAttributeIntermediateNode node)

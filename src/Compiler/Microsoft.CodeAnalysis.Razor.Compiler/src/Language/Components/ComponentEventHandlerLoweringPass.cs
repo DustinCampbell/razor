@@ -209,12 +209,7 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
         }
         else
         {
-            var result = new ComponentAttributeIntermediateNode(node)
-            {
-                OriginalAttributeName = node.OriginalAttributeName,
-            };
-
-            result.Children.Clear();
+            var result = ComponentAttributeIntermediateNode.CreateFrom(node, addChildren: false);
 
             var expressionNode = new CSharpExpressionIntermediateNode();
             result.Children.Add(expressionNode);
@@ -285,13 +280,10 @@ internal class ComponentEventHandlerLoweringPass : ComponentIntermediateNodePass
             return node;
         }
 
-        var result = new ComponentAttributeIntermediateNode(node)
-        {
-            OriginalAttributeName = node.OriginalAttributeName,
-            AddAttributeMethodName = eventHandlerMethod,
-        };
+        var result = ComponentAttributeIntermediateNode.CreateFrom(node, addChildren: false);
 
-        result.Children.Clear();
+        result.OriginalAttributeName = node.OriginalAttributeName;
+        result.AddAttributeMethodName = eventHandlerMethod;
 
         if (node.AttributeStructure != AttributeStructure.Minimized)
         {

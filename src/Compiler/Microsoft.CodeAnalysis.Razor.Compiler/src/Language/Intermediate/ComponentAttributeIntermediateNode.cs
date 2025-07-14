@@ -49,98 +49,67 @@ public sealed class ComponentAttributeIntermediateNode : IntermediateNode
     {
     }
 
-    public ComponentAttributeIntermediateNode(TagHelperHtmlAttributeIntermediateNode attributeNode)
-    {
-        if (attributeNode == null)
-        {
-            throw new ArgumentNullException(nameof(attributeNode));
-        }
+    private static ComponentAttributeIntermediateNode CreateFrom<T>(
+        T node, bool addChildren, bool addDiagnostics, Action<T, ComponentAttributeIntermediateNode> copyProperties)
+        where T : IntermediateNode
+        => CreateFrom<T, ComponentAttributeIntermediateNode>(node, addChildren, addDiagnostics, copyProperties);
 
-        AttributeName = attributeNode.AttributeName;
-        AttributeStructure = attributeNode.AttributeStructure;
-        Source = attributeNode.Source;
+    public static ComponentAttributeIntermediateNode CreateFrom(
+        TagHelperHtmlAttributeIntermediateNode node, bool addChildren = true, bool addDiagnostics = true)
+        => CreateFrom(node, addChildren, addDiagnostics,
+            static (node, newNode) =>
+            {
+                newNode.AttributeName = node.AttributeName;
+                newNode.AttributeStructure = node.AttributeStructure;
+                newNode.Source = node.Source;
+            });
 
-        for (var i = 0; i < attributeNode.Children.Count; i++)
-        {
-            Children.Add(attributeNode.Children[i]);
-        }
+    public static ComponentAttributeIntermediateNode CreateFrom(
+        TagHelperPropertyIntermediateNode node, bool addChildren = true, bool addDiagnostics = true)
+        => CreateFrom(node, addChildren, addDiagnostics,
+            static (node, newNode) =>
+            {
+                newNode.AttributeName = node.AttributeName;
+                newNode.AttributeStructure = node.AttributeStructure;
+                newNode.BoundAttribute = node.BoundAttribute;
+                newNode.OriginalAttributeSpan = node.OriginalAttributeSpan;
+                newNode.PropertyName = node.BoundAttribute.GetPropertyName();
+                newNode.Source = node.Source;
+                newNode.TagHelper = node.TagHelper;
+                newNode.TypeName = node.BoundAttribute.IsWeaklyTyped() ? null : node.BoundAttribute.TypeName;
+            });
 
-        AddDiagnosticsFromNode(attributeNode);
-    }
+    public static ComponentAttributeIntermediateNode CreateFrom(
+        TagHelperDirectiveAttributeIntermediateNode node, bool addChildren = true, bool addDiagnostics = true)
+        => CreateFrom(node, addChildren, addDiagnostics,
+            static (node, newNode) =>
+            {
+                newNode.AttributeName = node.AttributeName;
+                newNode.AttributeStructure = node.AttributeStructure;
+                newNode.BoundAttribute = node.BoundAttribute;
+                newNode.OriginalAttributeName = node.OriginalAttributeName;
+                newNode.OriginalAttributeSpan = node.OriginalAttributeSpan;
+                newNode.PropertyName = node.BoundAttribute.GetPropertyName();
+                newNode.Source = node.Source;
+                newNode.TagHelper = node.TagHelper;
+                newNode.TypeName = node.BoundAttribute.IsWeaklyTyped() ? null : node.BoundAttribute.TypeName;
+            });
 
-    public ComponentAttributeIntermediateNode(TagHelperPropertyIntermediateNode propertyNode)
-    {
-        if (propertyNode == null)
-        {
-            throw new ArgumentNullException(nameof(propertyNode));
-        }
-
-        var attributeName = propertyNode.AttributeName;
-
-        AttributeName = attributeName;
-        AttributeStructure = propertyNode.AttributeStructure;
-        BoundAttribute = propertyNode.BoundAttribute;
-        OriginalAttributeSpan = propertyNode.OriginalAttributeSpan;
-        PropertyName = propertyNode.BoundAttribute.GetPropertyName();
-        Source = propertyNode.Source;
-        TagHelper = propertyNode.TagHelper;
-        TypeName = propertyNode.BoundAttribute.IsWeaklyTyped() ? null : propertyNode.BoundAttribute.TypeName;
-
-        for (var i = 0; i < propertyNode.Children.Count; i++)
-        {
-            Children.Add(propertyNode.Children[i]);
-        }
-
-        AddDiagnosticsFromNode(propertyNode);
-    }
-
-    public ComponentAttributeIntermediateNode(TagHelperDirectiveAttributeIntermediateNode directiveAttributeNode)
-    {
-        if (directiveAttributeNode == null)
-        {
-            throw new ArgumentNullException(nameof(directiveAttributeNode));
-        }
-
-        AttributeName = directiveAttributeNode.AttributeName;
-        AttributeStructure = directiveAttributeNode.AttributeStructure;
-        BoundAttribute = directiveAttributeNode.BoundAttribute;
-        OriginalAttributeSpan = directiveAttributeNode.OriginalAttributeSpan;
-        PropertyName = directiveAttributeNode.BoundAttribute.GetPropertyName();
-        Source = directiveAttributeNode.Source;
-        TagHelper = directiveAttributeNode.TagHelper;
-        TypeName = directiveAttributeNode.BoundAttribute.IsWeaklyTyped() ? null : directiveAttributeNode.BoundAttribute.TypeName;
-
-        for (var i = 0; i < directiveAttributeNode.Children.Count; i++)
-        {
-            Children.Add(directiveAttributeNode.Children[i]);
-        }
-
-        AddDiagnosticsFromNode(directiveAttributeNode);
-    }
-
-    public ComponentAttributeIntermediateNode(TagHelperDirectiveAttributeParameterIntermediateNode directiveAttributeParameterNode)
-    {
-        if (directiveAttributeParameterNode == null)
-        {
-            throw new ArgumentNullException(nameof(directiveAttributeParameterNode));
-        }
-
-        AttributeName = directiveAttributeParameterNode.AttributeNameWithoutParameter;
-        AttributeStructure = directiveAttributeParameterNode.AttributeStructure;
-        BoundAttribute = directiveAttributeParameterNode.BoundAttribute;
-        OriginalAttributeSpan = directiveAttributeParameterNode.OriginalAttributeSpan;
-        PropertyName = directiveAttributeParameterNode.BoundAttributeParameter.PropertyName;
-        Source = directiveAttributeParameterNode.Source;
-        TagHelper = directiveAttributeParameterNode.TagHelper;
-        TypeName = directiveAttributeParameterNode.BoundAttributeParameter.TypeName;
-
-        for (var i = 0; i < directiveAttributeParameterNode.Children.Count; i++)
-        {
-            Children.Add(directiveAttributeParameterNode.Children[i]);
-        }
-
-        AddDiagnosticsFromNode(directiveAttributeParameterNode);
-    }
+    public static ComponentAttributeIntermediateNode CreateFrom(
+        TagHelperDirectiveAttributeParameterIntermediateNode node, bool addChildren = true, bool addDiagnostics = true)
+        => CreateFrom(node, addChildren, addDiagnostics,
+            static (node, newNode) =>
+            {
+                newNode.AttributeName = node.AttributeNameWithoutParameter;
+                newNode.AttributeStructure = node.AttributeStructure;
+                newNode.BoundAttribute = node.BoundAttribute;
+                newNode.OriginalAttributeName = node.OriginalAttributeName;
+                newNode.OriginalAttributeSpan = node.OriginalAttributeSpan;
+                newNode.PropertyName = node.BoundAttributeParameter.PropertyName;
+                newNode.Source = node.Source;
+                newNode.TagHelper = node.TagHelper;
+                newNode.TypeName = node.BoundAttributeParameter.TypeName;
+            });
 
     public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
 
@@ -159,22 +128,10 @@ public sealed class ComponentAttributeIntermediateNode : IntermediateNode
     public string GloballyQualifiedTypeName { get; set; }
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        visitor.VisitComponentAttribute(this);
-    }
+        => visitor.VisitComponentAttribute(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
-
         formatter.WriteContent(AttributeName);
 
         formatter.WriteProperty(nameof(AttributeName), AttributeName);

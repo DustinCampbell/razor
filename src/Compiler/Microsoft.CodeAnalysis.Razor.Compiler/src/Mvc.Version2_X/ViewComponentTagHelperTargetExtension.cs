@@ -16,9 +16,7 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X;
 
 internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTargetExtension
 {
-    // TODO: Merge s_classModifiers and s_publicModifiers when properties are done.
-    private static readonly ImmutableArray<Content> s_classModifiers = ["public"];
-    private static readonly string[] s_publicModifiers = ["public"];
+    private static readonly ImmutableArray<Content> s_publicModifiers = ["public"];
 
     public string TagHelperTypeName { get; set; } = "Microsoft.AspNetCore.Razor.TagHelpers.TagHelper";
 
@@ -67,7 +65,7 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
 
         // Initialize declaration.
         using (context.CodeWriter.BuildClassDeclaration(
-            s_classModifiers,
+            s_publicModifiers,
             node.ClassName,
             new BaseTypeWithModel(TagHelperTypeName),
             interfaces: default,

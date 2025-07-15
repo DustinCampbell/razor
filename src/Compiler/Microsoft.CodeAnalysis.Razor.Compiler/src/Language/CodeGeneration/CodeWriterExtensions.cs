@@ -220,30 +220,44 @@ internal static partial class CodeWriterExtensions
             .WriteEndMethodInvocation(endLine);
     }
 
-    public static CodeWriter WritePropertyDeclaration(this CodeWriter writer, IList<string> modifiers, IntermediateToken type, string propertyName, string propertyExpression, CodeRenderingContext context)
+    public static CodeWriter WritePropertyDeclaration(
+        this CodeWriter writer,
+        ImmutableArray<Content> modifiers,
+        IntermediateToken returnTypeName,
+        Content name,
+        Content expressionBody,
+        CodeRenderingContext context)
     {
-        WritePropertyDeclarationPreamble(writer, modifiers, type.Content, propertyName, type.Source, propertySpan: null, context);
-        writer.Write(" => ");
-        writer.Write(propertyExpression);
-        writer.WriteLine(";");
-        return writer;
+        writer.WritePropertyDeclarationPreamble(modifiers, returnTypeName.Content, name, returnTypeName.Source, propertySpan: null, context);
+
+        return writer.WriteLine($" => {expressionBody};");
     }
 
-    public static CodeWriter WriteAutoPropertyDeclaration(this CodeWriter writer, IList<string> modifiers, string typeName, string propertyName, SourceSpan? typeSpan = null, SourceSpan? propertySpan = null, CodeRenderingContext context = null, bool privateSetter = false, bool defaultValue = false)
+    public static CodeWriter WriteAutoPropertyDeclaration(
+        this CodeWriter writer,
+        ImmutableArray<Content> modifiers,
+        Content typeName,
+        Content name,
+        SourceSpan? typeSpan = null,
+        SourceSpan? propertySpan = null,
+        CodeRenderingContext context = null,
+        bool privateSetter = false,
+        bool defaultValue = false)
     {
         ArgHelper.ThrowIfNull(modifiers);
         ArgHelper.ThrowIfNull(typeName);
-        ArgHelper.ThrowIfNull(propertyName);
+        ArgHelper.ThrowIfNull(name);
 
-        WritePropertyDeclarationPreamble(writer, modifiers, typeName, propertyName, typeSpan, propertySpan, context);
+        writer.WritePropertyDeclarationPreamble(modifiers, typeName, name, typeSpan, propertySpan, context);
 
         writer.Write(" { get;");
+
         if (privateSetter)
         {
             writer.Write(" private");
         }
-        writer.Write(" set; }");
-        writer.WriteLine();
+
+        writer.WriteLine(" set; }");
 
         if (defaultValue && context?.Options.SuppressNullabilityEnforcement == false && context?.Options.DesignTime == false)
         {
@@ -253,19 +267,28 @@ internal static partial class CodeWriterExtensions
         return writer;
     }
 
-    private static void WritePropertyDeclarationPreamble(CodeWriter writer, IList<string> modifiers, string typeName, string propertyName, SourceSpan? typeSpan, SourceSpan? propertySpan, CodeRenderingContext context)
+    private static void WritePropertyDeclarationPreamble(
+        this CodeWriter writer,
+        ImmutableArray<Content> modifiers,
+        Content typeName,
+        Content name,
+        SourceSpan? typeSpan,
+        SourceSpan? propertySpan,
+        CodeRenderingContext context)
     {
-        for (var i = 0; i < modifiers.Count; i++)
+        if (!modifiers.IsDefaultOrEmpty)
         {
-            writer.Write(modifiers[i]);
-            writer.Write(" ");
+            foreach (var modifier in modifiers)
+            {
+                writer.Write($"{modifier} ");
+            }
         }
 
         WriteToken(writer, typeName, typeSpan, context);
         writer.Write(" ");
-        WriteToken(writer, propertyName, propertySpan, context);
+        WriteToken(writer, name, propertySpan, context);
 
-        static void WriteToken(CodeWriter writer, string content, SourceSpan? span, CodeRenderingContext context)
+        static void WriteToken(CodeWriter writer, Content content, SourceSpan? span, CodeRenderingContext context)
         {
             if (span is not null && context?.Options.DesignTime == false)
             {

@@ -363,7 +363,7 @@ public class CSharpCodeWriterTest
         writer.WriteAutoPropertyDeclaration(
             modifiers: ["public"],
             typeName: "global::System.String",
-            propertyName: "MyString");
+            name: "MyString");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -383,7 +383,7 @@ public class CSharpCodeWriterTest
         writer.WriteAutoPropertyDeclaration(
             modifiers: ["public", "static"],
             typeName: "global::System.String",
-            propertyName: "MyString");
+            name: "MyString");
 
         // Assert
         var output = writer.GetText().ToString();

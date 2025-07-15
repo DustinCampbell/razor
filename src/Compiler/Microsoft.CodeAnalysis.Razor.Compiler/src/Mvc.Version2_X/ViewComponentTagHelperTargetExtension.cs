@@ -88,18 +88,14 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         }
     }
 
-    private void WriteConstructorString(CodeWriter writer, string className)
+    private void WriteConstructorString(CodeWriter writer, Content className)
     {
-        writer.Write("public ")
-            .Write(className)
-            .Write("(")
-            .Write($"{ViewComponentHelperTypeName} helper")
-            .WriteLine(")");
+        writer.WriteLine($"public {className}({ViewComponentHelperTypeName} helper)");
+
         using (writer.BuildScope())
         {
             writer.WriteStartAssignment(ViewComponentHelperVariableName)
-                .Write("helper")
-                .WriteLine(";");
+                .WriteLine("helper;");
         }
     }
 

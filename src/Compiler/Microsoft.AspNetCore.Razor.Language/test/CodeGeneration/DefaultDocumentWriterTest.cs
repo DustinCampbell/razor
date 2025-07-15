@@ -306,23 +306,22 @@ public class DefaultDocumentWriterTest
         var builder = IntermediateNodeBuilder.Create(document);
         builder.Add(new MethodDeclarationIntermediateNode()
         {
-            Modifiers = { "internal", "virtual", "async", },
-            MethodName = "TestMethod",
-            Parameters =
-            {
+            Modifiers = ["internal", "virtual", "async"],
+            Name = "TestMethod",
+            Parameters = [
                 new MethodParameter()
                 {
-                    Modifiers = { "readonly", "ref" },
-                    ParameterName = "a",
+                    Modifiers = ["readonly", "ref"],
+                    Name = "a",
                     TypeName = "int"
                 },
                 new MethodParameter()
                 {
-                    ParameterName = "b",
+                    Name = "b",
                     TypeName = "string"
                 }
-            },
-            ReturnType = "string"
+            ],
+            ReturnTypeName = "string"
         });
 
         var codeDocument = TestRazorCodeDocument.CreateEmpty();

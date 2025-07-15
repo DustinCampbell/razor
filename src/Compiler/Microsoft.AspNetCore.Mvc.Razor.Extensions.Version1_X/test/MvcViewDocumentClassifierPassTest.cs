@@ -184,8 +184,8 @@ public class MvcViewDocumentClassifierPassTest : RazorProjectEngineTestBase
         var documentNode = processor.GetDocumentNode();
         var methodNode = documentNode.GetMethodNode();
 
-        Assert.Equal("ExecuteAsync", methodNode.MethodName);
-        Assert.Equal("global::System.Threading.Tasks.Task", methodNode.ReturnType);
-        Assert.Equal(["public", "async", "override"], methodNode.Modifiers);
+        Assert.Equal("ExecuteAsync", methodNode.Name);
+        Assert.Equal("global::System.Threading.Tasks.Task", methodNode.ReturnTypeName);
+        Assert.Equal<Content>(["public", "async", "override"], methodNode.Modifiers);
     }
 }

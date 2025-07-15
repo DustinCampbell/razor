@@ -1,63 +1,51 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class MethodDeclarationIntermediateNode : MemberDeclarationIntermediateNode
 {
-    public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
+    private IntermediateNodeCollection? _children;
 
-    public IList<string> Modifiers { get; } = new List<string>();
+    public Content Name { get; set; }
+    public Content ReturnTypeName { get; set; }
 
-    public string MethodName { get; set; }
-
-    public IList<MethodParameter> Parameters { get; } = new List<MethodParameter>();
-
-    public string ReturnType { get; set; }
+    public ImmutableArray<Content> Modifiers { get; set => field = value.NullToEmpty(); } = [];
+    public ImmutableArray<MethodParameter> Parameters { get; set => field = value.NullToEmpty(); } = [];
 
     public bool IsPrimaryMethod { get; set; }
 
-    public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
+    public override IntermediateNodeCollection Children => _children ??= [];
 
-        visitor.VisitMethodDeclaration(this);
-    }
+    public override void Accept(IntermediateNodeVisitor visitor)
+        => visitor.VisitMethodDeclaration(this);
 
     public override void FormatNode(IntermediateNodeFormatter formatter)
     {
-        formatter.WriteContent(MethodName);
+        formatter.WriteContent(Name);
 
-        formatter.WriteProperty(nameof(MethodName), MethodName);
-        formatter.WriteProperty(nameof(Modifiers), string.Join(", ", Modifiers));
-        formatter.WriteProperty(nameof(Parameters), string.Join(", ", Parameters.Select(FormatMethodParameter)));
-        formatter.WriteProperty(nameof(ReturnType), ReturnType);
-    }
+        formatter.WriteProperty(nameof(Name), Name);
+        formatter.WriteProperty(nameof(Modifiers), Content.Join(", ", Modifiers));
+        formatter.WriteProperty(nameof(Parameters), Content.Join(", ", Parameters.Select(FormatMethodParameter)));
+        formatter.WriteProperty(nameof(ReturnTypeName), ReturnTypeName);
 
-    private static string FormatMethodParameter(MethodParameter parameter)
-    {
-        var builder = new StringBuilder();
-        for (var i = 0; i < parameter.Modifiers.Count; i++)
+        static Content FormatMethodParameter(MethodParameter parameter)
         {
-            builder.Append(parameter.Modifiers[i]);
-            builder.Append(' ');
+            using var builder = new PooledArrayBuilder<Content>();
+
+            foreach (var modifier in parameter.Modifiers)
+            {
+                builder.Add(new($"{modifier} "));
+            }
+
+            builder.Add(new($"{parameter.TypeName} "));
+            builder.Add(parameter.Name);
+
+            return builder.ToContent();
         }
-
-        builder.Append(parameter.TypeName);
-        builder.Append(' ');
-
-        builder.Append(parameter.ParameterName);
-
-        return builder.ToString();
     }
 }

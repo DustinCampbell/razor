@@ -123,7 +123,7 @@ public class IntermediateNodeWriter :
 
     public override void VisitMethodDeclaration(MethodDeclarationIntermediateNode node)
     {
-        WriteContentNode(node, string.Join(" ", node.Modifiers), node.ReturnType, node.MethodName);
+        WriteContentNode(node, Content.Join(" ", node.Modifiers), node.ReturnTypeName, node.Name);
     }
 
     public override void VisitUsingDirective(UsingDirectiveIntermediateNode node)

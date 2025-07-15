@@ -99,12 +99,9 @@ internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
             // But we still want to generate code for it so we can get diagnostics.
             @class.BaseType = new BaseTypeWithModel("object");
 
-            method.ReturnType = "void";
-            method.MethodName = "Execute";
-            method.Modifiers.Clear();
-            method.Modifiers.Add("protected");
-
-            method.Parameters.Clear();
+            method.ReturnTypeName = "void";
+            method.Name = "Execute";
+            method.Modifiers = ["protected"];
         }
         else
         {
@@ -141,18 +138,15 @@ internal class ComponentDocumentClassifierPass : DocumentClassifierPassBase
 
             @class.TypeParameters = typeParameters.ToImmutableAndClear();
 
-            method.ReturnType = "void";
-            method.MethodName = ComponentsApi.ComponentBase.BuildRenderTree;
-            method.Modifiers.Clear();
-            method.Modifiers.Add("protected");
-            method.Modifiers.Add("override");
+            method.ReturnTypeName = "void";
+            method.Name = ComponentsApi.ComponentBase.BuildRenderTree;
+            method.Modifiers = ["protected", "override"];
 
-            method.Parameters.Clear();
-            method.Parameters.Add(new MethodParameter()
+            method.Parameters = [new MethodParameter()
             {
-                ParameterName = ComponentsApi.RenderTreeBuilder.BuilderParameter,
-                TypeName = $"global::{ComponentsApi.RenderTreeBuilder.FullTypeName}",
-            });
+                Name = ComponentsApi.RenderTreeBuilder.BuilderParameter,
+                TypeName = new($"global::{ComponentsApi.RenderTreeBuilder.FullTypeName}")
+            }];
         }
     }
 

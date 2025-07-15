@@ -1,9 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -14,45 +11,28 @@ namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 /// </summary>
 public class RazorCompiledItemMetadataAttributeIntermediateNode : ExtensionIntermediateNode
 {
-    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
-
     /// <summary>
     /// Gets or sets the attribute key.
     /// </summary>
-    public string Key { get; set; }
+    public required Content Key { get; init; }
 
     /// <summary>
     /// Gets or sets the attribute value.
     /// </summary>
-    public string Value { get; set; }
+    public required Content Value { get; init; }
 
     /// <summary>
     /// Gets or sets an optional string syntax for the <see cref="Value"/>
     /// </summary>
-    public string ValueStringSyntax { get; set; }
+    public Content ValueStringSyntax { get; init; }
+
+    public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 
     public override void Accept(IntermediateNodeVisitor visitor)
-    {
-        if (visitor == null)
-        {
-            throw new ArgumentNullException(nameof(visitor));
-        }
-
-        AcceptExtensionNode(this, visitor);
-    }
+        => AcceptExtensionNode(this, visitor);
 
     public override void WriteNode(CodeTarget target, CodeRenderingContext context)
     {
-        if (target == null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
-
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
-
         var extension = target.GetExtension<IMetadataAttributeTargetExtension>();
         if (extension == null)
         {

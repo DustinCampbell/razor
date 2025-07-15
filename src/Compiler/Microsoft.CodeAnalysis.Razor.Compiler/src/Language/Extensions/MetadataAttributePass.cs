@@ -71,8 +71,8 @@ internal class MetadataAttributePass : IntermediateNodePassBase, IRazorOptimizat
         documentNode.Children.Insert(0, new RazorCompiledItemAttributeIntermediateNode()
         {
             TypeName = !@namespace.Name.IsEmpty
-                ? new Content($"{@namespace.Name}.{@class.Name}").ToString()
-                : @class.Name.ToString(),
+                ? new($"{@namespace.Name}.{@class.Name}")
+                : @class.Name,
             Kind = documentNode.DocumentKind,
             Identifier = identifier,
         });

@@ -1,9 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Xunit;
 
@@ -15,10 +12,8 @@ public class MetadataAttributeTargetExtensionTest
     public void WriteRazorCompiledItemAttribute_RendersCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension()
-        {
-            CompiledItemAttributeName = "global::TestItem",
-        };
+        var extension = new MetadataAttributeTargetExtension();
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorCompiledItemAttributeIntermediateNode()
@@ -32,11 +27,11 @@ public class MetadataAttributeTargetExtensionTest
         extension.WriteRazorCompiledItemAttribute(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"[assembly: global::TestItem(typeof(Foo.Bar), @""test"", @""Foo/Bar"")]
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal($"""
+            [assembly: {MetadataAttributeTargetExtension.CompiledItemAttributeName}(typeof(Foo.Bar), @"test", @"Foo/Bar")]
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -44,16 +39,14 @@ public class MetadataAttributeTargetExtensionTest
     public void WriteRazorSourceChecksumAttribute_RendersCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension()
-        {
-            SourceChecksumAttributeName = "global::TestChecksum",
-        };
+        var extension = new MetadataAttributeTargetExtension();
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorSourceChecksumAttributeIntermediateNode()
         {
             ChecksumAlgorithm = CodeAnalysis.Text.SourceHashAlgorithm.Sha256,
-            Checksum = ImmutableArray.Create((byte)'t', (byte)'e', (byte)'s', (byte)'t'),
+            Checksum = [(byte)'t', (byte)'e', (byte)'s', (byte)'t'],
             Identifier = "Foo/Bar",
         };
 
@@ -61,11 +54,11 @@ public class MetadataAttributeTargetExtensionTest
         extension.WriteRazorSourceChecksumAttribute(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"[global::TestChecksum(@""Sha256"", @""74657374"", @""Foo/Bar"")]
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal($"""
+            [{MetadataAttributeTargetExtension.SourceChecksumAttributeName}(@"Sha256", @"74657374", @"Foo/Bar")]
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -73,10 +66,8 @@ public class MetadataAttributeTargetExtensionTest
     public void WriteRazorCompiledItemAttributeMetadata_RendersCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension()
-        {
-            CompiledItemMetadataAttributeName = "global::TestItemMetadata",
-        };
+        var extension = new MetadataAttributeTargetExtension();
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorCompiledItemMetadataAttributeIntermediateNode
@@ -89,10 +80,11 @@ public class MetadataAttributeTargetExtensionTest
         extension.WriteRazorCompiledItemMetadataAttribute(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString().Trim();
-        Assert.Equal(
-"[global::TestItemMetadata(\"key\", \"value\")]",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString().Trim();
+        Assert.Equal($"""
+            [{MetadataAttributeTargetExtension.CompiledItemMetadataAttributeName}("key", "value")]
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -100,10 +92,8 @@ public class MetadataAttributeTargetExtensionTest
     public void WriteRazorCompiledItemAttributeMetadata_EscapesKeysAndValuesCorrectly()
     {
         // Arrange
-        var extension = new MetadataAttributeTargetExtension()
-        {
-            CompiledItemMetadataAttributeName = "global::TestItemMetadata",
-        };
+        var extension = new MetadataAttributeTargetExtension();
+
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         var node = new RazorCompiledItemMetadataAttributeIntermediateNode
@@ -116,10 +106,11 @@ public class MetadataAttributeTargetExtensionTest
         extension.WriteRazorCompiledItemMetadataAttribute(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString().Trim();
-        Assert.Equal(
-"[global::TestItemMetadata(\"\\\"test\\\" key\", \"\\\"test\\\" value\")]",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString().Trim();
+        Assert.Equal($"""
+            [{MetadataAttributeTargetExtension.CompiledItemMetadataAttributeName}("\"test\" key", "\"test\" value")]
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 }

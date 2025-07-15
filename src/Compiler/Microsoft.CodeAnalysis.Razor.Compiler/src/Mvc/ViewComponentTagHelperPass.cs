@@ -105,7 +105,7 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         }
     }
 
-    private void AddField(Context context, TagHelperDescriptor tagHelper)
+    private static void AddField(Context context, TagHelperDescriptor tagHelper)
     {
         // We need to insert a node for the field that will hold the tag helper. We've already generated a field name
         // at this time and use it for all uses of the same tag helper type.
@@ -113,23 +113,26 @@ public class ViewComponentTagHelperPass : IntermediateNodePassBase, IRazorOptimi
         // We also want to preserve the ordering of the nodes for testability. So insert at the end of any existing
         // field nodes.
         var i = 0;
-        while (i < context.Class.Children.Count && context.Class.Children[i] is DefaultTagHelperRuntimeIntermediateNode)
+        var classChildren = context.Class.Children;
+        while (i < classChildren.Count && classChildren[i] is DefaultTagHelperRuntimeIntermediateNode)
         {
             i++;
         }
 
-        while (i < context.Class.Children.Count && context.Class.Children[i] is FieldDeclarationIntermediateNode)
+        while (i < classChildren.Count && classChildren[i] is FieldDeclarationIntermediateNode)
         {
             i++;
         }
 
-        context.Class.Children.Insert(i, new FieldDeclarationIntermediateNode()
+        var newFieldNode = new FieldDeclarationIntermediateNode()
         {
             IsTagHelperField = true,
-            Modifiers = { "private" },
-            FieldName = context.GetFieldName(tagHelper).ToString(),
-            FieldType = new Content($"global::{context.GetFullyQualifiedName(tagHelper)}").ToString(),
-        });
+            Modifiers = ["private"],
+            Name = context.GetFieldName(tagHelper),
+            TypeName = new Content($"global::{context.GetFullyQualifiedName(tagHelper)}"),
+        };
+
+        classChildren.Insert(i, newFieldNode);
     }
 
     private void AddTagHelperClass(Context context, TagHelperDescriptor tagHelper)

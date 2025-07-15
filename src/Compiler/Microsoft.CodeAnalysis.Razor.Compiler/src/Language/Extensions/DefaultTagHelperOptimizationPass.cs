@@ -151,7 +151,7 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         // Now i has the right insertion point.
         node.Children.Insert(i, new DefaultTagHelperCreateIntermediateNode()
         {
-            FieldName = context.GetFieldName(tagHelper),
+            FieldName = context.GetFieldName(tagHelper).ToString(),
             TagHelper = tagHelper,
             TypeName = tagHelper.GetTypeName(),
         });
@@ -166,14 +166,14 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
                 // This belongs to the current tag helper, replace it.
                 node.Children[i] = new DefaultTagHelperPropertyIntermediateNode(propertyNode)
                 {
-                    FieldName = context.GetFieldName(tagHelper),
+                    FieldName = context.GetFieldName(tagHelper).ToString(),
                     PropertyName = propertyNode.BoundAttribute.GetPropertyName(),
                 };
             }
         }
     }
 
-    private void AddField(Context context, TagHelperDescriptor tagHelper)
+    private static void AddField(Context context, TagHelperDescriptor tagHelper)
     {
         // We need to insert a node for the field that will hold the tag helper. We've already generated a field name
         // at this time and use it for all uses of the same tag helper type.
@@ -181,26 +181,26 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         // We also want to preserve the ordering of the nodes for testability. So insert at the end of any existing
         // field nodes.
         var i = 0;
-        while (i < context.Class.Children.Count && context.Class.Children[i] is DefaultTagHelperRuntimeIntermediateNode)
+        var classChildren = context.Class.Children;
+        while (i < classChildren.Count && classChildren[i] is DefaultTagHelperRuntimeIntermediateNode)
         {
             i++;
         }
 
-        while (i < context.Class.Children.Count && context.Class.Children[i] is FieldDeclarationIntermediateNode)
+        while (i < classChildren.Count && classChildren[i] is FieldDeclarationIntermediateNode)
         {
             i++;
         }
 
-        context.Class.Children.Insert(i, new FieldDeclarationIntermediateNode()
+        var newFieldNode = new FieldDeclarationIntermediateNode()
         {
             IsTagHelperField = true,
-            Modifiers =
-                {
-                    "private",
-                },
-            FieldName = context.GetFieldName(tagHelper),
-            FieldType = "global::" + tagHelper.GetTypeName(),
-        });
+            Modifiers = ["private"],
+            Name = context.GetFieldName(tagHelper),
+            TypeName = new Content($"global::{tagHelper.GetTypeName()}"),
+        };
+
+        context.Class.Children.Insert(i, newFieldNode);
     }
 
     private bool IsTagHelperRuntimeNode(TagHelperIntermediateNode node)
@@ -216,18 +216,11 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
         return false;
     }
 
-    private struct Context
+    private readonly struct Context(ClassDeclarationIntermediateNode @class)
     {
-        private readonly Dictionary<TagHelperDescriptor, string> _tagHelpers;
+        private readonly Dictionary<TagHelperDescriptor, Content> _tagHelpers = [];
 
-        public Context(ClassDeclarationIntermediateNode @class)
-        {
-            Class = @class;
-
-            _tagHelpers = new Dictionary<TagHelperDescriptor, string>();
-        }
-
-        public ClassDeclarationIntermediateNode Class { get; }
+        public ClassDeclarationIntermediateNode Class { get; } = @class;
 
         public IEnumerable<TagHelperDescriptor> TagHelpers => _tagHelpers.Keys;
 
@@ -242,14 +235,12 @@ internal class DefaultTagHelperOptimizationPass : IntermediateNodePassBase, IRaz
             return true;
         }
 
-        public string GetFieldName(TagHelperDescriptor tagHelper)
+        public Content GetFieldName(TagHelperDescriptor tagHelper)
         {
             return _tagHelpers[tagHelper];
         }
 
-        private static string GenerateFieldName(TagHelperDescriptor tagHelper)
-        {
-            return "__" + tagHelper.GetTypeName().Replace('.', '_');
-        }
+        private static Content GenerateFieldName(TagHelperDescriptor tagHelper)
+            => new($"__{tagHelper.GetTypeName().Replace('.', '_')}");
     }
 }

@@ -103,7 +103,7 @@ public class IntermediateNodeWriter :
 
     public override void VisitFieldDeclaration(FieldDeclarationIntermediateNode node)
     {
-        WriteContentNode(node, string.Join(" ", node.Modifiers), node.FieldType, node.FieldName);
+        WriteContentNode(node, Content.Join(" ", node.Modifiers), node.TypeName, node.Name);
     }
 
     public override void VisitHtmlAttribute(HtmlAttributeIntermediateNode node)

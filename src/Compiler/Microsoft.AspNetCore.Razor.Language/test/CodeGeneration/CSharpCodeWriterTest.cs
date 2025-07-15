@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using Roslyn.Test.Utilities;
@@ -15,18 +13,7 @@ public class CSharpCodeWriterTest
     // The length of the newline string written by writer.WriteLine.
     private static readonly int WriterNewLineLength = Environment.NewLine.Length;
 
-    public static IEnumerable<object[]> NewLines
-    {
-        get
-        {
-            return new object[][]
-            {
-                new object[] { "\r" },
-                new object[] { "\n" },
-                new object[] { "\r\n" },
-            };
-        }
-    }
+    public static TheoryData<string> NewLines => ["\r", "\n", "\r\n"];
 
     [Fact]
     public void CSharpCodeWriter_TracksPosition_WithWrite()
@@ -305,7 +292,11 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter();
 
         // Act
-        writer.WriteField(Array.Empty<string>(), new[] { "private" }, "global::System.String", "_myString");
+        writer.WriteField(
+            suppressWarnings: [],
+            modifiers: ["private"],
+            typeName: "global::System.String",
+            name: "_myString");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -322,7 +313,11 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter();
 
         // Act
-        writer.WriteField(Array.Empty<string>(), new[] { "private", "readonly", "static" }, "global::System.String", "_myString");
+        writer.WriteField(
+            suppressWarnings: [],
+            modifiers: ["private", "readonly", "static"],
+            typeName: "global::System.String",
+            name: "_myString");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -333,17 +328,17 @@ public class CSharpCodeWriterTest
     }
 
     [Fact]
-    public void WriteField_WithModifiersAndSupressions_WritesFieldDeclaration()
+    public void WriteField_WithModifiersAndSuppressions_WritesFieldDeclaration()
     {
         // Arrange
         using var writer = new CodeWriter();
 
         // Act
         writer.WriteField(
-            new[] { "0001", "0002", },
-            new[] { "private", "readonly", "static" },
-            "global::System.String",
-            "_myString");
+            suppressWarnings: ["0001", "0002",],
+            modifiers: ["private", "readonly", "static"],
+            typeName: "global::System.String",
+            name: "_myString");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -365,7 +360,10 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter();
 
         // Act
-        writer.WriteAutoPropertyDeclaration(new[] { "public" }, "global::System.String", "MyString");
+        writer.WriteAutoPropertyDeclaration(
+            modifiers: ["public"],
+            typeName: "global::System.String",
+            propertyName: "MyString");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -382,7 +380,10 @@ public class CSharpCodeWriterTest
         using var writer = new CodeWriter();
 
         // Act
-        writer.WriteAutoPropertyDeclaration(new[] { "public", "static" }, "global::System.String", "MyString");
+        writer.WriteAutoPropertyDeclaration(
+            modifiers: ["public", "static"],
+            typeName: "global::System.String",
+            propertyName: "MyString");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -411,7 +412,11 @@ public class CSharpCodeWriterTest
             typeParameters: [],
             context: null);
 
-        writer.WriteField(Array.Empty<string>(), Array.Empty<string>(), "int", "f");
+        writer.WriteField(
+            suppressWarnings: [],
+            modifiers: [],
+            typeName: "int",
+            name: "f");
 
         // Assert
         var output = writer.GetText().ToString();
@@ -442,7 +447,11 @@ public class CSharpCodeWriterTest
             typeParameters: [],
             context: null);
 
-        writer.WriteField(Array.Empty<string>(), Array.Empty<string>(), "int", "f");
+        writer.WriteField(
+            suppressWarnings: [],
+            modifiers: [],
+            typeName: "int",
+            name: "f");
 
         // Assert
         var output = writer.GetText().ToString();

@@ -50,9 +50,9 @@ public class DefaultTagHelperOptimizationPassTest : RazorProjectEngineTestBase
 
         var fieldDeclaration = Assert.IsType<FieldDeclarationIntermediateNode>(@class.Children[1]);
         Assert.True(fieldDeclaration.IsTagHelperField);
-        Assert.Equal("__TestTagHelper", fieldDeclaration.FieldName);
-        Assert.Equal("global::TestTagHelper", fieldDeclaration.FieldType);
-        Assert.Equal("private", fieldDeclaration.Modifiers.First());
+        Assert.Equal("__TestTagHelper", fieldDeclaration.Name);
+        Assert.Equal("global::TestTagHelper", fieldDeclaration.TypeName);
+        Assert.Equal<Content>(["private"], fieldDeclaration.Modifiers);
 
         var tagHelperNode = documentNode.GetTagHelperNode();
         Assert.Equal(5, tagHelperNode.Children.Count);

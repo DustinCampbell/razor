@@ -37,6 +37,14 @@ internal static class CodeWriterExtensions
         return writer.LastChar is '\n';
     }
 
+    public static void EnsureNewLine(this CodeWriter writer)
+    {
+        if (!IsAtBeginningOfLine(writer))
+        {
+            writer.WriteLine();
+        }
+    }
+
     public static CodeWriter WritePadding(this CodeWriter writer, int offset, SourceSpan? span, CodeRenderingContext context)
     {
         if (span == null)
@@ -151,7 +159,7 @@ internal static class CodeWriterExtensions
         return writer;
     }
 
-    public static CodeWriter WriteEnhancedLineNumberDirective(this CodeWriter writer, SourceSpan span, int characterOffset, bool ensurePathBackslashes)
+    public static CodeWriter WriteEnhancedLineNumberDirective(this CodeWriter writer, SourceSpan span, int characterOffset, bool ensurePathBackSlashes)
     {
         // All values here need to be offset by 1 since #line uses a 1-indexed numbering system.
         var lineNumberAsString = (span.LineIndex + 1).ToString(CultureInfo.InvariantCulture);
@@ -175,7 +183,7 @@ internal static class CodeWriterExtensions
             writer.Write(characterOffsetAsString).Write(" ");
         }
 
-        return writer.Write("\"").WriteFilePath(span.FilePath, ensurePathBackslashes).WriteLine("\"");
+        return writer.Write("\"").WriteFilePath(span.FilePath, ensurePathBackSlashes).WriteLine("\"");
     }
 
     public static CodeWriter WriteLineNumberDirective(this CodeWriter writer, SourceSpan span, bool ensurePathBackslashes)
@@ -189,9 +197,9 @@ internal static class CodeWriterExtensions
         return writer.Write("#line ").Write(lineNumberAsString).Write(" \"").WriteFilePath(span.FilePath, ensurePathBackslashes).WriteLine("\"");
     }
 
-    private static CodeWriter WriteFilePath(this CodeWriter writer, string filePath, bool ensurePathBackslashes)
+    private static CodeWriter WriteFilePath(this CodeWriter writer, string filePath, bool ensurePathBackSlashes)
     {
-        if (!ensurePathBackslashes)
+        if (!ensurePathBackSlashes)
         {
             return writer.Write(filePath);
         }

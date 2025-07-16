@@ -42,8 +42,8 @@ internal static class CodeRenderingContextExtensions
     {
         private readonly CodeWriter _writer;
         private readonly CodeRenderingContext _context;
+        private readonly bool _isEnhanced;
         private readonly int _startIndent;
-        private readonly int _startLineIndex;
         private readonly SourceSpan _span;
         private readonly bool _suppressLineDefaultAndHidden;
 
@@ -84,14 +84,12 @@ internal static class CodeRenderingContextExtensions
             if (useEnhancedLinePragma && _context.Options.UseEnhancedLinePragma)
             {
                 writer.WriteEnhancedLineNumberDirective(span, characterOffset, ensurePathBackslashes);
+                _isEnhanced = true;
             }
             else
             {
                 writer.WriteLineNumberDirective(span, ensurePathBackslashes);
             }
-
-            // Capture the line index after writing the #line directive.
-            _startLineIndex = writer.Location.LineIndex;
 
             if (useEnhancedLinePragma)
             {
@@ -121,8 +119,12 @@ internal static class CodeRenderingContextExtensions
                 _writer.WriteLine();
             }
 
-            var lineCount = _writer.Location.LineIndex - _startLineIndex;
-            var linePragma = new LinePragma(_span.LineIndex, lineCount, _span.FilePath, _span.EndCharacterIndex, _span.EndCharacterIndex, _span.CharacterIndex);
+            var linePragma = new LinePragma(
+                _isEnhanced,
+                _span.FilePath,
+                _span.LineIndex,
+                endLineIndex: _writer.Location.LineIndex);
+
             _context.AddLinePragma(linePragma);
 
             if (!_suppressLineDefaultAndHidden)

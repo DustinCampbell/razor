@@ -59,7 +59,7 @@ internal class MetadataAttributeTargetExtension : IMetadataAttributeTargetExtens
         context.CodeWriter.Write("(");
         context.CodeWriter.WriteStringLiteral(node.Key);
         context.CodeWriter.Write(", ");
-        if (node.Source.HasValue && !context.Options.DesignTime)
+        if (!context.Options.DesignTime && node.Source is SourceSpan nodeSource)
         {
             context.CodeWriter.WriteLine();
             if (node.ValueStringSyntax is not null)
@@ -67,7 +67,7 @@ internal class MetadataAttributeTargetExtension : IMetadataAttributeTargetExtens
                 context.CodeWriter.Write("// language=");
                 context.CodeWriter.WriteLine(node.ValueStringSyntax);
             }
-            using (context.BuildEnhancedLinePragma(node.Source))
+            using (context.BuildEnhancedLinePragma(nodeSource))
             {
                 context.AddSourceMappingFor(node);
                 context.CodeWriter.WriteStringLiteral(node.Value);

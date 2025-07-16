@@ -36,11 +36,8 @@ internal class DesignTimeDirectiveTargetExtension : IDesignTimeDirectiveTargetEx
     private void WriteDesignTimeDirectiveToken(CodeRenderingContext context, DesignTimeDirectiveIntermediateNode parent, DirectiveTokenIntermediateNode node, int currentIndex)
     {
         var tokenKind = node.DirectiveToken.Kind;
-        if (!node.Source.HasValue ||
-            !string.Equals(
-                context.SourceDocument?.FilePath,
-                node.Source.Value.FilePath,
-                StringComparison.OrdinalIgnoreCase))
+        if (node.Source is not SourceSpan nodeSource ||
+            !string.Equals(context.SourceDocument?.FilePath, nodeSource.FilePath, StringComparison.OrdinalIgnoreCase))
         {
             // We don't want to handle directives from imports.
             return;
@@ -74,7 +71,7 @@ internal class DesignTimeDirectiveTargetExtension : IDesignTimeDirectiveTargetEx
                     }
 
                     // {node.Content} __typeHelper = default({node.Content});
-                    using (context.BuildLinePragma(node.Source))
+                    using (context.BuildLinePragma(nodeSource))
                     {
                         context.AddSourceMappingFor(node);
                         context.CodeWriter
@@ -108,7 +105,7 @@ internal class DesignTimeDirectiveTargetExtension : IDesignTimeDirectiveTargetEx
                     }
 
                     // global::System.Object {node.content} = null;
-                    using (context.BuildLinePragma(node.Source))
+                    using (context.BuildLinePragma(nodeSource))
                     {
                         context.CodeWriter
                         .Write("global::")
@@ -140,7 +137,7 @@ internal class DesignTimeDirectiveTargetExtension : IDesignTimeDirectiveTargetEx
                     }
 
                     // global::System.Object __typeHelper = nameof({node.Content});
-                    using (context.BuildLinePragma(node.Source))
+                    using (context.BuildLinePragma(nodeSource))
                     {
                         context.CodeWriter
                         .Write("global::")
@@ -174,7 +171,7 @@ internal class DesignTimeDirectiveTargetExtension : IDesignTimeDirectiveTargetEx
                     }
 
                     // global::System.Object __typeHelper = "{node.Content}";
-                    using (context.BuildLinePragma(node.Source))
+                    using (context.BuildLinePragma(nodeSource))
                     {
                         context.CodeWriter
                         .Write("global::")
@@ -202,7 +199,7 @@ internal class DesignTimeDirectiveTargetExtension : IDesignTimeDirectiveTargetEx
 
                 case DirectiveTokenKind.Boolean:
                     // global::System.Boolean __typeHelper = {node.Content};
-                    using (context.BuildLinePragma(node.Source))
+                    using (context.BuildLinePragma(nodeSource))
                     {
                         context.CodeWriter
                         .Write("global::")

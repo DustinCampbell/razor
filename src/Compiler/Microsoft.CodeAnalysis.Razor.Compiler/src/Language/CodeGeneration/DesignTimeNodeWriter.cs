@@ -50,12 +50,12 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
             return;
         }
 
-        if (node.Source != null)
+        if (node.Source is SourceSpan nodeSource)
         {
-            using (context.BuildLinePragma(node.Source.Value))
+            using (context.BuildLinePragma(nodeSource))
             {
                 var offset = DesignTimeDirectivePass.DesignTimeVariable.Length + " = ".Length;
-                context.CodeWriter.WritePadding(offset, node.Source, context);
+                context.CodeWriter.WritePadding(offset, nodeSource, context);
                 context.CodeWriter.WriteStartAssignment(DesignTimeDirectivePass.DesignTimeVariable);
 
                 foreach (var child in node.Children)
@@ -99,11 +99,11 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
     public override void WriteCSharpCode(CodeRenderingContext context, CSharpCodeIntermediateNode node)
     {
         IDisposable linePragmaScope = null;
-        if (node.Source != null)
+        if (node.Source is SourceSpan nodeSource)
         {
-            linePragmaScope = context.BuildLinePragma(node.Source.Value);
+            linePragmaScope = context.BuildLinePragma(nodeSource);
 
-            context.CodeWriter.WritePadding(0, node.Source.Value, context);
+            context.CodeWriter.WritePadding(0, nodeSource, context);
         }
 
         foreach (var child in node.Children)
@@ -158,12 +158,12 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
         }
 
         var firstChild = node.Children[0];
-        if (firstChild.Source != null)
+        if (firstChild.Source is SourceSpan firstChildSource)
         {
-            using (context.BuildLinePragma(firstChild.Source.Value))
+            using (context.BuildLinePragma(firstChildSource))
             {
                 var offset = DesignTimeDirectivePass.DesignTimeVariable.Length + " = ".Length;
-                context.CodeWriter.WritePadding(offset, firstChild.Source, context);
+                context.CodeWriter.WritePadding(offset, firstChildSource, context);
                 context.CodeWriter.WriteStartAssignment(DesignTimeDirectivePass.DesignTimeVariable);
 
                 foreach (var child in node.Children)
@@ -216,14 +216,14 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
                 IDisposable linePragmaScope = null;
                 var isWhitespaceStatement = string.IsNullOrWhiteSpace(token.Content);
 
-                if (token.Source != null)
+                if (token.Source is SourceSpan nodeSource)
                 {
                     if (!isWhitespaceStatement)
                     {
-                        linePragmaScope = context.BuildLinePragma(token.Source.Value);
+                        linePragmaScope = context.BuildLinePragma(nodeSource);
                     }
 
-                    context.CodeWriter.WritePadding(0, token.Source.Value, context);
+                    context.CodeWriter.WritePadding(0, nodeSource, context);
                 }
                 else if (isWhitespaceStatement)
                 {

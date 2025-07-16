@@ -1220,13 +1220,14 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
 
     private static void WriteCSharpToken(CodeRenderingContext context, CSharpIntermediateToken token)
     {
-        if (token.Source?.FilePath == null)
+        if (token.Source is not SourceSpan tokenSource ||
+            tokenSource.FilePath == null)
         {
             context.CodeWriter.Write(token.Content);
             return;
         }
 
-        using (context.BuildEnhancedLinePragma(token.Source))
+        using (context.BuildEnhancedLinePragma(tokenSource))
         {
             context.CodeWriter.Write(token.Content);
         }

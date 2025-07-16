@@ -4,6 +4,7 @@
 #nullable disable
 
 using System;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -25,18 +26,18 @@ public class InjectTargetExtension(bool considerNullabilityEnforcement) : IInjec
             throw new ArgumentNullException(nameof(node));
         }
 
-        if (!context.Options.DesignTime && !string.IsNullOrWhiteSpace(node.TypeSource?.FilePath))
+        if (!context.Options.DesignTime && node.TypeSource is SourceSpan typeSource && !typeSource.FilePath.IsNullOrWhiteSpace())
         {
             if (node.TypeName == "")
             {
                 // if we don't even have a type name, just emit an empty mapped region so that intellisense still works
-                context.BuildEnhancedLinePragma(node.TypeSource.Value).Dispose();
+                context.BuildEnhancedLinePragma(typeSource).Dispose();
             }
             else
             {
                 context.CodeWriter.WriteLine(RazorInjectAttribute);
                 var memberName = node.MemberName ?? "Member_" + DefaultTagHelperTargetExtension.GetDeterministicId(context);
-                context.CodeWriter.WriteAutoPropertyDeclaration(["public"], node.TypeName, memberName, node.TypeSource, node.MemberSource, context, privateSetter: true, defaultValue: true);
+                context.CodeWriter.WriteAutoPropertyDeclaration(["public"], node.TypeName, memberName, typeSource, node.MemberSource, context, privateSetter: true, defaultValue: true);
             }
         }
         else if (!node.IsMalformed)
@@ -47,9 +48,9 @@ public class InjectTargetExtension(bool considerNullabilityEnforcement) : IInjec
                 property += " = default!;";
             }
 
-            if (node.Source.HasValue)
+            if (node.Source is SourceSpan nodeSource)
             {
-                using (context.BuildLinePragma(node.Source.Value))
+                using (context.BuildLinePragma(nodeSource))
                 {
                     WriteProperty();
                 }

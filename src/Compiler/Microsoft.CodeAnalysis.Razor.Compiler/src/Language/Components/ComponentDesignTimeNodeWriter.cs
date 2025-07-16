@@ -110,9 +110,9 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             return;
         }
 
-        if (node.Source != null)
+        if (node.Source is SourceSpan nodeSource)
         {
-            using (context.BuildLinePragma(node.Source.Value))
+            using (context.BuildLinePragma(nodeSource))
             {
                 var offset = DesignTimeVariable.Length + " = ".Length;
 
@@ -121,7 +121,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
                     offset += type.Length + 2; // two parenthesis
                 }
 
-                context.CodeWriter.WritePadding(offset, node.Source, context);
+                context.CodeWriter.WritePadding(offset, nodeSource, context);
                 context.CodeWriter.WriteStartAssignment(DesignTimeVariable);
 
                 if (type != null)
@@ -183,14 +183,14 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         }
 
         IDisposable? linePragmaScope = null;
-        if (node.Source != null)
+        if (node.Source is SourceSpan nodeSource)
         {
             if (!isWhitespaceStatement)
             {
-                linePragmaScope = context.BuildLinePragma(node.Source.Value);
+                linePragmaScope = context.BuildLinePragma(nodeSource);
             }
 
-            context.CodeWriter.WritePadding(0, node.Source.Value, context);
+            context.CodeWriter.WritePadding(0, nodeSource, context);
         }
         else if (isWhitespaceStatement)
         {
@@ -1191,15 +1191,16 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             return;
         }
 
-        if (token.Source?.FilePath == null)
+        if (token.Source is not SourceSpan tokenSource ||
+            tokenSource.FilePath is null)
         {
             context.CodeWriter.Write(token.Content);
             return;
         }
-
-        using (context.BuildLinePragma(token.Source))
+        
+        using (context.BuildLinePragma(tokenSource))
         {
-            context.CodeWriter.WritePadding(0, token.Source.Value, context);
+            context.CodeWriter.WritePadding(0, tokenSource, context);
             context.AddSourceMappingFor(token);
             context.CodeWriter.Write(token.Content);
         }

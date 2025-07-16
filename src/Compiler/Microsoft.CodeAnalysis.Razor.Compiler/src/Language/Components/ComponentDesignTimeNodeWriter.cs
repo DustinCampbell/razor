@@ -171,54 +171,39 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
     public override void WriteCSharpCode(CodeRenderingContext context, CSharpCodeIntermediateNode node)
     {
-        var isWhitespaceStatement = true;
+        var isWhiteSpace = true;
 
         foreach (var child in node.Children)
         {
-            if (child is not IntermediateToken token || !string.IsNullOrWhiteSpace(token.Content))
+            if (child is not CSharpIntermediateToken token || !token.Content.IsNullOrWhiteSpace())
             {
-                isWhitespaceStatement = false;
+                isWhiteSpace = false;
                 break;
             }
         }
 
-        IDisposable? linePragmaScope = null;
-        if (node.Source is SourceSpan nodeSource)
+        // Don't write whitespace if there is no line mapping for it.
+        if (isWhiteSpace && node.Source is null)
         {
-            if (!isWhitespaceStatement)
-            {
-                linePragmaScope = context.BuildLinePragma(nodeSource);
-            }
-
-            context.CodeWriter.WritePadding(0, nodeSource, context);
-        }
-        else if (isWhitespaceStatement)
-        {
-            // Don't write whitespace if there is no line mapping for it.
             return;
         }
 
-        foreach (var child in node.Children)
-        {
-            if (child is CSharpIntermediateToken token)
-            {
-                context.AddSourceMappingFor(token);
-                context.CodeWriter.Write(token.Content);
-            }
-            else
-            {
-                // There may be something else inside the statement like an extension node.
-                context.RenderNode(child);
-            }
-        }
+        var writer = context.CodeWriter;
 
-        if (linePragmaScope != null)
+        if (node.Source is SourceSpan nodeSource && !isWhiteSpace)
         {
-            linePragmaScope.Dispose();
+            using (context.BuildLinePragma(nodeSource))
+            {
+                writer.WritePadding(0, nodeSource, context);
+                RenderCSharpCode(context, node);
+            }
         }
         else
         {
-            context.CodeWriter.WriteLine();
+            writer.WritePadding(0, node.Source, context);
+
+            RenderCSharpCode(context, node);
+            writer.WriteLine();
         }
     }
 
@@ -1197,7 +1182,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             context.CodeWriter.Write(token.Content);
             return;
         }
-        
+
         using (context.BuildLinePragma(tokenSource))
         {
             context.CodeWriter.WritePadding(0, tokenSource, context);

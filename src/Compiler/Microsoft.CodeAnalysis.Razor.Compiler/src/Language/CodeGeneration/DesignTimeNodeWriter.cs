@@ -55,7 +55,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
             using (context.BuildLinePragma(nodeSource))
             {
                 var offset = DesignTimeDirectivePass.DesignTimeVariable.Length + " = ".Length;
-                context.CodeWriter.WritePadding(offset, nodeSource, context);
+                context.WritePadding(nodeSource, offset);
                 context.CodeWriter.WriteStartAssignment(DesignTimeDirectivePass.DesignTimeVariable);
 
                 foreach (var child in node.Children)
@@ -104,7 +104,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
         {
             using (context.BuildLinePragma(nodeSource))
             {
-                writer.WritePadding(0, nodeSource, context);
+                context.WritePadding(nodeSource, offset: 0);
                 RenderCSharpCode(context, node);
             }
         }
@@ -148,7 +148,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
             using (context.BuildLinePragma(firstChildSource))
             {
                 var offset = DesignTimeDirectivePass.DesignTimeVariable.Length + " = ".Length;
-                context.CodeWriter.WritePadding(offset, firstChildSource, context);
+                context.WritePadding(firstChildSource, offset);
                 context.CodeWriter.WriteStartAssignment(DesignTimeDirectivePass.DesignTimeVariable);
 
                 foreach (var child in node.Children)
@@ -209,7 +209,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
                 {
                     using (context.BuildLinePragma(nodeSource))
                     {
-                        writer.WritePadding(0, nodeSource, context);
+                        context.WritePadding(nodeSource, offset: 0);
 
                         context.AddSourceMappingFor(token);
                         writer.Write(token.Content);

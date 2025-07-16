@@ -4,11 +4,52 @@
 using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Utilities;
+using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 internal static class CodeRenderingContextExtensions
 {
+    public static void WritePadding(this CodeRenderingContext context, SourceSpan? span, int offset)
+    {
+        if (span is not SourceSpan spanValue)
+        {
+            return;
+        }
+
+        var sourceDocument = context.SourceDocument;
+
+        if (sourceDocument.FilePath is not null &&
+            !string.Equals(sourceDocument.FilePath, spanValue.FilePath, StringComparison.OrdinalIgnoreCase))
+        {
+            // We don't want to generate padding for nodes from imports.
+            return;
+        }
+
+        var basePadding = CalculatePadding(sourceDocument.Text, spanValue.AbsoluteIndex);
+        var resolvedPadding = Math.Max(basePadding - offset, 0);
+
+        context.CodeWriter.Indent(resolvedPadding);
+
+        static int CalculatePadding(SourceText text, int absoluteIndex)
+        {
+            var spaceCount = 0;
+
+            for (var i = absoluteIndex - 1; i >= 0; i--)
+            {
+                if (text[i] is '\n' or '\r')
+                {
+                    break;
+                }
+
+                // Note that a tab is also replaced with a single space so character indices match.
+                spaceCount++;
+            }
+
+            return spaceCount;
+        }
+    }
+
     public static LinePragmaScope BuildLinePragma(
         this CodeRenderingContext context,
         SourceSpan? span,
@@ -82,7 +123,7 @@ internal static class CodeRenderingContextExtensions
 
                 // If the caller requested an enhanced line directive, but we fell back to
                 // a regular one, write out the extra padding and add a source mapping.
-                writer.WritePadding(offset: 0, span, context);
+                context.WritePadding(span, offset: 0);
                 context.AddSourceMappingFor(span);
 
                 return standardScope;

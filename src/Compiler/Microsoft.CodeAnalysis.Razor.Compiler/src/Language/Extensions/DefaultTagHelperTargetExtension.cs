@@ -388,7 +388,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
 
                         if (valueStart != null)
                         {
-                            context.CodeWriter.WritePadding(assignmentPrefixLength, node.Source, context);
+                            context.WritePadding(node.Source, offset: assignmentPrefixLength);
                         }
 
                         context.CodeWriter
@@ -401,7 +401,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
                     {
                         if (valueStart != null)
                         {
-                            context.CodeWriter.WritePadding(assignmentPrefixLength, node.Source, context);
+                            context.WritePadding(node.Source, offset: assignmentPrefixLength);
                         }
 
                         context.CodeWriter.WriteStartAssignment(GetPropertyAccessor(node));

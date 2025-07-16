@@ -121,7 +121,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
                     offset += type.Length + 2; // two parenthesis
                 }
 
-                context.CodeWriter.WritePadding(offset, nodeSource, context);
+                context.WritePadding(nodeSource, offset);
                 context.CodeWriter.WriteStartAssignment(DesignTimeVariable);
 
                 if (type != null)
@@ -194,13 +194,13 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         {
             using (context.BuildLinePragma(nodeSource))
             {
-                writer.WritePadding(0, nodeSource, context);
+                context.WritePadding(nodeSource, offset: 0);
                 RenderCSharpCode(context, node);
             }
         }
         else
         {
-            writer.WritePadding(0, node.Source, context);
+            context.WritePadding(node.Source, offset: 0);
 
             RenderCSharpCode(context, node);
             writer.WriteLine();
@@ -706,7 +706,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
         using (context.BuildLinePragma(attributeSourceSpan))
         {
-            context.CodeWriter.WritePadding(0, attributeSourceSpan, context);
+            context.WritePadding(attributeSourceSpan, offset: 0);
             context.CodeWriter.WriteIdentifierEscapeIfNeeded(node.PropertyName);
             context.AddSourceMappingFor(attributeSourceSpan);
             context.CodeWriter.WriteLine(node.PropertyName);
@@ -1185,7 +1185,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
         using (context.BuildLinePragma(tokenSource))
         {
-            context.CodeWriter.WritePadding(0, tokenSource, context);
+            context.WritePadding(tokenSource, offset: 0);
             context.AddSourceMappingFor(token);
             context.CodeWriter.Write(token.Content);
         }

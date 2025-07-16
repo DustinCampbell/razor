@@ -70,7 +70,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
         if (node.Source is { FilePath: not null } sourceSpan)
         {
-            using (context.CodeWriter.BuildLinePragma(sourceSpan, context, suppressLineDefaultAndHidden: !node.AppendLineDefaultAndHidden))
+            using (context.BuildLinePragma(sourceSpan, suppressLineDefaultAndHidden: !node.AppendLineDefaultAndHidden))
             {
                 context.AddSourceMappingFor(node);
                 context.CodeWriter.WriteUsing(node.Content);
@@ -112,7 +112,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
         if (node.Source != null)
         {
-            using (context.CodeWriter.BuildLinePragma(node.Source.Value, context))
+            using (context.BuildLinePragma(node.Source.Value))
             {
                 var offset = DesignTimeVariable.Length + " = ".Length;
 
@@ -187,7 +187,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         {
             if (!isWhitespaceStatement)
             {
-                linePragmaScope = context.CodeWriter.BuildLinePragma(node.Source.Value, context);
+                linePragmaScope = context.BuildLinePragma(node.Source.Value);
             }
 
             context.CodeWriter.WritePadding(0, node.Source.Value, context);
@@ -542,7 +542,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         // the "usings directive is unnecessary" message.
         // Looks like:
         // __o = typeof(SomeNamespace.SomeComponent);
-        using (context.CodeWriter.BuildLinePragma(node.Source.AssumeNotNull(), context))
+        using (context.BuildLinePragma(node.Source.AssumeNotNull()))
         {
             context.CodeWriter.Write(DesignTimeVariable);
             context.CodeWriter.Write(" = ");
@@ -719,7 +719,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         context.CodeWriter.Write(".");
         context.CodeWriter.WriteLine();
 
-        using (context.CodeWriter.BuildLinePragma(attributeSourceSpan, context))
+        using (context.BuildLinePragma(attributeSourceSpan))
         {
             context.CodeWriter.WritePadding(0, attributeSourceSpan, context);
             context.CodeWriter.WriteIdentifierEscapeIfNeeded(node.PropertyName);
@@ -1197,7 +1197,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
             return;
         }
 
-        using (context.CodeWriter.BuildLinePragma(token.Source, context))
+        using (context.BuildLinePragma(token.Source))
         {
             context.CodeWriter.WritePadding(0, token.Source.Value, context);
             context.AddSourceMappingFor(token);

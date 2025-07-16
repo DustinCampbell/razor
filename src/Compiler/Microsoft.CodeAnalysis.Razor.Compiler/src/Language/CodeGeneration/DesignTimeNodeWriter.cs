@@ -15,7 +15,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
     {
         if (node.Source is { FilePath: not null } sourceSpan)
         {
-            using (context.CodeWriter.BuildLinePragma(sourceSpan, context, suppressLineDefaultAndHidden: !node.AppendLineDefaultAndHidden))
+            using (context.BuildLinePragma(sourceSpan, suppressLineDefaultAndHidden: !node.AppendLineDefaultAndHidden))
             {
                 context.AddSourceMappingFor(node);
                 context.CodeWriter.WriteUsing(node.Content);
@@ -52,7 +52,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
 
         if (node.Source != null)
         {
-            using (context.CodeWriter.BuildLinePragma(node.Source.Value, context))
+            using (context.BuildLinePragma(node.Source.Value))
             {
                 var offset = DesignTimeDirectivePass.DesignTimeVariable.Length + " = ".Length;
                 context.CodeWriter.WritePadding(offset, node.Source, context);
@@ -101,7 +101,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
         IDisposable linePragmaScope = null;
         if (node.Source != null)
         {
-            linePragmaScope = context.CodeWriter.BuildLinePragma(node.Source.Value, context);
+            linePragmaScope = context.BuildLinePragma(node.Source.Value);
 
             context.CodeWriter.WritePadding(0, node.Source.Value, context);
         }
@@ -160,7 +160,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
         var firstChild = node.Children[0];
         if (firstChild.Source != null)
         {
-            using (context.CodeWriter.BuildLinePragma(firstChild.Source.Value, context))
+            using (context.BuildLinePragma(firstChild.Source.Value))
             {
                 var offset = DesignTimeDirectivePass.DesignTimeVariable.Length + " = ".Length;
                 context.CodeWriter.WritePadding(offset, firstChild.Source, context);
@@ -220,7 +220,7 @@ public class DesignTimeNodeWriter : IntermediateNodeWriter
                 {
                     if (!isWhitespaceStatement)
                     {
-                        linePragmaScope = context.CodeWriter.BuildLinePragma(token.Source.Value, context);
+                        linePragmaScope = context.BuildLinePragma(token.Source.Value);
                     }
 
                     context.CodeWriter.WritePadding(0, token.Source.Value, context);

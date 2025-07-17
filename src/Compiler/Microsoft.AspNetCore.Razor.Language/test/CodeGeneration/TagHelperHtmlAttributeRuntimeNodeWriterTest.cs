@@ -26,7 +26,8 @@ public class TagHelperHtmlAttributeRuntimeNodeWriterTest : RazorProjectEngineTes
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
         var processor = CreateCodeDocumentProcessor(codeDocument);
         var documentNode = processor.GetDocumentNode();
-        var node = documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[0] as HtmlAttributeValueIntermediateNode;
+        var node = Assert.IsType<HtmlAttributeValueIntermediateNode>(
+            documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[0]);
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -34,11 +35,11 @@ public class TagHelperHtmlAttributeRuntimeNodeWriterTest : RazorProjectEngineTes
         writer.WriteHtmlAttributeValue(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"AddHtmlAttributeValue("""", 16, ""hello-world"", 16, 11, true);
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            AddHtmlAttributeValue("", 16, "hello-world", 16, 11, true);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -51,7 +52,8 @@ public class TagHelperHtmlAttributeRuntimeNodeWriterTest : RazorProjectEngineTes
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
         var processor = CreateCodeDocumentProcessor(codeDocument);
         var documentNode = processor.GetDocumentNode();
-        var node = documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1] as CSharpExpressionAttributeValueIntermediateNode;
+        var node = Assert.IsType<CSharpExpressionAttributeValueIntermediateNode>(
+            documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1]);
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -59,19 +61,19 @@ public class TagHelperHtmlAttributeRuntimeNodeWriterTest : RazorProjectEngineTes
         writer.WriteCSharpExpressionAttributeValue(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"AddHtmlAttributeValue("" "", 27, 
-#nullable restore
-#line (1,30)-(1,35) ""test.cshtml""
-false
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            AddHtmlAttributeValue(" ", 27, 
+            #nullable restore
+            #line (1,30)-(1,35) "test.cshtml"
+            false
 
-#line default
-#line hidden
-#nullable disable
-, 28, 6, false);
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+            , 28, 6, false);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -85,7 +87,8 @@ false
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
         var processor = CreateCodeDocumentProcessor(codeDocument);
         var documentNode = processor.GetDocumentNode();
-        var node = documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1] as CSharpCodeAttributeValueIntermediateNode;
+        var node = Assert.IsType<CSharpCodeAttributeValueIntermediateNode>(
+            documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1]);
 
         using var context = TestCodeRenderingContext.CreateRuntime(source: source);
 
@@ -93,22 +96,22 @@ false
         writer.WriteCSharpCodeAttributeValue(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"AddHtmlAttributeValue("" "", 27, new Microsoft.AspNetCore.Mvc.Razor.HelperResult(async(__razor_attribute_value_writer) => {
-    PushWriter(__razor_attribute_value_writer);
-#nullable restore
-#line (1,30)-(1,42) ""test.cshtml""
-if(@true){ }
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            AddHtmlAttributeValue(" ", 27, new Microsoft.AspNetCore.Mvc.Razor.HelperResult(async(__razor_attribute_value_writer) => {
+                PushWriter(__razor_attribute_value_writer);
+            #nullable restore
+            #line (1,30)-(1,42) "test.cshtml"
+            if(@true){ }
 
-#line default
-#line hidden
-#nullable disable
-    PopWriter();
-}
-), 28, 13, false);
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+                PopWriter();
+            }
+            ), 28, 13, false);
+            """,
+            csharpText.Trim(),
             ignoreLineEndingDifferences: true);
     }
 }

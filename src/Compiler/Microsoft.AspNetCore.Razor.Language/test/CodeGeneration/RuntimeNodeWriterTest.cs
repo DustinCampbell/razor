@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Xunit;
@@ -34,11 +33,11 @@ public class RuntimeNodeWriterTest : RazorProjectEngineTestBase
         writer.WriteUsingDirective(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"using System;
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            using System;
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -59,17 +58,17 @@ public class RuntimeNodeWriterTest : RazorProjectEngineTestBase
         writer.WriteUsingDirective(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"
-#nullable restore
-#line (1,1)-(1,1) ""test.cshtml""
-using System
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
 
-#nullable disable
-;
-",
-            csharp,
+            #nullable restore
+            #line (1,1)-(1,1) "test.cshtml"
+            using System
+
+            #nullable disable
+            ;
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -91,19 +90,19 @@ using System
         writer.WriteUsingDirective(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"
-#nullable restore
-#line (1,1)-(1,1) ""test.cshtml""
-using System
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
 
-#nullable disable
-;
-#line default
-#line hidden
-",
-            csharp,
+            #nullable restore
+            #line (1,1)-(1,1) "test.cshtml"
+            using System
+
+            #nullable disable
+            ;
+            #line default
+            #line hidden
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -111,10 +110,7 @@ using System
     public void WriteCSharpExpression_SkipsLinePragma_WithoutSource()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter()
-        {
-            WriteCSharpExpressionMethod = "Test"
-        };
+        var writer = new RuntimeNodeWriter();
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -126,12 +122,12 @@ using System
         writer.WriteCSharpExpression(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"Test(
-i++);
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            Write(
+            i++);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -139,10 +135,7 @@ i++);
     public void WriteCSharpExpression_WritesLinePragma_WithSource()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter()
-        {
-            WriteCSharpExpressionMethod = "Test"
-        };
+        var writer = new RuntimeNodeWriter();
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -154,19 +147,19 @@ i++);
         writer.WriteCSharpExpression(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"Test(
-#nullable restore
-#line (1,1)-(1,4) ""test.cshtml""
-i++
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal($"""
+            Write(
+            #nullable restore
+            #line (1,1)-(1,4) "test.cshtml"
+            i++
 
-#line default
-#line hidden
-#nullable disable
-);
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+            );
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -174,10 +167,7 @@ i++
     public void WriteCSharpExpression_WithExtensionNode_WritesPadding()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter()
-        {
-            WriteCSharpExpressionMethod = "Test"
-        };
+        var writer = new RuntimeNodeWriter();
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -193,13 +183,13 @@ i++
         writer.WriteCSharpExpression(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"Test(
-iRender Children
-++);
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            Write(
+            iRender Children
+            ++);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -207,10 +197,7 @@ iRender Children
     public void WriteCSharpExpression_WithSource_WritesPadding()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter()
-        {
-            WriteCSharpExpressionMethod = "Test"
-        };
+        var writer = new RuntimeNodeWriter();
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -226,27 +213,27 @@ iRender Children
         writer.WriteCSharpExpression(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"Test(
-#nullable restore
-#line (1,1)-(1,2) ""test.cshtml""
-i
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            Write(
+            #nullable restore
+            #line (1,1)-(1,2) "test.cshtml"
+            i
 
-#line default
-#line hidden
-#nullable disable
-Render Children
-#nullable restore
-#line (1,3)-(1,5) ""test.cshtml""
-++
+            #line default
+            #line hidden
+            #nullable disable
+            Render Children
+            #nullable restore
+            #line (1,3)-(1,5) "test.cshtml"
+            ++
 
-#line default
-#line hidden
-#nullable disable
-);
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+            );
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -284,11 +271,11 @@ Render Children
         writer.WriteCSharpCode(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"if (true) { }
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            if (true) { }
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -307,19 +294,18 @@ Render Children
         writer.WriteCSharpCode(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"
-#nullable restore
-#line (1,1)-(1,1) ""test.cshtml""
-if (true) { }
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
 
-#line default
-#line hidden
-#nullable disable
+            #nullable restore
+            #line (1,1)-(1,1) "test.cshtml"
+            if (true) { }
 
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -338,19 +324,18 @@ if (true) { }
         writer.WriteCSharpCode(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"
-#nullable restore
-#line (1,1)-(1,1) ""test.cshtml""
-    if (true) { }
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
 
-#line default
-#line hidden
-#nullable disable
+            #nullable restore
+            #line (1,1)-(1,1) "test.cshtml"
+                if (true) { }
 
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -358,18 +343,17 @@ if (true) { }
     public void WriteHtmlLiteral_WithinMaxSize_WritesSingleLiteral()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello");
+        RuntimeNodeWriter.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello");
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteLiteral(""Hello"");
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteLiteral("Hello");
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -377,19 +361,18 @@ if (true) { }
     public void WriteHtmlLiteral_GreaterThanMaxSize_WritesMultipleLiterals()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello World");
+        RuntimeNodeWriter.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello World");
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteLiteral(""Hello "");
-WriteLiteral(""World"");
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteLiteral("Hello ");
+            WriteLiteral("World");
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -397,19 +380,18 @@ WriteLiteral(""World"");
     public void WriteHtmlLiteral_GreaterThanMaxSize_SingleEmojisSplit()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 2, " 👦");
+        RuntimeNodeWriter.WriteHtmlLiteral(context, maxStringLiteralLength: 2, " 👦");
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteLiteral("" "");
-WriteLiteral(""👦"");
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteLiteral(" ");
+            WriteLiteral("👦");
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -417,21 +399,20 @@ WriteLiteral(""👦"");
     public void WriteHtmlLiteral_GreaterThanMaxSize_SequencedZeroWithJoinedEmojisSplit()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "👩‍👩‍👧‍👧👩‍👩‍👧‍👧");
+        RuntimeNodeWriter.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "👩‍👩‍👧‍👧👩‍👩‍👧‍👧");
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteLiteral(""👩‍👩‍"");
-WriteLiteral(""👧‍👧"");
-WriteLiteral(""👩‍👩‍"");
-WriteLiteral(""👧‍👧"");
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteLiteral("👩‍👩‍");
+            WriteLiteral("👧‍👧");
+            WriteLiteral("👩‍👩‍");
+            WriteLiteral("👧‍👧");
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -449,11 +430,11 @@ WriteLiteral(""👧‍👧"");
         writer.WriteHtmlContent(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteLiteral(""SomeContent"");
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteLiteral("SomeContent");
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -471,13 +452,12 @@ WriteLiteral(""👧‍👧"");
         writer.WriteHtmlContent(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(string.Format(
-            CultureInfo.InvariantCulture,
-@"WriteLiteral(@""{0}"");
-WriteLiteral(@""{1}"");
-", new string('*', 1024), new string('*', 976)),
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal($"""
+            WriteLiteral(@"{new string('*', 1024)}");
+            WriteLiteral(@"{new string('*', 976)}");
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -499,14 +479,14 @@ WriteLiteral(@""{1}"");
         writer.WriteHtmlAttribute(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"BeginWriteAttribute(""checked"", "" checked=\"""", 6, ""\"""", 34, 2);
-Render Children
-Render Children
-EndWriteAttribute();
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            BeginWriteAttribute("checked", " checked=\"", 6, "\"", 34, 2);
+            Render Children
+            Render Children
+            EndWriteAttribute();
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -520,7 +500,8 @@ EndWriteAttribute();
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
         var processor = CreateCodeDocumentProcessor(codeDocument);
         var documentNode = processor.GetDocumentNode();
-        var node = documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[0] as HtmlAttributeValueIntermediateNode;
+        var node = Assert.IsType<HtmlAttributeValueIntermediateNode>(
+            documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[0]);
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -528,11 +509,11 @@ EndWriteAttribute();
         writer.WriteHtmlAttributeValue(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteAttributeValue("""", 16, ""hello-world"", 16, 11, true);
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteAttributeValue("", 16, "hello-world", 16, 11, true);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -546,7 +527,8 @@ EndWriteAttribute();
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
         var processor = CreateCodeDocumentProcessor(codeDocument);
         var documentNode = processor.GetDocumentNode();
-        var node = documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1] as CSharpExpressionAttributeValueIntermediateNode;
+        var node = Assert.IsType<CSharpExpressionAttributeValueIntermediateNode>(
+            documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1]);
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -554,19 +536,19 @@ EndWriteAttribute();
         writer.WriteCSharpExpressionAttributeValue(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteAttributeValue("" "", 27, 
-#nullable restore
-#line (1,30)-(1,35) ""test.cshtml""
-false
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteAttributeValue(" ", 27, 
+            #nullable restore
+            #line (1,30)-(1,35) "test.cshtml"
+            false
 
-#line default
-#line hidden
-#nullable disable
-, 28, 6, false);
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+            , 28, 6, false);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -581,7 +563,8 @@ false
         var codeDocument = ProjectEngine.CreateCodeDocument(source);
         var processor = CreateCodeDocumentProcessor(codeDocument);
         var documentNode = processor.GetDocumentNode();
-        var node = documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1] as CSharpCodeAttributeValueIntermediateNode;
+        var node = Assert.IsType<CSharpCodeAttributeValueIntermediateNode>(
+            documentNode.Children.OfType<HtmlAttributeIntermediateNode>().Single().Children[1]);
 
         using var context = TestCodeRenderingContext.CreateRuntime(source: source);
 
@@ -589,22 +572,22 @@ false
         writer.WriteCSharpCodeAttributeValue(context, node);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"WriteAttributeValue("" "", 27, new Microsoft.AspNetCore.Mvc.Razor.HelperResult(async(__razor_attribute_value_writer) => {
-    PushWriter(__razor_attribute_value_writer);
-#nullable restore
-#line (1,30)-(1,42) ""test.cshtml""
-if(@true){ }
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            WriteAttributeValue(" ", 27, new Microsoft.AspNetCore.Mvc.Razor.HelperResult(async(__razor_attribute_value_writer) => {
+                PushWriter(__razor_attribute_value_writer);
+            #nullable restore
+            #line (1,30)-(1,42) "test.cshtml"
+            if(@true){ }
 
-#line default
-#line hidden
-#nullable disable
-    PopWriter();
-}
-), 28, 13, false);
-",
-            csharp,
+            #line default
+            #line hidden
+            #nullable disable
+                PopWriter();
+            }
+            ), 28, 13, false);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -612,10 +595,7 @@ if(@true){ }
     public void BeginWriterScope_UsesSpecifiedWriter_RendersCorrectly()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter()
-        {
-            PushWriterMethod = "TestPushWriter"
-        };
+        var writer = new RuntimeNodeWriter();
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -623,11 +603,11 @@ if(@true){ }
         writer.BeginWriterScope(context, "MyWriter");
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"TestPushWriter(MyWriter);
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            PushWriter(MyWriter);
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
@@ -635,10 +615,7 @@ if(@true){ }
     public void EndWriterScope_RendersCorrectly()
     {
         // Arrange
-        var writer = new RuntimeNodeWriter()
-        {
-            PopWriterMethod = "TestPopWriter"
-        };
+        var writer = new RuntimeNodeWriter();
 
         using var context = TestCodeRenderingContext.CreateRuntime();
 
@@ -646,15 +623,15 @@ if(@true){ }
         writer.EndWriterScope(context);
 
         // Assert
-        var csharp = context.CodeWriter.GetText().ToString();
-        Assert.Equal(
-@"TestPopWriter();
-",
-            csharp,
+        var csharpText = context.CodeWriter.GetText().ToString();
+        Assert.Equal("""
+            PopWriter();
+            """,
+            csharpText.TrimEnd(),
             ignoreLineEndingDifferences: true);
     }
 
-    private class MyExtensionIntermediateNode : ExtensionIntermediateNode
+    private sealed class MyExtensionIntermediateNode : ExtensionIntermediateNode
     {
         public override IntermediateNodeCollection Children => IntermediateNodeCollection.ReadOnly;
 

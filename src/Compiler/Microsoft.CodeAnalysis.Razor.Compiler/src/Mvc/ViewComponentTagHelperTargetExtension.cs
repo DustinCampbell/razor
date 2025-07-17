@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
@@ -76,9 +77,8 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         {
             // Add view component helper.
             context.CodeWriter.WriteVariableDeclaration(
-                $"private readonly {ViewComponentHelperTypeName}",
-                ViewComponentHelperVariableName,
-                value: null);
+                new($"private readonly {ViewComponentHelperTypeName}"),
+                ViewComponentHelperVariableName);
 
             // Add constructor.
             WriteConstructorString(context.CodeWriter, node.ClassName);
@@ -143,30 +143,28 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
     private void WriteProcessMethodString(CodeWriter writer, TagHelperDescriptor tagHelper)
     {
         using (writer.BuildMethodDeclaration(
-                $"public override async",
-                $"global::{typeof(Task).FullName}",
-                TagHelperProcessMethodName,
-                new Dictionary<string, string>()
-                {
-                        { TagHelperContextTypeName, TagHelperContextVariableName },
-                        { TagHelperOutputTypeName, TagHelperOutputVariableName }
-                }))
+            new($"public override async"),
+            new($"global::{typeof(Task).FullName}"),
+            TagHelperProcessMethodName,
+            parameters: [
+                (TagHelperContextTypeName, TagHelperContextVariableName),
+                (TagHelperOutputTypeName, TagHelperOutputVariableName)]))
         {
             writer.WriteInstanceMethodInvocation(
-                $"({ViewComponentHelperVariableName} as {IViewContextAwareTypeName})?",
+                new($"({ViewComponentHelperVariableName} as {IViewContextAwareTypeName})?"),
                 IViewContextAwareContextualizeMethodName,
-                new[] { ViewContextPropertyName });
+                [ViewContextPropertyName]);
 
-            var methodParameters = GetMethodParameters(tagHelper);
+            var methodArguments = GetMethodArguments(tagHelper);
             writer.Write("var ")
                 .WriteStartAssignment(TagHelperContentVariableName)
-                .WriteInstanceMethodInvocation($"await {ViewComponentHelperVariableName}", ViewComponentInvokeMethodName, methodParameters);
-            writer.WriteStartAssignment($"{TagHelperOutputVariableName}.{TagHelperOutputTagNamePropertyName}")
+                .WriteInstanceMethodInvocation(new($"await {ViewComponentHelperVariableName}"), ViewComponentInvokeMethodName, methodArguments);
+            writer.WriteStartAssignment(new($"{TagHelperOutputVariableName}.{TagHelperOutputTagNamePropertyName}"))
                 .WriteLine("null;");
             writer.WriteInstanceMethodInvocation(
-                $"{TagHelperOutputVariableName}.{TagHelperOutputContentPropertyName}",
+                new($"{TagHelperOutputVariableName}.{TagHelperOutputContentPropertyName}"),
                 TagHelperContentSetMethodName,
-                new[] { TagHelperContentVariableName });
+                [TagHelperContentVariableName]);
         }
     }
 
@@ -177,9 +175,9 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
             "private",
             methodReturnType,
             TagHelperProcessInvokeAsyncArgsMethodName,
-            new Dictionary<string, string>() { { TagHelperContextTypeName, TagHelperContextVariableName } }))
+            parameters: (TagHelperContextTypeName, TagHelperContextVariableName)))
         {
-            writer.WriteStartAssignment($"{methodReturnType} args")
+            writer.WriteStartAssignment(new($"{methodReturnType} args"))
                 .WriteStartNewObject(methodReturnType)
                 .WriteEndMethodInvocation();
 
@@ -198,11 +196,14 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         }
     }
 
-    private string[] GetMethodParameters(TagHelperDescriptor tagHelper)
+    private ImmutableArray<Content> GetMethodArguments(TagHelperDescriptor tagHelper)
     {
         var viewComponentName = tagHelper.GetViewComponentName();
-        var methodParameters = new[] { $"\"{viewComponentName}\"", $"{TagHelperProcessInvokeAsyncArgsMethodName}({TagHelperContextVariableName})" };
-        return methodParameters;
+
+        return [
+            new($"\"{viewComponentName}\""),
+            new($"{TagHelperProcessInvokeAsyncArgsMethodName}({TagHelperContextVariableName})")
+        ];
     }
 
     private void WriteTargetElementString(CodeWriter writer, TagHelperDescriptor tagHelper)

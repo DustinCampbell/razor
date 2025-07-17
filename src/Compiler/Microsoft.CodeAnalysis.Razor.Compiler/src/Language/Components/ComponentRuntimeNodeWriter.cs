@@ -153,7 +153,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         }
 
         context.CodeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddMarkupContent}")
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddMarkupContent}"))
             .Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture))
             .WriteParameterSeparator()
             .WriteStringLiteral(node.Content)
@@ -173,7 +173,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         }
 
         context.CodeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.OpenElement}")
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.OpenElement}"))
             .Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture))
             .WriteParameterSeparator()
             .WriteStringLiteral(node.TagName)
@@ -235,7 +235,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         }
 
         context.CodeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.CloseElement}")
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.CloseElement}"))
             .WriteEndMethodInvocation();
     }
 
@@ -256,7 +256,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         if (!string.IsNullOrEmpty(node.EventUpdatesAttributeName))
         {
             context.CodeWriter
-                .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.SetUpdatesAttributeName}")
+                .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.SetUpdatesAttributeName}"))
                 .WriteStringLiteral(node.EventUpdatesAttributeName)
                 .WriteEndMethodInvocation();
         }
@@ -300,7 +300,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         }
 
         context.CodeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{renderApi}")
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{renderApi}"))
             .Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture))
             .WriteParameterSeparator()
             .WriteStringLiteral(content)
@@ -880,7 +880,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         var codeWriter = context.CodeWriter;
 
         codeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.SetKey}");
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.SetKey}"));
         WriteSetKeyInnards(context, node);
         codeWriter.WriteEndMethodInvocation();
     }
@@ -912,7 +912,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         // Looks like:
         //
         // _builder.AddMultipleAttributes(2, ...);
-        context.CodeWriter.WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddMultipleAttributes}");
+        context.CodeWriter.WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddMultipleAttributes}"));
         context.CodeWriter.Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture));
         context.CodeWriter.WriteParameterSeparator();
 
@@ -971,7 +971,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
             ? ComponentsApi.RenderTreeBuilder.AddComponentReferenceCapture
             : ComponentsApi.RenderTreeBuilder.AddElementReferenceCapture;
         codeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{methodName}")
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{methodName}"))
             .Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture))
             .WriteParameterSeparator();
 
@@ -1058,7 +1058,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
     protected override void BeginWriteAttribute(CodeRenderingContext context, string key)
     {
         context.CodeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddAttribute}")
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddAttribute}"))
             .Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture))
             .WriteParameterSeparator()
             .WriteStringLiteral(key);
@@ -1066,7 +1066,7 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
 
     protected override void BeginWriteAttribute(CodeRenderingContext context, IntermediateNode nameExpression)
     {
-        context.CodeWriter.WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddAttribute}");
+        context.CodeWriter.WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddAttribute}"));
         context.CodeWriter.Write((_sourceSequence++).ToString(CultureInfo.InvariantCulture));
         context.CodeWriter.WriteParameterSeparator();
 
@@ -1145,15 +1145,15 @@ internal class ComponentRuntimeNodeWriter : ComponentNodeWriter
         // If we only have HTML tokens, we write out a single string literal.
         if (hasHtml && !hasCSharp)
         {
-            using var _ = StringBuilderPool.GetPooledObject(out var builder);
+            using var contentParts = new PooledArrayBuilder<ReadOnlyMemory<char>>(tokens.Length);
 
             foreach (var token in tokens)
             {
                 Debug.Assert(token is HtmlIntermediateToken);
-                builder.Append(token.Content);
+                contentParts.Add(token.Content.AsMemory());
             }
 
-            writer.WriteStringLiteral(builder.ToString());
+            writer.WriteStringLiteral(in contentParts);
             return;
         }
 

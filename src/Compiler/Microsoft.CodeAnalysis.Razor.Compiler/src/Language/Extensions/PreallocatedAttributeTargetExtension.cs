@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -153,16 +154,25 @@ internal class PreallocatedAttributeTargetExtension : IPreallocatedAttributeTarg
         throw new InvalidOperationException();
     }
 
-    private static string GetPropertyAccessor(PreallocatedTagHelperPropertyIntermediateNode node)
+    private static Content GetPropertyAccessor(PreallocatedTagHelperPropertyIntermediateNode node)
     {
-        var propertyAccessor = $"{node.FieldName}.{node.PropertyName}";
+        var capacity = node.IsIndexerNameMatch ? 6 : 3;
+
+        using var propertyAccessor = new PooledArrayBuilder<Content>(capacity: capacity);
+
+        propertyAccessor.Add(node.FieldName);
+        propertyAccessor.Add(".");
+        propertyAccessor.Add(node.PropertyName);
 
         if (node.IsIndexerNameMatch)
         {
-            var dictionaryKey = node.AttributeName.Substring(node.BoundAttribute.IndexerNamePrefix.Length);
-            propertyAccessor += $"[\"{dictionaryKey}\"]";
+            var dictionaryKey = node.AttributeName.AsMemory()[node.BoundAttribute.IndexerNamePrefix.Length..];
+
+            propertyAccessor.Add("[\"");
+            propertyAccessor.Add(dictionaryKey);
+            propertyAccessor.Add("\"]");
         }
 
-        return propertyAccessor;
+        return propertyAccessor.ToContent();
     }
 }

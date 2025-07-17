@@ -1,21 +1,19 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable disable
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 internal static partial class CodeWriterExtensions
 {
-    private const string InstanceMethodFormat = "{0}.{1}";
-
     public static bool IsAtBeginningOfLine(this CodeWriter writer)
     {
         return writer.LastChar is '\n';
@@ -29,47 +27,29 @@ internal static partial class CodeWriterExtensions
         }
     }
 
-    public static CodeWriter WriteVariableDeclaration(this CodeWriter writer, string type, string name, string value)
+    public static CodeWriter WriteVariableDeclaration(this CodeWriter writer, Content typeName, Content name, Content value = default)
     {
-        writer.Write(type).Write(" ").Write(name);
-        if (!string.IsNullOrEmpty(value))
-        {
-            writer.Write(" = ").Write(value);
-        }
-        else
-        {
-            writer.Write(" = null");
-        }
-
-        writer.WriteLine(";");
-
-        return writer;
+        return !value.IsEmpty
+            ? writer.WriteLine($"{typeName} {name} = {value};")
+            : writer.WriteLine($"{typeName} {name} = null;");
     }
 
-    public static CodeWriter WriteStartAssignment(this CodeWriter writer, string name)
-    {
-        return writer.Write(name).Write(" = ");
-    }
+    public static CodeWriter WriteStartAssignment(this CodeWriter writer, Content name)
+        => writer.Write($"{name} = ");
 
     public static CodeWriter WriteParameterSeparator(this CodeWriter writer)
     {
         return writer.Write(", ");
     }
 
-    public static CodeWriter WriteStartNewObject(this CodeWriter writer, string typeName)
+    public static CodeWriter WriteStartNewObject(this CodeWriter writer, Content typeName)
     {
-        return writer.Write("new ").Write(typeName).Write("(");
+        return writer.Write($"new {typeName}(");
     }
 
-    public static CodeWriter WriteUsing(this CodeWriter writer, string name)
+    public static CodeWriter WriteUsing(this CodeWriter writer, Content name, bool endLine = true)
     {
-        return WriteUsing(writer, name, endLine: true);
-    }
-
-    public static CodeWriter WriteUsing(this CodeWriter writer, string name, bool endLine)
-    {
-        writer.Write("using ");
-        writer.Write(name);
+        writer.Write($"using {name}");
 
         if (endLine)
         {
@@ -145,21 +125,15 @@ internal static partial class CodeWriterExtensions
         return writer;
     }
 
-    public static CodeWriter WriteStartMethodInvocation(this CodeWriter writer, string methodName)
+    public static CodeWriter WriteStartMethodInvocation(this CodeWriter writer, Content methodName)
     {
-        writer.Write(methodName);
-
-        return writer.Write("(");
+        return writer.Write($"{methodName}(");
     }
 
-    public static CodeWriter WriteEndMethodInvocation(this CodeWriter writer)
-    {
-        return WriteEndMethodInvocation(writer, endLine: true);
-    }
-
-    public static CodeWriter WriteEndMethodInvocation(this CodeWriter writer, bool endLine)
+    public static CodeWriter WriteEndMethodInvocation(this CodeWriter writer, bool endLine = true)
     {
         writer.Write(")");
+
         if (endLine)
         {
             writer.WriteLine(";");
@@ -171,63 +145,30 @@ internal static partial class CodeWriterExtensions
     // Writes a method invocation for the given instance name.
     public static CodeWriter WriteInstanceMethodInvocation(
         this CodeWriter writer,
-        string instanceName,
-        string methodName,
-        params string[] parameters)
+        Content instanceName,
+        Content methodName,
+        params ImmutableArray<Content> parameters)
     {
-        if (instanceName == null)
-        {
-            throw new ArgumentNullException(nameof(instanceName));
-        }
-
-        if (methodName == null)
-        {
-            throw new ArgumentNullException(nameof(methodName));
-        }
-
-        return WriteInstanceMethodInvocation(writer, instanceName, methodName, endLine: true, parameters: parameters);
+        return writer.WriteInstanceMethodInvocation(instanceName, methodName, endLine: true, parameters);
     }
 
     // Writes a method invocation for the given instance name.
     public static CodeWriter WriteInstanceMethodInvocation(
         this CodeWriter writer,
-        string instanceName,
-        string methodName,
+        Content instanceName,
+        Content methodName,
         bool endLine,
-        params string[] parameters)
+        params ImmutableArray<Content> parameters)
     {
-        if (instanceName == null)
-        {
-            throw new ArgumentNullException(nameof(instanceName));
-        }
-
-        if (methodName == null)
-        {
-            throw new ArgumentNullException(nameof(methodName));
-        }
-
-        return WriteMethodInvocation(
-            writer,
-            string.Format(CultureInfo.InvariantCulture, InstanceMethodFormat, instanceName, methodName),
+        return writer.WriteMethodInvocation(
+            new($"{instanceName}.{methodName}"),
             endLine,
             parameters);
     }
 
-    public static CodeWriter WriteStartInstanceMethodInvocation(this CodeWriter writer, string instanceName, string methodName)
+    public static CodeWriter WriteStartInstanceMethodInvocation(this CodeWriter writer, Content instanceName, Content methodName)
     {
-        if (instanceName == null)
-        {
-            throw new ArgumentNullException(nameof(instanceName));
-        }
-
-        if (methodName == null)
-        {
-            throw new ArgumentNullException(nameof(methodName));
-        }
-
-        return WriteStartMethodInvocation(
-            writer,
-            string.Format(CultureInfo.InvariantCulture, InstanceMethodFormat, instanceName, methodName));
+        return writer.WriteStartMethodInvocation(new($"{instanceName}.{methodName}"));
     }
 
     public static CodeWriter WriteField(this CodeWriter writer, IList<string> suppressWarnings, IList<string> modifiers, string typeName, string fieldName)
@@ -279,16 +220,16 @@ internal static partial class CodeWriterExtensions
         return writer;
     }
 
-    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, string methodName, params string[] parameters)
+    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, Content methodName, params ImmutableArray<Content> parameters)
     {
-        return WriteMethodInvocation(writer, methodName, endLine: true, parameters: parameters);
+        return WriteMethodInvocation(writer, methodName, endLine: true, parameters);
     }
 
-    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, string methodName, bool endLine, params string[] parameters)
+    public static CodeWriter WriteMethodInvocation(this CodeWriter writer, Content methodName, bool endLine, params ImmutableArray<Content> parameters)
     {
         return
             WriteStartMethodInvocation(writer, methodName)
-            .Write(string.Join(", ", parameters))
+            .Write(Content.Join(", ", parameters))
             .WriteEndMethodInvocation(endLine);
     }
 
@@ -577,20 +518,56 @@ internal static partial class CodeWriterExtensions
         }
     }
 
+    public static CodeWriter WriteCommaSeparatedList(this CodeWriter writer, ImmutableArray<Content> list)
+    {
+        if (list.IsEmpty)
+        {
+            return writer;
+        }
+
+        writer.Write(list[0]);
+
+        if (list.Length > 1)
+        {
+            for (var i = 1; i < list.Length; i++)
+            {
+                writer.Write($", {list[i]}");
+            }
+        }
+
+        return writer;
+    }
+
+    public static CodeWriter WriteCommaSeparatedList<T>(this CodeWriter writer, ImmutableArray<T> list, Func<T, Content> contentSelector)
+    {
+        if (list.IsEmpty)
+        {
+            return writer;
+        }
+
+        writer.Write(contentSelector(list[0]));
+
+        if (list.Length > 1)
+        {
+            for (var i = 1; i < list.Length; i++)
+            {
+                writer.Write($", {contentSelector(list[i])}");
+            }
+        }
+
+        return writer;
+    }
+
     public static CSharpCodeWritingScope BuildMethodDeclaration(
         this CodeWriter writer,
-        string accessibility,
-        string returnType,
-        string name,
-        IEnumerable<KeyValuePair<string, string>> parameters)
+        Content accessibility,
+        Content returnType,
+        Content name,
+        params ImmutableArray<(Content type, Content name)> parameters)
     {
-        writer.Write(accessibility)
-            .Write(" ")
-            .Write(returnType)
-            .Write(" ")
-            .Write(name)
-            .Write("(")
-            .Write(string.Join(", ", parameters.Select(p => p.Key + " " + p.Value)))
+        writer
+            .Write($"{accessibility} {returnType} {name}(")
+            .WriteCommaSeparatedList(parameters, p => new($"{p.type} {p.name}"))
             .WriteLine(")");
 
         return new CSharpCodeWritingScope(writer);

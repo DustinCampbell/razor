@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language.Extensions;
 
@@ -102,7 +103,7 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
             // Assign a unique ID for this instance of the source HTML tag. This must be unique
             // per call site, e.g. if the tag is on the view twice, there should be two IDs.
             var uniqueId = GetDeterministicId(context);
-            
+
             context.CodeWriter.WriteStringLiteral(node.TagName)
                 .WriteParameterSeparator()
                 .Write(TagModeTypeName)
@@ -485,13 +486,12 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
         {
             context.CodeWriter.WriteField(FieldUnusedModifiers, PrivateModifiers, "string", StringValueBufferVariableName);
 
-            var backedScopeManageVariableName = "__backed" + ScopeManagerVariableName;
+            var backedScopeManageVariableName = new Content($"__backed{ScopeManagerVariableName}");
             context.CodeWriter
                 .Write("private ")
                 .WriteVariableDeclaration(
                     ScopeManagerTypeName,
-                    backedScopeManageVariableName,
-                    value: null);
+                    backedScopeManageVariableName);
 
             context.CodeWriter
             .Write("private ")
@@ -652,16 +652,25 @@ internal sealed class DefaultTagHelperTargetExtension : IDefaultTagHelperTargetE
         return uniqueId;
     }
 
-    private static string GetPropertyAccessor(DefaultTagHelperPropertyIntermediateNode node)
+    private static Content GetPropertyAccessor(DefaultTagHelperPropertyIntermediateNode node)
     {
-        var propertyAccessor = node.FieldName + "." + node.PropertyName;
+        var capacity = node.IsIndexerNameMatch ? 6 : 3;
+
+        using var propertyAccessor = new PooledArrayBuilder<Content>(capacity: capacity);
+
+        propertyAccessor.Add(node.FieldName);
+        propertyAccessor.Add(".");
+        propertyAccessor.Add(node.PropertyName);
 
         if (node.IsIndexerNameMatch)
         {
-            var dictionaryKey = node.AttributeName.Substring(node.BoundAttribute.IndexerNamePrefix.Length);
-            propertyAccessor += $"[\"{dictionaryKey}\"]";
+            var dictionaryKey = node.AttributeName.AsMemory()[node.BoundAttribute.IndexerNamePrefix.Length..];
+
+            propertyAccessor.Add("[\"");
+            propertyAccessor.Add(dictionaryKey);
+            propertyAccessor.Add("\"]");
         }
 
-        return propertyAccessor;
+        return propertyAccessor.ToContent();
     }
 }

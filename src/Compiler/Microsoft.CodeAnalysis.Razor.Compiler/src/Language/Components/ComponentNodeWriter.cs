@@ -174,7 +174,8 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
             switch (parameter.Source)
             {
                 case ComponentAttributeIntermediateNode attribute:
-                    context.CodeWriter.WriteStartInstanceMethodInvocation(ComponentsApi.RenderTreeBuilder.BuilderParameter, GetAddComponentParameterMethodName(context));
+                    context.CodeWriter.WriteStartInstanceMethodInvocation(
+                        ComponentsApi.RenderTreeBuilder.BuilderParameter, GetAddComponentParameterMethodName(context));
                     context.CodeWriter.Write(parameter.SeqName);
                     context.CodeWriter.Write(", ");
                     WriteComponentAttributeName(context, attribute, allowNameof);
@@ -190,7 +191,8 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
                     break;
 
                 case SplatIntermediateNode:
-                    context.CodeWriter.WriteStartInstanceMethodInvocation(ComponentsApi.RenderTreeBuilder.BuilderParameter, ComponentsApi.RenderTreeBuilder.AddMultipleAttributes);
+                    context.CodeWriter.WriteStartInstanceMethodInvocation(
+                        ComponentsApi.RenderTreeBuilder.BuilderParameter, ComponentsApi.RenderTreeBuilder.AddMultipleAttributes);
                     context.CodeWriter.Write(parameter.SeqName);
                     context.CodeWriter.Write(", ");
 
@@ -199,7 +201,8 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
                     break;
 
                 case ComponentChildContentIntermediateNode childContent:
-                    context.CodeWriter.WriteStartInstanceMethodInvocation(ComponentsApi.RenderTreeBuilder.BuilderParameter, GetAddComponentParameterMethodName(context));
+                    context.CodeWriter.WriteStartInstanceMethodInvocation(
+                        ComponentsApi.RenderTreeBuilder.BuilderParameter, GetAddComponentParameterMethodName(context));
                     context.CodeWriter.Write(parameter.SeqName);
                     context.CodeWriter.Write(", ");
 
@@ -216,13 +219,18 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
                     break;
 
                 case SetKeyIntermediateNode:
-                    context.CodeWriter.WriteStartInstanceMethodInvocation(ComponentsApi.RenderTreeBuilder.BuilderParameter, ComponentsApi.RenderTreeBuilder.SetKey);
+                    context.CodeWriter.WriteStartInstanceMethodInvocation(
+                        ComponentsApi.RenderTreeBuilder.BuilderParameter, ComponentsApi.RenderTreeBuilder.SetKey);
                     context.CodeWriter.Write(parameter.ParameterName);
                     context.CodeWriter.WriteEndMethodInvocation();
                     break;
 
                 case ReferenceCaptureIntermediateNode capture:
-                    context.CodeWriter.WriteStartInstanceMethodInvocation(ComponentsApi.RenderTreeBuilder.BuilderParameter, capture.IsComponentCapture ? ComponentsApi.RenderTreeBuilder.AddComponentReferenceCapture : ComponentsApi.RenderTreeBuilder.AddElementReferenceCapture);
+                    context.CodeWriter.WriteStartInstanceMethodInvocation(
+                        ComponentsApi.RenderTreeBuilder.BuilderParameter,
+                        capture.IsComponentCapture
+                            ? ComponentsApi.RenderTreeBuilder.AddComponentReferenceCapture
+                            : ComponentsApi.RenderTreeBuilder.AddElementReferenceCapture);
                     context.CodeWriter.Write(parameter.SeqName);
                     context.CodeWriter.Write(", ");
 

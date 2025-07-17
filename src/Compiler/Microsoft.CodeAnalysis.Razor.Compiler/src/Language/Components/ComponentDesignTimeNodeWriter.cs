@@ -307,7 +307,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         }
 
         context.CodeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{nameof(ComponentsApi.RenderTreeBuilder.AddAttribute)}")
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{nameof(ComponentsApi.RenderTreeBuilder.AddAttribute)}"))
             .Write("-1")
             .WriteParameterSeparator()
             .WriteStringLiteral(key);
@@ -315,7 +315,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
 
     protected override void BeginWriteAttribute(CodeRenderingContext context, IntermediateNode expression)
     {
-        context.CodeWriter.WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddAttribute}");
+        context.CodeWriter.WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddAttribute}"));
         context.CodeWriter.Write("-1");
         context.CodeWriter.WriteParameterSeparator();
 
@@ -1000,7 +1000,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         var codeWriter = context.CodeWriter;
 
         codeWriter
-            .WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.SetKey}");
+            .WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.SetKey}"));
         WriteSetKeyInnards(context, node);
         codeWriter.WriteEndMethodInvocation();
     }
@@ -1032,7 +1032,7 @@ internal class ComponentDesignTimeNodeWriter : ComponentNodeWriter
         // Looks like:
         //
         // __builder.AddMultipleAttributes(2, ...);
-        context.CodeWriter.WriteStartMethodInvocation($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddMultipleAttributes}");
+        context.CodeWriter.WriteStartMethodInvocation(new($"{_scopeStack.BuilderVarName}.{ComponentsApi.RenderTreeBuilder.AddMultipleAttributes}"));
         context.CodeWriter.Write("-1");
         context.CodeWriter.WriteParameterSeparator();
 

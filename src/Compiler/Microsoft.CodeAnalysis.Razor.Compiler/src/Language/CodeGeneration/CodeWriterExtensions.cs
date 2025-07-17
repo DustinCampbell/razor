@@ -12,25 +12,9 @@ using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
-internal static class CodeWriterExtensions
+internal static partial class CodeWriterExtensions
 {
     private const string InstanceMethodFormat = "{0}.{1}";
-
-    private static readonly ReadOnlyMemory<char> s_true = "true".AsMemory();
-    private static readonly ReadOnlyMemory<char> s_false = "false".AsMemory();
-
-    private static readonly char[] CStyleStringLiteralEscapeChars =
-    {
-        '\r',
-        '\t',
-        '\"',
-        '\'',
-        '\\',
-        '\0',
-        '\n',
-        '\u2028',
-        '\u2029',
-    };
 
     public static bool IsAtBeginningOfLine(this CodeWriter writer)
     {
@@ -62,11 +46,6 @@ internal static class CodeWriterExtensions
         return writer;
     }
 
-    public static CodeWriter WriteBooleanLiteral(this CodeWriter writer, bool value)
-    {
-        return writer.Write(value ? s_true : s_false);
-    }
-
     public static CodeWriter WriteStartAssignment(this CodeWriter writer, string name)
     {
         return writer.Write(name).Write(" = ");
@@ -80,23 +59,6 @@ internal static class CodeWriterExtensions
     public static CodeWriter WriteStartNewObject(this CodeWriter writer, string typeName)
     {
         return writer.Write("new ").Write(typeName).Write("(");
-    }
-
-    public static CodeWriter WriteStringLiteral(this CodeWriter writer, string literal)
-        => writer.WriteStringLiteral(literal.AsMemory());
-
-    public static CodeWriter WriteStringLiteral(this CodeWriter writer, ReadOnlyMemory<char> literal)
-    {
-        if (literal.Length >= 256 && literal.Length <= 1500 && literal.Span.IndexOf('\0') == -1)
-        {
-            WriteVerbatimStringLiteral(writer, literal);
-        }
-        else
-        {
-            WriteCStyleStringLiteral(writer, literal);
-        }
-
-        return writer;
     }
 
     public static CodeWriter WriteUsing(this CodeWriter writer, string name)
@@ -632,91 +594,6 @@ internal static class CodeWriterExtensions
             .WriteLine(")");
 
         return new CSharpCodeWritingScope(writer);
-    }
-
-    private static void WriteVerbatimStringLiteral(CodeWriter writer, ReadOnlyMemory<char> literal)
-    {
-        writer.Write("@\"");
-
-        // We need to suppress indenting during the writing of the string's content. A
-        // verbatim string literal could contain newlines that don't get escaped.
-        var oldIndent = writer.CurrentIndent;
-        writer.CurrentIndent = 0;
-
-        // We need to find the index of each '"' (double-quote) to escape it.
-        int index;
-        while ((index = literal.Span.IndexOf('"')) >= 0)
-        {
-            writer.Write(literal[..index]);
-            writer.Write("\"\"");
-
-            literal = literal[(index + 1)..];
-        }
-
-        Debug.Assert(index == -1); // We've hit all of the double-quotes.
-
-        // Write the remainder after the last double-quote.
-        writer.Write(literal);
-
-        writer.Write("\"");
-
-        writer.CurrentIndent = oldIndent;
-    }
-
-    private static void WriteCStyleStringLiteral(CodeWriter writer, ReadOnlyMemory<char> literal)
-    {
-        // From CSharpCodeGenerator.QuoteSnippetStringCStyle in CodeDOM
-        writer.Write("\"");
-
-        // We need to find the index of each escapable character to escape it.
-        int index;
-        while ((index = literal.Span.IndexOfAny(CStyleStringLiteralEscapeChars)) >= 0)
-        {
-            writer.Write(literal[..index]);
-
-            switch (literal.Span[index])
-            {
-                case '\r':
-                    writer.Write("\\r");
-                    break;
-                case '\t':
-                    writer.Write("\\t");
-                    break;
-                case '\"':
-                    writer.Write("\\\"");
-                    break;
-                case '\'':
-                    writer.Write("\\\'");
-                    break;
-                case '\\':
-                    writer.Write("\\\\");
-                    break;
-                case '\0':
-                    writer.Write("\\\0");
-                    break;
-                case '\n':
-                    writer.Write("\\n");
-                    break;
-                case '\u2028':
-                    writer.Write("\\u2028");
-                    break;
-                case '\u2029':
-                    writer.Write("\\u2029");
-                    break;
-                default:
-                    Debug.Assert(false, "Unknown escape character.");
-                    break;
-            }
-
-            literal = literal[(index + 1)..];
-        }
-
-        Debug.Assert(index == -1); // We've hit all of chars that need escaping.
-
-        // Write the remainder after the last escaped char.
-        writer.Write(literal);
-
-        writer.Write("\"");
     }
 
     public struct CSharpCodeWritingScope : IDisposable

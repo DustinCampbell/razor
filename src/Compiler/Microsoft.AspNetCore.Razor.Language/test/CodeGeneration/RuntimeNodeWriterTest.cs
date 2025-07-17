@@ -362,7 +362,7 @@ if (true) { }
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello".AsMemory());
+        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello");
 
         // Assert
         var csharp = context.CodeWriter.GetText().ToString();
@@ -381,7 +381,7 @@ if (true) { }
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello World".AsMemory());
+        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "Hello World");
 
         // Assert
         var csharp = context.CodeWriter.GetText().ToString();
@@ -401,7 +401,7 @@ WriteLiteral(""World"");
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 2, " 👦".AsMemory());
+        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 2, " 👦");
 
         // Assert
         var csharp = context.CodeWriter.GetText().ToString();
@@ -421,7 +421,7 @@ WriteLiteral(""👦"");
         using var context = TestCodeRenderingContext.CreateRuntime();
 
         // Act
-        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "👩‍👩‍👧‍👧👩‍👩‍👧‍👧".AsMemory());
+        writer.WriteHtmlLiteral(context, maxStringLiteralLength: 6, "👩‍👩‍👧‍👧👩‍👩‍👧‍👧");
 
         // Assert
         var csharp = context.CodeWriter.GetText().ToString();

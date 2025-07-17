@@ -4,6 +4,7 @@
 #nullable disable
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -251,59 +252,159 @@ public class RuntimeNodeWriter : IntermediateNodeWriter
     {
         const int MaxStringLiteralLength = 1024;
 
-        using var htmlContentBuilder = new PooledArrayBuilder<ReadOnlyMemory<char>>();
+        using var contentParts = new PooledArrayBuilder<ReadOnlyMemory<char>>();
 
-        var length = 0;
+        var contentLength = 0;
+
         foreach (var child in node.Children)
         {
             if (child is HtmlIntermediateToken token)
             {
-                var htmlContent = token.Content.AsMemory();
+                var content = token.Content.AsMemory();
 
-                htmlContentBuilder.Add(htmlContent);
-                length += htmlContent.Length;
+                contentParts.Add(content);
+                contentLength += content.Length;
             }
         }
 
-        // Can't use a pooled builder here as the memory will be stored in the context.
-        var content = new char[length];
-        var contentIndex = 0;
-        foreach (var htmlContent in htmlContentBuilder)
-        {
-            htmlContent.Span.CopyTo(content.AsSpan(contentIndex));
-            contentIndex += htmlContent.Length;
-        }
-
-        WriteHtmlLiteral(context, MaxStringLiteralLength, content.AsMemory());
+        WriteHtmlLiteral(context, MaxStringLiteralLength, contentLength, ref contentParts.AsRef());
     }
 
     // Internal for testing
-    internal void WriteHtmlLiteral(CodeRenderingContext context, int maxStringLiteralLength, ReadOnlyMemory<char> literal)
+    internal void WriteHtmlLiteral(CodeRenderingContext context, int maxStringLiteralLength, Content literal)
     {
-        while (literal.Length > maxStringLiteralLength)
+        if (literal.Length == 0)
         {
-            // String is too large, render the string in pieces to avoid Roslyn OOM exceptions at compile time: https://github.com/aspnet/External/issues/54
-            var lastCharBeforeSplit = literal.Span[maxStringLiteralLength - 1];
-
-            // If character at splitting point is a high surrogate, take one less character this iteration
-            // as we're attempting to split a surrogate pair. This can happen when something like an
-            // emoji sits on the barrier between splits; if we were to split the emoji we'd end up with
-            // invalid bytes in our output.
-            var renderCharCount = char.IsHighSurrogate(lastCharBeforeSplit) ? maxStringLiteralLength - 1 : maxStringLiteralLength;
-
-            WriteLiteral(literal[..renderCharCount]);
-
-            literal = literal[renderCharCount..];
+            return;
         }
 
-        WriteLiteral(literal);
-        return;
+        using var parts = new PooledArrayBuilder<ReadOnlyMemory<char>>();
+        literal.CollectAllParts(ref parts.AsRef());
 
-        void WriteLiteral(ReadOnlyMemory<char> content)
+        WriteHtmlLiteral(context, maxStringLiteralLength, literal.Length, ref parts.AsRef());
+    }
+
+    private void WriteHtmlLiteral(
+        CodeRenderingContext context,
+        int maxStringLiteralLength,
+        int contentLength,
+        ref readonly PooledArrayBuilder<ReadOnlyMemory<char>> contentParts)
+    {
+        Debug.Assert(maxStringLiteralLength > 0);
+        Debug.Assert(contentLength == contentParts.Sum(static p => p.Length), "Length must match the sum of the parts' lengths.");
+
+        if (contentLength == 0)
+        {
+            return;
+        }
+
+        if (contentLength <= maxStringLiteralLength)
+        {
+            WriteLiteral(context, in contentParts);
+            return;
+        }
+
+        // Content is too large. Render it in pieces to avoid Roslyn OOM exceptions
+        // at compile time: https://github.com/aspnet/External/issues/54
+
+        using var chunkParts = new PooledArrayBuilder<ReadOnlyMemory<char>>();
+        ref var chunkPartsRef = ref chunkParts.AsRef();
+
+        var remainingPart = ReadOnlyMemory<char>.Empty;
+        var enumerator = contentParts.GetEnumerator();
+
+        while (contentLength > 0)
+        {
+            var chunkSize = Math.Min(contentLength, maxStringLiteralLength);
+            var charsToWrite = chunkSize;
+
+            // First copy any chars remaining from last time to this chunk.
+            if (!remainingPart.IsEmpty)
+            {
+                var toCopy = Math.Min(remainingPart.Length, charsToWrite);
+                chunkParts.Add(remainingPart[..toCopy]);
+                remainingPart = remainingPart[toCopy..];
+
+                charsToWrite -= toCopy;
+            }
+
+            // If there isn't anything more else left over, add parts until there
+            // are no more chars to write.
+            if (remainingPart.IsEmpty)
+            {
+                while (charsToWrite > 0 && enumerator.MoveNext())
+                {
+                    var part = enumerator.Current;
+
+                    if (part.IsEmpty)
+                    {
+                        continue;
+                    }
+
+                    if (part.Length <= charsToWrite)
+                    {
+                        chunkParts.Add(part);
+                        charsToWrite -= part.Length;
+                    }
+                    else
+                    {
+                        // If the part is larger than the remaining chars to write, split it.
+                        var partialPart = part[..charsToWrite];
+                        chunkParts.Add(part[..charsToWrite]);
+                        remainingPart = part[charsToWrite..];
+
+                        // Note: This should set charsToWrite to zero.
+                        charsToWrite -= partialPart.Length;
+                    }
+                }
+            }
+
+            Debug.Assert(charsToWrite == 0, "Ran out of content parts but expected to write more characters.");
+            Debug.Assert(chunkParts.Count > 0);
+
+            var lastChar = chunkParts[^1].Span[^1];
+
+            if (char.IsHighSurrogate(lastChar))
+            {
+                // If character at splitting point is a high surrogate, take one less character this iteration
+                // as we're attempting to split a surrogate pair. This can happen when something like an
+                // emoji sits on the barrier between splits; if we were to split the emoji we'd end up with
+                // invalid bytes in our output.
+
+                var lastPart = chunkParts[^1];
+                chunkPartsRef[^1] = lastPart[..^1];
+
+                WriteLiteral(context, in chunkParts);
+                chunkParts.Clear();
+
+                chunkParts.Add(lastPart[^1..]);
+            }
+            else
+            {
+                WriteLiteral(context, in chunkParts);
+                chunkParts.Clear();
+            }
+
+            contentLength -= chunkSize;
+        }
+
+        Debug.Assert(
+            contentLength == 0 && remainingPart.IsEmpty && enumerator.MoveNext() == false,
+            "More content remains to be written.");
+
+        if (chunkParts.Count > 0)
+        {
+            // This would only occur if the very last character was a high surrogate.
+            // That's a little weird, but we should handle it.
+            Debug.Assert(chunkParts.Count == 1 && chunkParts[0].Length == 1);
+            WriteLiteral(context, in chunkParts);
+        }
+
+        void WriteLiteral(CodeRenderingContext context, ref readonly PooledArrayBuilder<ReadOnlyMemory<char>> parts)
         {
             context.CodeWriter
                 .WriteStartMethodInvocation(WriteHtmlContentMethod)
-                .WriteStringLiteral(content)
+                .WriteStringLiteral(in parts)
                 .WriteEndMethodInvocation();
         }
     }

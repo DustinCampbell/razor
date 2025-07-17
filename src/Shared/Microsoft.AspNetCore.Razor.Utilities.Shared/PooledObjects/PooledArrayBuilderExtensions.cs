@@ -36,4 +36,24 @@ internal static class PooledArrayBuilderExtensions
 #pragma warning disable RS0042
         => ref Unsafe.AsRef(in builder);
 #pragma warning restore RS0042
+
+    /// <summary>
+    /// Computes the sum of the sequence of <see cref="int"/> values that are obtained
+    /// by invoking a transform function on each element of this builder.
+    /// </summary>
+    /// <typeparam name="T">The type of element stored in the pooled array builder.</typeparam>
+    /// <param name="builder">A pooled array builder whose elements to sum.</param>
+    /// <param name="selector">A transform function to apply to each element.</param>
+    /// <returns>The sum of the projected values.</returns>
+    public static int Sum<T>(this ref readonly PooledArrayBuilder<T> builder, Func<T, int> selector)
+    {
+        var result = 0;
+
+        foreach (var item in builder)
+        {
+            result += selector(item);
+        }
+
+        return result;
+    }
 }

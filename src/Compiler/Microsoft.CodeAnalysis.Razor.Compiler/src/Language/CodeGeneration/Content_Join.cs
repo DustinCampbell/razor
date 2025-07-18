@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
-namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
+namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 public readonly partial record struct Content
 {

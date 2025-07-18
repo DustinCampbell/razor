@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Internal;
 #endif
 
-namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
+namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 public readonly partial record struct Content
 {

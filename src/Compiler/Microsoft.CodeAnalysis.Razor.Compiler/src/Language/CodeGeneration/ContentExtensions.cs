@@ -2,11 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Diagnostics;
 using System.Text;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
-namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
+namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 internal static class ContentExtensions
 {

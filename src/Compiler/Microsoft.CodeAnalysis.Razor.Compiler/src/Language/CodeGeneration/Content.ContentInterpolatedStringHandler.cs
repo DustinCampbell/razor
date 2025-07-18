@@ -5,9 +5,8 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
-namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
+namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 public readonly partial record struct Content
 {

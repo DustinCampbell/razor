@@ -37,7 +37,7 @@ public class AssemblyAttributeInjectionPass : IntermediateNodePassBase, IRazorOp
 
         var generatedTypeName = @namespace.Name.IsEmpty
             ? @class.Name
-            : new Content($"{@namespace.Name}.{@class.Name}");
+            : new($"{@namespace.Name}.{@class.Name}");
 
         // The MVC attributes require a relative path to be specified so that we can make a view engine path.
         // We can't use a rooted path because we don't know what the project root is.

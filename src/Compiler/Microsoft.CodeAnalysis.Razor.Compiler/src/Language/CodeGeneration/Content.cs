@@ -8,11 +8,10 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.Extensions.Internal;
 
-namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
+namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 /// <summary>
 ///  This is used to represent content in Razor code generation. It can be a single string,

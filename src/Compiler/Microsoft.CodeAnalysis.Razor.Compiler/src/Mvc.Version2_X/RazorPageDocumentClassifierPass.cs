@@ -63,7 +63,7 @@ public class RazorPageDocumentClassifierPass : DocumentClassifierPassBase
             // It's possible for a Razor document to not have a file path.
             // Eg. When we try to generate code for an in memory document like default imports.
             var checksum = ChecksumUtilities.BytesToString(codeDocument.Source.Text.GetChecksum());
-            @class.Name = new Content($"AspNetCore_{checksum}");
+            @class.Name = new($"AspNetCore_{checksum}");
         }
         else
         {

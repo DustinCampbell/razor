@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Globalization;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
@@ -61,25 +60,25 @@ internal static partial class CodeWriterExtensions
     public static CodeWriter WriteEnhancedLineNumberDirective(this CodeWriter writer, SourceSpan span, int characterOffset, bool ensurePathBackSlashes)
     {
         // All values here need to be offset by 1 since #line uses a 1-indexed numbering system.
-        var lineNumberAsString = (span.LineIndex + 1).ToString(CultureInfo.InvariantCulture);
-        var characterStartAsString = (span.CharacterIndex + 1).ToString(CultureInfo.InvariantCulture);
-        var lineEndAsString = (span.LineIndex + 1 + span.LineCount).ToString(CultureInfo.InvariantCulture);
-        var characterEndAsString = (span.EndCharacterIndex + 1).ToString(CultureInfo.InvariantCulture);
+        var lineNumber = span.LineIndex + 1;
+        var characterStart = span.CharacterIndex + 1;
+        var lineEnd = span.LineIndex + 1 + span.LineCount;
+        var characterEnd = span.EndCharacterIndex + 1;
+
         writer.Write("#line (")
-            .Write(lineNumberAsString)
+            .WriteIntegerLiteral(lineNumber)
             .Write(",")
-            .Write(characterStartAsString)
+            .WriteIntegerLiteral(characterStart)
             .Write(")-(")
-            .Write(lineEndAsString)
+            .WriteIntegerLiteral(lineEnd)
             .Write(",")
-            .Write(characterEndAsString)
+            .WriteIntegerLiteral(characterEnd)
             .Write(") ");
 
         // an offset of zero is indicated by its absence.
         if (characterOffset != 0)
         {
-            var characterOffsetAsString = characterOffset.ToString(CultureInfo.InvariantCulture);
-            writer.Write(characterOffsetAsString).Write(" ");
+            writer.WriteIntegerLiteral(characterOffset).Write(" ");
         }
 
         return writer.Write("\"").WriteFilePath(span.FilePath, ensurePathBackSlashes).WriteLine("\"");
@@ -92,8 +91,13 @@ internal static partial class CodeWriterExtensions
             writer.WriteLine();
         }
 
-        var lineNumberAsString = (span.LineIndex + 1).ToString(CultureInfo.InvariantCulture);
-        return writer.Write("#line ").Write(lineNumberAsString).Write(" \"").WriteFilePath(span.FilePath, ensurePathBackslashes).WriteLine("\"");
+        var lineNumber = span.LineIndex + 1;
+        return writer
+            .Write("#line ")
+            .WriteIntegerLiteral(lineNumber)
+            .Write(" \"")
+            .WriteFilePath(span.FilePath, ensurePathBackslashes)
+            .WriteLine("\"");
     }
 
     private static CodeWriter WriteFilePath(this CodeWriter writer, string filePath, bool ensurePathBackSlashes)

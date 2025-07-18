@@ -1,13 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -18,45 +16,26 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
 {
     private static readonly ImmutableArray<Content> s_publicModifiers = ["public"];
 
-    public string TagHelperTypeName { get; set; } = "Microsoft.AspNetCore.Razor.TagHelpers.TagHelper";
-
-    public string ViewComponentHelperTypeName { get; set; } = "global::Microsoft.AspNetCore.Mvc.IViewComponentHelper";
-
-    public string ViewComponentHelperVariableName { get; set; } = "_helper";
-
-    public string ViewComponentInvokeMethodName { get; set; } = "InvokeAsync";
-
-    public string HtmlAttributeNotBoundAttributeTypeName { get; set; } = "Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeNotBoundAttribute";
-
-    public string ViewContextAttributeTypeName { get; set; } = "global::Microsoft.AspNetCore.Mvc.ViewFeatures.ViewContextAttribute";
-
-    public string ViewContextTypeName { get; set; } = "global::Microsoft.AspNetCore.Mvc.Rendering.ViewContext";
-
-    public string ViewContextPropertyName { get; set; } = "ViewContext";
-
-    public string HtmlTargetElementAttributeTypeName { get; set; } = "Microsoft.AspNetCore.Razor.TagHelpers.HtmlTargetElementAttribute";
-
-    public string TagHelperProcessMethodName { get; set; } = "ProcessAsync";
-
-    public string TagHelperContextTypeName { get; set; } = "Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext";
-
-    public string TagHelperContextVariableName { get; set; } = "context";
-
-    public string TagHelperOutputTypeName { get; set; } = "Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput";
-
-    public string TagHelperOutputVariableName { get; set; } = "output";
-
-    public string TagHelperOutputTagNamePropertyName { get; set; } = "TagName";
-
-    public string TagHelperOutputContentPropertyName { get; set; } = "Content";
-
-    public string TagHelperContentSetMethodName { get; set; } = "SetHtmlContent";
-
-    public string TagHelperContentVariableName { get; set; } = "content";
-
-    public string IViewContextAwareTypeName { get; set; } = "global::Microsoft.AspNetCore.Mvc.ViewFeatures.IViewContextAware";
-
-    public string IViewContextAwareContextualizeMethodName { get; set; } = "Contextualize";
+    public const string TagHelperTypeName = "Microsoft.AspNetCore.Razor.TagHelpers.TagHelper";
+    public const string ViewComponentHelperTypeName = "global::Microsoft.AspNetCore.Mvc.IViewComponentHelper";
+    public const string ViewComponentHelperVariableName = "_helper";
+    public const string ViewComponentInvokeMethodName = "InvokeAsync";
+    public const string HtmlAttributeNotBoundAttributeTypeName = "Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeNotBoundAttribute";
+    public const string ViewContextAttributeTypeName = "global::Microsoft.AspNetCore.Mvc.ViewFeatures.ViewContextAttribute";
+    public const string ViewContextTypeName = "global::Microsoft.AspNetCore.Mvc.Rendering.ViewContext";
+    public const string ViewContextPropertyName = "ViewContext";
+    public const string HtmlTargetElementAttributeTypeName = "Microsoft.AspNetCore.Razor.TagHelpers.HtmlTargetElementAttribute";
+    public const string TagHelperProcessMethodName = "ProcessAsync";
+    public const string TagHelperContextTypeName = "Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext";
+    public const string TagHelperContextVariableName = "context";
+    public const string TagHelperOutputTypeName = "Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput";
+    public const string TagHelperOutputVariableName = "output";
+    public const string TagHelperOutputTagNamePropertyName = "TagName";
+    public const string TagHelperOutputContentPropertyName = "Content";
+    public const string TagHelperContentSetMethodName = "SetHtmlContent";
+    public const string TagHelperContentVariableName = "content";
+    public const string IViewContextAwareTypeName = "global::Microsoft.AspNetCore.Mvc.ViewFeatures.IViewContextAware";
+    public const string IViewContextAwareContextualizeMethodName = "Contextualize";
 
     public void WriteViewComponentTagHelper(CodeRenderingContext context, ViewComponentTagHelperIntermediateNode node)
     {
@@ -88,7 +67,7 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         }
     }
 
-    private void WriteConstructorString(CodeWriter writer, Content className)
+    private static void WriteConstructorString(CodeWriter writer, Content className)
     {
         writer.WriteLine($"public {className}({ViewComponentHelperTypeName} helper)");
 
@@ -99,7 +78,7 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         }
     }
 
-    private void WriteAttributeDeclarations(CodeWriter writer, TagHelperDescriptor tagHelper)
+    private static void WriteAttributeDeclarations(CodeWriter writer, TagHelperDescriptor tagHelper)
     {
         writer.Write("[")
           .Write(HtmlAttributeNotBoundAttributeTypeName)
@@ -128,7 +107,7 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
         }
     }
 
-    private void WriteProcessMethodString(CodeWriter writer, TagHelperDescriptor tagHelper)
+    private static void WriteProcessMethodString(CodeWriter writer, TagHelperDescriptor tagHelper)
     {
         using (writer.BuildMethodDeclaration(
             new($"public override async"),
@@ -158,14 +137,14 @@ internal class ViewComponentTagHelperTargetExtension : IViewComponentTagHelperTa
 
     private static ImmutableArray<Content> GetMethodArguments(TagHelperDescriptor tagHelper)
     {
-        var propertyNames = tagHelper.BoundAttributes.Select(attribute => attribute.GetPropertyName());
-        var parametersString = new Content($"new {{ {Content.Join(", ", propertyNames)} }}");
+        var propertyNames = tagHelper.BoundAttributes.Select(attribute => attribute.GetPropertyName().AssumeNotNull());
+        var parameters = $"new {{ {Content.Join(", ", propertyNames)} }}";
         var viewComponentName = tagHelper.GetViewComponentName();
 
-        return [new($"\"{viewComponentName}\""), parametersString];
+        return [new($"\"{viewComponentName}\""), parameters];
     }
 
-    private void WriteTargetElementString(CodeWriter writer, TagHelperDescriptor tagHelper)
+    private static void WriteTargetElementString(CodeWriter writer, TagHelperDescriptor tagHelper)
     {
         Debug.Assert(tagHelper.TagMatchingRules.Length == 1);
 

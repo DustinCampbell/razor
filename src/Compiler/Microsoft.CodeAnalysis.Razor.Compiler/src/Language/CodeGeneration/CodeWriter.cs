@@ -239,6 +239,16 @@ public sealed partial class CodeWriter : IDisposable
         return this;
     }
 
+    internal CodeWriter Write(ref readonly PooledArrayBuilder<ReadOnlyMemory<char>> builder)
+    {
+        foreach (var value in builder)
+        {
+            Write(value);
+        }
+
+        return this;
+    }
+
     public CodeWriter Write(string value)
     {
         ArgHelper.ThrowIfNull(value);
@@ -324,6 +334,9 @@ public sealed partial class CodeWriter : IDisposable
 
     public CodeWriter WriteLine(ref Content.ContentInterpolatedStringHandler handler)
         => Write(ref handler).WriteLine();
+
+    internal CodeWriter WriteLine(ref readonly PooledArrayBuilder<ReadOnlyMemory<char>> builder)
+        => Write(in builder).WriteLine();
 
     public CodeWriter WriteLine(ReadOnlyMemory<char> value)
         => WriteCore(value).WriteLine();

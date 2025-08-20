@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
@@ -434,20 +435,15 @@ internal static class TagHelperBlockRewriter
     }
 
     // Determines the full name of the Type of the property corresponding to an attribute with the given name.
-    private static string GetPropertyType(string name, IEnumerable<TagHelperDescriptor> descriptors)
+    private static string GetPropertyType(string name, ImmutableArray<TagHelperDescriptor> descriptors)
     {
         foreach (var descriptor in descriptors)
         {
-            if (TagHelperMatchingConventions.TryGetFirstBoundAttributeMatch(descriptor, name, out var firstBoundAttribute, out var indexerMatch, out var _, out var _))
+            if (TagHelperMatchingConventions.TryGetFirstBoundAttributeMatch(descriptor, name, out var match))
             {
-                if (indexerMatch)
-                {
-                    return firstBoundAttribute.IndexerTypeName;
-                }
-                else
-                {
-                    return firstBoundAttribute.TypeName;
-                }
+                return match.IsIndexerMatch
+                    ? match.Attribute.IndexerTypeName
+                    : match.Attribute.TypeName;
             }
         }
 
@@ -468,30 +464,27 @@ internal static class TagHelperBlockRewriter
 
         foreach (var descriptor in descriptors)
         {
-            if (TagHelperMatchingConventions.TryGetFirstBoundAttributeMatch(
-                descriptor,
-                name,
-                out var firstBoundAttribute,
-                out var indexerMatch,
-                out var parameterMatch,
-                out var boundAttributeParameter))
+            if (TagHelperMatchingConventions.TryGetFirstBoundAttributeMatch(descriptor, name, out var match))
             {
                 isBoundAttribute = true;
-                if (parameterMatch)
+
+                var attribute = match.Attribute;
+
+                if (match is { IsParameterMatch: true, Parameter: var parameter})
                 {
-                    isBoundNonStringAttribute = !boundAttributeParameter.IsStringProperty;
-                    isBoundBooleanAttribute = boundAttributeParameter.IsBooleanProperty;
+                    isBoundNonStringAttribute = !parameter.IsStringProperty;
+                    isBoundBooleanAttribute = parameter.IsBooleanProperty;
                     isMissingDictionaryKey = false;
                 }
                 else
                 {
-                    isBoundNonStringAttribute = !firstBoundAttribute.ExpectsStringValue(name);
-                    isBoundBooleanAttribute = firstBoundAttribute.ExpectsBooleanValue(name);
-                    isMissingDictionaryKey = firstBoundAttribute.IndexerNamePrefix != null &&
-                        name.Length == firstBoundAttribute.IndexerNamePrefix.Length;
+                    isBoundNonStringAttribute = !attribute.ExpectsStringValue(name);
+                    isBoundBooleanAttribute = attribute.ExpectsBooleanValue(name);
+                    isMissingDictionaryKey = attribute.IndexerNamePrefix != null &&
+                        name.Length == attribute.IndexerNamePrefix.Length;
                 }
 
-                isDirectiveAttribute = firstBoundAttribute.IsDirectiveAttribute;
+                isDirectiveAttribute = attribute.IsDirectiveAttribute;
 
                 break;
             }

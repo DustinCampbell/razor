@@ -142,7 +142,7 @@ public sealed class ComponentAttributeIntermediateNode : IntermediateNode
         AddDiagnosticsFromNode(directiveAttributeParameterNode);
     }
 
-    public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
+    public override IntermediateNodeCollection Children { get => field ??= []; }
 
     public string AttributeName { get; set; }
 

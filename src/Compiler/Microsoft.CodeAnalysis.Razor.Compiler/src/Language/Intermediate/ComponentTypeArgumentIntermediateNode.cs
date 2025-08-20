@@ -33,7 +33,7 @@ public sealed class ComponentTypeArgumentIntermediateNode : IntermediateNode
         AddDiagnosticsFromNode(propertyNode);
     }
 
-    public override IntermediateNodeCollection Children { get; }
+    public override IntermediateNodeCollection Children { get => field ??= []; }
 
     public BoundAttributeDescriptor BoundAttribute { get; set; }
 

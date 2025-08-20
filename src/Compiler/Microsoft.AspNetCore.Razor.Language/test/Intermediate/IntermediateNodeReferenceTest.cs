@@ -499,7 +499,7 @@ public class IntermediateNodeReferenceTest
 
         public string Name { get; }
 
-        public override IntermediateNodeCollection Children { get; }
+        public override IntermediateNodeCollection Children { get => field ??= []; }
 
         public override void Accept(IntermediateNodeVisitor visitor)
         {

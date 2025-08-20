@@ -9,7 +9,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 public sealed class TagHelperHtmlAttributeIntermediateNode : IntermediateNode
 {
-    public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
+    public override IntermediateNodeCollection Children { get => field ??= []; }
 
     public string AttributeName { get; set; }
 

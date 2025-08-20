@@ -124,7 +124,7 @@ public class IntermediateNodeWalkerTest
     {
         public string Name { get; } = name;
 
-        public override IntermediateNodeCollection Children { get; } = [];
+        public override IntermediateNodeCollection Children { get => field ??= []; }
 
         public override void Accept(IntermediateNodeVisitor visitor)
             => ((DerivedIntermediateNodeWalker)visitor).VisitBasic(this);

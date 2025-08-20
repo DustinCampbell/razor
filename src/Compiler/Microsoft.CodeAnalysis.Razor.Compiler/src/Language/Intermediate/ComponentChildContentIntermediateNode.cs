@@ -4,7 +4,6 @@
 #nullable disable
 
 using System;
-using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Components;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
@@ -15,7 +14,7 @@ public sealed class ComponentChildContentIntermediateNode : IntermediateNode
 
     public BoundAttributeDescriptor BoundAttribute { get; set; }
 
-    public override IntermediateNodeCollection Children { get; } = new IntermediateNodeCollection();
+    public override IntermediateNodeCollection Children { get => field ??= []; }
 
     public bool IsParameterized => BoundAttribute?.IsParameterizedChildContentProperty() ?? false;
 

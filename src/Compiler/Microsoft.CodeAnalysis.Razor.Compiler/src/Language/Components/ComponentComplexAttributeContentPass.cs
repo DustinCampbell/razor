@@ -29,28 +29,39 @@ internal class ComponentComplexAttributeContentPass : ComponentIntermediateNodeP
         }
     }
 
-    private void ProcessAttributes(TagHelperIntermediateNode node)
+    private static void ProcessAttributes(TagHelperIntermediateNode node)
     {
+        var hasComponentTagHelpers = node.TagHelpers.Any(static t => t.IsComponentTagHelper);
+
         for (var i = node.Children.Count - 1; i >= 0; i--)
         {
-            if (node.Children[i] is TagHelperPropertyIntermediateNode propertyNode &&
-                node.TagHelpers.Any(t => t.IsComponentTagHelper))
+            var child = node.Children[i];
+
+            if (child is TagHelperDirectiveAttributeIntermediateNode directiveAttributeNode)
             {
-                ProcessAttribute(node, propertyNode, propertyNode.AttributeName);
+                ProcessAttribute(directiveAttributeNode, directiveAttributeNode.OriginalAttributeName);
+                continue;
             }
-            else if (node.Children[i] is TagHelperHtmlAttributeIntermediateNode htmlNode &&
-                node.TagHelpers.Any(t => t.IsComponentTagHelper))
+
+            if (!hasComponentTagHelpers)
             {
-                ProcessAttribute(node, htmlNode, htmlNode.AttributeName);
+                continue;
             }
-            else if (node.Children[i] is TagHelperDirectiveAttributeIntermediateNode directiveAttributeNode)
+
+            switch (child)
             {
-                ProcessAttribute(node, directiveAttributeNode, directiveAttributeNode.OriginalAttributeName);
+                case TagHelperPropertyIntermediateNode propertyNode:
+                    ProcessAttribute(propertyNode, propertyNode.AttributeName);
+                    break;
+
+                case TagHelperHtmlAttributeIntermediateNode htmlNode:
+                    ProcessAttribute(htmlNode, htmlNode.AttributeName);
+                    break;
             }
         }
     }
 
-    private static void ProcessAttribute(IntermediateNode parent, IntermediateNode node, string attributeName)
+    private static void ProcessAttribute(IntermediateNode node, string attributeName)
     {
         var issueDiagnostic = false;
 
@@ -59,17 +70,17 @@ internal class ComponentComplexAttributeContentPass : ComponentIntermediateNodeP
             // This case can be hit for a 'string' attribute
             issueDiagnostic = true;
         }
-        else if (node.Children is [CSharpExpressionIntermediateNode { Children.Count: > 1 } cSharpNode])
+        else if (node.Children is [CSharpExpressionIntermediateNode { Children.Count: > 1 } csharpNode])
         {
             // This case can be hit when the attribute has an explicit @ inside, which
             // 'escapes' any special sugar we provide for codegen.
             //
             // There's a special case here for explicit expressions. See https://github.com/aspnet/Razor/issues/2203
             // handling this case as a tactical matter since it's important for lambdas.
-            if (cSharpNode.Children is [IntermediateToken { Content: "(" }, _, IntermediateToken { Content: ")" }])
+            if (csharpNode.Children is [IntermediateToken { Content: "(" }, _, IntermediateToken { Content: ")" }])
             {
-                cSharpNode.Children.RemoveAt(2);
-                cSharpNode.Children.RemoveAt(0);
+                csharpNode.Children.RemoveAt(2);
+                csharpNode.Children.RemoveAt(0);
             }
             else
             {
@@ -90,9 +101,7 @@ internal class ComponentComplexAttributeContentPass : ComponentIntermediateNodeP
 
         if (issueDiagnostic)
         {
-            node.AddDiagnostic(ComponentDiagnosticFactory.Create_UnsupportedComplexContent(
-                node,
-                attributeName));
+            node.AddDiagnostic(ComponentDiagnosticFactory.Create_UnsupportedComplexContent(node, attributeName));
         }
     }
 }

@@ -73,7 +73,11 @@ public class PreallocatedAttributeTargetExtensionTest
         var extension = new PreallocatedAttributeTargetExtension();
         using var context = TestCodeRenderingContext.CreateRuntime();
 
-        var tagHelperNode = new TagHelperIntermediateNode();
+        var tagHelperNode = new TagHelperIntermediateNode()
+        {
+            TagName = "test",
+        };
+
         var node = new PreallocatedTagHelperHtmlAttributeIntermediateNode()
         {
             VariableName = "_tagHelper1"
@@ -138,7 +142,11 @@ public class PreallocatedAttributeTargetExtensionTest
 
         var descriptor = builder.Build();
 
-        var tagHelperNode = new TagHelperIntermediateNode();
+        var tagHelperNode = new TagHelperIntermediateNode()
+        {
+            TagName = "test",
+        };
+
         var node = new PreallocatedTagHelperPropertyIntermediateNode()
         {
             AttributeName = descriptor.Name,
@@ -182,7 +190,11 @@ __tagHelperExecutionContext.AddTagHelperAttribute(_tagHelper1);
 
         var descriptor = builder.Build();
 
-        var tagHelperNode = new TagHelperIntermediateNode();
+        var tagHelperNode = new TagHelperIntermediateNode()
+        {
+            TagName = "test",
+        };
+
         var node = new PreallocatedTagHelperPropertyIntermediateNode()
         {
             AttributeName = "pre-Foo",
@@ -233,7 +245,11 @@ __tagHelperExecutionContext.AddTagHelperAttribute(_tagHelper1);
         var boundAttribute = builder.Build();
         var tagHelper = tagHelperBuilder.Build();
 
-        var tagHelperNode = new TagHelperIntermediateNode();
+        var tagHelperNode = new TagHelperIntermediateNode()
+        {
+            TagName = "test",
+        };
+
         var node1 = new PreallocatedTagHelperPropertyIntermediateNode()
         {
             AttributeName = "pre-Bar",

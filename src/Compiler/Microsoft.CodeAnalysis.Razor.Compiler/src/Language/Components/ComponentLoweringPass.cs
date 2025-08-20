@@ -38,7 +38,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
         foreach (var reference in references)
         {
             var node = reference.Node;
-            if (node.TagHelpers.Any(t => t.IsChildContentTagHelper))
+            if (node.TagHelpers.Any(static t => t.IsChildContentTagHelper))
             {
                 // This is a child content tag helper. This will be rewritten when we visit its parent.
                 continue;
@@ -62,7 +62,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
 
             if (count == 1)
             {
-                reference.Replace(RewriteAsComponent(node, node.TagHelpers.Single(n => n.IsComponentTagHelper)));
+                reference.Replace(RewriteAsComponent(node, node.TagHelpers.Single(static n => n.IsComponentTagHelper)));
             }
             else if (count > 1)
             {
@@ -89,9 +89,8 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
         {
             TagHelperDescriptor candidate = null;
             List<TagHelperDescriptor> matched = null;
-            for (var i = 0; i < node.TagHelpers.Count; i++)
+            foreach (var tagHelper in node.TagHelpers)
             {
-                var tagHelper = node.TagHelpers[i];
                 if (!tagHelper.IsComponentTagHelper)
                 {
                     continue;
@@ -303,7 +302,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
             //    which is always allowed.
             // 5. Each 'child content' element will generate its own lambda, and be assigned to the property
             //    that matches the element name.
-            if (!node.Children.OfType<TagHelperIntermediateNode>().Any(t => t.TagHelpers.Any(th => th.IsChildContentTagHelper)))
+            if (!node.Children.OfType<TagHelperIntermediateNode>().Any(static t => t.TagHelpers.Any(static th => th.IsChildContentTagHelper)))
             {
                 // This node has implicit child content. It may or may not have an attribute that matches.
                 var attribute = _component.Component.BoundAttributes
@@ -326,7 +325,7 @@ internal class ComponentLoweringPass : ComponentIntermediateNodePassBase, IRazor
                 }
 
                 if (child is TagHelperIntermediateNode tagHelperNode &&
-                    tagHelperNode.TagHelpers.Any(th => th.IsChildContentTagHelper))
+                    tagHelperNode.TagHelpers.Any(static th => th.IsChildContentTagHelper))
                 {
                     // This is a child content element
                     var attribute = _component.Component.BoundAttributes

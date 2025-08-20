@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Xunit;
 
@@ -66,12 +67,18 @@ public class GenericTypeNameRewriterTest
         """)]
     public void GenericTypeNameRewriter_CanReplaceTypeParametersWithTypeArguments(string original, string expected)
     {
+        var tagHelper = TagHelperDescriptorBuilder.Create("Test", "TestAssembly")
+            .BoundAttributeDescriptor(builder => builder.Name("Test").PropertyName("Test"))
+            .Build();
+
+        var attribute = tagHelper.BoundAttributes[0];
+
         // Arrange
         var visitor = new GenericTypeNameRewriter(new Dictionary<string, ComponentTypeArgumentIntermediateNode>()
         {
-            { "TItem1", new ComponentTypeArgumentIntermediateNode(new() { Children = { IntermediateNodeFactory.CSharpToken("Type1") } })},
-            { "TItem2", new ComponentTypeArgumentIntermediateNode(new() { Children = { IntermediateNodeFactory.CSharpToken("Type2") } })},
-            { "TItem3", new ComponentTypeArgumentIntermediateNode(new() { Children = { IntermediateNodeFactory.CSharpToken(null!) } })},
+            { "TItem1", new ComponentTypeArgumentIntermediateNode(new() { AttributeName = "", BoundAttribute = attribute, Children = { IntermediateNodeFactory.CSharpToken("Type1") } })},
+            { "TItem2", new ComponentTypeArgumentIntermediateNode(new() { AttributeName = "", BoundAttribute = attribute, Children = { IntermediateNodeFactory.CSharpToken("Type2") } })},
+            { "TItem3", new ComponentTypeArgumentIntermediateNode(new() { AttributeName = "", BoundAttribute = attribute, Children = { IntermediateNodeFactory.CSharpToken(null!) } })},
         });
 
         // Act

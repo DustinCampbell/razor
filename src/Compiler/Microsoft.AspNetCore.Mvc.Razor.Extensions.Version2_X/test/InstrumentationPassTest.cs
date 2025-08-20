@@ -185,6 +185,12 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
     [Fact]
     public void InstrumentationPass_SkipsCSharpExpression_InsideTagHelperProperty()
     {
+        var tagHelper = TagHelperDescriptorBuilder.Create("Test", "TestAssembly")
+            .BoundAttributeDescriptor(builder => builder.Name("Test").PropertyName("Test"))
+            .Build();
+
+        var attribute = tagHelper.BoundAttributes[0];
+
         // Arrange
         var codeDocument = ProjectEngine.CreateEmptyCodeDocument();
         var documentNode = new DocumentIntermediateNode() { Options = codeDocument.CodeGenerationOptions };
@@ -196,7 +202,11 @@ public class InstrumentationPassTest : RazorProjectEngineTestBase
             TagName = "test",
         });
 
-        builder.Push(new TagHelperPropertyIntermediateNode());
+        builder.Push(new TagHelperPropertyIntermediateNode()
+        {
+            AttributeName = "TestAttribute",
+            BoundAttribute = attribute,
+        });
 
         builder.Push(new CSharpExpressionIntermediateNode()
         {

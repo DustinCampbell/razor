@@ -32,6 +32,21 @@
         <target state="translated">ImmutableArray&lt;T&gt; está sendo definido como IReadOnlyList&lt;T&gt;</target>
         <note />
       </trans-unit>
+      <trans-unit id="InterpolatedStringToContentDescription">
+        <source>It is inefficient to implicitly convert an interpolated string to Content. Instead, create a new Content and pass the interpolated string to the constructor.</source>
+        <target state="new">It is inefficient to implicitly convert an interpolated string to Content. Instead, create a new Content and pass the interpolated string to the constructor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InterpolatedStringToContentMessage">
+        <source>It is inefficient to implicitly convert an interpolated string to Content. Instead, create a new Content and pass the interpolated string to the constructor.</source>
+        <target state="new">It is inefficient to implicitly convert an interpolated string to Content. Instead, create a new Content and pass the interpolated string to the constructor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InterpolatedStringToContentTitle">
+        <source>Avoid implicitly converting an interpolated string to Content</source>
+        <target state="new">Avoid implicitly converting an interpolated string to Content</target>
+        <note />
+      </trans-unit>
       <trans-unit id="PooledArrayBuilderAsRefDescription">
         <source>Instance of PooledArrayBuilder&lt;T&gt;.AsRef() must be a 'using' variable.</source>
         <target state="translated">A instância de PooledArrayBuilder&lt;T&gt;.AsRef() deve ser uma variável 'usando'.</target>

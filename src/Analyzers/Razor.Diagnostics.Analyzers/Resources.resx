@@ -147,4 +147,13 @@
   <data name="ImmutableArrayBoxingMessage" xml:space="preserve">
     <value>Call to '{0}' on ImmutableArray&lt;T&gt; causes boxing. Consider using the ImmutableArray&lt;T&gt; extension method instead.</value>
   </data>
+  <data name="InterpolatedStringToContentDescription" xml:space="preserve">
+    <value>It is inefficient to implicitly convert an interpolated string to Content. Instead, create a new Content and pass the interpolated string to the constructor.</value>
+  </data>
+  <data name="InterpolatedStringToContentMessage" xml:space="preserve">
+    <value>It is inefficient to implicitly convert an interpolated string to Content. Instead, create a new Content and pass the interpolated string to the constructor.</value>
+  </data>
+  <data name="InterpolatedStringToContentTitle" xml:space="preserve">
+    <value>Avoid implicitly converting an interpolated string to Content</value>
+  </data>
 </root>

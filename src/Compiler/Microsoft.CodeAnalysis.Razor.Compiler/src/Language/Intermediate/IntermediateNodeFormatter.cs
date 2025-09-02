@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 namespace Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -36,8 +37,8 @@ public sealed class IntermediateNodeFormatter(
     private readonly FormatterMode Mode = mode;
     private readonly bool _includeSource = includeSource;
 
-    private readonly Dictionary<string, string> _properties = new(StringComparer.Ordinal);
-    private string? _content;
+    private readonly Dictionary<string, Content> _properties = new(StringComparer.Ordinal);
+    private Content _content;
 
     private static string GetNodeShortName(IntermediateNode node)
     {
@@ -78,19 +79,19 @@ public sealed class IntermediateNodeFormatter(
         _builder.Append('"');
     }
 
-    public void WriteContent(string? content)
+    public void WriteContent(Content content)
     {
-        if (content != null)
+        if (!content.IsEmpty)
         {
             _content = content;
         }
     }
 
-    public void WriteProperty(string key, string? value)
+    public void WriteProperty(string key, Content value)
     {
         Debug.Assert(key != null);
 
-        if (value != null)
+        if (!value.IsEmpty)
         {
             _properties.Add(key, value);
         }
@@ -168,37 +169,42 @@ public sealed class IntermediateNodeFormatter(
         _builder.AppendLine();
     }
 
-    private void WriteEscaped(string content)
+    private void WriteEscaped(Content content)
     {
-        var startIndex = 0;
-        int charToEscapeIndex;
-
-        while ((charToEscapeIndex = content.IndexOfAny(s_charsToEscape, startIndex)) >= 0)
+        foreach (var part in content.AllParts)
         {
-            if (startIndex < charToEscapeIndex)
+            var partText = part.ToString();
+
+            var startIndex = 0;
+            int charToEscapeIndex;
+
+            while ((charToEscapeIndex = partText.IndexOfAny(s_charsToEscape, startIndex)) >= 0)
             {
-                _builder.Append(content, startIndex, charToEscapeIndex - startIndex);
+                if (startIndex < charToEscapeIndex)
+                {
+                    _builder.Append(partText, startIndex, charToEscapeIndex - startIndex);
+                }
+
+                switch (partText[charToEscapeIndex])
+                {
+                    case '\r':
+                        _builder.Append("\\r");
+                        break;
+                    case '\n':
+                        _builder.Append("\\n");
+                        break;
+                    case '\t':
+                        _builder.Append("\\t");
+                        break;
+                }
+
+                startIndex = charToEscapeIndex + 1;
             }
 
-            switch (content[charToEscapeIndex])
+            if (startIndex < partText.Length)
             {
-                case '\r':
-                    _builder.Append("\\r");
-                    break;
-                case '\n':
-                    _builder.Append("\\n");
-                    break;
-                case '\t':
-                    _builder.Append("\\t");
-                    break;
+                _builder.Append(partText, startIndex, content.Length - startIndex);
             }
-
-            startIndex = charToEscapeIndex + 1;
-        }
-
-        if (startIndex < content.Length)
-        {
-            _builder.Append(content, startIndex, content.Length - startIndex);
         }
     }
 

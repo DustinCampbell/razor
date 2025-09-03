@@ -20,6 +20,19 @@ internal readonly struct BuilderVariableName(int index) : IWriteableValue
         _ => ComponentsApi.RenderTreeBuilder.BuilderParameter.Length + Index.CountDigits()
     };
 
+    public void AppendTo(ref ContentBuilder builder)
+    {
+        if (Index == 1)
+        {
+            builder.Append(ComponentsApi.RenderTreeBuilder.BuilderParameter);
+        }
+        else
+        {
+            builder.Append(ComponentsApi.RenderTreeBuilder.BuilderParameter);
+            builder.AppendIntegerLiteral(Index);
+        }
+    }
+
     public void WriteTo(CodeWriter writer)
     {
         if (Index == 1)

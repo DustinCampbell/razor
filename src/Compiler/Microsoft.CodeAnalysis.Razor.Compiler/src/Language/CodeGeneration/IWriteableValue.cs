@@ -4,9 +4,10 @@
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
 /// <summary>
-///  A type that can write itself to a <see cref="CodeWriter"/>.
+///  A type that can write itself to a <see cref="ContentBuilder"/> or <see cref="CodeWriter"/>.
 /// </summary>
 internal interface IWriteableValue
 {
+    void AppendTo(ref ContentBuilder builder);
     void WriteTo(CodeWriter writer);
 }

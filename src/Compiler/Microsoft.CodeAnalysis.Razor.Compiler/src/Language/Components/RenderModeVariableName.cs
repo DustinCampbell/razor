@@ -14,6 +14,21 @@ internal readonly struct RenderModeVariableName(int index, int builderIndex) : I
     public int Index { get; } = index;
     public int BuilderIndex { get; } = builderIndex;
 
+    public void AppendTo(ref ContentBuilder builder)
+    {
+        if (BuilderIndex == 1 && Index == 0)
+        {
+            builder.Append(ComponentsApi.RenderTreeBuilder.RenderModeVariableName);
+        }
+        else
+        {
+            builder.Append(ComponentsApi.RenderTreeBuilder.RenderModeVariableName);
+            builder.AppendIntegerLiteral(BuilderIndex);
+            builder.Append("_");
+            builder.AppendIntegerLiteral(Index);
+        }
+    }
+
     public void WriteTo(CodeWriter writer)
     {
         if (BuilderIndex == 1 && Index == 0)

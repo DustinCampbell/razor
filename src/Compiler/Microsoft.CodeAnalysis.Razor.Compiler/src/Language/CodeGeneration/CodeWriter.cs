@@ -224,6 +224,20 @@ public sealed partial class CodeWriter : IDisposable
         return new string(' ', size).AsMemory();
     }
 
+    public CodeWriter Write(Content value)
+    {
+        value.WriteTo(this);
+
+        return this;
+    }
+
+    public CodeWriter Write(ref ContentInterpolatedStringHandler handler)
+    {
+        handler.WriteAllContentAndClear(this);
+
+        return this;
+    }
+
     public CodeWriter Write(string value)
     {
         ArgHelper.ThrowIfNull(value);
@@ -251,9 +265,6 @@ public sealed partial class CodeWriter : IDisposable
 
         return this;
     }
-
-    public CodeWriter Write([InterpolatedStringHandlerArgument("")] ref WriteInterpolatedStringHandler handler)
-        => this;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private CodeWriter WriteCore(ReadOnlyMemory<char> value, bool allowIndent = true)
@@ -315,6 +326,12 @@ public sealed partial class CodeWriter : IDisposable
     public CodeWriter WriteLine()
         => WriteCore(_newLine.AsMemory(), allowIndent: false);
 
+    public CodeWriter WriteLine(Content value)
+        => Write(value).WriteLine();
+
+    public CodeWriter WriteLine(ref ContentInterpolatedStringHandler handler)
+        => Write(ref handler).WriteLine();
+
     public CodeWriter WriteLine(ReadOnlyMemory<char> value)
         => WriteCore(value).WriteLine();
 
@@ -324,9 +341,6 @@ public sealed partial class CodeWriter : IDisposable
 
         return WriteCore(value.AsMemory()).WriteLine();
     }
-
-    public CodeWriter WriteLine([InterpolatedStringHandlerArgument("")] ref WriteInterpolatedStringHandler handler)
-        => WriteLine();
 
     public SourceText GetText()
     {

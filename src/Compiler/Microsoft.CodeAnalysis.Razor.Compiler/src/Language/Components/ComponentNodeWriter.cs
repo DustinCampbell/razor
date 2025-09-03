@@ -533,49 +533,69 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct SeqName(int index) : IWriteableValue
     {
+        private static readonly ReadOnlyMemory<char> s_seq = "__seq".AsMemory();
+
+        public void AppendTo(ref ContentBuilder builder)
+        {
+            builder.Append(s_seq);
+            builder.AppendIntegerLiteral(index);
+        }
+
         public void WriteTo(CodeWriter writer)
         {
-            writer.Write("__seq");
+            writer.Write(s_seq);
             writer.WriteIntegerLiteral(index);
         }
 
         internal string GetDebuggerDisplay()
-            => $"__seq{index}";
+            => $"{s_seq}{index}";
     }
 
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct ParameterName(int index, bool isSynthetic = false) : IWriteableValue
     {
+        private static readonly ReadOnlyMemory<char> s_syntheticArg = "__syntheticArg".AsMemory();
+        private static readonly ReadOnlyMemory<char> s_arg = "__arg".AsMemory();
+
+        private readonly ReadOnlyMemory<char> _baseName = isSynthetic  ? s_syntheticArg : s_arg;
+
+        public void AppendTo(ref ContentBuilder builder)
+        {
+            builder.Append(_baseName);
+            builder.AppendIntegerLiteral(index);
+        }
+
         public void WriteTo(CodeWriter writer)
         {
-            if (isSynthetic)
-            {
-                writer.Write("__syntheticArg");
-            }
-            else
-            {
-                writer.Write("__arg");
-            }
-
+            writer.Write(_baseName);
             writer.WriteIntegerLiteral(index);
         }
 
         internal string GetDebuggerDisplay()
-            => isSynthetic ? $"__syntheticArg{index}" : $"__arg{index}";
+            => $"{_baseName}{index}";
     }
 
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct TypeInferenceArgName(int depth, ParameterName parameterName) : IWriteableValue
     {
+        private static readonly ReadOnlyMemory<char> s_typeInferenceArg = "__typeInferenceArg_".AsMemory();
+
+        public void AppendTo(ref ContentBuilder builder)
+        {
+            builder.Append(s_typeInferenceArg);
+            builder.AppendIntegerLiteral(depth);
+            builder.Append($"_{parameterName}");
+        }
+
         public void WriteTo(CodeWriter writer)
         {
-            writer.Write("__typeInferenceArg_");
+            writer.Write(s_typeInferenceArg);
             writer.WriteIntegerLiteral(depth);
             writer.Write($"_{parameterName}");
         }
 
         internal string GetDebuggerDisplay()
-            => $"__typeInferenceArg_{depth}_{parameterName.GetDebuggerDisplay()}";
+            => $"{s_typeInferenceArg}{depth}_{parameterName.GetDebuggerDisplay()}";
     }
 
     protected class TypeInferenceMethodParameter

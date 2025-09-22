@@ -41,7 +41,7 @@ internal class ViewComponentTagHelperDescriptorFactory
 
     public ViewComponentTagHelperDescriptorFactory(Compilation compilation)
     {
-        _viewComponentAttributeSymbol = compilation.GetTypeByMetadataName(ViewComponentsApi.ViewComponentAttribute.FullTypeName);
+        _viewComponentAttributeSymbol = compilation.GetAspNetRuntimeTypeByMetadataName(ViewComponentsApi.ViewComponentAttribute.FullTypeName);
         _genericTaskSymbol = compilation.GetTypeByMetadataName(ViewComponentTypes.GenericTask);
         _taskSymbol = compilation.GetTypeByMetadataName(ViewComponentTypes.Task);
         _iDictionarySymbol = compilation.GetTypeByMetadataName(ViewComponentTypes.IDictionary);

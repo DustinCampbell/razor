@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.CodeAnalysis.Razor.Compiler.CSharp;
+namespace Microsoft.CodeAnalysis.Razor;
 
 internal static class ParseOptionsExtensions
 {

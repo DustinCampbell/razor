@@ -17,13 +17,14 @@ public sealed class ViewComponentTagHelperDescriptorProvider : TagHelperDescript
 
         var compilation = context.Compilation;
 
-        var vcAttribute = compilation.GetTypeByMetadataName(ViewComponentsApi.ViewComponentAttribute.FullTypeName);
-        var nonVCAttribute = compilation.GetTypeByMetadataName(ViewComponentsApi.NonViewComponentAttribute.FullTypeName);
-        if (vcAttribute == null || vcAttribute.TypeKind == TypeKind.Error)
+        if (!compilation.TryGetAspNetRuntimeTypeByMetadataName(ViewComponentsApi.ViewComponentAttribute.FullTypeName, out var vcAttribute) ||
+            vcAttribute.TypeKind == TypeKind.Error)
         {
             // Could not find attributes we care about in the compilation. Nothing to do.
             return;
         }
+
+        var nonVCAttribute = compilation.GetAspNetRuntimeTypeByMetadataName(ViewComponentsApi.NonViewComponentAttribute.FullTypeName);
 
         var factory = new ViewComponentTagHelperDescriptorFactory(compilation);
         var collector = new Collector(compilation, factory, vcAttribute, nonVCAttribute);

@@ -18,15 +18,15 @@ internal sealed class SplatTagHelperDescriptorProvider : TagHelperDescriptorProv
 
         var compilation = context.Compilation;
 
-        var renderTreeBuilder = compilation.GetTypeByMetadataName(ComponentsApi.RenderTreeBuilder.FullTypeName);
-        if (renderTreeBuilder == null)
+        if (!compilation.TryGetAspNetRuntimeTypeByMetadataName(ComponentsApi.RenderTreeBuilder.FullTypeName, out var renderTreeBuilder))
         {
             // If we can't find RenderTreeBuilder, then just bail. We won't be able to compile the
             // generated code anyway.
             return;
         }
 
-        if (context.TargetAssembly is { } targetAssembly && !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilder.ContainingAssembly))
+        if (context.TargetAssembly is { } targetAssembly &&
+            !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilder.ContainingAssembly))
         {
             return;
         }

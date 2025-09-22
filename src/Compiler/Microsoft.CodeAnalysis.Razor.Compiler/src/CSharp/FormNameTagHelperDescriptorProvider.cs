@@ -26,16 +26,19 @@ internal sealed class FormNameTagHelperDescriptorProvider() : TagHelperDescripto
 
         var compilation = context.Compilation;
 
-        var renderTreeBuilders = compilation.GetTypesByMetadataName(ComponentsApi.RenderTreeBuilder.FullTypeName)
+        var renderTreeBuilders = compilation.GetAspNetRuntimeTypesByMetadataName(ComponentsApi.RenderTreeBuilder.FullTypeName)
             .Where(static t => t.DeclaredAccessibility == Accessibility.Public &&
                 t.GetMembers(ComponentsApi.RenderTreeBuilder.AddNamedEvent).Any(static m => m.DeclaredAccessibility == Accessibility.Public))
-            .Take(2).ToArray();
+            .Take(2)
+            .ToArray();
+
         if (renderTreeBuilders is not [var renderTreeBuilder])
         {
             return;
         }
 
-        if (targetAssembly is not null && !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilder.ContainingAssembly))
+        if (targetAssembly is not null &&
+            !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilder.ContainingAssembly))
         {
             return;
         }

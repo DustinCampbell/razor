@@ -19,15 +19,15 @@ internal sealed class RefTagHelperDescriptorProvider() : TagHelperDescriptorProv
 
         var compilation = context.Compilation;
 
-        var elementReference = compilation.GetTypeByMetadataName(ComponentsApi.ElementReference.FullTypeName);
-        if (elementReference == null)
+        if (!compilation.TryGetAspNetRuntimeTypeByMetadataName(ComponentsApi.ElementReference.FullTypeName, out var elementReference))
         {
             // If we can't find ElementRef, then just bail. We won't be able to compile the
             // generated code anyway.
             return;
         }
 
-        if (context.TargetAssembly is { } targetAssembly && !SymbolEqualityComparer.Default.Equals(targetAssembly, elementReference.ContainingAssembly))
+        if (context.TargetAssembly is { } targetAssembly &&
+            !SymbolEqualityComparer.Default.Equals(targetAssembly, elementReference.ContainingAssembly))
         {
             return;
         }

@@ -19,15 +19,15 @@ internal sealed class KeyTagHelperDescriptorProvider() : TagHelperDescriptorProv
 
         var compilation = context.Compilation;
 
-        var renderTreeBuilderType = compilation.GetTypeByMetadataName(ComponentsApi.RenderTreeBuilder.FullTypeName);
-        if (renderTreeBuilderType == null)
+        if (!compilation.TryGetAspNetRuntimeTypeByMetadataName(ComponentsApi.RenderTreeBuilder.FullTypeName, out var renderTreeBuilderType))
         {
             // If we can't find RenderTreeBuilder, then just bail. We won't be able to compile the
             // generated code anyway.
             return;
         }
 
-        if (context.TargetAssembly is { } targetAssembly && !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilderType.ContainingAssembly))
+        if (context.TargetAssembly is { } targetAssembly &&
+            !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilderType.ContainingAssembly))
         {
             return;
         }

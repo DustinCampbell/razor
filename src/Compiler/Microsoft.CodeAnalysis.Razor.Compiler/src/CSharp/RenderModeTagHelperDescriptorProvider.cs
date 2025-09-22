@@ -19,15 +19,15 @@ internal sealed class RenderModeTagHelperDescriptorProvider() : TagHelperDescrip
 
         var compilation = context.Compilation;
 
-        var iComponentRenderMode = compilation.GetTypeByMetadataName(ComponentsApi.IComponentRenderMode.FullTypeName);
-        if (iComponentRenderMode == null)
+        if (!compilation.TryGetAspNetRuntimeTypeByMetadataName(ComponentsApi.IComponentRenderMode.FullTypeName, out var iComponentRenderMode))
         {
             // If we can't find IComponentRenderMode, then just bail. We won't be able to compile the
             // generated code anyway.
             return;
         }
 
-        if (context.TargetAssembly is { } targetAssembly && !SymbolEqualityComparer.Default.Equals(targetAssembly, iComponentRenderMode.ContainingAssembly))
+        if (context.TargetAssembly is { } targetAssembly &&
+            !SymbolEqualityComparer.Default.Equals(targetAssembly, iComponentRenderMode.ContainingAssembly))
         {
             return;
         }

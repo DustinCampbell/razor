@@ -16,8 +16,8 @@ public sealed class DefaultTagHelperDescriptorProvider : TagHelperDescriptorProv
 
         var compilation = context.Compilation;
 
-        var tagHelperTypeSymbol = compilation.GetTypeByMetadataName(TagHelperTypes.ITagHelper);
-        if (tagHelperTypeSymbol == null || tagHelperTypeSymbol.TypeKind == TypeKind.Error)
+        if (!compilation.TryGetAspNetRuntimeTypeByMetadataName(TagHelperTypes.ITagHelper, out var tagHelperTypeSymbol) ||
+            tagHelperTypeSymbol.TypeKind == TypeKind.Error)
         {
             // Could not find attributes we care about in the compilation. Nothing to do.
             return;

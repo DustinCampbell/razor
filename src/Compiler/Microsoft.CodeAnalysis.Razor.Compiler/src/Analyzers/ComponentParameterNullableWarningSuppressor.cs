@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -17,16 +18,16 @@ public sealed class ComponentParameterNullableWarningSuppressor : DiagnosticSupp
 
     //Suppress CS8618: "Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider declaring the {0} as nullable."
     public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [
-            new SuppressionDescriptor(AnalyzerIDs.ComponentParameterNullableWarningSuppressionId, "CS8618", Description)
-        ];
+        new SuppressionDescriptor(AnalyzerIDs.ComponentParameterNullableWarningSuppressionId, "CS8618", Description)
+    ];
 
     public override void ReportSuppressions(SuppressionAnalysisContext context)
     {
-        var editorRequiredSymbol = context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Components.EditorRequiredAttribute");
-        var parameterSymbol = context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Components.ParameterAttribute");
-        var componentSymbol = context.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Components.IComponent");
+        var compilation = context.Compilation;
 
-        if (parameterSymbol is null || editorRequiredSymbol is null || componentSymbol is null)
+        if (!compilation.TryGetAspNetRuntimeTypeByMetadataName("Microsoft.AspNetCore.Components.ParameterAttribute", out var parameterSymbol) ||
+            !compilation.TryGetAspNetRuntimeTypeByMetadataName("Microsoft.AspNetCore.Components.EditorRequiredAttribute", out var editorRequiredSymbol) ||
+            !compilation.TryGetAspNetRuntimeTypeByMetadataName("Microsoft.AspNetCore.Components.IComponent", out var componentSymbol))
         {
             return;
         }

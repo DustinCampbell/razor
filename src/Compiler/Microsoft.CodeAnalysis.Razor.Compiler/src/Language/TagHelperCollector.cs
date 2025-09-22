@@ -2,26 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-public abstract partial class TagHelperCollector<T>
+public abstract partial class TagHelperCollector<T>(Compilation compilation, ISymbol? targetSymbol)
     where T : TagHelperCollector<T>
 {
-    // This type is generic to ensure that each descendent gets its own instance of this field.
-    private static readonly ConditionalWeakTable<IAssemblySymbol, Cache> s_perAssemblyCaches = new();
-
-    private readonly Compilation _compilation;
-    private readonly ISymbol? _targetSymbol;
-
-    protected TagHelperCollector(Compilation compilation, ISymbol? targetSymbol)
-    {
-        _compilation = compilation;
-        _targetSymbol = targetSymbol;
-    }
+    private readonly Compilation _compilation = compilation;
+    private readonly ISymbol? _targetSymbol = targetSymbol;
 
     protected abstract void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results);
 
@@ -37,37 +28,48 @@ public abstract partial class TagHelperCollector<T>
 
             foreach (var reference in _compilation.References)
             {
-                if (_compilation.GetAssemblyOrModuleSymbol(reference) is IAssemblySymbol assembly)
+                if (_compilation.GetAssemblyOrModuleSymbol(reference) is IAssemblySymbol referencedAssembly)
                 {
-                    // Check to see if we already have tag helpers cached for this assembly
-                    // and use the cached versions if we do. Roslyn shares PE assembly symbols
-                    // across compilations, so this ensures that we don't produce new tag helpers
-                    // for the same assemblies over and over again.
-
-                    var assemblySymbolData = SymbolCache.GetAssemblySymbolData(assembly);
-                    if (!assemblySymbolData.MightContainTagHelpers)
+                    if (TryCollectTagHelpersFromReference(context, referencedAssembly, out var tagHelpers))
                     {
-                        continue;
-                    }
-
-                    var includeDocumentation = context.IncludeDocumentation;
-                    var excludeHidden = context.ExcludeHidden;
-
-                    var cache = s_perAssemblyCaches.GetValue(assembly, static assembly => new Cache());
-                    if (!cache.TryGet(includeDocumentation, excludeHidden, out var tagHelpers))
-                    {
-                        using var _ = ListPool<TagHelperDescriptor>.GetPooledObject(out var referenceTagHelpers);
-                        Collect(assembly.GlobalNamespace, referenceTagHelpers);
-
-                        tagHelpers = cache.Add(referenceTagHelpers.ToArrayOrEmpty(), includeDocumentation, excludeHidden);
-                    }
-
-                    foreach (var tagHelper in tagHelpers)
-                    {
-                        context.Results.Add(tagHelper);
+                        foreach (var tagHelper in tagHelpers)
+                        {
+                            context.Results.Add(tagHelper);
+                        }
                     }
                 }
             }
         }
+    }
+
+    private bool TryCollectTagHelpersFromReference(
+        TagHelperDescriptorProviderContext context,
+        IAssemblySymbol referencedAssembly,
+        [NotNullWhen(true)] out TagHelperDescriptor[]? result)
+    {
+        // Check to see if we already have tag helpers cached for this assembly
+        // and use the cached versions if we do. Roslyn shares PE assembly symbols
+        // across compilations, so this ensures that we don't produce new tag helpers
+        // for the same assemblies over and over again.
+
+        var assemblySymbolData = SymbolCache.GetAssemblySymbolData(referencedAssembly);
+        if (!assemblySymbolData.MightContainTagHelpers)
+        {
+            result = null;
+            return false;
+        }
+
+        var includeDocumentation = context.IncludeDocumentation;
+        var excludeHidden = context.ExcludeHidden;
+
+        result = assemblySymbolData.GetOrAddTagHelpers(typeof(T), includeDocumentation, excludeHidden, assembly =>
+        {
+            using var _ = ListPool<TagHelperDescriptor>.GetPooledObject(out var referenceTagHelpers);
+            Collect(assembly.GlobalNamespace, referenceTagHelpers);
+
+            return referenceTagHelpers.ToArrayOrEmpty();
+        });
+
+        return result.Length > 0;
     }
 }

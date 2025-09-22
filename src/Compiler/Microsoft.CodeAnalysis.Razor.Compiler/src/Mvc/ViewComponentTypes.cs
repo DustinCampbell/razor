@@ -1,21 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions;
 
 internal static class ViewComponentTypes
 {
-    public const string Assembly = "Microsoft.AspNetCore.Mvc.ViewFeatures";
-
-    public static readonly Version AssemblyVersion = new(1, 1, 0, 0);
-
     public const string ViewComponentSuffix = "ViewComponent";
-
-    public const string ViewComponentAttribute = "Microsoft.AspNetCore.Mvc.ViewComponentAttribute";
-
-    public const string NonViewComponentAttribute = "Microsoft.AspNetCore.Mvc.NonViewComponentAttribute";
 
     public const string GenericTask = "System.Threading.Tasks.Task`1";
 

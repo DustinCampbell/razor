@@ -17,8 +17,8 @@ public sealed class ViewComponentTagHelperDescriptorProvider : TagHelperDescript
 
         var compilation = context.Compilation;
 
-        var vcAttribute = compilation.GetTypeByMetadataName(ViewComponentTypes.ViewComponentAttribute);
-        var nonVCAttribute = compilation.GetTypeByMetadataName(ViewComponentTypes.NonViewComponentAttribute);
+        var vcAttribute = compilation.GetTypeByMetadataName(ViewComponentsApi.ViewComponentAttribute.FullTypeName);
+        var nonVCAttribute = compilation.GetTypeByMetadataName(ViewComponentsApi.NonViewComponentAttribute.FullTypeName);
         if (vcAttribute == null || vcAttribute.TypeKind == TypeKind.Error)
         {
             // Could not find attributes we care about in the compilation. Nothing to do.

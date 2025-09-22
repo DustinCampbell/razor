@@ -5,6 +5,20 @@ namespace Microsoft.AspNetCore.Mvc.Razor.Extensions;
 
 internal static class ViewComponentsApi
 {
+    private const string ViewFeaturesAssemblyName = "Microsoft.AspNetCore.Mvc.ViewFeatures";
+
+    public static class ViewComponentAttribute
+    {
+        public const string AssemblyName = ViewFeaturesAssemblyName;
+        public const string FullTypeName = "Microsoft.AspNetCore.Mvc.ViewComponentAttribute";
+    }
+
+    public static class NonViewComponentAttribute
+    {
+        public const string AssemblyName = ViewFeaturesAssemblyName;
+        public const string FullTypeName = "Microsoft.AspNetCore.Mvc.NonViewComponentAttribute";
+    }
+
     public static class HtmlAttributeNotBoundAttribute
     {
         public const string FullTypeName = "Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeNotBoundAttribute";

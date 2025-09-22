@@ -36,12 +36,17 @@ public sealed class DefaultTagHelperDescriptorProvider : TagHelperDescriptorProv
         private readonly DefaultTagHelperDescriptorFactory _factory = factory;
         private readonly INamedTypeSymbol _tagHelperTypeSymbol = tagHelperTypeSymbol;
 
+        private bool IsTagHelper(INamedTypeSymbol symbol)
+            => symbol.TypeKind != TypeKind.Error &&
+               symbol.DeclaredAccessibility == Accessibility.Public &&
+               !symbol.IsAbstract &&
+               !symbol.IsGenericType &&
+               symbol.AllInterfaces.Contains(_tagHelperTypeSymbol);
+
         protected override void Collect(IAssemblySymbol assemblySymbol, ICollection<TagHelperDescriptor> results)
         {
-            using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
-            var visitor = new TagHelperTypeVisitor(_tagHelperTypeSymbol, types);
-
-            visitor.Visit(assemblySymbol);
+            using var types = new PooledArrayBuilder<INamedTypeSymbol>();
+            CollectTypes(assemblySymbol, IsTagHelper, ref types.AsRef());
 
             foreach (var type in types)
             {

@@ -13,7 +13,7 @@ internal partial class SymbolCache
     {
         private sealed class IsViewComponentResult
         {
-            public bool IsViewComponent { get; }
+            public bool Value { get; }
             public INamedTypeSymbol ViewComponentAttribute { get; }
             public INamedTypeSymbol? NonViewComponentAttribute { get; }
 
@@ -22,27 +22,19 @@ internal partial class SymbolCache
                 ViewComponentAttribute = viewComponentAttribute;
                 NonViewComponentAttribute = nonViewComponentAttribute;
 
-                if (symbol.DeclaredAccessibility != Accessibility.Public ||
-                    symbol.IsAbstract ||
-                    symbol.IsGenericType ||
-                    AttributeIsDefined(symbol, nonViewComponentAttribute))
-                {
-                    IsViewComponent = false;
-                }
-                else
-                {
-                    IsViewComponent = symbol.Name.EndsWith(ViewComponentTypes.ViewComponentSuffix, StringComparison.Ordinal) ||
-                        AttributeIsDefined(symbol, viewComponentAttribute);
-                }
+                Value = symbol.IsViableType() &&
+                        !IsAttributeDefined(symbol, nonViewComponentAttribute) &&
+                        (HasViewComponentSuffix(symbol) || IsAttributeDefined(symbol, viewComponentAttribute));
             }
+
+            private static bool HasViewComponentSuffix(INamedTypeSymbol symbol)
+                => symbol.Name.EndsWith(ViewComponentTypes.ViewComponentSuffix, StringComparison.Ordinal);
 
             public bool IsMatchingCache(INamedTypeSymbol viewComponentAttribute, INamedTypeSymbol? nonViewComponentAttribute)
-            {
-                return SymbolEqualityComparer.Default.Equals(ViewComponentAttribute, viewComponentAttribute)
-                    && SymbolEqualityComparer.Default.Equals(NonViewComponentAttribute, nonViewComponentAttribute);
-            }
+                => SymbolEqualityComparer.Default.Equals(ViewComponentAttribute, viewComponentAttribute) &&
+                   SymbolEqualityComparer.Default.Equals(NonViewComponentAttribute, nonViewComponentAttribute);
 
-            private static bool AttributeIsDefined(INamedTypeSymbol type, INamedTypeSymbol? queryAttribute)
+            private static bool IsAttributeDefined(INamedTypeSymbol type, INamedTypeSymbol? queryAttribute)
             {
                 if (queryAttribute == null)
                 {

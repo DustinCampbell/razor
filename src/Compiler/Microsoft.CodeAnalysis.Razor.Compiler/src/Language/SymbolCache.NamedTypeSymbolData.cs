@@ -22,7 +22,7 @@ internal partial class SymbolCache
                 _isViewComponentResult = isViewComponentResult;
             }
 
-            return isViewComponentResult.IsViewComponent;
+            return isViewComponentResult.Value;
         }
     }
 }

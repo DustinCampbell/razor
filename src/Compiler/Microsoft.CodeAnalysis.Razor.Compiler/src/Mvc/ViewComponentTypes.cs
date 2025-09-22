@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 
 namespace Microsoft.AspNetCore.Mvc.Razor.Extensions;
@@ -11,7 +9,7 @@ internal static class ViewComponentTypes
 {
     public const string Assembly = "Microsoft.AspNetCore.Mvc.ViewFeatures";
 
-    public static readonly Version AssemblyVersion = new Version(1, 1, 0, 0);
+    public static readonly Version AssemblyVersion = new(1, 1, 0, 0);
 
     public const string ViewComponentSuffix = "ViewComponent";
 

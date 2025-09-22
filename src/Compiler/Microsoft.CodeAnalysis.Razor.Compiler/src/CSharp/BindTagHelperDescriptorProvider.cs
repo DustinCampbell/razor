@@ -217,12 +217,14 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
         Compilation compilation, INamedTypeSymbol bindElementAttribute, INamedTypeSymbol bindInputElementAttribute)
         : TagHelperCollector<Collector>(compilation, targetAssembly: null)
     {
+        private static bool IsBindAttributesType(INamedTypeSymbol symbol)
+            => symbol.DeclaredAccessibility == Accessibility.Public &&
+               symbol.Name == "BindAttributes";
+
         protected override void Collect(IAssemblySymbol assemblySymbol, ICollection<TagHelperDescriptor> results)
         {
-            using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
-            var visitor = new BindElementDataVisitor(types);
-
-            visitor.Visit(assemblySymbol);
+            using var types = new PooledArrayBuilder<INamedTypeSymbol>();
+            CollectTypes(assemblySymbol, IsBindAttributesType, ref types.AsRef());
 
             foreach (var type in types)
             {
@@ -667,33 +669,6 @@ internal sealed class BindTagHelperDescriptorProvider() : TagHelperDescriptorPro
                 builder.SetMetadata(metadata.Build());
 
                 results.Add(builder.Build());
-            }
-        }
-
-        private class BindElementDataVisitor(List<INamedTypeSymbol> results) : SymbolVisitor
-        {
-            private readonly List<INamedTypeSymbol> _results = results;
-
-            public override void VisitNamedType(INamedTypeSymbol symbol)
-            {
-                if (symbol.DeclaredAccessibility == Accessibility.Public &&
-                    symbol.Name == "BindAttributes")
-                {
-                    _results.Add(symbol);
-                }
-            }
-
-            public override void VisitNamespace(INamespaceSymbol symbol)
-            {
-                foreach (var member in symbol.GetMembers())
-                {
-                    Visit(member);
-                }
-            }
-
-            public override void VisitAssembly(IAssemblySymbol symbol)
-            {
-                Visit(symbol.GlobalNamespace);
             }
         }
     }

@@ -42,12 +42,13 @@ public sealed class ViewComponentTagHelperDescriptorProvider : TagHelperDescript
         private readonly INamedTypeSymbol _vcAttribute = vcAttribute;
         private readonly INamedTypeSymbol? _nonVCAttribute = nonVCAttribute;
 
+        private bool IsViewComponentType(INamedTypeSymbol symbol)
+            => symbol.IsViewComponent(_vcAttribute, _nonVCAttribute);
+
         protected override void Collect(IAssemblySymbol assemblySymbol, ICollection<TagHelperDescriptor> results)
         {
-            using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
-            var visitor = new ViewComponentTypeVisitor(_vcAttribute, _nonVCAttribute, types);
-
-            visitor.Visit(assemblySymbol);
+            using var types = new PooledArrayBuilder<INamedTypeSymbol>();
+            CollectTypes(assemblySymbol, IsViewComponentType, includeNestedTypes: true, ref types.AsRef());
 
             foreach (var type in types)
             {

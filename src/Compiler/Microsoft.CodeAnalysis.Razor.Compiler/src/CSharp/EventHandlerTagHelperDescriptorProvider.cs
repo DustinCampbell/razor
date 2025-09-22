@@ -35,12 +35,14 @@ internal sealed class EventHandlerTagHelperDescriptorProvider : TagHelperDescrip
     {
         private readonly INamedTypeSymbol _eventHandlerAttribute = eventHandlerAttribute;
 
+        private static bool IsEventHandlersType(INamedTypeSymbol symbol)
+            => symbol.DeclaredAccessibility == Accessibility.Public &&
+               symbol.Name == "EventHandlers";
+
         protected override void Collect(IAssemblySymbol assemblySymbol, ICollection<TagHelperDescriptor> results)
         {
-            using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
-            var visitor = new EventHandlerDataVisitor(types);
-
-            visitor.Visit(assemblySymbol);
+            using var types = new PooledArrayBuilder<INamedTypeSymbol>();
+            CollectTypes(assemblySymbol, IsEventHandlersType, ref types.AsRef());
 
             foreach (var type in types)
             {
@@ -246,33 +248,6 @@ internal sealed class EventHandlerTagHelperDescriptorProvider : TagHelperDescrip
             });
 
             return builder.Build();
-        }
-
-        private class EventHandlerDataVisitor(List<INamedTypeSymbol> results) : SymbolVisitor
-        {
-            private readonly List<INamedTypeSymbol> _results = results;
-
-            public override void VisitNamedType(INamedTypeSymbol symbol)
-            {
-                if (symbol.DeclaredAccessibility == Accessibility.Public &&
-                    symbol.Name == "EventHandlers")
-                {
-                    _results.Add(symbol);
-                }
-            }
-
-            public override void VisitNamespace(INamespaceSymbol symbol)
-            {
-                foreach (var member in symbol.GetMembers())
-                {
-                    Visit(member);
-                }
-            }
-
-            public override void VisitAssembly(IAssemblySymbol symbol)
-            {
-                Visit(symbol.GlobalNamespace);
-            }
         }
     }
 }

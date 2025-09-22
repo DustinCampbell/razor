@@ -18,8 +18,8 @@ internal sealed class FormNameTagHelperDescriptorProvider() : TagHelperDescripto
     {
         ArgHelper.ThrowIfNull(context);
 
-        var targetSymbol = context.TargetSymbol;
-        if (targetSymbol is not null && targetSymbol.Name != ComponentsApi.AssemblyName)
+        var targetAssembly = context.TargetAssembly;
+        if (targetAssembly is not null && targetAssembly.Name != ComponentsApi.AssemblyName)
         {
             return;
         }
@@ -35,7 +35,7 @@ internal sealed class FormNameTagHelperDescriptorProvider() : TagHelperDescripto
             return;
         }
 
-        if (targetSymbol is not null && !SymbolEqualityComparer.Default.Equals(targetSymbol, renderTreeBuilder.ContainingAssembly))
+        if (targetAssembly is not null && !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilder.ContainingAssembly))
         {
             return;
         }

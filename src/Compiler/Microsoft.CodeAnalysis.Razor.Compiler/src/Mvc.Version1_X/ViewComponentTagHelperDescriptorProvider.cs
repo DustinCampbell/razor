@@ -36,18 +36,18 @@ public sealed class ViewComponentTagHelperDescriptorProvider : TagHelperDescript
         ViewComponentTagHelperDescriptorFactory factory,
         INamedTypeSymbol vcAttribute,
         INamedTypeSymbol? nonVCAttribute)
-        : TagHelperCollector<Collector>(compilation, targetSymbol: null)
+        : TagHelperCollector<Collector>(compilation, targetAssembly: null)
     {
         private readonly ViewComponentTagHelperDescriptorFactory _factory = factory;
         private readonly INamedTypeSymbol _vcAttribute = vcAttribute;
         private readonly INamedTypeSymbol? _nonVCAttribute = nonVCAttribute;
 
-        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results)
+        protected override void Collect(IAssemblySymbol assemblySymbol, ICollection<TagHelperDescriptor> results)
         {
             using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
             var visitor = new ViewComponentTypeVisitor(_vcAttribute, _nonVCAttribute, types);
 
-            visitor.Visit(symbol);
+            visitor.Visit(assemblySymbol);
 
             foreach (var type in types)
             {

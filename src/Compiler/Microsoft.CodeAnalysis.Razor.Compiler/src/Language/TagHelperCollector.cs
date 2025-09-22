@@ -8,23 +8,23 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-public abstract partial class TagHelperCollector<T>(Compilation compilation, ISymbol? targetSymbol)
+public abstract partial class TagHelperCollector<T>(Compilation compilation, IAssemblySymbol? targetAssembly)
     where T : TagHelperCollector<T>
 {
     private readonly Compilation _compilation = compilation;
-    private readonly ISymbol? _targetSymbol = targetSymbol;
+    private readonly IAssemblySymbol? _targetAssembly = targetAssembly;
 
-    protected abstract void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results);
+    protected abstract void Collect(IAssemblySymbol assemblySymbol, ICollection<TagHelperDescriptor> results);
 
     public void Collect(TagHelperDescriptorProviderContext context)
     {
-        if (_targetSymbol is not null)
+        if (_targetAssembly is IAssemblySymbol targetAssembly)
         {
-            Collect(_targetSymbol, context.Results);
+            Collect(targetAssembly, context.Results);
         }
         else
         {
-            Collect(_compilation.Assembly.GlobalNamespace, context.Results);
+            Collect(_compilation.Assembly, context.Results);
 
             foreach (var reference in _compilation.References)
             {
@@ -65,7 +65,7 @@ public abstract partial class TagHelperCollector<T>(Compilation compilation, ISy
         result = assemblySymbolData.GetOrAddTagHelpers(typeof(T), includeDocumentation, excludeHidden, assembly =>
         {
             using var _ = ListPool<TagHelperDescriptor>.GetPooledObject(out var referenceTagHelpers);
-            Collect(assembly.GlobalNamespace, referenceTagHelpers);
+            Collect(assembly, referenceTagHelpers);
 
             return referenceTagHelpers.ToArrayOrEmpty();
         });

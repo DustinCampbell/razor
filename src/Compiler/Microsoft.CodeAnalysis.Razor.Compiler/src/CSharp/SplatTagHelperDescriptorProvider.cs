@@ -26,7 +26,7 @@ internal sealed class SplatTagHelperDescriptorProvider : TagHelperDescriptorProv
             return;
         }
 
-        if (context.TargetSymbol is { } targetSymbol && !SymbolEqualityComparer.Default.Equals(targetSymbol, renderTreeBuilder.ContainingAssembly))
+        if (context.TargetAssembly is { } targetAssembly && !SymbolEqualityComparer.Default.Equals(targetAssembly, renderTreeBuilder.ContainingAssembly))
         {
             return;
         }

@@ -23,25 +23,25 @@ public sealed class DefaultTagHelperDescriptorProvider : TagHelperDescriptorProv
             return;
         }
 
-        var targetSymbol = context.TargetSymbol;
+        var targetAssembly = context.TargetAssembly;
         var factory = new DefaultTagHelperDescriptorFactory(context.IncludeDocumentation, context.ExcludeHidden);
-        var collector = new Collector(compilation, targetSymbol, factory, tagHelperTypeSymbol);
+        var collector = new Collector(compilation, targetAssembly, factory, tagHelperTypeSymbol);
         collector.Collect(context);
     }
 
     private class Collector(
-        Compilation compilation, ISymbol? targetSymbol, DefaultTagHelperDescriptorFactory factory, INamedTypeSymbol tagHelperTypeSymbol)
-        : TagHelperCollector<Collector>(compilation, targetSymbol)
+        Compilation compilation, IAssemblySymbol? targetAssembly, DefaultTagHelperDescriptorFactory factory, INamedTypeSymbol tagHelperTypeSymbol)
+        : TagHelperCollector<Collector>(compilation, targetAssembly)
     {
         private readonly DefaultTagHelperDescriptorFactory _factory = factory;
         private readonly INamedTypeSymbol _tagHelperTypeSymbol = tagHelperTypeSymbol;
 
-        protected override void Collect(ISymbol symbol, ICollection<TagHelperDescriptor> results)
+        protected override void Collect(IAssemblySymbol assemblySymbol, ICollection<TagHelperDescriptor> results)
         {
             using var _ = ListPool<INamedTypeSymbol>.GetPooledObject(out var types);
             var visitor = new TagHelperTypeVisitor(_tagHelperTypeSymbol, types);
 
-            visitor.Visit(symbol);
+            visitor.Visit(assemblySymbol);
 
             foreach (var type in types)
             {

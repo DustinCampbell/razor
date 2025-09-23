@@ -213,9 +213,9 @@ namespace Microsoft.NET.Sdk.Razor.SourceGenerators
 
                     foreach (var reference in compilation.References)
                     {
-                        if (compilation.GetAssemblyOrModuleSymbol(reference) is IAssemblySymbol assembly)
+                        if (compilation.TryGetAssemblySymbol(reference, out var assemblySymbol))
                         {
-                            tagHelperFeature.CollectDescriptors(assembly, results);
+                            tagHelperFeature.CollectDescriptors(assemblySymbol, results);
                         }
                     }
 

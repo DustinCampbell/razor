@@ -63,7 +63,7 @@ public abstract partial class TagHelperCollector<T>(Compilation compilation, IAs
         var includeDocumentation = context.IncludeDocumentation;
         var excludeHidden = context.ExcludeHidden;
 
-        result = assemblySymbolData.GetOrAddTagHelpers(typeof(T), includeDocumentation, excludeHidden, assembly =>
+        result = assemblySymbolData.GetOrComputeTagHelpers(typeof(T), includeDocumentation, excludeHidden, assembly =>
         {
             using var _ = ListPool<TagHelperDescriptor>.GetPooledObject(out var referenceTagHelpers);
             Collect(assembly, referenceTagHelpers);

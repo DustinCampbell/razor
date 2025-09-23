@@ -7,32 +7,31 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-internal partial class SymbolCache
+internal static partial class SymbolCache
 {
     public sealed partial class NamedTypeSymbolData
     {
-        private sealed class IsViewComponentResult
+        private sealed class IsViewComponentValue(
+            INamedTypeSymbol symbol,
+            INamedTypeSymbol viewComponentAttribute,
+            INamedTypeSymbol? nonViewComponentAttribute)
         {
-            public bool Value { get; }
-            public INamedTypeSymbol ViewComponentAttribute { get; }
-            public INamedTypeSymbol? NonViewComponentAttribute { get; }
+            public bool Value { get; } = ComputeValue(symbol, viewComponentAttribute, nonViewComponentAttribute);
 
-            public IsViewComponentResult(INamedTypeSymbol symbol, INamedTypeSymbol viewComponentAttribute, INamedTypeSymbol? nonViewComponentAttribute)
-            {
-                ViewComponentAttribute = viewComponentAttribute;
-                NonViewComponentAttribute = nonViewComponentAttribute;
+            private readonly INamedTypeSymbol _viewComponentAttribute = viewComponentAttribute;
+            private readonly INamedTypeSymbol? _nonViewComponentAttribute = nonViewComponentAttribute;
 
-                Value = symbol.IsViableType() &&
-                        !IsAttributeDefined(symbol, nonViewComponentAttribute) &&
-                        (HasViewComponentSuffix(symbol) || IsAttributeDefined(symbol, viewComponentAttribute));
-            }
+            private static bool ComputeValue(INamedTypeSymbol symbol, INamedTypeSymbol viewComponentAttribute, INamedTypeSymbol? nonViewComponentAttribute)
+                => symbol.IsViableType() &&
+                   !IsAttributeDefined(symbol, nonViewComponentAttribute) &&
+                   (HasViewComponentSuffix(symbol) || IsAttributeDefined(symbol, viewComponentAttribute));
 
             private static bool HasViewComponentSuffix(INamedTypeSymbol symbol)
                 => symbol.Name.EndsWith(ViewComponentTypes.ViewComponentSuffix, StringComparison.Ordinal);
 
-            public bool IsMatchingCache(INamedTypeSymbol viewComponentAttribute, INamedTypeSymbol? nonViewComponentAttribute)
-                => SymbolEqualityComparer.Default.Equals(ViewComponentAttribute, viewComponentAttribute) &&
-                   SymbolEqualityComparer.Default.Equals(NonViewComponentAttribute, nonViewComponentAttribute);
+            public bool HasSameAttributes(INamedTypeSymbol viewComponentAttribute, INamedTypeSymbol? nonViewComponentAttribute)
+                => SymbolEqualityComparer.Default.Equals(_viewComponentAttribute, viewComponentAttribute) &&
+                   SymbolEqualityComparer.Default.Equals(_nonViewComponentAttribute, nonViewComponentAttribute);
 
             private static bool IsAttributeDefined(INamedTypeSymbol type, INamedTypeSymbol? queryAttribute)
             {

@@ -5,24 +5,23 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-internal partial class SymbolCache
+internal static partial class SymbolCache
 {
     public sealed partial class NamedTypeSymbolData(INamedTypeSymbol symbol)
     {
-        private readonly INamedTypeSymbol _symbol = symbol;
-        private IsViewComponentResult? _isViewComponentResult;
+        private IsViewComponentValue? _isViewComponent;
 
         public bool IsViewComponent(INamedTypeSymbol viewComponentAttribute, INamedTypeSymbol? nonViewComponentAttribute)
         {
-            var isViewComponentResult = _isViewComponentResult;
-            if (isViewComponentResult is null
-                || !isViewComponentResult.IsMatchingCache(viewComponentAttribute, nonViewComponentAttribute))
+            var result = _isViewComponent;
+
+            if (result is null || !result.HasSameAttributes(viewComponentAttribute, nonViewComponentAttribute))
             {
-                isViewComponentResult = new IsViewComponentResult(_symbol, viewComponentAttribute, nonViewComponentAttribute);
-                _isViewComponentResult = isViewComponentResult;
+                result = new IsViewComponentValue(symbol, viewComponentAttribute, nonViewComponentAttribute);
+                _isViewComponent = result;
             }
 
-            return isViewComponentResult.Value;
+            return result.Value;
         }
     }
 }

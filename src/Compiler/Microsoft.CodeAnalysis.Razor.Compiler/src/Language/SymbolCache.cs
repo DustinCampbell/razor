@@ -6,34 +6,31 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-internal partial class SymbolCache
+internal static partial class SymbolCache
 {
-    private static readonly ConditionalWeakTable<ISymbol, Entry> s_instance = new();
+    private static readonly ConditionalWeakTable<ISymbol, Entry> s_table = new();
+
+    private static Entry GetCacheEntry(ISymbol symbol)
+        => s_table.GetValue(symbol, static s => new Entry());
 
     public static SymbolData GetSymbolData(ISymbol symbol)
     {
         var entry = GetCacheEntry(symbol);
-        entry.SymbolData ??= new SymbolData(symbol);
 
-        return entry.SymbolData;
+        return InterlockedOperations.Initialize(ref entry.SymbolData, new(symbol));
     }
 
     public static AssemblySymbolData GetAssemblySymbolData(IAssemblySymbol symbol)
     {
         var entry = GetCacheEntry(symbol);
-        entry.AssemblySymbolData ??= new AssemblySymbolData(symbol);
 
-        return entry.AssemblySymbolData;
+        return InterlockedOperations.Initialize(ref entry.AssemblySymbolData, new(symbol));
     }
 
     public static NamedTypeSymbolData GetNamedTypeSymbolData(INamedTypeSymbol symbol)
     {
         var entry = GetCacheEntry(symbol);
-        entry.NamedTypeSymbolData ??= new NamedTypeSymbolData(symbol);
 
-        return entry.NamedTypeSymbolData;
+        return InterlockedOperations.Initialize(ref entry.NamedTypeSymbolData, new(symbol));
     }
-
-    private static Entry GetCacheEntry(ISymbol symbol)
-        => s_instance.GetValue(symbol, static s => new Entry());
 }

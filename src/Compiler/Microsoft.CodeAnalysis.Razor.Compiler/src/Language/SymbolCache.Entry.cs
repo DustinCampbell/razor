@@ -3,12 +3,12 @@
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-internal partial class SymbolCache
+internal static partial class SymbolCache
 {
-    private class Entry
+    private sealed class Entry
     {
-        public SymbolData? SymbolData { get; set; }
-        public NamedTypeSymbolData? NamedTypeSymbolData { get; set; }
-        public AssemblySymbolData? AssemblySymbolData { get; set; }
+        public SymbolData? SymbolData;
+        public NamedTypeSymbolData? NamedTypeSymbolData;
+        public AssemblySymbolData? AssemblySymbolData;
     }
 }

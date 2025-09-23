@@ -5,33 +5,22 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
-internal partial class SymbolCache
+internal static partial class SymbolCache
 {
     public sealed partial class SymbolData(ISymbol symbol)
     {
-        private readonly ISymbol _symbol = symbol;
+        private DisplayStringValues? _displayStrings;
 
-        private ToDisplayStringResult? _toDisplayStringResult;
+        private DisplayStringValues GetDisplayStrings()
+            => _displayStrings ?? InterlockedOperations.Initialize(ref _displayStrings, new DisplayStringValues(symbol));
 
         public string GetDefaultDisplayString()
-        {
-            _toDisplayStringResult ??= new ToDisplayStringResult(_symbol);
-
-            return _toDisplayStringResult.GetDefaultDisplayString();
-        }
+            => GetDisplayStrings().Default;
 
         public string GetFullName()
-        {
-            _toDisplayStringResult ??= new ToDisplayStringResult(_symbol);
-
-            return _toDisplayStringResult.GetFullName();
-        }
+            => GetDisplayStrings().FullName;
 
         public string GetGloballyQualifiedFullName()
-        {
-            _toDisplayStringResult ??= new ToDisplayStringResult(_symbol);
-
-            return _toDisplayStringResult.GetGloballyQualifiedFullName();
-        }
+            => GetDisplayStrings().GloballyQualifiedFullName;
     }
 }

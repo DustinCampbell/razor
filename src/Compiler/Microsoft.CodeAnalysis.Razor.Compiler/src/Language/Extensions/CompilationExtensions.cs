@@ -21,16 +21,25 @@ internal static class CompilationExtensions
                     .Any(static m => m.DeclaredAccessibility == Accessibility.Public));
     }
 
+    public static bool TryGetAssemblySymbol(
+        this Compilation compilation,
+        MetadataReference reference,
+        [NotNullWhen(true)] out IAssemblySymbol? result)
+    {
+        result = compilation.GetAssemblyOrModuleSymbol(reference) as IAssemblySymbol;
+        return result is not null;
+    }
+
     public static INamedTypeSymbol? GetAspNetRuntimeTypeByMetadataName(this Compilation compilation, string fullyQualifiedMetadataName)
-        => compilation.Assembly.GetTypeByMetadataName(fullyQualifiedMetadataName) ??
-           compilation.GetTypeFromReferencedAssemblies(fullyQualifiedMetadataName);
+        => compilation.Assembly.GetCachedTypeByMetadataName(fullyQualifiedMetadataName) ??
+           compilation.GetCachedTypeFromReferencedAssemblies(fullyQualifiedMetadataName);
 
     public static bool TryGetAspNetRuntimeTypeByMetadataName(
         this Compilation compilation,
         string fullyQualifiedMetadataName,
         [NotNullWhen(true)] out INamedTypeSymbol? result)
-        => compilation.Assembly.TryGetTypeByMetadataName(fullyQualifiedMetadataName, out result) ||
-           compilation.TryGetTypeFromReferencedAssemblies(fullyQualifiedMetadataName, out result);
+        => compilation.Assembly.TryGetCachedTypeByMetadataName(fullyQualifiedMetadataName, out result) ||
+           compilation.TryGetCachedTypeFromReferencedAssemblies(fullyQualifiedMetadataName, out result);
 
     public static ImmutableArray<INamedTypeSymbol> GetAspNetRuntimeTypesByMetadataName(
         this Compilation compilation,
@@ -38,7 +47,7 @@ internal static class CompilationExtensions
     {
         using var builder = new PooledArrayBuilder<INamedTypeSymbol>();
 
-        if (compilation.Assembly.TryGetTypeByMetadataName(fullyQualifiedMetadataName, out var candidate))
+        if (compilation.Assembly.TryGetCachedTypeByMetadataName(fullyQualifiedMetadataName, out var candidate))
         {
             builder.Add(candidate);
         }
@@ -46,7 +55,7 @@ internal static class CompilationExtensions
         foreach (var reference in compilation.References)
         {
             if (compilation.TryGetAssemblySymbol(reference, out var assemblySymbol) &&
-                assemblySymbol.TryGetTypeByMetadataName(fullyQualifiedMetadataName, out candidate))
+                assemblySymbol.TryGetCachedTypeByMetadataName(fullyQualifiedMetadataName, out candidate))
             {
                 builder.Add(candidate);
             }
@@ -55,12 +64,12 @@ internal static class CompilationExtensions
         return builder.ToImmutableAndClear();
     }
 
-    private static INamedTypeSymbol? GetTypeFromReferencedAssemblies(this Compilation compilation, string fullyQualifiedMetadataName)
-        => compilation.TryGetTypeFromReferencedAssemblies(fullyQualifiedMetadataName, out var result)
+    private static INamedTypeSymbol? GetCachedTypeFromReferencedAssemblies(this Compilation compilation, string fullyQualifiedMetadataName)
+        => compilation.TryGetCachedTypeFromReferencedAssemblies(fullyQualifiedMetadataName, out var result)
             ? result
             : null;
 
-    private static bool TryGetTypeFromReferencedAssemblies(
+    private static bool TryGetCachedTypeFromReferencedAssemblies(
         this Compilation compilation,
         string fullyQualifiedMetadataName,
         [NotNullWhen(true)] out INamedTypeSymbol? result)
@@ -70,7 +79,7 @@ internal static class CompilationExtensions
         foreach (var reference in compilation.References)
         {
             if (compilation.TryGetAssemblySymbol(reference, out var assemblySymbol) &&
-                assemblySymbol.TryGetTypeByMetadataName(fullyQualifiedMetadataName, out var candidate))
+                assemblySymbol.TryGetCachedTypeByMetadataName(fullyQualifiedMetadataName, out var candidate))
             {
                 if (result is not null)
                 {
@@ -84,24 +93,6 @@ internal static class CompilationExtensions
             }
         }
 
-        return result is not null;
-    }
-
-    private static bool TryGetAssemblySymbol(
-        this Compilation compilation,
-        MetadataReference reference,
-        [NotNullWhen(true)] out IAssemblySymbol? result)
-    {
-        result = compilation.GetAssemblyOrModuleSymbol(reference) as IAssemblySymbol;
-        return result is not null;
-    }
-
-    private static bool TryGetTypeByMetadataName(
-        this IAssemblySymbol assemblySymbol,
-        string fullyQualifiedMetadataName,
-        [NotNullWhen(true)] out INamedTypeSymbol? result)
-    {
-        result = assemblySymbol.GetTypeByMetadataName(fullyQualifiedMetadataName);
         return result is not null;
     }
 }

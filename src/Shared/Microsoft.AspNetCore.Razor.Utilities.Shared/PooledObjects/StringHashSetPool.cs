@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
@@ -15,19 +14,18 @@ namespace Microsoft.AspNetCore.Razor.PooledObjects;
 /// Instances originating from this pool are intended to be short-lived and are suitable
 /// for temporary work. Do not return them as the results of methods or store them in fields.
 /// </remarks>
-internal static partial class StringHashSetPool
+internal class StringHashSetPool : HashSetPool<string>
 {
-    public static readonly ObjectPool<HashSet<string>> Ordinal = HashSetPool<string>.Create(StringComparer.Ordinal);
-    public static readonly ObjectPool<HashSet<string>> OrdinalIgnoreCase = HashSetPool<string>.Create(StringComparer.OrdinalIgnoreCase);
+    public static readonly StringHashSetPool Ordinal = Create(StringComparer.Ordinal);
+    public static readonly StringHashSetPool OrdinalIgnoreCase = Create(StringComparer.OrdinalIgnoreCase);
 
-    public static ObjectPool<HashSet<string>> Create(IEqualityComparer<string> comparer)
-        => HashSetPool<string>.Create(comparer);
+    protected StringHashSetPool(Policy policy, int size)
+        : base(policy, size)
+    {
+    }
 
-    public static PooledObject<HashSet<string>> GetPooledObject()
-        => Ordinal.GetPooledObject();
-
-    public static PooledObject<HashSet<string>> GetPooledObject(out HashSet<string> set)
-        => Ordinal.GetPooledObject(out set);
+    public new static StringHashSetPool Create(IEqualityComparer<string> comparer)
+        => new(new Policy(comparer), size: DefaultPool.DefaultPoolSize);
 
     public static PooledObject<HashSet<string>> GetPooledObject(bool ignoreCase)
         => ignoreCase

@@ -6,19 +6,19 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class StackPool<T>
+internal partial class StackPool<T>
 {
-    private class Policy : IPooledObjectPolicy<Stack<T>>
+    protected class Policy : IPooledObjectPolicy<Stack<T>>
     {
         public static readonly Policy Instance = new();
 
-        private Policy()
+        protected Policy()
         {
         }
 
-        public Stack<T> Create() => new();
+        public virtual Stack<T> Create() => new();
 
-        public bool Return(Stack<T> stack)
+        public virtual bool Return(Stack<T> stack)
         {
             var count = stack.Count;
 

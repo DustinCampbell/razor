@@ -6,22 +6,18 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class HashSetPool<T>
+internal partial class HashSetPool<T>
 {
-    private class Policy : IPooledObjectPolicy<HashSet<T>>
+    protected class Policy(IEqualityComparer<T>? comparer = null) : IPooledObjectPolicy<HashSet<T>>
     {
-        public static readonly Policy Instance = new();
+        public static readonly Policy Default = new();
 
-        private readonly IEqualityComparer<T>? _comparer;
+        public IEqualityComparer<T> Comparer { get; } = comparer ?? EqualityComparer<T>.Default;
 
-        public Policy(IEqualityComparer<T>? comparer = null)
-        {
-            _comparer = comparer;
-        }
+        public virtual HashSet<T> Create()
+            => new(Comparer);
 
-        public HashSet<T> Create() => new(_comparer);
-
-        public bool Return(HashSet<T> set)
+        public virtual bool Return(HashSet<T> set)
         {
             var count = set.Count;
 

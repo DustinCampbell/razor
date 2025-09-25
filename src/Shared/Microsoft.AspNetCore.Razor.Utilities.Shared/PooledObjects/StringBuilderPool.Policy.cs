@@ -6,19 +6,19 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class StringBuilderPool
+internal partial class StringBuilderPool
 {
-    private class Policy : IPooledObjectPolicy<StringBuilder>
+    protected class Policy : IPooledObjectPolicy<StringBuilder>
     {
         public static readonly Policy Instance = new();
 
-        private Policy()
+        protected Policy()
         {
         }
 
-        public StringBuilder Create() => new();
+        public virtual StringBuilder Create() => new();
 
-        public bool Return(StringBuilder builder)
+        public virtual bool Return(StringBuilder builder)
         {
             builder.Clear();
 

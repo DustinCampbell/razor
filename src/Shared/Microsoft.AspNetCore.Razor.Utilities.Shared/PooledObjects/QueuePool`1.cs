@@ -6,9 +6,14 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class QueuePool<T>
+internal partial class QueuePool<T> : DefaultObjectPool<Queue<T>>
 {
-    public static readonly ObjectPool<Queue<T>> Default = DefaultPool.Create(Policy.Instance);
+    public static readonly QueuePool<T> Default = new(Policy.Instance, size: DefaultPool.DefaultPoolSize);
+
+    protected QueuePool(IPooledObjectPolicy<Queue<T>> policy, int size)
+        : base(policy, size)
+    {
+    }
 
     public static PooledObject<Queue<T>> GetPooledObject()
         => Default.GetPooledObject();

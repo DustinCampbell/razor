@@ -80,7 +80,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         private RazorSourceDocument? _source;
         private CancellationToken _cancellationToken;
 
-        private readonly HashSet<TagHelperDescriptor> _matches = [];
+        private HashSet<TagHelperDescriptor>? _matches;
 
         protected bool IsInitialized => _isInitialized;
         protected RazorSourceDocument Source => _source.AssumeNotNull();
@@ -101,7 +101,8 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
             Visit(tree.Root);
         }
 
-        public ImmutableArray<TagHelperDescriptor> GetResults() => [.. _matches];
+        public ImmutableArray<TagHelperDescriptor> GetResults()
+            => _matches is { } matches ? [.. matches] : [];
 
         protected void Initialize(string? filePath, CancellationToken cancellationToken)
         {
@@ -112,17 +113,25 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
 
         public virtual void Reset()
         {
-            _matches.Clear();
+            if (_matches is { } matches)
+            {
+                HashSetPool<TagHelperDescriptor>.Default.Return(matches);
+            }
+
+            _matches = null;
             _filePath = null;
             _source = null;
             _cancellationToken = default;
             _isInitialized = false;
         }
 
+        private HashSet<TagHelperDescriptor> Matches
+            => _matches ??= HashSetPool<TagHelperDescriptor>.Default.Get();
+
         protected void AddMatch(TagHelperDescriptor tagHelper)
         {
             _cancellationToken.ThrowIfCancellationRequested();
-            _matches.Add(tagHelper);
+            Matches.Add(tagHelper);
         }
 
         protected void AddMatches(List<TagHelperDescriptor> tagHelpers)
@@ -131,14 +140,14 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
 
             foreach (var tagHelper in tagHelpers)
             {
-                _matches.Add(tagHelper);
+                Matches.Add(tagHelper);
             }
         }
 
         protected void RemoveMatch(TagHelperDescriptor tagHelper)
         {
             _cancellationToken.ThrowIfCancellationRequested();
-            _matches.Remove(tagHelper);
+            Matches.Remove(tagHelper);
         }
 
         protected void RemoveMatches(List<TagHelperDescriptor> tagHelpers)
@@ -147,7 +156,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
 
             foreach (var tagHelper in tagHelpers)
             {
-                _matches.Remove(tagHelper);
+                Matches.Remove(tagHelper);
             }
         }
 

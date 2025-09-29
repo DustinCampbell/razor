@@ -65,7 +65,11 @@ internal sealed class SourceGeneratorProjectEngine
         return new SourceGeneratorRazorCodeDocument(codeDocument);
     }
 
-    public SourceGeneratorRazorCodeDocument ProcessTagHelpers(SourceGeneratorRazorCodeDocument sgDocument, IReadOnlyList<TagHelperDescriptor> tagHelpers, bool checkForIdempotency, CancellationToken cancellationToken)
+    public SourceGeneratorRazorCodeDocument ProcessTagHelpers(
+        SourceGeneratorRazorCodeDocument sgDocument,
+        TagHelperCollection tagHelpers,
+        bool checkForIdempotency,
+        CancellationToken cancellationToken)
     {
         Debug.Assert(sgDocument.CodeDocument.GetPreTagHelperSyntaxTree() is not null);
 
@@ -75,7 +79,7 @@ internal sealed class SourceGeneratorProjectEngine
         if (checkForIdempotency && codeDocument.TryGetTagHelpers(out var previousTagHelpers))
         {
             // compare the tag helpers with the ones the document last used
-            if (Enumerable.SequenceEqual(tagHelpers, previousTagHelpers))
+            if (tagHelpers.Equals(previousTagHelpers))
             {
                 // tag helpers are the same, nothing to do!
                 return sgDocument;

@@ -59,7 +59,9 @@ internal ref struct MemoryBuilder<T>
         }
     }
 
-    public ref T this[int index]
+    // Note: This is a confusing bit of C# syntax, so it should be called out.
+    // This is a readonly member that returns a ref T; it does *not* return a ref readonly T.
+    public readonly ref T this[int index]
     {
         get
         {

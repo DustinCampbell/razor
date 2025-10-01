@@ -23,7 +23,12 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         var syntaxTree = codeDocument.GetPreTagHelperSyntaxTree() ?? codeDocument.GetSyntaxTree();
         ThrowForMissingDocumentDependency(syntaxTree);
 
-        if (!codeDocument.TryGetTagHelpers(out var tagHelpers))
+        IReadOnlyList<TagHelperDescriptor> tagHelpers;
+        if (codeDocument.TryGetTagHelpers(out var value))
+        {
+            tagHelpers = value;
+        }
+        else
         {
             if (!Engine.TryGetFeature(out ITagHelperFeature? tagHelperFeature))
             {

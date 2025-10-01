@@ -4,7 +4,6 @@
 #nullable disable
 
 using System;
-using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.LanguageServer.Completion;
@@ -238,9 +237,9 @@ public class TagHelperFactsServiceTest(ITestOutputHelper testOutput) : TagHelper
             });
     }
 
-    private static RazorCodeDocument CreateComponentDocument(string text, ImmutableArray<TagHelperDescriptor> tagHelpers)
+    private static RazorCodeDocument CreateComponentDocument(string text, TagHelperCollection tagHelpers)
     {
-        tagHelpers = tagHelpers.NullToEmpty();
+        tagHelpers ??= TagHelperCollection.Empty;
         var sourceDocument = TestRazorSourceDocument.Create(text);
         var projectEngine = RazorProjectEngine.Create(builder =>
         {

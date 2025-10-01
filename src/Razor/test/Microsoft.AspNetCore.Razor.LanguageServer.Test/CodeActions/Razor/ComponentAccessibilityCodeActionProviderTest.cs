@@ -466,13 +466,11 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
         fullyQualifiedGenericComponent.CaseSensitive = true;
         fullyQualifiedGenericComponent.TagMatchingRule(rule => rule.TagName = "Fully.Qualified.GenericComponent");
 
-        var tagHelpers = ImmutableArray.Create(shortComponent.Build(), fullyQualifiedComponent.Build(), shortGenericComponent.Build(), fullyQualifiedGenericComponent.Build());
+        TagHelperCollection tagHelpers = [shortComponent.Build(), fullyQualifiedComponent.Build(), shortGenericComponent.Build(), fullyQualifiedGenericComponent.Build()];
 
         var sourceDocument = TestRazorSourceDocument.Create(text, filePath: filePath, relativePath: filePath);
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.AddTagHelpers(tagHelpers);
-
             builder.ConfigureParserOptions(builder =>
             {
                 builder.UseRoslynTokenizer = true;
@@ -498,7 +496,7 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
             .ReturnsAsync(codeDocument.Source.Text);
         documentSnapshotMock
             .Setup(x => x.Project.GetTagHelpersAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(tagHelpers);
+            .ReturnsAsync(tagHelpers.ToImmutableArray());
 
         return new RazorCodeActionContext(
             request,

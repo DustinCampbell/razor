@@ -37,7 +37,7 @@ namespace Microsoft.AspNetCore.Razor.LanguageServer.Formatting;
 
 public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
 {
-    private static readonly AsyncLazy<ImmutableArray<TagHelperDescriptor>> s_standardTagHelpers = AsyncLazy.Create(GetStandardTagHelpersAsync);
+    private static readonly AsyncLazy<TagHelperCollection> s_standardTagHelpers = AsyncLazy.Create(GetStandardTagHelpersAsync);
 
     private readonly HtmlFormattingService _htmlFormattingService;
     private readonly FormattingTestContext _context;
@@ -59,7 +59,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         int tabSize = 4,
         bool insertSpaces = true,
         RazorFileKind? fileKind = null,
-        ImmutableArray<TagHelperDescriptor> tagHelpers = default,
+        TagHelperCollection? tagHelpers = null,
         bool allowDiagnostics = false,
         bool codeBlockBraceOnNextLine = false,
         bool inGlobalNamespace = false,
@@ -81,7 +81,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         int tabSize,
         bool insertSpaces,
         RazorFileKind? fileKind,
-        ImmutableArray<TagHelperDescriptor> tagHelpers,
+        TagHelperCollection? tagHelpers,
         bool allowDiagnostics,
         RazorLSPOptions? razorLSPOptions,
         bool inGlobalNamespace,
@@ -90,7 +90,6 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
     {
         // Arrange
         var fileKindValue = fileKind ?? RazorFileKind.Component;
-        tagHelpers = tagHelpers.NullToEmpty();
 
         TestFileMarkupParser.GetSpans(input, out input, out ImmutableArray<TextSpan> spans);
 
@@ -99,7 +98,9 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
             ? null
             : source.GetLinePositionSpan(spans.Single());
 
-        tagHelpers = tagHelpers.AddRange(await s_standardTagHelpers.GetValueAsync(DisposalToken));
+        tagHelpers = tagHelpers is not null
+            ? TagHelperCollection.Merge(tagHelpers, await s_standardTagHelpers.GetValueAsync(DisposalToken))
+            : await s_standardTagHelpers.GetValueAsync(DisposalToken);
 
         var path = "file:///path/to/Document." + fileKindValue.ToString();
         var uri = new Uri(path);
@@ -232,7 +233,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
     private (RazorCodeDocument, IDocumentSnapshot) CreateCodeDocumentAndSnapshot(
         SourceText text,
         string path,
-        ImmutableArray<TagHelperDescriptor> tagHelpers,
+        TagHelperCollection tagHelpers,
         RazorFileKind? fileKind = null,
         bool allowDiagnostics = false,
         bool inGlobalNamespace = false)
@@ -306,7 +307,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         RazorProjectEngine projectEngine,
         ImmutableArray<IDocumentSnapshot> imports,
         ImmutableArray<RazorSourceDocument> importDocuments,
-        ImmutableArray<TagHelperDescriptor> tagHelpers,
+        TagHelperCollection tagHelpers,
         bool inGlobalNamespace)
     {
         var projectKey = new ProjectKey(Path.Combine(path, "obj"));
@@ -330,7 +331,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
             .ReturnsAsync(codeDocument.Source.Text);
         snapshotMock
             .Setup(d => d.Project.GetTagHelpersAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(tagHelpers);
+            .ReturnsAsync(tagHelpers.ToImmutableArray());
         snapshotMock
             .Setup(d => d.FileKind)
             .Returns(fileKind);
@@ -354,7 +355,7 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         return snapshotMock.Object;
     }
 
-    private static async Task<ImmutableArray<TagHelperDescriptor>> GetStandardTagHelpersAsync(CancellationToken cancellationToken)
+    private static async Task<TagHelperCollection> GetStandardTagHelpersAsync(CancellationToken cancellationToken)
     {
         var projectId = ProjectId.CreateNewId();
         var projectInfo = ProjectInfo
@@ -394,6 +395,6 @@ public abstract class FormattingTestBase : RazorToolingIntegrationTestBase
         var tagHelpers = await project.GetTagHelpersAsync(engine, NoOpTelemetryReporter.Instance, cancellationToken).ConfigureAwait(false);
         Assert.NotEmpty(tagHelpers);
 
-        return tagHelpers;
+        return [.. tagHelpers];
     }
 }

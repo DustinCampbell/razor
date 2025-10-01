@@ -1,10 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.Test.Common;
@@ -34,7 +31,9 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
                 <p><$$strong></strong></p>
                 """,
             isRazorFile: false);
+        Assert.NotNull(context.Owner);
         var element = context.Owner.FirstAncestorOrSelf<MarkupElementSyntax>();
+        Assert.NotNull(element);
 
         // Act
         var (ancestorName, ancestorIsTagHelper) = TagHelperFacts.GetNearestAncestorTagInfo(element.Ancestors());
@@ -55,7 +54,9 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
                 """,
             isRazorFile: false,
             tagHelpers: DefaultTagHelpers);
+        Assert.NotNull(context.Owner);
         var element = context.Owner.FirstAncestorOrSelf<MarkupTagHelperElementSyntax>();
+        Assert.NotNull(element);
 
         // Act
         var (ancestorName, ancestorIsTagHelper) = TagHelperFacts.GetNearestAncestorTagInfo(element.Ancestors());
@@ -561,7 +562,7 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
                 <test $$/>
                 """,
             isRazorFile: false,
-            tagHelpers: ImmutableArray.Create(tagHelper.Build()));
+            tagHelpers: [tagHelper.Build()]);
 
         // Act
         var completions = service.GetCompletionItems(context);
@@ -604,7 +605,7 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
                 <test $$/>
                 """,
             isRazorFile: false,
-            tagHelpers: ImmutableArray.Create(tagHelper.Build()));
+            tagHelpers: [tagHelper.Build()]);
 
         // Act
         var completions = service.GetCompletionItems(context);
@@ -931,9 +932,13 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
         );
     }
 
-    private static RazorCompletionContext CreateRazorCompletionContext(string markup, bool isRazorFile, RazorCompletionOptions options = default, ImmutableArray<TagHelperDescriptor> tagHelpers = default)
+    private static RazorCompletionContext CreateRazorCompletionContext(
+        string markup,
+        bool isRazorFile,
+        RazorCompletionOptions options = default,
+        TagHelperCollection? tagHelpers = null)
     {
-        tagHelpers = tagHelpers.NullToEmpty();
+        tagHelpers ??= TagHelperCollection.Empty;
 
         TestFileMarkupParser.GetPosition(markup, out var documentContent, out var position);
         var codeDocument = CreateCodeDocument(documentContent, isRazorFile, tagHelpers);

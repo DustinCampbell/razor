@@ -42,7 +42,7 @@ public class TagHelperDescriptorSerializationTest(ITestOutputHelper testOutput) 
         }
 
         // Assert
-        Assert.Equal<TagHelperDescriptor>(expectedTagHelpers, actualTagHelpers);
+        Assert.Equal(expectedTagHelpers, actualTagHelpers);
     }
 
     [Fact]

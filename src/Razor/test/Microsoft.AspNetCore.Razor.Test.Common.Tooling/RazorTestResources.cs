@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Razor.Language;
@@ -15,7 +14,7 @@ internal static class RazorTestResources
 {
     public const string BlazorServerAppTagHelpersJson = "BlazorServerApp.TagHelpers.json";
 
-    private static ImmutableArray<TagHelperDescriptor>? s_blazorServerAppTagHelpers;
+    private static TagHelperCollection? s_blazorServerAppTagHelpers;
 
     private readonly static Dictionary<(string Name, string? Folder), string> s_textMap = new();
     private readonly static Dictionary<(string Name, string? Folder), byte[]> s_bytesMap = new();
@@ -81,17 +80,18 @@ internal static class RazorTestResources
         }
     }
 
-    public static ImmutableArray<TagHelperDescriptor> BlazorServerAppTagHelpers
+    public static TagHelperCollection BlazorServerAppTagHelpers
     {
         get
         {
             return s_blazorServerAppTagHelpers ??= ReadBlazorServerAppTagHelpers();
 
-            static ImmutableArray<TagHelperDescriptor> ReadBlazorServerAppTagHelpers()
+            static TagHelperCollection ReadBlazorServerAppTagHelpers()
             {
                 var bytes = GetResourceBytes(BlazorServerAppTagHelpersJson);
+                var array = JsonDataConvert.DeserializeTagHelperArray(bytes);
 
-                return JsonDataConvert.DeserializeTagHelperArray(bytes);
+                return TagHelperCollection.Create(array);
             }
         }
     }

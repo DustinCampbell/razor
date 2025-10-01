@@ -1,10 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.AspNetCore.Razor.Test.Common;
 using Microsoft.CodeAnalysis.Razor.Formatting;
 using Xunit;
@@ -400,7 +398,7 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
                     """,
             tagHelpers: CreateTagHelpers());
 
-        ImmutableArray<TagHelperDescriptor> CreateTagHelpers()
+        TagHelperCollection CreateTagHelpers()
         {
             var select = """
                     @typeparam TValue
@@ -432,11 +430,9 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
             var selectComponent = CompileToCSharp("Select.razor", select, throwOnFailure: true, fileKind: RazorFileKind.Component);
             var selectItemComponent = CompileToCSharp("SelectItem.razor", selectItem, throwOnFailure: true, fileKind: RazorFileKind.Component);
 
-            using var _ = ArrayBuilderPool<TagHelperDescriptor>.GetPooledObject(out var tagHelpers);
-            tagHelpers.AddRange(selectComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers);
-            tagHelpers.AddRange(selectItemComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers);
-
-            return tagHelpers.ToImmutable();
+            return TagHelperCollection.Merge(
+                [.. selectComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers],
+                [.. selectItemComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers]);
         }
     }
 
@@ -480,7 +476,7 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
             allowDiagnostics: true);
     }
 
-    private ImmutableArray<TagHelperDescriptor> GetComponents()
+    private TagHelperCollection GetComponents()
     {
         AdditionalSyntaxTrees.Add(Parse("""
                 using Microsoft.AspNetCore.Components;
@@ -520,6 +516,6 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
 
         var generated = CompileToCSharp("Test.razor", string.Empty, throwOnFailure: false, fileKind: RazorFileKind.Component);
 
-        return generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers;
+        return [.. generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers];
     }
 }

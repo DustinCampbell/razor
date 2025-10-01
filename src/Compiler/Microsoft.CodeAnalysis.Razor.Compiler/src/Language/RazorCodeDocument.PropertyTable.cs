@@ -25,7 +25,7 @@ public sealed partial class RazorCodeDocument
 
         private readonly object?[] _values = new object?[Size];
 
-        public Property<IReadOnlyList<TagHelperDescriptor>> TagHelpers => new(_values, 0);
+        public Property<TagHelperCollection> TagHelpers => new(_values, 0);
         public Property<ISet<TagHelperDescriptor>> ReferencedTagHelpers => new(_values, 1);
         public Property<RazorSyntaxTree> PreTagHelperSyntaxTree => new(_values, 2);
         public Property<RazorSyntaxTree> SyntaxTree => new(_values, 3);

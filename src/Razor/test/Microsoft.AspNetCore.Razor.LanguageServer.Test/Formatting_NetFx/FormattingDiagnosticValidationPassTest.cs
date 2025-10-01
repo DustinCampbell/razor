@@ -94,11 +94,11 @@ public class FormattingDiagnosticValidationPassTest(ITestOutputHelper testOutput
     private static (RazorCodeDocument, IDocumentSnapshot) CreateCodeDocumentAndSnapshot(
         SourceText text,
         string path,
-        ImmutableArray<TagHelperDescriptor> tagHelpers = default,
+        TagHelperCollection? tagHelpers = null,
         RazorFileKind? fileKind = null)
     {
         var fileKindValue = fileKind ?? RazorFileKind.Component;
-        tagHelpers = tagHelpers.NullToEmpty();
+        tagHelpers ??= TagHelperCollection.Empty;
 
         var sourceDocument = RazorSourceDocument.Create(text, RazorSourceDocumentProperties.Create(path, path));
         var projectEngine = RazorProjectEngine.Create(builder =>

@@ -124,16 +124,17 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectItem = new TestRazorProjectItem("Index.cshtml");
         var importItem = new TestRazorProjectItem("_import.cshtml");
         var expectedImports = ImmutableArray.Create(RazorSourceDocument.ReadFrom(importItem));
-        var expectedTagHelpers = new[]
-        {
+
+        TagHelperCollection expectedTagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly").Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("Test2TagHelper", "TestAssembly").Build(),
-        };
+        ];
 
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, expectedImports, expectedTagHelpers);
+        var codeDocument = projectEngine.Process(
+            RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, expectedImports, expectedTagHelpers);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -150,7 +151,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.Process(
+            RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         var actual = codeDocument.FileKind;
@@ -166,7 +168,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.Process(
+            RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -230,7 +233,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.Process(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.Process(
+            RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         Assert.Empty(codeDocument.Imports);
@@ -243,16 +247,17 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectItem = new TestRazorProjectItem("Index.cshtml");
         var importItem = new TestRazorProjectItem("_import.cshtml");
         var expectedImports = ImmutableArray.Create(RazorSourceDocument.ReadFrom(importItem));
-        var expectedTagHelpers = new[]
-        {
+
+        TagHelperCollection expectedTagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly").Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("Test2TagHelper", "TestAssembly").Build(),
-        };
+        ];
 
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, expectedImports, expectedTagHelpers);
+        var codeDocument = projectEngine.ProcessDesignTime(
+            RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, expectedImports, expectedTagHelpers);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -269,7 +274,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, default, tagHelpers: null);
+        var codeDocument = projectEngine.ProcessDesignTime(
+            RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         var tagHelpers = codeDocument.GetTagHelpers();
@@ -333,7 +339,8 @@ public class DefaultRazorProjectEngineIntegrationTest
         var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, TestRazorProjectFileSystem.Empty);
 
         // Act
-        var codeDocument = projectEngine.ProcessDesignTime(RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
+        var codeDocument = projectEngine.ProcessDesignTime(
+            RazorSourceDocument.ReadFrom(projectItem), RazorFileKind.Legacy, importSources: default, tagHelpers: null);
 
         // Assert
         Assert.Empty(codeDocument.Imports);

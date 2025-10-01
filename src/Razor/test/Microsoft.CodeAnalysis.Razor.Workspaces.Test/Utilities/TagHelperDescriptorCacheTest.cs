@@ -69,7 +69,7 @@ public class TagHelperDescriptorCacheTest(ITestOutputHelper testOutput) : Toolin
         {
             var tagHelpersBatch = RazorTestResources.BlazorServerAppTagHelpers;
             tagHelpers.AddRange(tagHelpersBatch);
-            tagHelpersPerBatch = tagHelpersBatch.Length;
+            tagHelpersPerBatch = tagHelpersBatch.Count;
         }
 
         // Act
@@ -90,6 +90,6 @@ public class TagHelperDescriptorCacheTest(ITestOutputHelper testOutput) : Toolin
         var hashes = new HashSet<Checksum>(tagHelpers.Select(t => t.Checksum));
 
         // Assert
-        Assert.Equal(hashes.Count, tagHelpers.Length);
+        Assert.Equal(hashes.Count, tagHelpers.Count);
     }
 }

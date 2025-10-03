@@ -3,7 +3,6 @@
 
 using BenchmarkDotNet.Attributes;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.LanguageServer.Completion;
 using Microsoft.CodeAnalysis.Razor.Completion;
 using Microsoft.VisualStudio.Editor.Razor;
 
@@ -31,7 +30,7 @@ public class TagHelperCompletionBenchmark
     {
         var tagHelperCompletionService = new TagHelperCompletionService();
         var context = new AttributeCompletionContext(
-            TagHelperDocumentContext.Create(prefix: null, CommonResources.TelerikTagHelpers),
+            TagHelperDocumentContext.Create(prefix: null, [.. CommonResources.TelerikTagHelpers]),
             existingCompletions: [],
             currentTagName: "PageTitle",
             currentAttributeName: null,
@@ -48,7 +47,7 @@ public class TagHelperCompletionBenchmark
     {
         var tagHelperCompletionService = new TagHelperCompletionService();
         var context = new ElementCompletionContext(
-            TagHelperDocumentContext.Create(prefix: null, CommonResources.TelerikTagHelpers),
+            TagHelperDocumentContext.Create(prefix: null, [.. CommonResources.TelerikTagHelpers]),
             existingCompletions: s_existingElementCompletions,
             containingTagName: null,
             attributes: [],

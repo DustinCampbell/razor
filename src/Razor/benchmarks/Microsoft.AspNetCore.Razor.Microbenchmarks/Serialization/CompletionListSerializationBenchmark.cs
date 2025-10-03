@@ -6,9 +6,6 @@ using System.Text.Json;
 using BenchmarkDotNet.Attributes;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
-using Microsoft.AspNetCore.Razor.LanguageServer;
-using Microsoft.AspNetCore.Razor.LanguageServer.Completion;
-using Microsoft.AspNetCore.Razor.LanguageServer.Hosting;
 using Microsoft.CodeAnalysis.Razor.Completion;
 
 namespace Microsoft.AspNetCore.Razor.Microbenchmarks.Serialization;
@@ -68,7 +65,7 @@ public class CompletionListSerializationBenchmark
     {
         var sourceDocument = RazorSourceDocument.Create(documentContent, RazorSourceDocumentProperties.Default);
         var syntaxTree = RazorSyntaxTree.Parse(sourceDocument);
-        var tagHelperDocumentContext = TagHelperDocumentContext.Create(prefix: string.Empty, CommonResources.LegacyTagHelpers);
+        var tagHelperDocumentContext = TagHelperDocumentContext.Create(prefix: string.Empty, [.. CommonResources.LegacyTagHelpers]);
 
         var owner = syntaxTree.Root.FindInnermostNode(queryIndex, includeWhitespace: true, walkMarkersBack: true);
         var context = new RazorCompletionContext(queryIndex, owner, syntaxTree, tagHelperDocumentContext);

@@ -31,7 +31,7 @@ public class TagHelperSerializationBenchmark
     [ParamsAllValues]
     public ResourceSet ResourceSet { get; set; }
 
-    private ImmutableArray<TagHelperDescriptor> TagHelpers
+    private TagHelperCollection TagHelpers
         => ResourceSet switch
         {
             ResourceSet.Telerik => CommonResources.TelerikTagHelpers,
@@ -48,7 +48,7 @@ public class TagHelperSerializationBenchmark
     private static ImmutableArray<TagHelperDescriptor> DeserializeTagHelpers_Json(TextReader reader)
         => JsonDataConvert.DeserializeTagHelperArray(reader);
 
-    private static void SerializeTagHelpers(TextWriter writer, ImmutableArray<TagHelperDescriptor> tagHelpers)
+    private static void SerializeTagHelpers(TextWriter writer, TagHelperCollection tagHelpers)
         => JsonDataConvert.Serialize(tagHelpers, writer);
 
     [Benchmark(Description = "Serialize Tag Helpers (JSON)")]
@@ -68,7 +68,7 @@ public class TagHelperSerializationBenchmark
 
         var tagHelpers = DeserializeTagHelpers_Json(reader);
 
-        if (tagHelpers.Length != TagHelpers.Length)
+        if (tagHelpers.Length != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }
@@ -89,7 +89,7 @@ public class TagHelperSerializationBenchmark
 
         var tagHelpers = DeserializeTagHelpers_Json(reader);
 
-        if (tagHelpers.Length != TagHelpers.Length)
+        if (tagHelpers.Length != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }
@@ -109,7 +109,7 @@ public class TagHelperSerializationBenchmark
         return MessagePackSerializer.Deserialize<ImmutableArray<TagHelperDescriptor>>(bytes, cachingOptions);
     }
 
-    private ReadOnlyMemory<byte> SerializeTagHelpers_MessagePack(ImmutableArray<TagHelperDescriptor> tagHelpers)
+    private ReadOnlyMemory<byte> SerializeTagHelpers_MessagePack(TagHelperCollection tagHelpers)
     {
         using var cachingOptions = new SerializerCachingOptions(s_options);
 
@@ -130,7 +130,7 @@ public class TagHelperSerializationBenchmark
     {
         var tagHelpers = DeserializeTagHelpers_MessagePack(_tagHelperMessagePackBytes);
 
-        if (tagHelpers.Length != TagHelpers.Length)
+        if (tagHelpers.Length != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }
@@ -142,7 +142,7 @@ public class TagHelperSerializationBenchmark
         var bytes = SerializeTagHelpers_MessagePack(TagHelpers);
         var tagHelpers = DeserializeTagHelpers_MessagePack(bytes);
 
-        if (tagHelpers.Length != TagHelpers.Length)
+        if (tagHelpers.Length != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }

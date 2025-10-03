@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,7 +69,7 @@ internal sealed class VisualStudioDocumentTracker : IVisualStudioDocumentTracker
 
     public ClientSpaceSettings EditorSettings => _workspaceEditorSettings.Current.ClientSpaceSettings;
 
-    public ImmutableArray<TagHelperDescriptor> TagHelpers
+    public TagHelperCollection TagHelpers
         => _projectSnapshot is { TagHelpers: var tagHelpers }
             ? tagHelpers
             : [];

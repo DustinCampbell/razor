@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
@@ -856,11 +855,11 @@ public class ProjectStateTest(ITestOutputHelper testOutput) : ToolingTestBase(te
         Assert.Empty(documentPathSet);
     }
 
-    private static void AssertSameTagHelpers(ImmutableArray<TagHelperDescriptor> expected, ImmutableArray<TagHelperDescriptor> actual)
+    private static void AssertSameTagHelpers(TagHelperCollection expected, TagHelperCollection actual)
     {
-        Assert.Equal(expected.Length, actual.Length);
+        Assert.Equal(expected.Count, actual.Count);
 
-        for (var i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Count; i++)
         {
             Assert.Same(expected[i], actual[i]);
         }

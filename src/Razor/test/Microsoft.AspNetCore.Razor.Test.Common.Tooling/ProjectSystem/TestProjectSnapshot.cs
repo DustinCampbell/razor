@@ -45,7 +45,7 @@ internal sealed class TestProjectSnapshot : IProjectSnapshot
     public string DisplayName => RealSnapshot.DisplayName;
     public LanguageVersion CSharpLanguageVersion => RealSnapshot.CSharpLanguageVersion;
 
-    public ValueTask<ImmutableArray<TagHelperDescriptor>> GetTagHelpersAsync(CancellationToken cancellationToken)
+    public ValueTask<TagHelperCollection> GetTagHelpersAsync(CancellationToken cancellationToken)
         => RealSnapshot.GetTagHelpersAsync(cancellationToken);
 
     public bool ContainsDocument(string filePath)

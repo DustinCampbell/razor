@@ -130,9 +130,9 @@ internal sealed partial class RemoteTagHelperProviderService(in ServiceArgs args
 
         return _tagHelperDeltaProvider.GetTagHelpersDelta(projectHandle.ProjectId, lastResultId, checksums);
 
-        static ImmutableArray<Checksum> GetChecksums(ImmutableArray<TagHelperDescriptor> tagHelpers)
+        static ImmutableArray<Checksum> GetChecksums(TagHelperCollection tagHelpers)
         {
-            using var builder = new PooledArrayBuilder<Checksum>(capacity: tagHelpers.Length);
+            using var builder = new PooledArrayBuilder<Checksum>(capacity: tagHelpers.Count);
 
             // Add each tag helpers to the cache so that we can retrieve them later if needed.
             var cache = TagHelperCache.Default;

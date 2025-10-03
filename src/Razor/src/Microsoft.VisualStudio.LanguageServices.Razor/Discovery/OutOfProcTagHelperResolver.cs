@@ -6,7 +6,6 @@ using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
@@ -40,7 +39,7 @@ internal class OutOfProcTagHelperResolver(
     private readonly ITelemetryReporter _telemetryReporter = telemetryReporter;
     private readonly TagHelperResultCache _resultCache = new();
 
-    public async ValueTask<ImmutableArray<TagHelperDescriptor>> GetTagHelpersAsync(
+    public async ValueTask<TagHelperCollection?> GetTagHelpersAsync(
         Project project,
         ProjectSnapshot projectSnapshot,
         CancellationToken cancellationToken)
@@ -52,7 +51,7 @@ internal class OutOfProcTagHelperResolver(
             var result = await ResolveTagHelpersOutOfProcessAsync(project, projectSnapshot, cancellationToken).ConfigureAwait(false);
 
             // We received tag helpers, so we're done.
-            if (!result.IsDefault)
+            if (result is not null)
             {
                 return result;
             }
@@ -74,7 +73,7 @@ internal class OutOfProcTagHelperResolver(
         }
     }
 
-    protected virtual async ValueTask<ImmutableArray<TagHelperDescriptor>> ResolveTagHelpersOutOfProcessAsync(Project project, ProjectSnapshot projectSnapshot, CancellationToken cancellationToken)
+    protected virtual async ValueTask<TagHelperCollection?> ResolveTagHelpersOutOfProcessAsync(Project project, ProjectSnapshot projectSnapshot, CancellationToken cancellationToken)
     {
         if (!_resultCache.TryGetId(project.Id, out var lastResultId))
         {
@@ -92,13 +91,13 @@ internal class OutOfProcTagHelperResolver(
         if (deltaResult is null)
         {
             // For some reason, TryInvokeAsync can return null if it is cancelled while fetching the client.
-            return default;
+            return null;
         }
 
         // Apply the delta we received to any cached checksums for the current project.
         var checksums = ProduceChecksumsFromDelta(project.Id, lastResultId, deltaResult);
 
-        // Create an array to hold the result. We'll wrap it in an ImmutableArray at the end.
+        // Create an array to hold the result. We'll wrap it in TagHelperCollection at the end.
         var result = new TagHelperDescriptor[checksums.Length];
 
         // We need to keep track of which checksums we still need to fetch tag helpers for from OOP.
@@ -176,21 +175,21 @@ internal class OutOfProcTagHelperResolver(
 
                 // We didn't receive all the tag helpers we requested. This is bad. However, instead of failing,
                 // we'll just return the tag helpers we were able to retrieve.
-                using var resultBuilder = new PooledArrayBuilder<TagHelperDescriptor>(capacity: result.Length);
+                using var results = new TagHelperCollection.RefBuilder(capacity: result.Length);
 
                 foreach (var tagHelper in result)
                 {
                     if (tagHelper is not null)
                     {
-                        resultBuilder.Add(tagHelper);
+                        results.Add(tagHelper);
                     }
                 }
 
-                return resultBuilder.ToImmutableAndClear();
+                return results.ToCollection();
             }
         }
 
-        return ImmutableCollectionsMarshal.AsImmutableArray(result);
+        return TagHelperCollection.Create(result);
     }
 
     // Protected virtual for testing
@@ -224,7 +223,7 @@ internal class OutOfProcTagHelperResolver(
         return checksums;
     }
 
-    protected virtual ValueTask<ImmutableArray<TagHelperDescriptor>> ResolveTagHelpersInProcessAsync(
+    protected virtual ValueTask<TagHelperCollection> ResolveTagHelpersInProcessAsync(
         Project project,
         ProjectSnapshot projectSnapshot,
         CancellationToken cancellationToken)

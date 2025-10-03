@@ -26,7 +26,7 @@ public class RemoteTagHelperDeltaProviderBenchmark
             .ToImmutableArray();
 
         RemovedHalfOfDefaultTagHelpers = DefaultTagHelperSet
-            .Take(CommonResources.LegacyTagHelpers.Length / 2)
+            .Take(CommonResources.LegacyTagHelpers.Count / 2)
             .ToHashSet()
             .ToImmutableArray();
 

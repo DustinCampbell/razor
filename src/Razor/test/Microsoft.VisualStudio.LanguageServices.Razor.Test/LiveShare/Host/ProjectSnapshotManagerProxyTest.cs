@@ -244,7 +244,7 @@ public class ProjectSnapshotManagerProxyTest(ITestOutputHelper testOutput) : Vis
 
     private static Action<ProjectSnapshotHandleProxy> AssertProjectSnapshotHandle(
         string expectedFilePath,
-        ImmutableArray<TagHelperDescriptor> expectedTagHelpers)
+        TagHelperCollection expectedTagHelpers)
         => handle =>
         {
             Assert.Equal(expectedFilePath, handle.FilePath.ToString());

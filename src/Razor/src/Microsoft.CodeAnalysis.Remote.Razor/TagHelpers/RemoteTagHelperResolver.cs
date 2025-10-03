@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +35,7 @@ internal class RemoteTagHelperResolver(ITelemetryReporter telemetryReporter)
         return map;
     }
 
-    public ValueTask<ImmutableArray<TagHelperDescriptor>> GetTagHelpersAsync(
+    public ValueTask<TagHelperCollection> GetTagHelpersAsync(
         Project workspaceProject,
         RazorConfiguration? configuration,
         CancellationToken cancellationToken)

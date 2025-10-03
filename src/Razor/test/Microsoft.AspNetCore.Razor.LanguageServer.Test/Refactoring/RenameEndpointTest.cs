@@ -617,7 +617,7 @@ public class RenameEndpointTest(ITestOutputHelper testOutput) : LanguageServerTe
         IEditMappingService? editMappingService = null,
         IClientConnection? clientConnection = null)
     {
-        using PooledArrayBuilder<TagHelperDescriptor> builder = [];
+        using var builder = new TagHelperCollection.Builder();
         builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", RootNamespace1, "Component1"));
         builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test", "Component2"));
         builder.AddRange(CreateRazorComponentTagHelperDescriptors("Second", RootNamespace2, "Component3"));
@@ -625,7 +625,7 @@ public class RenameEndpointTest(ITestOutputHelper testOutput) : LanguageServerTe
         builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test", "Component1337"));
         builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test.Components", "Directory1"));
         builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test.Components", "Directory2"));
-        var tagHelpers = builder.ToImmutable();
+        var tagHelpers = builder.ToCollection();
 
         var projectManager = CreateProjectSnapshotManager();
 

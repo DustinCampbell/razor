@@ -43,6 +43,7 @@ internal sealed class RazorProjectInfoResolver : IFormatterResolver
             DocumentSnapshotHandleFormatter.Instance,
             ProjectWorkspaceStateFormatter.Instance,
             RazorConfigurationFormatter.Instance,
+            TagHelperCollectionFormatter.Instance,
 
             // tag helpers
             AllowedChildTagFormatter.Instance,

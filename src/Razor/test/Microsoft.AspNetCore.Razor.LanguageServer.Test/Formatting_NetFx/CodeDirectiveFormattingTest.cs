@@ -181,7 +181,7 @@ public class CodeDirectiveFormattingTest(FormattingTestContext context, HtmlForm
 
         var generated = CompileToCSharp("TestGeneric.razor", input, throwOnFailure: true, fileKind: RazorFileKind.Component);
 
-        return [.. generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers];
+        return generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers;
     }
 
     private TagHelperCollection GetComponentWithTwoCascadingTypeParameter()
@@ -206,6 +206,6 @@ public class CodeDirectiveFormattingTest(FormattingTestContext context, HtmlForm
 
         var generated = CompileToCSharp("TestGenericTwo.razor", input, throwOnFailure: true, fileKind: RazorFileKind.Component);
 
-        return [.. generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers];
+        return generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers;
     }
 }

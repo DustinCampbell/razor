@@ -34,7 +34,7 @@ internal static class TagHelperFacts
             return null;
         }
 
-        if (documentContext.TagHelpers.Length == 0)
+        if (documentContext.TagHelpers.Count == 0)
         {
             return null;
         }
@@ -98,7 +98,7 @@ internal static class TagHelperFacts
             throw new ArgumentNullException(nameof(tagName));
         }
 
-        if (documentContext?.TagHelpers is not { Length: > 0 } tagHelpers)
+        if (documentContext?.TagHelpers is not { Count: > 0 } tagHelpers)
         {
             return ImmutableArray<TagHelperDescriptor>.Empty;
         }
@@ -137,7 +137,7 @@ internal static class TagHelperFacts
             throw new ArgumentNullException(nameof(documentContext));
         }
 
-        if (documentContext?.TagHelpers is not { Length: > 0 } tagHelpers)
+        if (documentContext?.TagHelpers is not { Count: > 0 } tagHelpers)
         {
             return ImmutableArray<TagHelperDescriptor>.Empty;
         }

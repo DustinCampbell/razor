@@ -431,8 +431,8 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
             var selectItemComponent = CompileToCSharp("SelectItem.razor", selectItem, throwOnFailure: true, fileKind: RazorFileKind.Component);
 
             return TagHelperCollection.Merge(
-                [.. selectComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers],
-                [.. selectItemComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers]);
+                selectComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers,
+                selectItemComponent.CodeDocument.GetRequiredTagHelperContext().TagHelpers);
         }
     }
 
@@ -516,6 +516,6 @@ public class HtmlFormattingTest(FormattingTestContext context, HtmlFormattingFix
 
         var generated = CompileToCSharp("Test.razor", string.Empty, throwOnFailure: false, fileKind: RazorFileKind.Component);
 
-        return [.. generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers];
+        return generated.CodeDocument.GetRequiredTagHelperContext().TagHelpers;
     }
 }

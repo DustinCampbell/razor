@@ -18,7 +18,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_OnlyIndexerNamePrefix()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -32,11 +32,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
-            ["asp-route-..."] = [documentDescriptors[0].BoundAttributes.Last()]
+            ["asp-route-..."] = [tagHelpers[0].BoundAttributes.Last()]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             attributes: [],
             currentTagName: "form");
@@ -53,7 +53,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_BoundDictionaryAttribute_ReturnsPrefixIndexerAndFullSetter()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -68,12 +68,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
-            ["asp-all-route-data"] = [documentDescriptors[0].BoundAttributes.Last()],
-            ["asp-route-..."] = [documentDescriptors[0].BoundAttributes.Last()]
+            ["asp-all-route-data"] = [tagHelpers[0].BoundAttributes.Last()],
+            ["asp-route-..."] = [tagHelpers[0].BoundAttributes.Last()]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             attributes: [],
             currentTagName: "form");
@@ -90,7 +90,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_RequiredBoundDictionaryAttribute_ReturnsPrefixIndexerAndFullSetter()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -113,12 +113,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
-            ["asp-all-route-data"] = [documentDescriptors[0].BoundAttributes.Last()],
-            ["asp-route-..."] = [documentDescriptors[0].BoundAttributes.Last()]
+            ["asp-all-route-data"] = [tagHelpers[0].BoundAttributes.Last()],
+            ["asp-route-..."] = [tagHelpers[0].BoundAttributes.Last()]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             attributes: [],
             currentTagName: "form");
@@ -135,7 +135,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_DoesNotReturnCompletionsForAlreadySuppliedAttributes()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -158,11 +158,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
             ["onclick"] = [],
-            ["visible"] = [documentDescriptors[0].BoundAttributes.Last()]
+            ["visible"] = [tagHelpers[0].BoundAttributes.Last()]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["onclick"],
             attributes: [
                 KeyValuePair.Create("class", "something"),
@@ -181,7 +181,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_ReturnsCompletionForAlreadySuppliedAttribute_IfCurrentAttributeMatches()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -204,11 +204,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
             ["onclick"] = [],
-            ["visible"] = [documentDescriptors[0].BoundAttributes.Last()]
+            ["visible"] = [tagHelpers[0].BoundAttributes.Last()]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["onclick"],
             attributes: [
                 KeyValuePair.Create("class", "something"),
@@ -229,7 +229,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_DoesNotReturnAlreadySuppliedAttribute_IfCurrentAttributeDoesNotMatch()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -255,7 +255,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["onclick"],
             attributes: [
                 KeyValuePair.Create("class", "something"),
@@ -276,7 +276,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_PossibleDescriptorsReturnUnboundRequiredAttributesWithExistingCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -298,7 +298,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["onclick", "class"],
             currentTagName: "div");
         var service = CreateTagHelperCompletionFactsService();
@@ -314,7 +314,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_PossibleDescriptorsReturnBoundRequiredAttributesWithExistingCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -342,13 +342,13 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
-            ["class"] = [.. documentDescriptors[1].BoundAttributes],
+            ["class"] = [.. tagHelpers[1].BoundAttributes],
             ["onclick"] = [],
-            ["repeat"] = [documentDescriptors[0].BoundAttributes.First()]
+            ["repeat"] = [tagHelpers[0].BoundAttributes.First()]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["onclick"],
             currentTagName: "div");
         var service = CreateTagHelperCompletionFactsService();
@@ -364,7 +364,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_AppliedDescriptorsReturnAllBoundAttributesWithExistingCompletionsForSchemaTags()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
@@ -398,13 +398,13 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
             ["onclick"] = [],
-            ["class"] = [.. documentDescriptors[1].BoundAttributes],
-            ["repeat"] = [documentDescriptors[0].BoundAttributes.First()],
-            ["visible"] = [documentDescriptors[0].BoundAttributes.Last(), documentDescriptors[2].BoundAttributes.First()]
+            ["class"] = [.. tagHelpers[1].BoundAttributes],
+            ["repeat"] = [tagHelpers[0].BoundAttributes.First()],
+            ["visible"] = [tagHelpers[0].BoundAttributes.Last(), tagHelpers[2].BoundAttributes.First()]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["class", "onclick"],
             currentTagName: "div");
         var service = CreateTagHelperCompletionFactsService();
@@ -420,7 +420,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_AppliedTagOutputHintDescriptorsReturnBoundAttributesWithExistingCompletionsForNonSchemaTags()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CustomTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("custom"))
@@ -435,11 +435,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
             ["class"] = [],
-            ["repeat"] = [.. documentDescriptors[0].BoundAttributes]
+            ["repeat"] = [.. tagHelpers[0].BoundAttributes]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["class"],
             currentTagName: "custom");
         var service = CreateTagHelperCompletionFactsService();
@@ -455,7 +455,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_AppliedDescriptorsReturnBoundAttributesCompletionsForNonSchemaTags()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CustomTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("custom"))
@@ -468,11 +468,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
-            ["repeat"] = [.. documentDescriptors[0].BoundAttributes]
+            ["repeat"] = [.. tagHelpers[0].BoundAttributes]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["class"],
             currentTagName: "custom");
         var service = CreateTagHelperCompletionFactsService();
@@ -488,7 +488,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_AppliedDescriptorsReturnBoundAttributesWithExistingCompletionsForSchemaTags()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
@@ -502,11 +502,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = AttributeCompletionResult.Create(new()
         {
             ["class"] = [],
-            ["repeat"] = [.. documentDescriptors[0].BoundAttributes]
+            ["repeat"] = [.. tagHelpers[0].BoundAttributes]
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["class"],
             currentTagName: "div");
         var service = CreateTagHelperCompletionFactsService();
@@ -528,7 +528,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            descriptors: [],
+            tagHelpers: [],
             existingCompletions: ["class"],
             currentTagName: "div");
         var service = CreateTagHelperCompletionFactsService();
@@ -544,7 +544,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_NoDescriptorsForUnprefixedTagReturnsExistingCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -559,7 +559,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["class"],
             currentTagName: "div",
             tagHelperPrefix: "th:");
@@ -576,7 +576,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetAttributeCompletions_NoDescriptorsForTagReturnsExistingCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("MyTableTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -591,7 +591,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         });
 
         var completionContext = BuildAttributeCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["class"],
             currentTagName: "div");
         var service = CreateTagHelperCompletionFactsService();
@@ -607,7 +607,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_IgnoresDirectiveAttributes()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BindAttribute", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
@@ -623,7 +623,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = ElementCompletionResult.Create([]);
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["table"],
             containingTagName: "body",
             containingParentTagName: null!);
@@ -640,7 +640,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_FiltersFullyQualifiedElementsIfShortNameExists()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("Test"))
@@ -657,12 +657,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["Test"] = [documentDescriptors[0]],
-            ["Test2Assembly.Test"] = [documentDescriptors[2]],
+            ["Test"] = [tagHelpers[0]],
+            ["Test2Assembly.Test"] = [tagHelpers[2]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: "body",
             containingParentTagName: null!);
@@ -679,7 +679,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_TagOutputHintDoesNotFallThroughToSchemaCheck()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("MyTableTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("my-table"))
@@ -693,11 +693,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["my-table"] = [documentDescriptors[0]]
+            ["my-table"] = [tagHelpers[0]]
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["table", "div"],
             containingTagName: "body",
             containingParentTagName: null!);
@@ -714,7 +714,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_CatchAllsOnlyApplyToCompletionsStartingWithPrefix()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
@@ -726,11 +726,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["th:li"] = [documentDescriptors[1], documentDescriptors[0]],
+            ["th:li"] = [tagHelpers[1], tagHelpers[0]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["li"],
             containingTagName: "ul",
             tagHelperPrefix: "th:");
@@ -747,7 +747,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_TagHelperPrefixIsPrependedToTagHelperCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("superli"))
@@ -759,12 +759,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["th:superli"] = [documentDescriptors[0]],
-            ["th:li"] = [documentDescriptors[1]],
+            ["th:superli"] = [tagHelpers[0]],
+            ["th:li"] = [tagHelpers[1]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["li"],
             containingTagName: "ul",
             tagHelperPrefix: "th:");
@@ -781,7 +781,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_IsCaseSensitive()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("MyliTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("myli"))
@@ -795,12 +795,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["myli"] = [documentDescriptors[0]],
-            ["MYLI"] = [documentDescriptors[1]],
+            ["myli"] = [tagHelpers[0]],
+            ["MYLI"] = [tagHelpers[1]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["li"],
             containingTagName: "ul",
             tagHelperPrefix: null!);
@@ -817,7 +817,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_HTMLSchemaTagName_IsCaseSensitive()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("LITagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("LI"))
@@ -831,12 +831,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["LI"] = [documentDescriptors[0]],
-            ["li"] = [documentDescriptors[1]],
+            ["LI"] = [tagHelpers[0]],
+            ["li"] = [tagHelpers[1]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["li"],
             containingTagName: "ul",
             tagHelperPrefix: null!);
@@ -853,7 +853,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_CatchAllsApplyToOnlyTagHelperCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("superli"))
@@ -865,11 +865,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["superli"] = [documentDescriptors[0], documentDescriptors[1]],
+            ["superli"] = [tagHelpers[0], tagHelpers[1]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["li"],
             containingTagName: "ul");
         var service = CreateTagHelperCompletionFactsService();
@@ -885,7 +885,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_CatchAllsApplyToNonTagHelperCompletionsIfStartsWithTagHelperPrefix()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("superli"))
@@ -897,11 +897,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["th:superli"] = [documentDescriptors[0], documentDescriptors[1]],
+            ["th:superli"] = [tagHelpers[0], tagHelpers[1]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["th:li"],
             containingTagName: "ul",
             tagHelperPrefix: "th:");
@@ -918,7 +918,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_AllowsMultiTargetingTagHelpers()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldTagHelper1", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("strong"))
@@ -932,13 +932,13 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["strong"] = [documentDescriptors[0], documentDescriptors[1]],
-            ["b"] = [documentDescriptors[0]],
-            ["bold"] = [documentDescriptors[0]],
+            ["strong"] = [tagHelpers[0], tagHelpers[1]],
+            ["b"] = [tagHelpers[0]],
+            ["bold"] = [tagHelpers[0]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["strong", "b", "bold"],
             containingTagName: "ul");
         var service = CreateTagHelperCompletionFactsService();
@@ -954,7 +954,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_CombinesDescriptorsOnExistingCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper1", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("li"))
@@ -966,10 +966,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["li"] = [documentDescriptors[0], documentDescriptors[1]],
+            ["li"] = [tagHelpers[0], tagHelpers[1]],
         });
 
-        var completionContext = BuildElementCompletionContext(documentDescriptors, existingCompletions: ["li"], containingTagName: "ul");
+        var completionContext = BuildElementCompletionContext(tagHelpers, existingCompletions: ["li"], containingTagName: "ul");
         var service = CreateTagHelperCompletionFactsService();
 
         // Act
@@ -983,7 +983,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_NewCompletionsForSchemaTagsNotInExistingCompletionsAreIgnored()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("superli"))
@@ -999,11 +999,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["li"] = [documentDescriptors[1]],
-            ["superli"] = [documentDescriptors[0]],
+            ["li"] = [tagHelpers[1]],
+            ["superli"] = [tagHelpers[0]],
         });
 
-        var completionContext = BuildElementCompletionContext(documentDescriptors, existingCompletions: ["li"], containingTagName: "ul");
+        var completionContext = BuildElementCompletionContext(tagHelpers, existingCompletions: ["li"], containingTagName: "ul");
         var service = CreateTagHelperCompletionFactsService();
 
         // Act
@@ -1017,7 +1017,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_OutputHintIsCrossReferencedWithExistingCompletions()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
@@ -1031,11 +1031,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["div"] = [documentDescriptors[0]],
-            ["li"] = [documentDescriptors[1]],
+            ["div"] = [tagHelpers[0]],
+            ["li"] = [tagHelpers[1]],
         });
 
-        var completionContext = BuildElementCompletionContext(documentDescriptors, existingCompletions: ["li"], containingTagName: "ul");
+        var completionContext = BuildElementCompletionContext(tagHelpers, existingCompletions: ["li"], containingTagName: "ul");
         var service = CreateTagHelperCompletionFactsService();
 
         // Act
@@ -1049,7 +1049,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_EnsuresDescriptorsHaveSatisfiedParent()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper1", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("li"))
@@ -1061,10 +1061,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["li"] = [documentDescriptors[0]],
+            ["li"] = [tagHelpers[0]],
         });
 
-        var completionContext = BuildElementCompletionContext(documentDescriptors, existingCompletions: ["li"], containingTagName: "ul");
+        var completionContext = BuildElementCompletionContext(tagHelpers, existingCompletions: ["li"], containingTagName: "ul");
         var service = CreateTagHelperCompletionFactsService();
 
         // Act
@@ -1078,7 +1078,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_NoContainingParentTag_DoesNotGetCompletionForRuleWithParentTag()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("Tag1", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("outer-child-tag"))
@@ -1092,12 +1092,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["outer-child-tag"] = [documentDescriptors[0]],
-            ["parent-tag"] = [documentDescriptors[1]],
+            ["outer-child-tag"] = [tagHelpers[0]],
+            ["parent-tag"] = [tagHelpers[1]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: null!,
             containingParentTagName: null!);
@@ -1114,7 +1114,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_WithContainingParentTag_GetsCompletionForRuleWithParentTag()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("Tag1", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("outer-child-tag"))
@@ -1128,11 +1128,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["child-tag"] = [documentDescriptors[0]],
+            ["child-tag"] = [tagHelpers[0]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: "child-tag",
             containingParentTagName: "parent-tag");
@@ -1149,7 +1149,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_AllowedChildrenAreIgnoredWhenAtRoot()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
@@ -1162,7 +1162,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = ElementCompletionResult.Create([]);
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: null!,
             containingParentTagName: null!);
@@ -1179,7 +1179,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_DoesNotReturnExistingCompletionsWhenAllowedChildren()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParent", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
@@ -1193,11 +1193,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         {
             ["b"] = [],
             ["bold"] = [],
-            ["div"] = [documentDescriptors[0]]
+            ["div"] = [tagHelpers[0]]
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["p", "em"],
             containingTagName: "thing",
             containingParentTagName: "div");
@@ -1214,7 +1214,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_CapturesAllAllowedChildTagsFromParentTagHelpers_NoneTagHelpers()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParent", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
@@ -1230,7 +1230,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: "",
             containingParentTagName: "div");
@@ -1247,7 +1247,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_CapturesAllAllowedChildTagsFromParentTagHelpers_SomeTagHelpers()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParent", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
@@ -1261,11 +1261,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         {
             ["b"] = [],
             ["bold"] = [],
-            ["div"] = [documentDescriptors[0]]
+            ["div"] = [tagHelpers[0]]
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: "",
             containingParentTagName: "div");
@@ -1282,7 +1282,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_CapturesAllAllowedChildTagsFromParentTagHelpers_AllTagHelpers()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParentCatchAll", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
@@ -1299,14 +1299,14 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["strong"] = [documentDescriptors[0]],
-            ["b"] = [documentDescriptors[0]],
-            ["bold"] = [documentDescriptors[0]],
-            ["div"] = [documentDescriptors[0], documentDescriptors[1]],
+            ["strong"] = [tagHelpers[0]],
+            ["b"] = [tagHelpers[0]],
+            ["bold"] = [tagHelpers[0]],
+            ["div"] = [tagHelpers[0], tagHelpers[1]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: "",
             containingParentTagName: "div");
@@ -1323,7 +1323,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_MustSatisfyAttributeRules_WithAttributes()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -1338,14 +1338,14 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["form"] = [documentDescriptors[0]]
+            ["form"] = [tagHelpers[0]]
         });
 
         var attributes = ImmutableArray.Create(
             KeyValuePair.Create("asp-route-id", "123"));
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["form"],
             containingTagName: "",
             containingParentTagName: "div",
@@ -1363,7 +1363,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_MustSatisfyAttributeRules_NoAttributes()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -1379,7 +1379,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         var expectedCompletions = ElementCompletionResult.Create([]);
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: ["form"],
             containingTagName: "",
             containingParentTagName: "div");
@@ -1396,7 +1396,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     public void GetElementCompletions_MustSatisfyAttributeRules_NoAttributes_AllowedIfNotHtml()
     {
         // Arrange
-        ImmutableArray<TagHelperDescriptor> documentDescriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("ComponentTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -1411,11 +1411,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
 
         var expectedCompletions = ElementCompletionResult.Create(new()
         {
-            ["component"] = [documentDescriptors[0]],
+            ["component"] = [tagHelpers[0]],
         });
 
         var completionContext = BuildElementCompletionContext(
-            documentDescriptors,
+            tagHelpers,
             existingCompletions: [],
             containingTagName: "",
             containingParentTagName: "div");
@@ -1455,7 +1455,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     }
 
     private static ElementCompletionContext BuildElementCompletionContext(
-        ImmutableArray<TagHelperDescriptor> descriptors,
+        TagHelperCollection tagHelpers,
         ImmutableArray<string> existingCompletions,
         string containingTagName,
         string containingParentTagName = "body",
@@ -1465,7 +1465,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     {
         attributes = attributes.NullToEmpty();
 
-        var documentContext = TagHelperDocumentContext.Create(tagHelperPrefix, descriptors);
+        var documentContext = TagHelperDocumentContext.Create(tagHelperPrefix, tagHelpers);
         var completionContext = new ElementCompletionContext(
             documentContext,
             existingCompletions,
@@ -1479,7 +1479,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     }
 
     private static AttributeCompletionContext BuildAttributeCompletionContext(
-        ImmutableArray<TagHelperDescriptor> descriptors,
+        TagHelperCollection tagHelpers,
         ImmutableArray<string> existingCompletions,
         string currentTagName,
         string? currentAttributeName = null!,
@@ -1488,7 +1488,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
     {
         attributes = attributes.NullToEmpty();
 
-        var documentContext = TagHelperDocumentContext.Create(tagHelperPrefix, descriptors);
+        var documentContext = TagHelperDocumentContext.Create(tagHelperPrefix, tagHelpers);
         var completionContext = new AttributeCompletionContext(
             documentContext,
             existingCompletions,

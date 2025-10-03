@@ -52,7 +52,7 @@ internal class RenameService(
         var codeDocument = await documentContext.GetCodeDocumentAsync(cancellationToken).ConfigureAwait(false);
 
         var originTagHelpers = await GetOriginTagHelpersAsync(documentContext, positionInfo.HostDocumentIndex, cancellationToken).ConfigureAwait(false);
-        if (originTagHelpers.IsDefaultOrEmpty)
+        if (originTagHelpers is null or [])
         {
             return null;
         }
@@ -149,7 +149,7 @@ internal class RenameService(
 
     private async Task AddEditsForCodeDocumentAsync(
         List<SumType<TextDocumentEdit, CreateFile, RenameFile, DeleteFile>> documentChanges,
-        ImmutableArray<TagHelperDescriptor> originTagHelpers,
+        TagHelperCollection originTagHelpers,
         string newName,
         IDocumentSnapshot documentSnapshot,
         CancellationToken cancellationToken)
@@ -169,7 +169,7 @@ internal class RenameService(
 
     private static void AddEditsForCodeDocument(
         List<SumType<TextDocumentEdit, CreateFile, RenameFile, DeleteFile>> documentChanges,
-        ImmutableArray<TagHelperDescriptor> originTagHelpers,
+        TagHelperCollection originTagHelpers,
         string newName,
         DocumentUri uri,
         RazorCodeDocument codeDocument)
@@ -225,34 +225,34 @@ internal class RenameService(
     }
 
     private static bool BindingContainsTagHelper(TagHelperDescriptor tagHelper, TagHelperBinding potentialBinding)
-        => potentialBinding.Descriptors.Any(descriptor => descriptor.Equals(tagHelper));
+        => potentialBinding.TagHelpers.Contains(tagHelper);
 
-    private static async Task<ImmutableArray<TagHelperDescriptor>> GetOriginTagHelpersAsync(DocumentContext documentContext, int absoluteIndex, CancellationToken cancellationToken)
+    private static async Task<TagHelperCollection?> GetOriginTagHelpersAsync(DocumentContext documentContext, int absoluteIndex, CancellationToken cancellationToken)
     {
         var owner = await documentContext.GetSyntaxNodeAsync(absoluteIndex, cancellationToken).ConfigureAwait(false);
         if (owner is null)
         {
             Debug.Fail("Owner should never be null.");
-            return default;
+            return null;
         }
 
         if (!TryGetTagHelperBinding(owner, absoluteIndex, out var binding))
         {
-            return default;
+            return null;
         }
 
         // Can only have 1 component TagHelper belonging to an element at a time
-        var primaryTagHelper = binding.Descriptors.FirstOrDefault(static d => d.Kind == TagHelperKind.Component);
+        var primaryTagHelper = binding.TagHelpers.FirstOrDefault(static d => d.Kind == TagHelperKind.Component);
         if (primaryTagHelper is null)
         {
-            return default;
+            return null;
         }
 
         var tagHelpers = await documentContext.Snapshot.Project.GetTagHelpersAsync(cancellationToken).ConfigureAwait(false);
         var associatedTagHelper = FindAssociatedTagHelper(primaryTagHelper, tagHelpers);
         if (associatedTagHelper is null)
         {
-            return default;
+            return null;
         }
 
         return [primaryTagHelper, associatedTagHelper];

@@ -242,8 +242,8 @@ internal sealed class FormattingVisitor : SyntaxWalker
 
         static bool IsComponentTagHelperNode(MarkupTagHelperElementSyntax node)
         {
-            return node.TagHelperInfo?.BindingResult?.Descriptors is { Length: > 0 } descriptors &&
-                   descriptors.Any(static d => d.IsComponentOrChildContentTagHelper());
+            return node.TagHelperInfo?.BindingResult?.TagHelpers is { Count: > 0 } tagHelpers &&
+                   tagHelpers.Any(static d => d.IsComponentOrChildContentTagHelper());
         }
 
         static bool ParentHasProperty(MarkupTagHelperElementSyntax parentComponent, string? propertyName)
@@ -271,7 +271,7 @@ internal sealed class FormattingVisitor : SyntaxWalker
             //
             // This code will not count "ChildContent" as causing indentation because its parent
             // has a property called "ChildContent".
-            if (parentComponent.TagHelperInfo?.BindingResult.Descriptors.Any(d => d.BoundAttributes.Any(a => a.Name == propertyName)) ?? false)
+            if (parentComponent.TagHelperInfo?.BindingResult.TagHelpers.Any(d => d.BoundAttributes.Any(a => a.Name == propertyName)) ?? false)
             {
                 return true;
             }
@@ -281,14 +281,14 @@ internal sealed class FormattingVisitor : SyntaxWalker
 
         static bool HasUnspecifiedCascadingTypeParameter(MarkupTagHelperElementSyntax node)
         {
-            if (node.TagHelperInfo?.BindingResult?.Descriptors is not { Length: > 0 } descriptors)
+            if (node.TagHelperInfo?.BindingResult?.TagHelpers is not { Count: > 0 } tagHelpers)
             {
                 return false;
             }
 
             // A cascading type parameter will mean the generated code will get a TypeInference class generated
             // for it, which we need to account for with an extra level of indentation in our expected C# indentation
-            var hasCascadingGenericParameters = descriptors.Any(static d => d.SuppliesCascadingGenericParameters());
+            var hasCascadingGenericParameters = tagHelpers.Any(static d => d.SuppliesCascadingGenericParameters());
             if (!hasCascadingGenericParameters)
             {
                 return false;
@@ -298,7 +298,7 @@ internal sealed class FormattingVisitor : SyntaxWalker
             // doesn't specify any type parameter in the element itself as an attribute.
 
             // Get all type parameters for later use. Array is fine to use as the list should be tiny (I hope!!)
-            var typeParameterNames = descriptors.SelectMany(d => d.GetTypeParameters().Select(p => p.Name)).ToArray();
+            var typeParameterNames = tagHelpers.SelectMany(d => d.GetTypeParameters().Select(p => p.Name)).ToArray();
 
             var attributes = node.StartTag.Attributes.OfType<MarkupTagHelperAttributeSyntax>();
             foreach (var attribute in attributes)

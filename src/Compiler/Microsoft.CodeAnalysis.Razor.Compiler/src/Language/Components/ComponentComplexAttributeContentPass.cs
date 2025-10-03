@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
@@ -33,28 +33,31 @@ internal sealed class ComponentComplexAttributeContentPass : ComponentIntermedia
         }
     }
 
-    private void ProcessAttributes(TagHelperIntermediateNode node)
+    private static void ProcessAttributes(TagHelperIntermediateNode node)
     {
+        var hasComponent = node.TagHelpers.Any(static t => t.Kind == TagHelperKind.Component);
+
         for (var i = node.Children.Count - 1; i >= 0; i--)
         {
-            if (node.Children[i] is TagHelperPropertyIntermediateNode propertyNode &&
-                node.TagHelpers.Any(t => t.Kind == TagHelperKind.Component))
+            if (hasComponent)
             {
-                ProcessAttribute(node, propertyNode, propertyNode.AttributeName);
-            }
-            else if (node.Children[i] is TagHelperHtmlAttributeIntermediateNode htmlNode &&
-                node.TagHelpers.Any(t => t.Kind == TagHelperKind.Component))
-            {
-                ProcessAttribute(node, htmlNode, htmlNode.AttributeName);
+                if (node.Children[i] is TagHelperPropertyIntermediateNode propertyNode)
+                {
+                    ProcessAttribute(propertyNode, propertyNode.AttributeName);
+                }
+                else if (node.Children[i] is TagHelperHtmlAttributeIntermediateNode htmlNode)
+                {
+                    ProcessAttribute(htmlNode, htmlNode.AttributeName);
+                }
             }
             else if (node.Children[i] is TagHelperDirectiveAttributeIntermediateNode directiveAttributeNode)
             {
-                ProcessAttribute(node, directiveAttributeNode, directiveAttributeNode.OriginalAttributeName);
+                ProcessAttribute(directiveAttributeNode, directiveAttributeNode.OriginalAttributeName);
             }
         }
     }
 
-    private static void ProcessAttribute(IntermediateNode parent, IntermediateNode node, string attributeName)
+    private static void ProcessAttribute(IntermediateNode node, string attributeName)
     {
         var issueDiagnostic = false;
 

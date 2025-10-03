@@ -75,7 +75,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
 
         // Assert
         Assert.NotNull(binding);
-        var descriptor = Assert.Single(binding.Descriptors);
+        var descriptor = Assert.Single(binding.TagHelpers);
         Assert.Equal(tagHelpers[0], descriptor);
         var boundRule = Assert.Single(binding.GetBoundRules(descriptor));
         Assert.Equal(tagHelpers[0].TagMatchingRules.First(), boundRule);

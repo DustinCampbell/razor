@@ -71,7 +71,7 @@ internal static class RazorComponentDefinitionHelpers
 
         using var descriptorsBuilder = new PooledArrayBuilder<BoundTagHelperResult>();
 
-        foreach (var boundTagHelper in binding.Descriptors.Where(d => !d.IsAttributeDescriptor()))
+        foreach (var boundTagHelper in binding.TagHelpers.Where(static d => !d.IsAttributeDescriptor()))
         {
             var requireAttributeMatch = false;
             if ((!ignoreComponentAttributes || boundTagHelper.Kind != TagHelperKind.Component) &&

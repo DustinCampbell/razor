@@ -42,7 +42,7 @@ internal sealed class ComponentLoweringPass : ComponentIntermediateNodePassBase,
         foreach (var reference in references)
         {
             var node = reference.Node;
-            if (node.TagHelpers.Any(t => t.Kind == TagHelperKind.ChildContent))
+            if (node.TagHelpers.Any(static t => t.Kind == TagHelperKind.ChildContent))
             {
                 // This is a child content tag helper. This will be rewritten when we visit its parent.
                 continue;
@@ -306,7 +306,7 @@ internal sealed class ComponentLoweringPass : ComponentIntermediateNodePassBase,
             //    which is always allowed.
             // 5. Each 'child content' element will generate its own lambda, and be assigned to the property
             //    that matches the element name.
-            if (!node.Children.OfType<TagHelperIntermediateNode>().Any(t => t.TagHelpers.Any(th => th.Kind == TagHelperKind.ChildContent)))
+            if (!node.Children.OfType<TagHelperIntermediateNode>().Any(static t => t.TagHelpers.Any(static th => th.Kind == TagHelperKind.ChildContent)))
             {
                 // This node has implicit child content. It may or may not have an attribute that matches.
                 var attribute = _component.Component.BoundAttributes
@@ -329,7 +329,7 @@ internal sealed class ComponentLoweringPass : ComponentIntermediateNodePassBase,
                 }
 
                 if (child is TagHelperIntermediateNode tagHelperNode &&
-                    tagHelperNode.TagHelpers.Any(th => th.Kind == TagHelperKind.ChildContent))
+                    tagHelperNode.TagHelpers.Any(static th => th.Kind == TagHelperKind.ChildContent))
                 {
                     // This is a child content element
                     var attribute = _component.Component.BoundAttributes

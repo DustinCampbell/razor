@@ -18,7 +18,7 @@ internal static class TagHelperParseTreeRewriter
     public static RazorSyntaxTree Rewrite(
         RazorSyntaxTree syntaxTree,
         TagHelperBinder binder,
-        ISet<TagHelperDescriptor>? usedDescriptors = null,
+        ISet<TagHelperDescriptor>? useTagHelpers = null,
         CancellationToken cancellationToken = default)
     {
         using var errorSink = new ErrorSink();
@@ -28,7 +28,7 @@ internal static class TagHelperParseTreeRewriter
             binder,
             syntaxTree.Options,
             errorSink,
-            usedDescriptors,
+            useTagHelpers,
             cancellationToken);
 
         var rewritten = rewriter.Visit(syntaxTree.Root);
@@ -57,7 +57,7 @@ internal static class TagHelperParseTreeRewriter
         TagHelperBinder binder,
         RazorParserOptions options,
         ErrorSink errorSink,
-        ISet<TagHelperDescriptor>? usedDescriptors,
+        ISet<TagHelperDescriptor>? usedTagHelpers,
         CancellationToken cancellationToken) : SyntaxRewriter
     {
         // Internal for testing.
@@ -69,7 +69,7 @@ internal static class TagHelperParseTreeRewriter
         private readonly Stack<TagTracker> _trackerStack = new();
         private readonly ErrorSink _errorSink = errorSink;
         private readonly RazorParserOptions _options = options;
-        private readonly ISet<TagHelperDescriptor> _usedDescriptors = usedDescriptors ?? new HashSet<TagHelperDescriptor>();
+        private readonly ISet<TagHelperDescriptor> _usedTagHelpers = usedTagHelpers ?? new HashSet<TagHelperDescriptor>();
         private readonly CancellationToken _cancellationToken = cancellationToken;
 
         private TagTracker? CurrentTracker => _trackerStack.Count > 0 ? _trackerStack.Peek() : null;
@@ -283,9 +283,9 @@ internal static class TagHelperParseTreeRewriter
                 return false;
             }
 
-            foreach (var descriptor in tagHelperBinding.Descriptors)
+            foreach (var tagHelper in tagHelperBinding.TagHelpers)
             {
-                _usedDescriptors.Add(descriptor);
+                _usedTagHelpers.Add(tagHelper);
             }
 
             ValidateParentAllowsTagHelper(tagName, startTag);
@@ -768,7 +768,7 @@ internal static class TagHelperParseTreeRewriter
 
                 using var result = new PooledArrayBuilder<string>();
 
-                foreach (var tagHelper in _binding.Descriptors)
+                foreach (var tagHelper in _binding.TagHelpers)
                 {
                     foreach (var allowedChildTag in tagHelper.AllowedChildTags)
                     {

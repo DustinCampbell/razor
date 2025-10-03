@@ -12,18 +12,18 @@ namespace Microsoft.AspNetCore.Razor.Microbenchmarks.Serialization;
 public class MemoryCacheBenchmark
 {
     private IReadOnlyList<int>? _tagHelperHashes;
-    private IReadOnlyList<TagHelperDescriptor>? _tagHelpers;
+    private TagHelperCollection? _tagHelpers;
     private MemoryCache<int, TagHelperDescriptor>? _cache;
 
     private IReadOnlyList<int> TagHelperHashes => _tagHelperHashes.AssumeNotNull();
-    private IReadOnlyList<TagHelperDescriptor> TagHelpers => _tagHelpers.AssumeNotNull();
+    private TagHelperCollection TagHelpers => _tagHelpers.AssumeNotNull();
     private MemoryCache<int, TagHelperDescriptor> Cache => _cache.AssumeNotNull();
 
     [GlobalSetup]
     public void Setup()
     {
         _tagHelpers = CommonResources.LegacyTagHelpers;
-        _tagHelperHashes = TagHelpers.Select(th => th.GetHashCode()).ToArray();
+        _tagHelperHashes = [.. TagHelpers.Select(th => th.GetHashCode())];
 
         // Set cache size to 400 so anything more then that will force compacts
         _cache = new MemoryCache<int, TagHelperDescriptor>(400);

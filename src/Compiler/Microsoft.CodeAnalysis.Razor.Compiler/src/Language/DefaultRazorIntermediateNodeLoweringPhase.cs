@@ -1033,7 +1033,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 TagName = tagName,
                 TagMode = info.TagMode,
                 Source = BuildSourceSpanFromNode(node),
-                TagHelpers = info.BindingResult.Descriptors
+                TagHelpers = info.BindingResult.TagHelpers
             };
 
             _builder.Push(tagHelperNode);
@@ -1078,11 +1078,11 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
 
             var element = node.FirstAncestorOrSelf<MarkupTagHelperElementSyntax>();
-            var descriptors = element.TagHelperInfo.BindingResult.Descriptors;
+            var tagHelpers = element.TagHelperInfo.BindingResult.TagHelpers;
             var attributeName = node.Name.GetContent();
 
             using var matches = new PooledArrayBuilder<TagHelperAttributeMatch>();
-            TagHelperMatchingConventions.GetAttributeMatches(descriptors, attributeName, ref matches.AsRef());
+            TagHelperMatchingConventions.GetAttributeMatches(tagHelpers, attributeName, ref matches.AsRef());
 
             if (matches.Any() && _renderedBoundAttributeNames.Add(attributeName))
             {
@@ -1119,12 +1119,12 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
         public override void VisitMarkupTagHelperAttribute(MarkupTagHelperAttributeSyntax node)
         {
             var element = node.FirstAncestorOrSelf<MarkupTagHelperElementSyntax>();
-            var descriptors = element.TagHelperInfo.BindingResult.Descriptors;
+            var tagHelpers = element.TagHelperInfo.BindingResult.TagHelpers;
             var attributeName = node.Name.GetContent();
             var attributeValueNode = node.Value;
 
             using var matches = new PooledArrayBuilder<TagHelperAttributeMatch>();
-            TagHelperMatchingConventions.GetAttributeMatches(descriptors, attributeName, ref matches.AsRef());
+            TagHelperMatchingConventions.GetAttributeMatches(tagHelpers, attributeName, ref matches.AsRef());
 
             if (matches.Any() && _renderedBoundAttributeNames.Add(attributeName))
             {
@@ -1750,7 +1750,7 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
                 TagName = tagName,
                 TagMode = info.TagMode,
                 Source = BuildSourceSpanFromNode(node),
-                TagHelpers = info.BindingResult.Descriptors
+                TagHelpers = info.BindingResult.TagHelpers
             };
 
             if (node.StartTag != null &&
@@ -1824,11 +1824,11 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
 
             var element = node.FirstAncestorOrSelf<MarkupTagHelperElementSyntax>();
-            var descriptors = element.TagHelperInfo.BindingResult.Descriptors;
+            var tagHelpers = element.TagHelperInfo.BindingResult.TagHelpers;
             var attributeName = node.Name.GetContent();
 
             using var matches = new PooledArrayBuilder<TagHelperAttributeMatch>();
-            TagHelperMatchingConventions.GetAttributeMatches(descriptors, attributeName, ref matches.AsRef());
+            TagHelperMatchingConventions.GetAttributeMatches(tagHelpers, attributeName, ref matches.AsRef());
 
             if (matches.Any() && _renderedBoundAttributeNames.Add(attributeName))
             {
@@ -1873,11 +1873,11 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
             }
 
             var element = node.FirstAncestorOrSelf<MarkupTagHelperElementSyntax>();
-            var descriptors = element.TagHelperInfo.BindingResult.Descriptors;
+            var tagHelpers = element.TagHelperInfo.BindingResult.TagHelpers;
             var attributeName = node.FullName;
 
             using var matches = new PooledArrayBuilder<TagHelperAttributeMatch>();
-            TagHelperMatchingConventions.GetAttributeMatches(descriptors, attributeName, ref matches.AsRef());
+            TagHelperMatchingConventions.GetAttributeMatches(tagHelpers, attributeName, ref matches.AsRef());
 
             if (matches.Any() && _renderedBoundAttributeNames.Add(attributeName))
             {
@@ -1926,12 +1926,12 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
         public override void VisitMarkupTagHelperAttribute(MarkupTagHelperAttributeSyntax node)
         {
             var element = node.FirstAncestorOrSelf<MarkupTagHelperElementSyntax>();
-            var descriptors = element.TagHelperInfo.BindingResult.Descriptors;
+            var tagHelpers = element.TagHelperInfo.BindingResult.TagHelpers;
             var attributeName = node.Name.GetContent();
             var attributeValueNode = node.Value;
 
             using var matches = new PooledArrayBuilder<TagHelperAttributeMatch>();
-            TagHelperMatchingConventions.GetAttributeMatches(descriptors, attributeName, ref matches.AsRef());
+            TagHelperMatchingConventions.GetAttributeMatches(tagHelpers, attributeName, ref matches.AsRef());
 
             if (matches.Any() && _renderedBoundAttributeNames.Add(attributeName))
             {
@@ -1967,12 +1967,12 @@ internal class DefaultRazorIntermediateNodeLoweringPhase : RazorEnginePhaseBase,
         public override void VisitMarkupTagHelperDirectiveAttribute(MarkupTagHelperDirectiveAttributeSyntax node)
         {
             var element = node.FirstAncestorOrSelf<MarkupTagHelperElementSyntax>();
-            var descriptors = element.TagHelperInfo.BindingResult.Descriptors;
+            var tagHelpers = element.TagHelperInfo.BindingResult.TagHelpers;
             var attributeName = node.FullName;
             var attributeValueNode = node.Value;
 
             using var matches = new PooledArrayBuilder<TagHelperAttributeMatch>();
-            TagHelperMatchingConventions.GetAttributeMatches(descriptors, attributeName, ref matches.AsRef());
+            TagHelperMatchingConventions.GetAttributeMatches(tagHelpers, attributeName, ref matches.AsRef());
 
             if (matches.Any() && _renderedBoundAttributeNames.Add(attributeName))
             {

@@ -13,7 +13,7 @@ internal static partial class RazorWrapperFactory
         private ImmutableArray<IRazorTagHelperDescriptor> _descriptors;
 
         public ImmutableArray<IRazorTagHelperDescriptor> Descriptors
-            => InitializeArrayWithWrappedItems(ref _descriptors, Object.Descriptors, Wrap);
+            => InitializeArrayWithWrappedItems(ref _descriptors, Object.TagHelpers, Wrap);
 
         public ImmutableArray<IRazorTagMatchingRuleDescriptor> GetBoundRules(IRazorTagHelperDescriptor descriptor)
         {

@@ -3,7 +3,6 @@
 
 using System;
 using System.Buffers;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
@@ -45,8 +44,12 @@ public class TagHelperSerializationBenchmark
             _ => CommonResources.LegacyTagHelperJsonBytes
         };
 
-    private static ImmutableArray<TagHelperDescriptor> DeserializeTagHelpers_Json(TextReader reader)
-        => JsonDataConvert.DeserializeTagHelperArray(reader);
+    private static TagHelperCollection DeserializeTagHelpers_Json(TextReader reader)
+    {
+        var array = JsonDataConvert.DeserializeTagHelperArray(reader);
+
+        return TagHelperCollection.Create(array);
+    }
 
     private static void SerializeTagHelpers(TextWriter writer, TagHelperCollection tagHelpers)
         => JsonDataConvert.Serialize(tagHelpers, writer);
@@ -68,7 +71,7 @@ public class TagHelperSerializationBenchmark
 
         var tagHelpers = DeserializeTagHelpers_Json(reader);
 
-        if (tagHelpers.Length != TagHelpers.Count)
+        if (tagHelpers.Count != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }
@@ -89,7 +92,7 @@ public class TagHelperSerializationBenchmark
 
         var tagHelpers = DeserializeTagHelpers_Json(reader);
 
-        if (tagHelpers.Length != TagHelpers.Count)
+        if (tagHelpers.Count != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }
@@ -102,11 +105,11 @@ public class TagHelperSerializationBenchmark
         _tagHelperMessagePackBytes = SerializeTagHelpers_MessagePack(TagHelpers);
     }
 
-    private static ImmutableArray<TagHelperDescriptor> DeserializeTagHelpers_MessagePack(ReadOnlyMemory<byte> bytes)
+    private static TagHelperCollection DeserializeTagHelpers_MessagePack(ReadOnlyMemory<byte> bytes)
     {
         using var cachingOptions = new SerializerCachingOptions(s_options);
 
-        return MessagePackSerializer.Deserialize<ImmutableArray<TagHelperDescriptor>>(bytes, cachingOptions);
+        return MessagePackSerializer.Deserialize<TagHelperCollection>(bytes, cachingOptions);
     }
 
     private ReadOnlyMemory<byte> SerializeTagHelpers_MessagePack(TagHelperCollection tagHelpers)
@@ -130,7 +133,7 @@ public class TagHelperSerializationBenchmark
     {
         var tagHelpers = DeserializeTagHelpers_MessagePack(_tagHelperMessagePackBytes);
 
-        if (tagHelpers.Length != TagHelpers.Count)
+        if (tagHelpers.Count != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }
@@ -142,7 +145,7 @@ public class TagHelperSerializationBenchmark
         var bytes = SerializeTagHelpers_MessagePack(TagHelpers);
         var tagHelpers = DeserializeTagHelpers_MessagePack(bytes);
 
-        if (tagHelpers.Length != TagHelpers.Count)
+        if (tagHelpers.Count != TagHelpers.Count)
         {
             throw new InvalidDataException();
         }

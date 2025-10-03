@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -16,28 +17,24 @@ public class RemoteTagHelperDeltaProviderBenchmark
 {
     public RemoteTagHelperDeltaProviderBenchmark()
     {
-        DefaultTagHelperSet = CommonResources.LegacyTagHelpers.ToHashSet().ToImmutableArray();
+        DefaultTagHelperSet = CommonResources.LegacyTagHelpers;
 
-        Added50PercentMoreDefaultTagHelpers = DefaultTagHelperSet
-            .Take(DefaultTagHelperSet.Length / 2)
-            .Select(th => th.WithName(th.Name + "Added"))
-            .Concat(DefaultTagHelperSet)
-            .ToHashSet()
-            .ToImmutableArray();
+        Added50PercentMoreDefaultTagHelpers = TagHelperCollection.Create(
+            DefaultTagHelperSet
+                .Take(DefaultTagHelperSet.Count / 2)
+                .Select(th => th.WithName(th.Name + "Added"))
+                .Concat(DefaultTagHelperSet));
 
-        RemovedHalfOfDefaultTagHelpers = DefaultTagHelperSet
-            .Take(CommonResources.LegacyTagHelpers.Count / 2)
-            .ToHashSet()
-            .ToImmutableArray();
+        RemovedHalfOfDefaultTagHelpers = TagHelperCollection.Create(
+            DefaultTagHelperSet.Take(CommonResources.LegacyTagHelpers.Count / 2));
 
         var tagHelpersToMutate = DefaultTagHelperSet
             .Take(2)
             .Select(th => th.WithName(th.Name + "Mutated"));
-        MutatedTwoDefaultTagHelpers = DefaultTagHelperSet
-            .Skip(2)
-            .Concat(tagHelpersToMutate)
-            .ToHashSet()
-            .ToImmutableArray();
+        MutatedTwoDefaultTagHelpers = TagHelperCollection.Create(
+            DefaultTagHelperSet
+                .Skip(2)
+                .Concat(tagHelpersToMutate));
 
         DefaultTagHelperChecksumsSet = DefaultTagHelperSet.SelectAsArray(t => t.Checksum);
         Added50PercentMoreDefaultTagHelpersChecksums = Added50PercentMoreDefaultTagHelpers.SelectAsArray(t => t.Checksum);
@@ -47,13 +44,13 @@ public class RemoteTagHelperDeltaProviderBenchmark
         ProjectId = ProjectId.CreateNewId();
     }
 
-    private ImmutableArray<TagHelperDescriptor> DefaultTagHelperSet { get; }
+    private TagHelperCollection DefaultTagHelperSet { get; }
     private ImmutableArray<Checksum> DefaultTagHelperChecksumsSet { get; }
-    private ImmutableArray<TagHelperDescriptor> Added50PercentMoreDefaultTagHelpers { get; }
+    private TagHelperCollection Added50PercentMoreDefaultTagHelpers { get; }
     private ImmutableArray<Checksum> Added50PercentMoreDefaultTagHelpersChecksums { get; }
-    private ImmutableArray<TagHelperDescriptor> RemovedHalfOfDefaultTagHelpers { get; }
+    private TagHelperCollection RemovedHalfOfDefaultTagHelpers { get; }
     private ImmutableArray<Checksum> RemovedHalfOfDefaultTagHelpersChecksums { get; }
-    private ImmutableArray<TagHelperDescriptor> MutatedTwoDefaultTagHelpers { get; }
+    private TagHelperCollection MutatedTwoDefaultTagHelpers { get; }
     private ImmutableArray<Checksum> MutatedTwoDefaultTagHelpersChecksums { get; }
     private ProjectId ProjectId { get; }
 

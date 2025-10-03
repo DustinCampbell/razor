@@ -15,7 +15,7 @@ internal sealed class TagHelperBinding
     public string? ParentTagName { get; }
     public ImmutableArray<KeyValuePair<string, string>> Attributes { get; }
 
-    private ImmutableArray<TagHelperDescriptor> _descriptors;
+    private TagHelperCollection? _tagHelpers;
     private bool? _isAttributeMatch;
 
     internal TagHelperBinding(
@@ -32,16 +32,22 @@ internal sealed class TagHelperBinding
         TagNamePrefix = tagNamePrefix;
     }
 
-    public ImmutableArray<TagHelperDescriptor> Descriptors
+    public TagHelperCollection TagHelpers
     {
         get
         {
-            if (_descriptors.IsDefault)
-            {
-                ImmutableInterlocked.InterlockedInitialize(ref _descriptors, AllBoundRules.SelectAsArray(x => x.Descriptor));
-            }
+            return _tagHelpers ?? InterlockedOperations.Initialize(ref _tagHelpers, CreateTagHelpers(AllBoundRules));
 
-            return _descriptors;
+            static TagHelperCollection CreateTagHelpers(ImmutableArray<TagHelperBoundRulesInfo> boundRules)
+            {
+                return TagHelperCollection.Build(boundRules, capacity: boundRules.Length, (ref builder, boundRules) =>
+                {
+                    foreach (var boundRule in boundRules)
+                    {
+                        builder.Add(boundRule.Descriptor);
+                    }
+                });
+            }
         }
     }
 
@@ -62,13 +68,13 @@ internal sealed class TagHelperBinding
     {
         get
         {
-            return _isAttributeMatch ??= ComputeIsAttributeMatch(Descriptors);
+            return _isAttributeMatch ??= ComputeIsAttributeMatch(TagHelpers);
 
-            static bool ComputeIsAttributeMatch(ImmutableArray<TagHelperDescriptor> descriptors)
+            static bool ComputeIsAttributeMatch(TagHelperCollection tagHelpers)
             {
-                foreach (var descriptor in descriptors)
+                foreach (var tagHelper in tagHelpers)
                 {
-                    if (!descriptor.ClassifyAttributesOnly)
+                    if (!tagHelper.ClassifyAttributesOnly)
                     {
                         return false;
                     }

@@ -187,7 +187,7 @@ internal static class TagHelperMatchingConventions
     ///  for the specified attribute name. Each successful match is added to the provided matches collection.
     /// </remarks>
     public static void GetAttributeMatches(
-        ImmutableArray<TagHelperDescriptor> tagHelpers,
+        TagHelperCollection tagHelpers,
         string name,
         ref PooledArrayBuilder<TagHelperAttributeMatch> matches)
     {
@@ -200,16 +200,16 @@ internal static class TagHelperMatchingConventions
         }
     }
 
-    public static bool TryGetFirstBoundAttributeMatch(TagHelperDescriptor descriptor, string name, out TagHelperAttributeMatch match)
+    public static bool TryGetFirstBoundAttributeMatch(TagHelperDescriptor tagHelper, string name, out TagHelperAttributeMatch match)
     {
-        if (descriptor == null || name.IsNullOrEmpty())
+        if (tagHelper == null || name.IsNullOrEmpty())
         {
             match = default;
             return false;
         }
 
         // First, check if we have a bound attribute descriptor that matches the parameter if it exists.
-        foreach (var attribute in descriptor.BoundAttributes)
+        foreach (var attribute in tagHelper.BoundAttributes)
         {
             if (GetSatisfyingBoundAttributeWithParameter(attribute, name) is { } parameter)
             {
@@ -220,7 +220,7 @@ internal static class TagHelperMatchingConventions
 
         // If we reach here, either the attribute name doesn't contain a parameter portion or
         // the specified parameter isn't supported by any of the BoundAttributeDescriptors.
-        foreach (var attribute in descriptor.BoundAttributes)
+        foreach (var attribute in tagHelper.BoundAttributes)
         {
             if (CanSatisfyBoundAttribute(name, attribute))
             {

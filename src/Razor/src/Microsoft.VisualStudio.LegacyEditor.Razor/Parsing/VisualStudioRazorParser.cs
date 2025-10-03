@@ -581,19 +581,9 @@ internal class VisualStudioRazorParser : IVisualStudioRazorParser, IDisposable
         }
     }
 
-    private class VisualStudioTagHelperFeature : RazorEngineFeatureBase, ITagHelperFeature
+    private sealed class VisualStudioTagHelperFeature(TagHelperCollection tagHelpers) : RazorEngineFeatureBase, ITagHelperFeature
     {
-        private readonly IReadOnlyList<TagHelperDescriptor>? _tagHelpers;
-
-        public VisualStudioTagHelperFeature(IReadOnlyList<TagHelperDescriptor>? tagHelpers)
-        {
-            _tagHelpers = tagHelpers;
-        }
-
-        public IReadOnlyList<TagHelperDescriptor> GetDescriptors(CancellationToken cancellationToken = default)
-        {
-            return _tagHelpers ?? [];
-        }
+        public TagHelperCollection GetTagHelpers(CancellationToken cancellationToken = default) => tagHelpers;
     }
 
     // Internal for testing

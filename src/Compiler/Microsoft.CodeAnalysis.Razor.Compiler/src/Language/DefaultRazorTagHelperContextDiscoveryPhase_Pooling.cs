@@ -49,7 +49,7 @@ internal partial class DefaultRazorTagHelperContextDiscoveryPhase
 
     internal static PooledDirectiveVisitor GetPooledVisitor(
         RazorCodeDocument codeDocument,
-        IReadOnlyList<TagHelperDescriptor> tagHelpers,
+        TagHelperCollection tagHelpers,
         CancellationToken cancellationToken,
         out DirectiveVisitor visitor)
     {

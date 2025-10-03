@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
@@ -23,12 +22,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         var syntaxTree = codeDocument.GetPreTagHelperSyntaxTree() ?? codeDocument.GetSyntaxTree();
         ThrowForMissingDocumentDependency(syntaxTree);
 
-        IReadOnlyList<TagHelperDescriptor> tagHelpers;
-        if (codeDocument.TryGetTagHelpers(out var value))
-        {
-            tagHelpers = value;
-        }
-        else
+        if (!codeDocument.TryGetTagHelpers(out var tagHelpers))
         {
             if (!Engine.TryGetFeature(out ITagHelperFeature? tagHelperFeature))
             {
@@ -36,7 +30,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
                 return;
             }
 
-            tagHelpers = tagHelperFeature.GetDescriptors(cancellationToken);
+            tagHelpers = tagHelperFeature.GetTagHelpers(cancellationToken);
         }
 
         using var _ = GetPooledVisitor(codeDocument, tagHelpers, cancellationToken, out var visitor);
@@ -195,7 +189,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         /// </summary>
         private readonly Dictionary<string, List<TagHelperDescriptor>> _tagHelperMap = new(StringComparer.Ordinal);
 
-        private IReadOnlyList<TagHelperDescriptor>? _descriptors;
+        private TagHelperCollection? _tagHelpers;
         private bool _tagHelperMapComputed;
         private string? _tagHelperPrefix;
 
@@ -216,13 +210,13 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
 
                 void ComputeTagHelperMap()
                 {
-                    var tagHelpers = _descriptors.AssumeNotNull();
+                    var tagHelpers = _tagHelpers.AssumeNotNull();
 
                     string? currentAssemblyName = null;
                     List<TagHelperDescriptor>? currentTagHelpers = null;
 
                     // We don't want to consider components in a view document.
-                    foreach (var tagHelper in tagHelpers.AsEnumerable())
+                    foreach (var tagHelper in tagHelpers)
                     {
                         if (!tagHelper.IsAnyComponentDocumentTagHelper())
                         {
@@ -245,13 +239,13 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         }
 
         public void Initialize(
-            IReadOnlyList<TagHelperDescriptor> descriptors,
+            TagHelperCollection tagHelpers,
             string? filePath,
             CancellationToken cancellationToken = default)
         {
             Debug.Assert(!IsInitialized);
 
-            _descriptors = descriptors;
+            _tagHelpers = tagHelpers;
 
             base.Initialize(filePath, cancellationToken);
         }
@@ -265,7 +259,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
 
             _tagHelperMap.Clear();
             _tagHelperMapComputed = false;
-            _descriptors = null;
+            _tagHelpers = null;
             _tagHelperPrefix = null;
 
             base.Reset();
@@ -396,14 +390,14 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         private List<TagHelperDescriptor>? _componentsWithoutNamespace;
 
         public void Initialize(
-            IReadOnlyList<TagHelperDescriptor> descriptors,
+            TagHelperCollection tagHelpers,
             string? filePath,
             string? currentNamespace,
             CancellationToken cancellationToken = default)
         {
             Debug.Assert(!IsInitialized);
 
-            foreach (var component in descriptors.AsEnumerable())
+            foreach (var component in tagHelpers)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

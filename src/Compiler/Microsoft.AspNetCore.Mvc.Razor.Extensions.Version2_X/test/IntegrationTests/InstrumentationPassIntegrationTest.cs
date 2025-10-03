@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Language;
@@ -31,40 +29,39 @@ public class InstrumentationPassIntegrationTest : IntegrationTestBase
     public void BasicTest()
     {
         // Arrange
-        var descriptors = new[]
+        var tagHelpers = new[]
         {
-                CreateTagHelperDescriptor(
-                    tagName: "p",
-                    typeName: "PTagHelper",
-                    assemblyName: "TestAssembly"),
-                CreateTagHelperDescriptor(
-                    tagName: "form",
-                    typeName: "FormTagHelper",
-                    assemblyName: "TestAssembly"),
-                CreateTagHelperDescriptor(
-                    tagName: "input",
-                    typeName: "InputTagHelper",
-                    assemblyName: "TestAssembly",
-                    attributes: new Action<BoundAttributeDescriptorBuilder>[]
-                    {
-                        builder => builder
-                            .Name("value")
-                            .PropertyName("FooProp")
-                            .TypeName("System.String"),      // Gets preallocated
-                        builder => builder
-                            .Name("date")
-                            .PropertyName("BarProp")
-                            .TypeName("System.DateTime"),    // Doesn't get preallocated
-                    })
+            CreateTagHelperDescriptor(
+                tagName: "p",
+                typeName: "PTagHelper",
+                assemblyName: "TestAssembly"),
+            CreateTagHelperDescriptor(
+                tagName: "form",
+                typeName: "FormTagHelper",
+                assemblyName: "TestAssembly"),
+            CreateTagHelperDescriptor(
+                tagName: "input",
+                typeName: "InputTagHelper",
+                assemblyName: "TestAssembly",
+                attributes: [
+                    builder => builder
+                        .Name("value")
+                        .PropertyName("FooProp")
+                        .TypeName("System.String"),      // Gets preallocated
+                    builder => builder
+                        .Name("date")
+                        .PropertyName("BarProp")
+                        .TypeName("System.DateTime"),    // Doesn't get preallocated
+                ])
             };
 
         var engine = CreateProjectEngine(b =>
         {
-            b.AddTagHelpers(descriptors);
+            b.SetTagHelpers(tagHelpers);
             b.Features.Add(new InstrumentationPass());
 
-                // This test includes templates
-                b.AddTargetExtension(new TemplateTargetExtension());
+            // This test includes templates
+            b.AddTargetExtension(new TemplateTargetExtension());
         });
 
         var projectItem = CreateProjectItemFromFile();
@@ -73,9 +70,9 @@ public class InstrumentationPassIntegrationTest : IntegrationTestBase
         var document = engine.Process(projectItem);
 
         // Assert
-        AssertDocumentNodeMatchesBaseline(document.GetDocumentNode());
+        AssertDocumentNodeMatchesBaseline(document.GetRequiredDocumentNode());
 
-        var csharpDocument = document.GetCSharpDocument();
+        var csharpDocument = document.GetRequiredCSharpDocument();
         AssertCSharpDocumentMatchesBaseline(csharpDocument);
         Assert.Empty(csharpDocument.Diagnostics);
     }
@@ -84,7 +81,7 @@ public class InstrumentationPassIntegrationTest : IntegrationTestBase
         string tagName,
         string typeName,
         string assemblyName,
-        IEnumerable<Action<BoundAttributeDescriptorBuilder>> attributes = null)
+        IEnumerable<Action<BoundAttributeDescriptorBuilder>>? attributes = null)
     {
         var builder = TagHelperDescriptorBuilder.CreateTagHelper(typeName, assemblyName);
         builder.SetTypeName(typeName, typeNamespace: null, typeNameIdentifier: null);

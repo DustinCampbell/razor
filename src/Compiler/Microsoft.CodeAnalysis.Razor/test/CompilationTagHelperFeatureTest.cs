@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Razor.Language;
@@ -68,7 +66,7 @@ public class CompilationTagHelperFeatureTest
     }
 
     [Fact]
-    public void GetDescriptors_DoesNotSetCompilation_IfCompilationIsInvalid()
+    public void GetTagHelpersDoesNotSetCompilation_IfCompilationIsInvalid()
     {
         // Arrange
         var provider = new Mock<ITagHelperDescriptorProvider>();
@@ -90,7 +88,7 @@ public class CompilationTagHelperFeatureTest
         var feature = engine.Engine.GetFeatures<CompilationTagHelperFeature>().First();
 
         // Act
-        var result = feature.GetDescriptors();
+        var result = feature.GetTagHelpers();
 
         // Assert
         Assert.Empty(result);
@@ -98,10 +96,10 @@ public class CompilationTagHelperFeatureTest
     }
 
     [Fact]
-    public void GetDescriptors_SetsCompilation_IfCompilationIsValid()
+    public void GetTagHelpers_SetsCompilation_IfCompilationIsValid()
     {
         // Arrange
-        Compilation compilation = null;
+        Compilation? compilation = null;
         var provider = new Mock<ITagHelperDescriptorProvider>();
         provider
             .Setup(c => c.Execute(It.IsAny<TagHelperDescriptorProviderContext>(), It.IsAny<CancellationToken>()))
@@ -130,7 +128,7 @@ public class CompilationTagHelperFeatureTest
         var feature = engine.Engine.GetFeatures<CompilationTagHelperFeature>().First();
 
         // Act
-        var result = feature.GetDescriptors();
+        var result = feature.GetTagHelpers();
 
         // Assert
         Assert.Empty(result);

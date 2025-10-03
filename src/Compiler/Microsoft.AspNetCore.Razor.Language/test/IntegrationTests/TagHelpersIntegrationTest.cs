@@ -21,7 +21,7 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
                 assemblyName: "TestAssembly")
         };
 
-        var projectEngine = CreateProjectEngine(builder => builder.AddTagHelpers(descriptors));
+        var projectEngine = CreateProjectEngine(builder => builder.SetTagHelpers(descriptors));
         var projectItem = CreateProjectItemFromFile();
 
         // Act
@@ -50,7 +50,7 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
                 })
         };
 
-        var projectEngine = CreateProjectEngine(builder => builder.AddTagHelpers(descriptors));
+        var projectEngine = CreateProjectEngine(builder => builder.SetTagHelpers(descriptors));
         var projectItem = CreateProjectItemFromFile();
 
         // Act
@@ -87,7 +87,7 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
                 })
         };
 
-        var projectEngine = CreateProjectEngine(builder => builder.AddTagHelpers(descriptors));
+        var projectEngine = CreateProjectEngine(builder => builder.SetTagHelpers(descriptors));
         var projectItem = CreateProjectItemFromFile();
 
         // Act

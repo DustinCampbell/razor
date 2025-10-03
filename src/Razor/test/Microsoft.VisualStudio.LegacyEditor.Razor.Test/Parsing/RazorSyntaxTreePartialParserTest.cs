@@ -402,7 +402,7 @@ public class RazorSyntaxTreePartialParserTest(ITestOutputHelper testOutput) : To
 
             if (tagHelpers != null)
             {
-                builder.AddTagHelpers(tagHelpers);
+                builder.SetTagHelpers(tagHelpers);
             }
 
             builder.ConfigureParserOptions(VisualStudioRazorParser.ConfigureParserOptions);

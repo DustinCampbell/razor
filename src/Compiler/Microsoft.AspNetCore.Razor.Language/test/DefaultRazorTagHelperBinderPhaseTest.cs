@@ -124,7 +124,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
 
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.AddTagHelpers(tagHelper1, tagHelper2);
+            builder.SetTagHelpers(tagHelper1, tagHelper2);
         });
 
         var source = CreateTestSourceDocument();
@@ -194,7 +194,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
 
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.AddTagHelpers(tagHelper1, tagHelper2);
+            builder.SetTagHelpers(tagHelper1, tagHelper2);
         });
 
         var source = CreateTestSourceDocument();
@@ -232,7 +232,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
 
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.AddTagHelpers(tagHelper1, tagHelper2);
+            builder.SetTagHelpers(tagHelper1, tagHelper2);
         });
 
         var source = CreateTestSourceDocument();
@@ -347,7 +347,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
 
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.AddTagHelpers(featureTagHelper);
+            builder.SetTagHelpers(featureTagHelper);
         });
 
         var source = CreateTestSourceDocument();
@@ -454,7 +454,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
 
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.AddTagHelpers(tagHelper1, tagHelper2);
+            builder.SetTagHelpers(tagHelper1, tagHelper2);
         });
 
         var content =
@@ -594,7 +594,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var parser = new RazorParser();
         var syntaxTree = parser.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.TagHelperDirectiveVisitor();
-        visitor.Initialize(descriptors: [], sourceDocument.FilePath);
+        visitor.Initialize(tagHelpers: [], sourceDocument.FilePath);
 
         // Act
         visitor.Visit(syntaxTree.Root);
@@ -603,156 +603,141 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         Assert.Equal(expectedPrefix, visitor.TagHelperPrefix);
     }
 
-    public static TheoryData<string, TagHelperDescriptor[], TagHelperDescriptor[]> ProcessTagHelperMatchesData
-    {
-        get
+    public static TheoryData<string, TagHelperCollection, TagHelperDescriptor[]> ProcessTagHelperMatchesData
+        // source, taghelpers, expected descriptors
+        => new()
         {
-            // source, taghelpers, expected descriptors
-            return new TheoryData<string, TagHelperDescriptor[], TagHelperDescriptor[]>
             {
-                {
-                    $@"
+                $@"
 @addTagHelper *, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, },
-                    new [] { Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyB}",
-                    new [] { Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor },
-                    new [] { Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper *, {AssemblyB}",
-                    new [] { Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor },
-                    new [] { Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyB}
 @removeTagHelper *, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor },
-                    new [] { String_TagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor],
+                [String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper {Valid_PlainTagHelperDescriptor.Name}, {AssemblyA}
 @addTagHelper *, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, },
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper {Valid_PlainTagHelperDescriptor.Name}, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, },
-                    new [] { Valid_InheritedTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor],
+                [Valid_InheritedTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, },
-                    new [] { Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor],
+                [Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, },
-                    new [] { Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor],
+                [Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper Microsoft.AspNetCore.Razor.TagHelpers.ValidPlain*, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, },
-                    new [] { Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper Microsoft.AspNetCore.Razor.TagHelpers.*, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, },
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor, Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper Microsoft.AspNetCore.Razor.TagHelpers.ValidP*, {AssemblyA}
 @addTagHelper *, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, },
-                    new [] { Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor],
+                [Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper Str*, {AssemblyB}",
-                    new [] { Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor, },
-                    new [] { Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper *, {AssemblyB}",
-                    new [] { Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor, },
-                    new [] { Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper System.{String_TagHelperDescriptor.Name}, {AssemblyB}",
-                    new [] { Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor, },
-                    new [] { Valid_PlainTagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor],
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyB}
 @removeTagHelper Microsoft.*, {AssemblyA}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor },
-                    new [] { String_TagHelperDescriptor }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor],
+                [String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyB}
 @removeTagHelper ?Microsoft*, {AssemblyA}
 @removeTagHelper System.{String_TagHelperDescriptor.Name}, {AssemblyB}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor },
-                    new []
-                    {
-                        Valid_InheritedTagHelperDescriptor,
-                        Valid_PlainTagHelperDescriptor,
-                        String_TagHelperDescriptor
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor],
+                [Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyB}
 @removeTagHelper TagHelper*, {AssemblyA}
 @removeTagHelper System.{String_TagHelperDescriptor.Name}, {AssemblyB}",
-                    new [] { Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor },
-                    new []
-                    {
-                        Valid_InheritedTagHelperDescriptor,
-                        Valid_PlainTagHelperDescriptor,
-                        String_TagHelperDescriptor
-                    }
-                },
-            };
-        }
-    }
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor],
+                [Valid_InheritedTagHelperDescriptor, Valid_PlainTagHelperDescriptor, String_TagHelperDescriptor]
+            }
+        };
 
     [Theory]
     [MemberData(nameof(ProcessTagHelperMatchesData))]
     public void DirectiveVisitor_FiltersTagHelpersByDirectives(
         string source,
-        TagHelperDescriptor[] tagHelpers,
+        TagHelperCollection tagHelpers,
         TagHelperDescriptor[] expectedTagHelpers)
     {
         // Arrange
@@ -775,131 +760,88 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         }
     }
 
-    public static TheoryData<string, IReadOnlyList<TagHelperDescriptor>> ProcessTagHelperMatches_EmptyResultData
-    {
-        get
+    public static TheoryData<string, TagHelperCollection> ProcessTagHelperMatches_EmptyResultData
+        // source, taghelpers
+        => new()
         {
-            // source, taghelpers
-            return new TheoryData<string, IReadOnlyList<TagHelperDescriptor>>
             {
-                {
-                    $@"
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper *, {AssemblyA}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper {Valid_PlainTagHelperDescriptor.Name}, {AssemblyA}
 @removeTagHelper {Valid_InheritedTagHelperDescriptor.Name}, {AssemblyA}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                        Valid_InheritedTagHelperDescriptor,
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyB}
 @removeTagHelper *, {AssemblyA}
 @removeTagHelper *, {AssemblyB}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                        Valid_InheritedTagHelperDescriptor,
-                        String_TagHelperDescriptor,
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @addTagHelper *, {AssemblyB}
 @removeTagHelper {Valid_PlainTagHelperDescriptor.Name}, {AssemblyA}
 @removeTagHelper {Valid_InheritedTagHelperDescriptor.Name}, {AssemblyA}
 @removeTagHelper {String_TagHelperDescriptor.Name}, {AssemblyB}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                        Valid_InheritedTagHelperDescriptor,
-                        String_TagHelperDescriptor,
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @removeTagHelper *, {AssemblyA}
 @removeTagHelper {Valid_PlainTagHelperDescriptor.Name}, {AssemblyA}",
-                    new TagHelperDescriptor[0]
-                },
-                {
-                    $@"
+                []
+            },
+            {
+                $@"
 @addTagHelper *, {AssemblyA}
 @removeTagHelper Mic*, {AssemblyA}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper Mic*, {AssemblyA}
 @removeTagHelper {Valid_PlainTagHelperDescriptor.Name}, {AssemblyA}
 @removeTagHelper {Valid_InheritedTagHelperDescriptor.Name}, {AssemblyA}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper Microsoft.*, {AssemblyA}
 @addTagHelper System.*, {AssemblyB}
 @removeTagHelper Microsoft.AspNetCore.Razor.TagHelpers*, {AssemblyA}
 @removeTagHelper System.*, {AssemblyB}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                        Valid_InheritedTagHelperDescriptor,
-                        String_TagHelperDescriptor,
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper ?icrosoft.*, {AssemblyA}
 @addTagHelper ?ystem.*, {AssemblyB}
 @removeTagHelper *?????r, {AssemblyA}
 @removeTagHelper Sy??em.*, {AssemblyB}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                        Valid_InheritedTagHelperDescriptor,
-                        String_TagHelperDescriptor,
-                    }
-                },
-                {
-                    $@"
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor]
+            },
+            {
+                $@"
 @addTagHelper ?i?crosoft.*, {AssemblyA}
 @addTagHelper ??ystem.*, {AssemblyB}",
-                    new TagHelperDescriptor[]
-                    {
-                        Valid_PlainTagHelperDescriptor,
-                        Valid_InheritedTagHelperDescriptor,
-                        String_TagHelperDescriptor,
-                    }
-                },
-            };
-        }
-    }
+                [Valid_PlainTagHelperDescriptor, Valid_InheritedTagHelperDescriptor, String_TagHelperDescriptor]
+            }
+        };
 
     [Theory]
     [MemberData(nameof(ProcessTagHelperMatches_EmptyResultData))]
     public void ProcessDirectives_CanReturnEmptyDescriptorsBasedOnDirectiveDescriptors(
         string source,
-        IReadOnlyList<TagHelperDescriptor> tagHelpers)
+        TagHelperCollection tagHelpers)
     {
         // Arrange
         var sourceDocument = TestRazorSourceDocument.Create(source, filePath: "TestFile");
@@ -922,11 +864,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         // Arrange
         var componentDescriptor = CreateComponentDescriptor("counter", "SomeProject.Counter", AssemblyA);
         var legacyDescriptor = Valid_PlainTagHelperDescriptor;
-        var tagHelpers = new[]
-        {
-            legacyDescriptor,
-            componentDescriptor,
-        };
+        TagHelperCollection tagHelpers = [legacyDescriptor, componentDescriptor];
 
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.TagHelperDirectiveVisitor();
         visitor.Initialize(tagHelpers, filePath: null);
@@ -975,15 +913,12 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var currentNamespace = "SomeProject";
         var componentDescriptor = CreateComponentDescriptor("counter", "SomeProject.Counter", AssemblyA);
         var legacyDescriptor = Valid_PlainTagHelperDescriptor;
-        var descriptors = new[]
-        {
-            legacyDescriptor,
-            componentDescriptor,
-        };
+        TagHelperCollection tagHelpers = [legacyDescriptor, componentDescriptor];
+
         var sourceDocument = CreateComponentTestSourceDocument(@"<Counter />", "C:\\SomeFolder\\SomeProject\\Counter.cshtml");
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);
@@ -1001,11 +936,8 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var currentNamespace = "SomeProject";
         var componentDescriptor = CreateComponentDescriptor("counter", "SomeProject.Counter", AssemblyA);
         var legacyDescriptor = Valid_PlainTagHelperDescriptor;
-        var descriptors = new[]
-        {
-            legacyDescriptor,
-            componentDescriptor,
-        };
+        TagHelperCollection tagHelpers = [legacyDescriptor, componentDescriptor];
+
         var filePath = "C:\\SomeFolder\\SomeProject\\Counter.cshtml";
         var content = @"
 @tagHelperPrefix th:
@@ -1015,7 +947,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var sourceDocument = CreateComponentTestSourceDocument(content, filePath);
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);
@@ -1040,17 +972,15 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
             "SomeProject.SomeOtherFolder.Counter",
             AssemblyA,
             fullyQualified: true);
-        var descriptors = new[]
-        {
-            componentDescriptor,
-        };
+        TagHelperCollection tagHelpers = [componentDescriptor];
+
         var filePath = "C:\\SomeFolder\\SomeProject\\Counter.cshtml";
         var content = @"
 ";
         var sourceDocument = CreateComponentTestSourceDocument(content, filePath);
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);
@@ -1077,18 +1007,15 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
             "SomeProject",
             "Counter",
             childContent: true);
-        var descriptors = new[]
-        {
-            componentDescriptor,
-            childContentDescriptor,
-        };
+        TagHelperCollection tagHelpers = [componentDescriptor, childContentDescriptor];
+
         var filePath = "C:\\SomeFolder\\SomeProject\\Counter.cshtml";
         var content = @"
 ";
         var sourceDocument = CreateComponentTestSourceDocument(content, filePath);
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);
@@ -1112,18 +1039,15 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
            "SomeProject.SomeOtherFolder.Counter",
            AssemblyA,
            fullyQualified: true);
-        var descriptors = new[]
-        {
-            componentDescriptor,
-            fullyQualifiedComponent,
-        };
+        TagHelperCollection tagHelpers = [componentDescriptor, fullyQualifiedComponent];
+
         var filePath = "C:\\SomeFolder\\SomeProject\\Counter.cshtml";
         var content = @"
 ";
         var sourceDocument = CreateComponentTestSourceDocument(content, filePath);
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);
@@ -1147,11 +1071,8 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
            "Foo",
            "SomeProject.SomeOtherFolder.Foo",
            AssemblyA);
-        var descriptors = new[]
-        {
-            componentDescriptor,
-            anotherComponentDescriptor,
-        };
+        TagHelperCollection tagHelpers = [componentDescriptor, anotherComponentDescriptor];
+
         var filePath = "C:\\SomeFolder\\SomeProject\\Counter.cshtml";
         var content = @"
 @using SomeProject.SomeOtherFolder
@@ -1159,7 +1080,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var sourceDocument = CreateComponentTestSourceDocument(content, filePath);
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);
@@ -1178,10 +1099,8 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
             "Counter",
             "SomeProject.SomeOtherFolder.Counter",
             AssemblyA);
-        var descriptors = new[]
-        {
-            componentDescriptor,
-        };
+        TagHelperCollection tagHelpers = [componentDescriptor];
+
         var filePath = "C:\\SomeFolder\\SomeProject\\Counter.cshtml";
         var content = """
             @using global::SomeProject.SomeOtherFolder
@@ -1189,7 +1108,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var sourceDocument = CreateComponentTestSourceDocument(content, filePath);
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);
@@ -1213,11 +1132,8 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
            "Foo",
            "SomeProject.SomeOtherFolder.Foo",
            AssemblyA);
-        var descriptors = new[]
-        {
-                componentDescriptor,
-                anotherComponentDescriptor,
-            };
+        TagHelperCollection tagHelpers = [componentDescriptor, anotherComponentDescriptor];
+
         var filePath = "C:\\SomeFolder\\SomeProject\\Counter.cshtml";
         var content = @"
 @using Bar = SomeProject.SomeOtherFolder
@@ -1226,7 +1142,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var sourceDocument = CreateComponentTestSourceDocument(content, filePath);
         var tree = RazorSyntaxTree.Parse(sourceDocument);
         var visitor = new DefaultRazorTagHelperContextDiscoveryPhase.ComponentDirectiveVisitor();
-        visitor.Initialize(descriptors, sourceDocument.FilePath, currentNamespace);
+        visitor.Initialize(tagHelpers, sourceDocument.FilePath, currentNamespace);
 
         // Act
         visitor.Visit(tree);

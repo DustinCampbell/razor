@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable disable
-
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -30,21 +28,16 @@ public static class RazorProjectEngineBuilderExtensions
         return builder;
     }
 
-    public static RazorProjectEngineBuilder AddTagHelpers(this RazorProjectEngineBuilder builder, params TagHelperDescriptor[] tagHelpers)
+    public static RazorProjectEngineBuilder SetTagHelpers(this RazorProjectEngineBuilder builder, params IEnumerable<TagHelperDescriptor> tagHelpers)
     {
-        return AddTagHelpers(builder, (IEnumerable<TagHelperDescriptor>)tagHelpers);
-    }
-
-    public static RazorProjectEngineBuilder AddTagHelpers(this RazorProjectEngineBuilder builder, IEnumerable<TagHelperDescriptor> tagHelpers)
-    {
-        var feature = (TestTagHelperFeature)builder.Features.OfType<ITagHelperFeature>().FirstOrDefault();
+        var feature = (TestTagHelperFeature?)builder.Features.OfType<ITagHelperFeature>().FirstOrDefault();
         if (feature == null)
         {
             feature = new TestTagHelperFeature();
             builder.Features.Add(feature);
         }
 
-        feature.TagHelpers.AddRange(tagHelpers);
+        feature.SetTagHelpers(TagHelperCollection.Create(tagHelpers));
         return builder;
     }
 

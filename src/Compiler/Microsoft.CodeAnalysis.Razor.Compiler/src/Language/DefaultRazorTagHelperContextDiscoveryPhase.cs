@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -53,7 +52,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         // This will always be null for a component document.
         var tagHelperPrefix = visitor.TagHelperPrefix;
 
-        var context = TagHelperDocumentContext.Create(tagHelperPrefix, [.. visitor.GetResults()]);
+        var context = TagHelperDocumentContext.Create(tagHelperPrefix, visitor.GetResults());
         codeDocument.SetTagHelperContext(context);
         codeDocument.SetPreTagHelperSyntaxTree(syntaxTree);
     }
@@ -79,7 +78,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         private RazorSourceDocument? _source;
         private CancellationToken _cancellationToken;
 
-        private HashSet<TagHelperDescriptor>? _matches;
+        private TagHelperCollection.Builder? _matches;
 
         protected bool IsInitialized => _isInitialized;
         protected RazorSourceDocument Source => _source.AssumeNotNull();
@@ -100,7 +99,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
             Visit(tree.Root);
         }
 
-        public ImmutableArray<TagHelperDescriptor> GetResults()
+        public TagHelperCollection GetResults()
             => _matches is { } matches ? [.. matches] : [];
 
         protected void Initialize(string? filePath, CancellationToken cancellationToken)
@@ -114,7 +113,7 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
         {
             if (_matches is { } matches)
             {
-                HashSetPool<TagHelperDescriptor>.Default.Return(matches);
+                matches.Dispose();
             }
 
             _matches = null;
@@ -124,8 +123,8 @@ internal sealed partial class DefaultRazorTagHelperContextDiscoveryPhase : Razor
             _isInitialized = false;
         }
 
-        private HashSet<TagHelperDescriptor> Matches
-            => _matches ??= HashSetPool<TagHelperDescriptor>.Default.Get();
+        private TagHelperCollection.Builder Matches
+            => _matches ??= [];
 
         protected void AddMatch(TagHelperDescriptor tagHelper)
         {

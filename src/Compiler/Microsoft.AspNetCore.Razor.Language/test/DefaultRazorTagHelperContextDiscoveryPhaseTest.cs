@@ -752,7 +752,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var results = visitor.GetResults();
 
         // Assert
-        Assert.Equal(expectedTagHelpers.Length, results.Length);
+        Assert.Equal(expectedTagHelpers.Length, results.Count);
 
         foreach (var expectedTagHelper in expectedTagHelpers)
         {
@@ -1022,7 +1022,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var results = visitor.GetResults();
 
         // Assert
-        Assert.Equal(2, results.Length);
+        Assert.Equal(2, results.Count);
     }
 
     [Fact]
@@ -1087,7 +1087,7 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         var results = visitor.GetResults();
 
         // Assert
-        Assert.Equal(2, results.Length);
+        Assert.Equal(2, results.Count);
     }
 
     [Fact]

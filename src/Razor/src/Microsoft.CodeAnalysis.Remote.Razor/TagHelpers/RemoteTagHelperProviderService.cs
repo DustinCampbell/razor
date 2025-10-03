@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
@@ -76,23 +77,23 @@ internal sealed partial class RemoteTagHelperProviderService(in ServiceArgs args
 
         return new FetchTagHelpersResult(tagHelpers);
 
-        static bool TryGetCachedTagHelpers(ImmutableArray<Checksum> checksums, out ImmutableArray<TagHelperDescriptor> tagHelpers)
+        static bool TryGetCachedTagHelpers(ImmutableArray<Checksum> checksums, [NotNullWhen(true)] out TagHelperCollection? tagHelpers)
         {
-            using var builder = new PooledArrayBuilder<TagHelperDescriptor>(capacity: checksums.Length);
+            using var builder = new TagHelperCollection.RefBuilder(capacity: checksums.Length);
             var cache = TagHelperCache.Default;
 
             foreach (var checksum in checksums)
             {
                 if (!cache.TryGet(checksum, out var tagHelper))
                 {
-                    tagHelpers = ImmutableArray<TagHelperDescriptor>.Empty;
+                    tagHelpers = null;
                     return false;
                 }
 
                 builder.Add(tagHelper);
             }
 
-            tagHelpers = builder.ToImmutableAndClear();
+            tagHelpers = builder.ToCollection();
             return true;
         }
     }

@@ -38,6 +38,7 @@ internal sealed class FetchTagHelpersResultResolver : IFormatterResolver
         private static readonly Dictionary<Type, object> s_map = new()
         {
             FetchTagHelpersResultFormatter.Instance,
+            TagHelperCollectionFormatter.Instance,
 
             // tag helpers
             AllowedChildTagFormatter.Instance,

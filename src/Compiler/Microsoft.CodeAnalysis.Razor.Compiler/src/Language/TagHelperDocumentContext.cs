@@ -29,6 +29,6 @@ internal sealed class TagHelperDocumentContext
 
     public TagHelperBinder GetBinder()
     {
-        return _binder ?? InterlockedOperations.Initialize(ref _binder, new TagHelperBinder(Prefix, [.. TagHelpers]));
+        return _binder ?? InterlockedOperations.Initialize(ref _binder, new TagHelperBinder(Prefix, TagHelpers));
     }
 }

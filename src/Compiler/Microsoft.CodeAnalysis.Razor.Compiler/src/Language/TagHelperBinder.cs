@@ -19,24 +19,24 @@ internal sealed partial class TagHelperBinder
     private readonly ReadOnlyDictionary<string, TagHelperSet> _tagNameToDescriptorsMap;
 
     public string? TagNamePrefix { get; }
-    public ImmutableArray<TagHelperDescriptor> Descriptors { get; }
+    public TagHelperCollection TagHelpers { get; }
 
     /// <summary>
     /// Instantiates a new instance of the <see cref="TagHelperBinder"/>.
     /// </summary>
     /// <param name="tagNamePrefix">The tag helper prefix being used by the document.</param>
-    /// <param name="descriptors">The <see cref="TagHelperDescriptor"/>s that the <see cref="TagHelperBinder"/>
+    /// <param name="tagHelpers">The <see cref="TagHelperDescriptor"/>s that the <see cref="TagHelperBinder"/>
     /// will pull from.</param>
-    public TagHelperBinder(string? tagNamePrefix, ImmutableArray<TagHelperDescriptor> descriptors)
+    public TagHelperBinder(string? tagNamePrefix, TagHelperCollection tagHelpers)
     {
         TagNamePrefix = tagNamePrefix;
-        Descriptors = descriptors.NullToEmpty();
+        TagHelpers = tagHelpers;
 
-        ProcessDescriptors(descriptors, tagNamePrefix, out _tagNameToDescriptorsMap, out _catchAllDescriptors);
+        BuildLookupTables(tagHelpers, tagNamePrefix, out _tagNameToDescriptorsMap, out _catchAllDescriptors);
     }
 
-    private static void ProcessDescriptors(
-        ImmutableArray<TagHelperDescriptor> descriptors,
+    private static void BuildLookupTables(
+        TagHelperCollection tagHelpers,
         string? tagNamePrefix,
         out ReadOnlyDictionary<string, TagHelperSet> tagNameToDescriptorsMap,
         out TagHelperSet catchAllDescriptors)
@@ -47,30 +47,19 @@ internal sealed partial class TagHelperBinder
         // Keep track of what needs to be added in the second pass.
         // There will be an entry for every tag matching rule.
         // Each entry consists of an index to identify a builder and the TagHelperDescriptor to add to it.
-        using var toAdd = new MemoryBuilder<(int, TagHelperDescriptor)>(initialCapacity: descriptors.Length * 4, clearArray: true);
+        using var toAdd = new MemoryBuilder<(int, TagHelperDescriptor)>(initialCapacity: tagHelpers.Count * 4, clearArray: true);
 
         // Use a special TagHelperSet.Builder to track catch-all tag helpers.
         var catchAllBuilder = new TagHelperSet.Builder();
 
         // At most, there should only be one catch-all tag helper per descriptor.
-        using var catchAllToAdd = new MemoryBuilder<TagHelperDescriptor>(initialCapacity: descriptors.Length, clearArray: true);
+        using var catchAllToAdd = new MemoryBuilder<TagHelperDescriptor>(initialCapacity: tagHelpers.Count, clearArray: true);
 
         // The builders are indexed using a map of "tag name" to the index of the builder in the array.
-        using var _1 = StringDictionaryPool<int>.OrdinalIgnoreCase.GetPooledObject(out var tagNameToBuilderIndexMap);
-        using var _2 = HashSetPool<TagHelperDescriptor>.GetPooledObject(out var tagHelperSet);
+        using var _ = StringDictionaryPool<int>.OrdinalIgnoreCase.GetPooledObject(out var tagNameToBuilderIndexMap);
 
-#if NET
-        tagHelperSet.EnsureCapacity(descriptors.Length);
-#endif
-
-        foreach (var tagHelper in descriptors)
+        foreach (var tagHelper in tagHelpers)
         {
-            if (!tagHelperSet.Add(tagHelper))
-            {
-                // We've already seen this tag helper. Skip.
-                continue;
-            }
-
             foreach (var rule in tagHelper.TagMatchingRules)
             {
                 var tagName = rule.TagName;

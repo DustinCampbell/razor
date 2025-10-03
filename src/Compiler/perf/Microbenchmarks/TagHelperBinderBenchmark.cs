@@ -14,7 +14,7 @@ public class TagHelperBinderBenchmark
     private const int Count = 2500;
 
     private readonly TagHelperBinder[] _binders = new TagHelperBinder[Count];
-    private ImmutableArray<TagHelperDescriptor> _tagHelpers;
+    private TagHelperCollection? _tagHelpers;
 
     [ParamsAllValues]
     public TagHelpers TagHelpers { get; set; }
@@ -26,7 +26,7 @@ public class TagHelperBinderBenchmark
         {
             TagHelpers.BlazorServerApp => TagHelperResources.BlazorServerApp,
             TagHelpers.TelerikMvc => TagHelperResources.TelerikMvc,
-            _ => Assumed.Unreachable<ImmutableArray<TagHelperDescriptor>>()
+            _ => Assumed.Unreachable<TagHelperCollection>()
         };
     }
 
@@ -41,7 +41,7 @@ public class TagHelperBinderBenchmark
     {
         for (var i = 0; i < Count; i++)
         {
-            _binders[i] = new TagHelperBinder(tagNamePrefix: null, _tagHelpers);
+            _binders[i] = new TagHelperBinder(tagNamePrefix: null, _tagHelpers!);
         }
     }
 
@@ -50,7 +50,7 @@ public class TagHelperBinderBenchmark
     {
         for (var i = 0; i < Count; i++)
         {
-            _binders[i] = new TagHelperBinder(tagNamePrefix: "abc", _tagHelpers);
+            _binders[i] = new TagHelperBinder(tagNamePrefix: "abc", _tagHelpers!);
         }
     }
 }

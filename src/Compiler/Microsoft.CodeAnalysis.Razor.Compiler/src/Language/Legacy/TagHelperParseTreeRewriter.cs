@@ -41,9 +41,9 @@ internal static class TagHelperParseTreeRewriter
         builder.AddRange(treeDiagnostics);
         builder.AddRange(sinkDiagnostics);
 
-        foreach (var descriptor in binder.Descriptors)
+        foreach (var tagHelper in binder.TagHelpers)
         {
-            descriptor.AppendAllDiagnostics(ref builder.AsRef());
+            tagHelper.AppendAllDiagnostics(ref builder.AsRef());
         }
 
         var diagnostics = builder.ToImmutableOrderedBy(static d => d.Span.AbsoluteIndex);

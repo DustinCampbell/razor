@@ -57,7 +57,7 @@ internal class DirectiveAttributeParameterCompletionItemProvider : DirectiveAttr
         TagHelperDocumentContext tagHelperDocumentContext)
     {
         var descriptorsForTag = TagHelperFacts.GetTagHelpersGivenTag(tagHelperDocumentContext, containingTagName, parentTag: null);
-        if (descriptorsForTag.Length == 0)
+        if (descriptorsForTag.Count == 0)
         {
             // If the current tag has no possible descriptors then we can't have any additional attributes.
             return [];

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
@@ -19,10 +20,7 @@ internal static class TagHelperFacts
         string? parentTag,
         bool parentIsTagHelper)
     {
-        if (documentContext is null)
-        {
-            throw new ArgumentNullException(nameof(documentContext));
-        }
+        ArgHelper.ThrowIfNull(documentContext);
 
         if (attributes.IsDefault)
         {
@@ -49,20 +47,9 @@ internal static class TagHelperFacts
         string attributeName,
         TagHelperBinding binding)
     {
-        if (documentContext is null)
-        {
-            throw new ArgumentNullException(nameof(documentContext));
-        }
-
-        if (attributeName is null)
-        {
-            throw new ArgumentNullException(nameof(attributeName));
-        }
-
-        if (binding is null)
-        {
-            throw new ArgumentNullException(nameof(binding));
-        }
+        ArgHelper.ThrowIfNull(documentContext);
+        ArgHelper.ThrowIfNull(attributeName);
+        ArgHelper.ThrowIfNull(binding);
 
         using var matchingBoundAttributes = new PooledArrayBuilder<BoundAttributeDescriptor>();
 
@@ -83,80 +70,72 @@ internal static class TagHelperFacts
         return matchingBoundAttributes.ToImmutableAndClear();
     }
 
-    public static ImmutableArray<TagHelperDescriptor> GetTagHelpersGivenTag(
+    public static TagHelperCollection GetTagHelpersGivenTag(
         TagHelperDocumentContext documentContext,
         string tagName,
         string? parentTag)
     {
-        if (documentContext is null)
-        {
-            throw new ArgumentNullException(nameof(documentContext));
-        }
-
-        if (tagName is null)
-        {
-            throw new ArgumentNullException(nameof(tagName));
-        }
+        ArgHelper.ThrowIfNull(documentContext);
+        ArgHelper.ThrowIfNull(tagName);
 
         if (documentContext?.TagHelpers is not { Count: > 0 } tagHelpers)
         {
-            return ImmutableArray<TagHelperDescriptor>.Empty;
+            return [];
         }
 
         var prefix = documentContext?.Prefix ?? string.Empty;
         if (!tagName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
         {
             // Can't possibly match TagHelpers, it doesn't start with the TagHelperPrefix.
-            return ImmutableArray<TagHelperDescriptor>.Empty;
+            return [];
         }
 
-        using var matchingDescriptors = new PooledArrayBuilder<TagHelperDescriptor>();
-
-        var tagNameWithoutPrefix = tagName.AsSpan()[prefix.Length..];
-
-        foreach (var tagHelper in tagHelpers)
+        return TagHelperCollection.Build((tagHelpers, tagName, parentTag, prefix), static (ref builder, state) =>
         {
-            foreach (var rule in tagHelper.TagMatchingRules)
+            var (tagHelpers, tagName, parentTag, prefix) = state;
+
+            var tagNameWithoutPrefix = tagName.AsSpan()[prefix.Length..];
+
+            foreach (var tagHelper in tagHelpers)
             {
-                if (TagHelperMatchingConventions.SatisfiesTagName(rule, tagNameWithoutPrefix) &&
-                    TagHelperMatchingConventions.SatisfiesParentTag(rule, parentTag.AsSpanOrDefault()))
+                foreach (var rule in tagHelper.TagMatchingRules)
                 {
-                    matchingDescriptors.Add(tagHelper);
-                    break;
+                    if (TagHelperMatchingConventions.SatisfiesTagName(rule, tagNameWithoutPrefix) &&
+                        TagHelperMatchingConventions.SatisfiesParentTag(rule, parentTag.AsSpan()))
+                    {
+                        builder.Add(tagHelper);
+                        break;
+                    }
                 }
             }
-        }
-
-        return matchingDescriptors.ToImmutableAndClear();
+        });
     }
 
-    public static ImmutableArray<TagHelperDescriptor> GetTagHelpersGivenParent(TagHelperDocumentContext documentContext, string? parentTag)
+    public static TagHelperCollection GetTagHelpersGivenParent(TagHelperDocumentContext documentContext, string? parentTag)
     {
-        if (documentContext is null)
-        {
-            throw new ArgumentNullException(nameof(documentContext));
-        }
+        ArgHelper.ThrowIfNull(documentContext);
 
         if (documentContext?.TagHelpers is not { Count: > 0 } tagHelpers)
         {
-            return ImmutableArray<TagHelperDescriptor>.Empty;
+            return [];
         }
 
-        using var matchingDescriptors = new PooledArrayBuilder<TagHelperDescriptor>();
-
-        foreach (var descriptor in tagHelpers)
+        return TagHelperCollection.Build((tagHelpers, parentTag), static (ref builder, state) =>
         {
-            foreach (var rule in descriptor.TagMatchingRules)
+            var (tagHelpers, parentTag) = state;
+
+            foreach (var descriptor in tagHelpers)
             {
-                if (TagHelperMatchingConventions.SatisfiesParentTag(rule, parentTag.AsSpanOrDefault()))
+                foreach (var rule in descriptor.TagMatchingRules)
                 {
-                    matchingDescriptors.Add(descriptor);
-                    break;
+                    if (TagHelperMatchingConventions.SatisfiesParentTag(rule, parentTag.AsSpan()))
+                    {
+                        builder.Add(descriptor);
+                        break;
+                    }
                 }
             }
-        }
-
-        return matchingDescriptors.ToImmutableAndClear();
+        });
     }
 
     public static ImmutableArray<KeyValuePair<string, string>> StringifyAttributes(SyntaxList<RazorSyntaxNode> attributes)

@@ -344,7 +344,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Gets a list of descendant nodes (including this node) in prefix document order.
     /// </summary>
     /// <param name="descendIntoChildren">An optional function that determines if the search descends into the argument node's children.</param>
-    public IEnumerable<SyntaxNodeOrToken> DescendandNodesAndTokensAndSelf(Func<SyntaxNode, bool>? descendIntoChildren = null)
+    public IEnumerable<SyntaxNodeOrToken> DescendantNodesAndTokensAndSelf(Func<SyntaxNode, bool>? descendIntoChildren = null)
     {
         return DescendantNodesAndTokensImpl(Span, descendIntoChildren, includeSelf: true);
     }
@@ -353,7 +353,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// Gets a list of descendant nodes (including this node) in prefix document order.
     /// </summary>
     /// <param name="descendIntoChildren">An optional function that determines if the search descends into the argument node's children.</param>
-    public IEnumerable<SyntaxNodeOrToken> DescendandNodesAndTokensAndSelf(TextSpan span, Func<SyntaxNode, bool>? descendIntoChildren = null)
+    public IEnumerable<SyntaxNodeOrToken> DescendantNodesAndTokensAndSelf(TextSpan span, Func<SyntaxNode, bool>? descendIntoChildren = null)
     {
         return DescendantNodesAndTokensImpl(span, descendIntoChildren, includeSelf: true);
     }
@@ -445,7 +445,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// </summary>
     public IEnumerable<SyntaxNodeOrToken> GetAnnotatedNodesAndTokens(string annotationKind)
     {
-        return DescendandNodesAndTokensAndSelf(n => n.ContainsAnnotations)
+        return DescendantNodesAndTokensAndSelf(n => n.ContainsAnnotations)
             .Where(t => t.HasAnnotations(annotationKind));
     }
 
@@ -454,7 +454,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// </summary>
     public IEnumerable<SyntaxNodeOrToken> GetAnnotatedNodesAndTokens(params string[] annotationKinds)
     {
-        return DescendandNodesAndTokensAndSelf(n => n.ContainsAnnotations)
+        return DescendantNodesAndTokensAndSelf(n => n.ContainsAnnotations)
             .Where(t => t.HasAnnotations(annotationKinds));
     }
 
@@ -463,7 +463,7 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
     /// </summary>
     public IEnumerable<SyntaxNodeOrToken> GetAnnotatedNodesAndTokens(SyntaxAnnotation annotation)
     {
-        return DescendandNodesAndTokensAndSelf(n => n.ContainsAnnotations)
+        return DescendantNodesAndTokensAndSelf(n => n.ContainsAnnotations)
             .Where(t => t.HasAnnotation(annotation));
     }
 

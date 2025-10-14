@@ -572,7 +572,7 @@ internal static class StringExtensions
         /// </returns>
         public static string Build<TState>(TState state, MemoryBuilderAction<ReadOnlyMemory<char>, TState> action)
         {
-            var builder = new MemoryBuilder<ReadOnlyMemory<char>>();
+            var builder = new MemoryBuilder<ReadOnlyMemory<char>>(initialCapacity: 32, clearArray: true);
             try
             {
                 action(ref builder, state);
@@ -595,7 +595,7 @@ internal static class StringExtensions
         /// </returns>
         public static string Build(MemoryBuilderAction<ReadOnlyMemory<char>> action)
         {
-            var builder = new MemoryBuilder<ReadOnlyMemory<char>>();
+            var builder = new MemoryBuilder<ReadOnlyMemory<char>>(initialCapacity: 32, clearArray: true);
             try
             {
                 action(ref builder);
@@ -626,7 +626,7 @@ internal static class StringExtensions
         /// </returns>
         public static string? TryBuild<TState>(TState state, MemoryBuilderFunc<ReadOnlyMemory<char>, TState, bool> func)
         {
-            var builder = new MemoryBuilder<ReadOnlyMemory<char>>();
+            var builder = new MemoryBuilder<ReadOnlyMemory<char>>(initialCapacity: 32, clearArray: true);
             try
             {
                 if (func(ref builder, state))
@@ -655,7 +655,7 @@ internal static class StringExtensions
         /// </returns>
         public static string? TryBuild(MemoryBuilderFunc<ReadOnlyMemory<char>, bool> func)
         {
-            var builder = new MemoryBuilder<ReadOnlyMemory<char>>();
+            var builder = new MemoryBuilder<ReadOnlyMemory<char>>(initialCapacity: 32, clearArray: true);
             try
             {
                 if (func(ref builder))

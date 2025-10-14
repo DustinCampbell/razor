@@ -7,9 +7,12 @@ namespace Microsoft.AspNetCore.Razor;
 
 internal static class MemoryBuilderExtensions
 {
-    public static void Append(this ref MemoryBuilder<ReadOnlyMemory<char>> builder, string value)
+    public static void Append(this ref MemoryBuilder<ReadOnlyMemory<char>> builder, string? value)
     {
-        builder.Append(value.AsMemory());
+        if (value?.Length > 0)
+        {
+            builder.Append(value.AsMemory());
+        }
     }
 
     /// <summary>

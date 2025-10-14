@@ -59,7 +59,7 @@ internal ref struct MemoryBuilder<T>
         }
     }
 
-    public ref T this[int index]
+    public readonly ref T this[int index]
     {
         get
         {

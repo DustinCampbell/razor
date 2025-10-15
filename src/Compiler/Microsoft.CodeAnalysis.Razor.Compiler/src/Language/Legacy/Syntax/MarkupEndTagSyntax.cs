@@ -14,5 +14,5 @@ internal partial class MarkupEndTagSyntax : ILegacySyntax
         => WithEditHandler(editHandler);
 
     public MarkupEndTagSyntax Update(ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
-        => Update(OpenAngle, ForwardSlash, Bang, Name, MiscAttributeContent, CloseAngle, chunkGenerator, editHandler, IsMarkupTransition);
+        => Update(OpenAngle, ForwardSlash, Bang, Name, MiscAttributeContent, CloseAngle, IsMarkupTransition, chunkGenerator, editHandler);
 }

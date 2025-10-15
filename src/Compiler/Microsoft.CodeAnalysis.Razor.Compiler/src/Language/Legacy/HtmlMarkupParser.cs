@@ -758,9 +758,9 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
             attributes,
             forwardSlashToken,
             closeAngleToken,
+            isMarkupTransition: false,
             chunkGenerator,
-            GetEditHandler(),
-            isMarkupTransition: false);
+            GetEditHandler());
 
         if (string.Equals(tagName, ScriptTagName, StringComparison.OrdinalIgnoreCase))
         {
@@ -834,9 +834,9 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
                 attributes: miscAttributeContentBuilder.ToList(),
                 forwardSlash: forwardSlashToken,
                 closeAngle: closeAngleToken,
+                isMarkupTransition: true,
                 chunkGenerator,
-                GetEditHandler(),
-                isMarkupTransition: true);
+                GetEditHandler());
         }
     }
 
@@ -951,9 +951,9 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
             tagNameToken,
             miscAttributeContent,
             closeAngleToken,
+            isMarkupTransition: false,
             chunkGenerator,
-            GetEditHandler(),
-            isMarkupTransition: false);
+            GetEditHandler());
     }
 
     private MarkupEndTagSyntax ParseEndTextTag(SyntaxToken openAngleToken, SyntaxToken forwardSlashToken, out bool isWellFormed)
@@ -1000,9 +1000,9 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
             name: tagNameToken,
             miscAttributeContent: miscAttributeContent,
             closeAngle: closeAngleToken,
+            isMarkupTransition: true,
             chunkGenerator,
-            GetEditHandler(),
-            isMarkupTransition: true);
+            GetEditHandler());
     }
 
     private void ParseAttributes(in SyntaxListBuilder<RazorSyntaxNode> builder)
@@ -1570,9 +1570,9 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
                 name: tagNameToken,
                 miscAttributeContent: miscContent,
                 closeAngle: closeAngleToken,
+                isMarkupTransition: false,
                 chunkGenerator,
-                GetEditHandler(),
-                isMarkupTransition: false);
+                GetEditHandler());
         }
 
         var element = SyntaxFactory.MarkupElement(startTag, builder.Consume(), endTag);

@@ -173,9 +173,9 @@
     <Field Name="CloseAngle" Type="SyntaxToken" Override="true">
       <Kind Name="CloseAngle" />
     </Field>
+    <Field Name="IsMarkupTransition" Type="bool" Optional="true" />
     <Field Name="ChunkGenerator" Type="ISpanChunkGenerator" Optional="true" Override="true" />
     <Field Name="EditHandler" Type="SpanEditHandler" Optional="true" Override ="true" />
-    <Field Name="IsMarkupTransition" Type="bool" Optional="true" />
   </Node>
   <Node Name="MarkupEndTagSyntax" Base="BaseMarkupEndTagSyntax">
     <Kind Name="MarkupEndTag" />
@@ -195,9 +195,9 @@
     <Field Name="CloseAngle" Type="SyntaxToken" Override="true">
       <Kind Name="CloseAngle" />
     </Field>
+    <Field Name="IsMarkupTransition" Type="bool" Optional="true" />
     <Field Name="ChunkGenerator" Type="ISpanChunkGenerator" Optional="true" Override="true" />
     <Field Name="EditHandler" Type="SpanEditHandler" Optional="true" Override="true" />
-    <Field Name="IsMarkupTransition" Type="bool" Optional="true" />
   </Node>
   <Node Name="MarkupTagHelperElementSyntax" Base="MarkupSyntaxNode">
     <Kind Name="MarkupTagHelperElement" />

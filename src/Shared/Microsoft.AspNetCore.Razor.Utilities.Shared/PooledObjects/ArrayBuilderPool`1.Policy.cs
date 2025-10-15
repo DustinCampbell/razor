@@ -6,19 +6,20 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class ArrayBuilderPool<T>
+internal partial class ArrayBuilderPool<T>
 {
-    private class Policy : IPooledObjectPolicy<ImmutableArray<T>.Builder>
+    protected class Policy : IPooledObjectPolicy<ImmutableArray<T>.Builder>
     {
         public static readonly Policy Instance = new();
 
-        private Policy()
+        protected Policy()
         {
         }
 
-        public ImmutableArray<T>.Builder Create() => ImmutableArray.CreateBuilder<T>();
+        public virtual ImmutableArray<T>.Builder Create()
+            => ImmutableArray.CreateBuilder<T>();
 
-        public bool Return(ImmutableArray<T>.Builder builder)
+        public virtual bool Return(ImmutableArray<T>.Builder builder)
         {
             var count = builder.Count;
 

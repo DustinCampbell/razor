@@ -14,9 +14,14 @@ namespace Microsoft.AspNetCore.Razor.PooledObjects;
 /// Instances originating from this pool are intended to be short-lived and are suitable
 /// for temporary work. Do not return them as the results of methods or store them in fields.
 /// </remarks>
-internal static partial class StackPool<T>
+internal partial class StackPool<T> : DefaultObjectPool<Stack<T>>
 {
-    public static readonly ObjectPool<Stack<T>> Default = DefaultPool.Create(Policy.Instance);
+    public static readonly StackPool<T> Default = new(Policy.Instance, size: DefaultPool.DefaultPoolSize);
+
+    protected StackPool(IPooledObjectPolicy<Stack<T>> policy, int size)
+        : base(policy, size)
+    {
+    }
 
     public static PooledObject<Stack<T>> GetPooledObject() => Default.GetPooledObject();
 

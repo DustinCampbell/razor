@@ -15,16 +15,18 @@ namespace Microsoft.AspNetCore.Razor.PooledObjects;
 /// Instances originating from this pool are intended to be short-lived and are suitable
 /// for temporary work. Do not return them as the results of methods or store them in fields.
 /// </remarks>
-internal static partial class StringDictionaryPool<TValue>
+internal partial class StringDictionaryPool<TValue> : DictionaryPool<string, TValue>
 {
-    public static readonly ObjectPool<Dictionary<string, TValue>> Ordinal = DictionaryPool<string, TValue>.Create(StringComparer.Ordinal);
-    public static readonly ObjectPool<Dictionary<string, TValue>> OrdinalIgnoreCase = DictionaryPool<string, TValue>.Create(StringComparer.OrdinalIgnoreCase);
+    public static readonly StringDictionaryPool<TValue> Ordinal = Create(StringComparer.Ordinal);
+    public static readonly StringDictionaryPool<TValue> OrdinalIgnoreCase = Create(StringComparer.OrdinalIgnoreCase);
 
-    public static PooledObject<Dictionary<string, TValue>> GetPooledObject()
-        => Ordinal.GetPooledObject();
+    protected StringDictionaryPool(IPooledObjectPolicy<Dictionary<string, TValue>> policy, int size)
+        : base(policy, size)
+    {
+    }
 
-    public static PooledObject<Dictionary<string, TValue>> GetPooledObject(out Dictionary<string, TValue> map)
-        => Ordinal.GetPooledObject(out map);
+    public new static StringDictionaryPool<TValue> Create(IEqualityComparer<string> comparer)
+        => new(new Policy(comparer), size: DefaultPool.DefaultPoolSize);
 
     public static PooledObject<Dictionary<string, TValue>> GetPooledObject(bool ignoreCase)
         => ignoreCase

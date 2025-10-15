@@ -6,19 +6,19 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class StopwatchPool
+internal partial class StopwatchPool
 {
-    private class Policy : IPooledObjectPolicy<Stopwatch>
+    protected class Policy : IPooledObjectPolicy<Stopwatch>
     {
         public static readonly Policy Instance = new();
 
-        private Policy()
+        protected Policy()
         {
         }
 
-        public Stopwatch Create() => new();
+        public virtual Stopwatch Create() => new();
 
-        public bool Return(Stopwatch watch)
+        public virtual bool Return(Stopwatch watch)
         {
             watch.Reset();
             return true;

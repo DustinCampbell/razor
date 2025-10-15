@@ -15,13 +15,18 @@ namespace Microsoft.AspNetCore.Razor.PooledObjects;
 /// Instances originating from this pool are intended to be short-lived and are suitable
 /// for temporary work. Do not return them as the results of methods or store them in fields.
 /// </remarks>
-internal static partial class DictionaryBuilderPool<TKey, TValue>
+internal partial class DictionaryBuilderPool<TKey, TValue> : DefaultObjectPool<ImmutableDictionary<TKey, TValue>.Builder>
     where TKey : notnull
 {
-    public static readonly ObjectPool<ImmutableDictionary<TKey, TValue>.Builder> Default = DefaultPool.Create(Policy.Instance);
+    public static readonly DictionaryBuilderPool<TKey, TValue> Default = new(Policy.Instance, size: DefaultPool.DefaultPoolSize);
 
-    public static ObjectPool<ImmutableDictionary<TKey, TValue>.Builder> Create(IEqualityComparer<TKey> comparer)
-        => DefaultPool.Create(new Policy(comparer));
+    protected DictionaryBuilderPool(IPooledObjectPolicy<ImmutableDictionary<TKey, TValue>.Builder> policy, int size)
+        : base(policy, size)
+    {
+    }
+
+    public static DictionaryBuilderPool<TKey, TValue> Create(IEqualityComparer<TKey> comparer)
+        => new(new Policy(comparer), size: DefaultPool.DefaultPoolSize);
 
     public static PooledObject<ImmutableDictionary<TKey, TValue>.Builder> GetPooledObject()
         => Default.GetPooledObject();

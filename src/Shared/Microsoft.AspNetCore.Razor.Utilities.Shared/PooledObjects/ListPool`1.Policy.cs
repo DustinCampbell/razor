@@ -6,19 +6,19 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class ListPool<T>
+internal partial class ListPool<T>
 {
-    private class Policy : IPooledObjectPolicy<List<T>>
+    protected class Policy : IPooledObjectPolicy<List<T>>
     {
         public static readonly Policy Instance = new();
 
-        private Policy()
+        protected Policy()
         {
         }
 
-        public List<T> Create() => new();
+        public virtual List<T> Create() => [];
 
-        public bool Return(List<T> list)
+        public virtual bool Return(List<T> list)
         {
             var count = list.Count;
 

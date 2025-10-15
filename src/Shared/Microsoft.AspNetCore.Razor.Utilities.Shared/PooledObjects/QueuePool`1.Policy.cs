@@ -6,19 +6,19 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace Microsoft.AspNetCore.Razor.PooledObjects;
 
-internal static partial class QueuePool<T>
+internal partial class QueuePool<T>
 {
-    private class Policy : IPooledObjectPolicy<Queue<T>>
+    protected class Policy : IPooledObjectPolicy<Queue<T>>
     {
         public static readonly Policy Instance = new();
 
-        private Policy()
+        protected Policy()
         {
         }
 
-        public Queue<T> Create() => new Queue<T>();
+        public virtual Queue<T> Create() => [];
 
-        public bool Return(Queue<T> queue)
+        public virtual bool Return(Queue<T> queue)
         {
             var count = queue.Count;
 

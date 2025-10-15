@@ -73,12 +73,7 @@ internal static class SyntaxUtilities
         {
             if (literals.Count > 0)
             {
-                var mergedLiteral = MergeTextLiterals(literals.ToArrayAndClear());
-
-                if (includeEditHandler)
-                {
-                    mergedLiteral = mergedLiteral.WithEditHandlerGreen(latestEditHandler);
-                }
+                var mergedLiteral = MergeTextLiterals(literals.ToArrayAndClear(), includeEditHandler ? latestEditHandler : null);
 
                 latestEditHandler = null;
                 newChildren.Add(mergedLiteral);
@@ -86,7 +81,8 @@ internal static class SyntaxUtilities
         }
     }
 
-    private static InternalSyntax.MarkupTextLiteralSyntax MergeTextLiterals(params ReadOnlySpan<MarkupTextLiteralSyntax> literals)
+    private static InternalSyntax.MarkupTextLiteralSyntax MergeTextLiterals(
+        ReadOnlySpan<MarkupTextLiteralSyntax> literals, SpanEditHandler? editHandler)
     {
         using PooledArrayBuilder<SyntaxToken> builder = [];
 
@@ -97,7 +93,8 @@ internal static class SyntaxUtilities
 
         return InternalSyntax.SyntaxFactory.MarkupTextLiteral(
             literalTokens: builder.ToGreenListNode().ToGreenList<InternalSyntax.SyntaxToken>(),
-            chunkGenerator: null);
+            chunkGenerator: null,
+            editHandler);
     }
 
     internal static SyntaxList<RazorSyntaxNode> GetRewrittenMarkupEndTagChildren(
@@ -124,12 +121,8 @@ internal static class SyntaxUtilities
 
         var markupTransition = InternalSyntax.SyntaxFactory.MarkupTransition(
             builder.ToGreenListNode().ToGreenList<InternalSyntax.SyntaxToken>(),
-            chunkGenerator);
-
-        if (includeEditHandler && node.GetEditHandler() is { } editHandler)
-        {
-            markupTransition = markupTransition.WithEditHandlerGreen(editHandler);
-        }
+            chunkGenerator,
+            includeEditHandler ? node.GetEditHandler() : null);
 
         return new(markupTransition.CreateRed(node, node.Position));
     }

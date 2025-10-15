@@ -409,7 +409,7 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
         AcceptAndMoveNext();
         SetAcceptedCharacters(AcceptedCharactersInternal.None);
         chunkGenerator = SpanChunkGenerator.Null;
-        var transition = GetNodeWithEditHandler(SyntaxFactory.MarkupTransition(Output(), chunkGenerator));
+        var transition = SyntaxFactory.MarkupTransition(Output(), chunkGenerator, GetEditHandler());
         builder.Add(transition);
 
         // "@:" => Explicit Single Line Block
@@ -759,6 +759,7 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
             forwardSlashToken,
             closeAngleToken,
             chunkGenerator,
+            GetEditHandler(),
             isMarkupTransition: false);
 
         if (string.Equals(tagName, ScriptTagName, StringComparison.OrdinalIgnoreCase))
@@ -780,7 +781,7 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
             tagMode = MarkupTagMode.Invalid;
         }
 
-        return GetNodeWithEditHandler(startTag);
+        return startTag;
     }
 
     private MarkupStartTagSyntax ParseStartTextTag(SyntaxToken openAngleToken, out MarkupTagMode tagMode, out bool isWellFormed)
@@ -825,7 +826,8 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
 
             isWellFormed = true;
             chunkGenerator = SpanChunkGenerator.Null;
-            var startTextTag = SyntaxFactory.MarkupStartTag(
+
+            return SyntaxFactory.MarkupStartTag(
                 openAngleToken,
                 bang: null,
                 name: tagNameToken,
@@ -833,9 +835,8 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
                 forwardSlash: forwardSlashToken,
                 closeAngle: closeAngleToken,
                 chunkGenerator,
+                GetEditHandler(),
                 isMarkupTransition: true);
-
-            return GetNodeWithEditHandler(startTextTag);
         }
     }
 
@@ -943,7 +944,7 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
         }
 
         // End tag block
-        var endTag = SyntaxFactory.MarkupEndTag(
+        return SyntaxFactory.MarkupEndTag(
             openAngleToken,
             forwardSlashToken,
             bangToken,
@@ -951,9 +952,8 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
             miscAttributeContent,
             closeAngleToken,
             chunkGenerator,
+            GetEditHandler(),
             isMarkupTransition: false);
-
-        return GetNodeWithEditHandler(endTag);
     }
 
     private MarkupEndTagSyntax ParseEndTextTag(SyntaxToken openAngleToken, SyntaxToken forwardSlashToken, out bool isWellFormed)
@@ -993,7 +993,7 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
         }
 
         chunkGenerator = SpanChunkGenerator.Null;
-        var endTextTag = SyntaxFactory.MarkupEndTag(
+        return SyntaxFactory.MarkupEndTag(
             openAngleToken,
             forwardSlashToken,
             bang: null,
@@ -1001,9 +1001,8 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
             miscAttributeContent: miscAttributeContent,
             closeAngle: closeAngleToken,
             chunkGenerator,
+            GetEditHandler(),
             isMarkupTransition: true);
-
-        return GetNodeWithEditHandler(endTextTag);
     }
 
     private void ParseAttributes(in SyntaxListBuilder<RazorSyntaxNode> builder)
@@ -1572,9 +1571,8 @@ internal class HtmlMarkupParser : TokenizerBackedParser<HtmlTokenizer>
                 miscAttributeContent: miscContent,
                 closeAngle: closeAngleToken,
                 chunkGenerator,
+                GetEditHandler(),
                 isMarkupTransition: false);
-
-            endTag = GetNodeWithEditHandler(endTag);
         }
 
         var element = SyntaxFactory.MarkupElement(startTag, builder.Consume(), endTag);

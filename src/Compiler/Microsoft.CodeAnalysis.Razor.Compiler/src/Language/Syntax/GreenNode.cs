@@ -331,11 +331,13 @@ internal abstract class GreenNode
 
     private string GetDebuggerDisplay()
     {
-        return string.Build((ref builder) =>
+        return string.Build(state: (GetType().Name, Kind), static (ref builder, state) =>
         {
-            builder.Append(GetType().Name);
+            var (name, kind) = state;
+
+            builder.Append(name);
             builder.Append("<");
-            builder.Append(Kind.ToString());
+            builder.Append(kind.ToString());
             builder.Append(">");
         });
     }
@@ -373,7 +375,7 @@ internal abstract class GreenNode
     {
         return _width == 0
             ? string.Empty
-            : string.Build(AppendContent);
+            : string.Build(this, static (ref builder, @this) => @this.AppendContent(ref builder));
     }
 
     #endregion

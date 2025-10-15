@@ -11,14 +11,18 @@ internal sealed partial class MarkupMinimizedTagHelperDirectiveAttributeSyntax
     {
         get
         {
-            return field ??= string.Build(AppendContent);
+            return field ??= string.Build((Transition, Name, Colon, ParameterName), AppendContent);
 
-            void AppendContent(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+            static void AppendContent(
+                ref MemoryBuilder<ReadOnlyMemory<char>> builder,
+                (RazorMetaCodeSyntax, MarkupTextLiteralSyntax, RazorMetaCodeSyntax?, MarkupTextLiteralSyntax?) state)
             {
-                Transition.AppendContent(ref builder);
-                Name.AppendContent(ref builder);
-                Colon?.AppendContent(ref builder);
-                ParameterName?.AppendContent(ref builder);
+                var (transition, name, colon, parameterName) = state;
+
+                transition.AppendContent(ref builder);
+                name.AppendContent(ref builder);
+                colon?.AppendContent(ref builder);
+                parameterName?.AppendContent(ref builder);
             }
         }
     }

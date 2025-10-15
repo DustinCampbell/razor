@@ -501,14 +501,39 @@ internal abstract partial class SyntaxNode(GreenNode green, SyntaxNode parent, i
         return GetAnnotatedNodesAndTokens(annotationKind).Where(n => n.IsToken).Select(n => n.AsToken());
     }
 
+    internal SyntaxNode WithAdditionalAnnotationInternal(SyntaxAnnotation annotation)
+    {
+        var newGreen = Green.WithAdditionalAnnotationGreen(annotation);
+
+        return Green != newGreen ? newGreen.CreateRed() : this;
+    }
+
     internal SyntaxNode WithAdditionalAnnotationsInternal(IEnumerable<SyntaxAnnotation> annotations)
     {
-        return Green.WithAdditionalAnnotationsGreen(annotations).CreateRed();
+        var newGreen = Green.WithAdditionalAnnotationsGreen(annotations);
+
+        return Green != newGreen ? newGreen.CreateRed() : this;
+    }
+
+    internal SyntaxNode GetNodeWithoutAnnotation(SyntaxAnnotation annotation)
+    {
+        var newGreen = Green.WithoutAnnotationGreen(annotation);
+
+        return Green != newGreen ? newGreen.CreateRed() : this;
+    }
+
+    internal SyntaxNode GetNodeWithoutAnnotations(string annotationKind)
+    {
+        var newGreen = Green.WithoutAnnotationsGreen(annotationKind);
+
+        return Green != newGreen ? newGreen.CreateRed() : this;
     }
 
     internal SyntaxNode GetNodeWithoutAnnotations(IEnumerable<SyntaxAnnotation> annotations)
     {
-        return Green.WithoutAnnotationsGreen(annotations).CreateRed();
+        var newGreen = Green.WithoutAnnotationsGreen(annotations);
+
+        return Green != newGreen ? newGreen.CreateRed() : this;
     }
 
     /// <summary>

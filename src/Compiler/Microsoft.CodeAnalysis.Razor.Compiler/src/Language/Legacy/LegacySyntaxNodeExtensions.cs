@@ -102,7 +102,7 @@ internal static partial class LegacySyntaxNodeExtensions
             return newNode;
         }
 
-        return newNode.WithAdditionalAnnotations(new SyntaxAnnotation(SyntaxConstants.EditHandlerKind, editHandler));
+        return newNode.WithAdditionalAnnotation(new(SyntaxConstants.EditHandlerKind, editHandler));
     }
 
     public static TNode WithEditHandlerGreen<TNode>(this TNode node, SpanEditHandler? editHandler)
@@ -117,7 +117,7 @@ internal static partial class LegacySyntaxNodeExtensions
             return newNode;
         }
 
-        return newNode.WithAdditionalAnnotationsGreen(new SyntaxAnnotation(SyntaxConstants.EditHandlerKind, editHandler));
+        return newNode.WithAdditionalAnnotationGreen(new(SyntaxConstants.EditHandlerKind, editHandler));
     }
 
     [Obsolete("Use FindToken or FindInnermostNode instead", error: false)]

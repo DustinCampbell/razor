@@ -3,8 +3,11 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
@@ -26,61 +29,103 @@ internal static class GreenNodeExtensions
 
 #nullable enable
 
+    public static TNode WithAnnotationGreen<TNode>(this TNode node, SyntaxAnnotation annotation)
+        where TNode : GreenNode
+    {
+        return (TNode)node.SetAnnotations([annotation]);
+    }
+
     public static TNode WithAnnotationsGreen<TNode>(this TNode node, IEnumerable<SyntaxAnnotation> annotations)
         where TNode : GreenNode
     {
-        using var newAnnotations = new PooledArrayBuilder<SyntaxAnnotation>();
+        if (!annotations.TryGetCount(out var count))
+        {
+            return WithAnnotationsGreenSlow(node, annotations);
+        }
+
+        if (count == 0)
+        {
+            return node;
+        }
+
+        using var newAnnotations = new PooledHashSet<SyntaxAnnotation>(count);
+
+        var result = new SyntaxAnnotation[count];
+        var index = 0;
 
         foreach (var candidate in annotations)
         {
-            if (!newAnnotations.Contains(candidate))
+            if (!newAnnotations.Add(candidate))
             {
-                newAnnotations.Add(candidate);
+                result[index++] = candidate;
             }
         }
 
-        if (newAnnotations.Count == 0)
+        if (result.Length > index)
         {
-            var existingAnnotations = node.GetAnnotations();
-            return existingAnnotations.Length > 0
-                ? (TNode)node.SetAnnotations(null)
-                : node;
+            // Resize the array if annotations contained duplicates.
+            Array.Resize(ref result, index);
         }
-        else
+
+        return (TNode)node.SetAnnotations(result);
+
+        static TNode WithAnnotationsGreenSlow(TNode node, IEnumerable<SyntaxAnnotation> annotations)
         {
-            return (TNode)node.SetAnnotations(newAnnotations.ToArrayAndClear());
+            using var newAnnotations = new PooledHashSet<SyntaxAnnotation>();
+            using var builder = new PooledArrayBuilder<SyntaxAnnotation>();
+
+            foreach (var candidate in annotations)
+            {
+                if (!newAnnotations.Add(candidate))
+                {
+                    builder.Add(candidate);
+                }
+            }
+
+            return (TNode)node.SetAnnotations(builder.ToArrayAndClear());
         }
     }
 
-    public static TNode WithAdditionalAnnotationsGreen<TNode>(this TNode node, SyntaxAnnotation annotation)
+    public static TNode WithAdditionalAnnotationGreen<TNode>(this TNode node, SyntaxAnnotation annotation)
         where TNode : GreenNode
     {
+        ArgHelper.ThrowIfNull(annotation);
+
         var existingAnnotations = node.GetAnnotations();
-
-        using var newAnnotations = new PooledArrayBuilder<SyntaxAnnotation>(capacity: existingAnnotations.Length);
-        newAnnotations.AddRange(existingAnnotations);
-
-        if (!newAnnotations.Contains(annotation))
+        if (existingAnnotations.Length == 0)
         {
-            newAnnotations.Add(annotation);
+            return (TNode)node.SetAnnotations([annotation]);
         }
 
-        return newAnnotations.Count != existingAnnotations.Length
-            ? (TNode)node.SetAnnotations(newAnnotations.ToArrayAndClear())
-            : node;
+        if (existingAnnotations.Contains(annotation))
+        {
+            // If we already have this annotation, we're done.
+            return node;
+        }
+
+        var result = new SyntaxAnnotation[existingAnnotations.Length + 1];
+        existingAnnotations.CopyTo(result);
+        result[^1] = annotation;
+
+        return (TNode)node.SetAnnotations(result);
     }
 
     public static TNode WithAdditionalAnnotationsGreen<TNode>(this TNode node, IEnumerable<SyntaxAnnotation> annotations)
         where TNode : GreenNode
     {
+        ArgHelper.ThrowIfNull(annotations);
+
         var existingAnnotations = node.GetAnnotations();
+
+        using var existingAnnotationSet = new PooledHashSet<SyntaxAnnotation>(existingAnnotations.Length);
+        existingAnnotationSet.UnionWith(existingAnnotations);
 
         using var newAnnotations = new PooledArrayBuilder<SyntaxAnnotation>(capacity: existingAnnotations.Length);
         newAnnotations.AddRange(existingAnnotations);
 
         foreach (var candidate in annotations)
         {
-            if (!newAnnotations.Contains(candidate))
+            if (!existingAnnotationSet.Contains(candidate))
             {
                 newAnnotations.Add(candidate);
             }
@@ -91,42 +136,149 @@ internal static class GreenNodeExtensions
             : node;
     }
 
+    public static TNode WithoutAnnotationGreen<TNode>(this TNode node, SyntaxAnnotation annotation)
+        where TNode : GreenNode
+    {
+        ArgHelper.ThrowIfNull(annotation);
+
+        var existingAnnotations = node.GetAnnotations();
+        if (existingAnnotations.Length == 0)
+        {
+            // If there aren't any existing annotations, we have nothing to remove.
+            return node;
+        }
+
+        var foundCount = 0;
+
+        foreach (var candidate in existingAnnotations)
+        {
+            if (candidate == annotation)
+            {
+                foundCount++;
+            }
+        }
+
+        if (foundCount == 0)
+        {
+            return node;
+        }
+
+        var result = new SyntaxAnnotation[existingAnnotations.Length - foundCount];
+        var index = 0;
+
+        foreach (var candidate in existingAnnotations)
+        {
+            if (candidate != annotation)
+            {
+                result[index++] = candidate;
+            }
+        }
+
+        Debug.Assert(index == result.Length);
+
+        return (TNode)node.SetAnnotations(result);
+    }
+
     public static TNode WithoutAnnotationsGreen<TNode>(this TNode node, string annotationKind)
         where TNode : GreenNode
     {
-        return node.HasAnnotations(annotationKind)
-            ? node.WithoutAnnotationsGreen(node.GetAnnotations(annotationKind))
-            : node;
+        ArgHelper.ThrowIfNull(annotationKind);
+
+        var existingAnnotations = node.GetAnnotations();
+        if (existingAnnotations.Length == 0)
+        {
+            // If there aren't any existing annotations, we have nothing to remove.
+            return node;
+        }
+
+        // First, determine how many annotations we'll need to remove.
+        var foundCount = 0;
+
+        foreach (var candidate in existingAnnotations)
+        {
+            if (candidate.Kind == annotationKind)
+            {
+                foundCount++;
+            }
+        }
+
+        if (foundCount == 0)
+        {
+            // If we don't have anything to remove, we're done.
+            return node;
+        }
+
+        var result = new SyntaxAnnotation[existingAnnotations.Length - foundCount];
+        var index = 0;
+
+        foreach (var candidate in existingAnnotations)
+        {
+            if (candidate.Kind != annotationKind)
+            {
+                result[index++] = candidate;
+            }
+        }
+
+        Debug.Assert(index == result.Length);
+
+        return (TNode)node.SetAnnotations(result);
     }
 
     public static TNode WithoutAnnotationsGreen<TNode>(this TNode node, IEnumerable<SyntaxAnnotation> annotations)
         where TNode : GreenNode
     {
-        var existingAnnotations = node.GetAnnotations();
+        ArgHelper.ThrowIfNull(annotations);
 
+        var existingAnnotations = node.GetAnnotations();
         if (existingAnnotations.Length == 0)
         {
+            // If there aren't any existing annotations, we have nothing to remove.
             return node;
         }
 
-        using var removalAnnotations = new PooledArrayBuilder<SyntaxAnnotation>();
-        removalAnnotations.AddRange(annotations);
+        PooledHashSet<SyntaxAnnotation> annotationsToRemove;
 
-        if (removalAnnotations.Count == 0)
+        if (annotations.TryGetCount(out var count))
         {
-            return node;
-        }
-
-        var newAnnotations = new PooledArrayBuilder<SyntaxAnnotation>();
-        foreach (var candidate in existingAnnotations)
-        {
-            if (!removalAnnotations.Contains(candidate))
+            if (count == 0)
             {
-                newAnnotations.Add(candidate);
+                // No annotations to remove!
+                return node;
             }
+
+            // Set the capacity to our count to limit HashSet growth.
+            annotationsToRemove = new PooledHashSet<SyntaxAnnotation>(count);
+        }
+        else
+        {
+            annotationsToRemove = new PooledHashSet<SyntaxAnnotation>();
         }
 
-        return (TNode)node.SetAnnotations(newAnnotations.ToArrayAndClear());
+        try
+        {
+            annotationsToRemove.UnionWith(annotations);
+
+            if (annotationsToRemove.Count == 0)
+            {
+                return node;
+            }
+
+            using var annotationsToKeep = new PooledArrayBuilder<SyntaxAnnotation>(existingAnnotations.Length);
+
+            foreach (var candidate in existingAnnotations)
+            {
+                if (!annotationsToRemove.Contains(candidate))
+                {
+                    annotationsToKeep.Add(candidate);
+                }
+            }
+
+            return (TNode)node.SetAnnotations(annotationsToKeep.ToArrayAndClear());
+        }
+        finally
+        {
+            annotationsToRemove.Dispose();
+        }
     }
 
 #nullable disable

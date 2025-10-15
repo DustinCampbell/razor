@@ -10,7 +10,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 public sealed class RazorDiagnostic : IEquatable<RazorDiagnostic>, IFormattable
 {
     private readonly RazorDiagnosticDescriptor _descriptor;
-    private readonly object[] _args;
+    private readonly object?[] _args;
 
     public string Id => _descriptor.Id;
     public RazorDiagnosticSeverity Severity => _descriptor.Severity;
@@ -18,11 +18,11 @@ public sealed class RazorDiagnostic : IEquatable<RazorDiagnostic>, IFormattable
 
     private Checksum? _checksum;
 
-    private RazorDiagnostic(RazorDiagnosticDescriptor descriptor, SourceSpan? span, object[]? args)
+    private RazorDiagnostic(RazorDiagnosticDescriptor descriptor, SourceSpan? span, object?[]? args)
     {
         _descriptor = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
         Span = span ?? SourceSpan.Undefined;
-        _args = args ?? Array.Empty<object>();
+        _args = args ?? [];
     }
 
     public static RazorDiagnostic Create(RazorDiagnosticDescriptor descriptor)
@@ -31,10 +31,10 @@ public sealed class RazorDiagnostic : IEquatable<RazorDiagnostic>, IFormattable
     public static RazorDiagnostic Create(RazorDiagnosticDescriptor descriptor, SourceSpan? span)
         => new(descriptor, span, args: null);
 
-    public static RazorDiagnostic Create(RazorDiagnosticDescriptor descriptor, params object[] args)
+    public static RazorDiagnostic Create(RazorDiagnosticDescriptor descriptor, params object?[] args)
         => new(descriptor, span: null, args);
 
-    public static RazorDiagnostic Create(RazorDiagnosticDescriptor descriptor, SourceSpan? span, params object[] args)
+    public static RazorDiagnostic Create(RazorDiagnosticDescriptor descriptor, SourceSpan? span, params object?[] args)
         => new(descriptor, span, args);
 
     internal Checksum Checksum
@@ -64,9 +64,9 @@ public sealed class RazorDiagnostic : IEquatable<RazorDiagnostic>, IFormattable
 
         return builder.FreeAndGetChecksum();
 
-        static object ConvertEnumIfNeeded(object value)
+        static object? ConvertEnumIfNeeded(object? value)
         {
-            if (value.GetType() is { IsEnum: true } enumType)
+            if (value?.GetType() is { IsEnum: true } enumType)
             {
                 var underlyingType = Enum.GetUnderlyingType(enumType);
 

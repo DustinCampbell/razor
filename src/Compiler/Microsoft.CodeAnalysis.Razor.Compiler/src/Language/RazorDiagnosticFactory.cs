@@ -471,7 +471,7 @@ internal static class RazorDiagnosticFactory
             Resources.RewriterError_EmptyTagHelperBoundAttribute,
             RazorDiagnosticSeverity.Error);
 
-    public static RazorDiagnostic CreateTagHelper_EmptyBoundAttribute(SourceSpan location, string attributeName, string tagName, string propertyTypeName)
+    public static RazorDiagnostic CreateTagHelper_EmptyBoundAttribute(SourceSpan location, string attributeName, string tagName, string? propertyTypeName)
         => RazorDiagnostic.Create(TagHelper_EmptyBoundAttribute, location, attributeName, tagName, propertyTypeName);
 
     internal static readonly RazorDiagnosticDescriptor TagHelper_CannotHaveNonTagContent =

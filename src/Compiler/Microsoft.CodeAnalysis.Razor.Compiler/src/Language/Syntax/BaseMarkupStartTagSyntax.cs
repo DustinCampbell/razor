@@ -39,7 +39,7 @@ internal abstract partial class BaseMarkupStartTagSyntax
 
         var containsAttributesContent = false;
 
-        var editHandler = this.GetEditHandler();
+        var editHandler = EditHandler;
         if (editHandler != null)
         {
             acceptsAnyHandler = SpanEditHandler.GetDefault(AcceptedCharactersInternal.Any);

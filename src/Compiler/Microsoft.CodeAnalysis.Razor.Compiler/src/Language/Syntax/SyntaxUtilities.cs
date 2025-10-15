@@ -32,7 +32,7 @@ internal static class SyntaxUtilities
 
                     if (includeEditHandler)
                     {
-                        latestEditHandler = literal.GetEditHandler() ?? latestEditHandler;
+                        latestEditHandler = literal.EditHandler ?? latestEditHandler;
                     }
 
                     break;
@@ -46,7 +46,7 @@ internal static class SyntaxUtilities
 
                             if (includeEditHandler)
                             {
-                                latestEditHandler = contentLiteral.GetEditHandler() ?? latestEditHandler;
+                                latestEditHandler = contentLiteral.EditHandler ?? latestEditHandler;
                             }
                         }
                         else

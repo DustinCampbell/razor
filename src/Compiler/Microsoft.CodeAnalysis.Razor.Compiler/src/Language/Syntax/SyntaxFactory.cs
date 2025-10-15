@@ -62,6 +62,10 @@ internal static partial class SyntaxFactory
     public static SyntaxTokenList TokenList(IEnumerable<SyntaxToken> tokens)
         => SyntaxList.Create(tokens);
 
+    public static CSharpExpressionLiteralSyntax CSharpExpressionLiteral(
+        SyntaxToken token, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
+        => CSharpExpressionLiteral(new SyntaxTokenList(token), chunkGenerator, editHandler);
+
     public static MarkupTextLiteralSyntax MarkupTextLiteral(
         SyntaxToken token, ISpanChunkGenerator? chunkGenerator, SpanEditHandler? editHandler)
         => MarkupTextLiteral(new SyntaxTokenList(token), chunkGenerator, editHandler);

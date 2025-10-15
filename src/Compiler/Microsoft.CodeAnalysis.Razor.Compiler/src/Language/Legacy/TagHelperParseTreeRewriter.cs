@@ -384,9 +384,7 @@ internal static class TagHelperParseTreeRewriter
                 endTag.Bang,
                 endTag.Name,
                 endTag.MiscAttributeContent,
-                endTag.CloseAngle,
-                chunkGenerator: null,
-                editHandler: null);
+                endTag.CloseAngle);
 
             return true;
         }

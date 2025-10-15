@@ -2711,8 +2711,7 @@ internal class CSharpCodeParser : TokenizerBackedParser<CSharpTokenizer>
         var directiveBody = SyntaxFactory.RazorDirectiveBody(keyword, csharpCode: null);
 
         // transition could be null if we're already inside a code block.
-        transition = transition ?? SyntaxFactory.CSharpTransition(
-            SyntaxFactory.MissingToken(SyntaxKind.Transition), chunkGenerator: null, editHandler: null);
+        transition ??= SyntaxFactory.CSharpTransition(SyntaxFactory.MissingToken(SyntaxKind.Transition));
         var directive = SyntaxFactory.RazorDirective(transition, directiveBody);
         builder.Add(directive);
     }

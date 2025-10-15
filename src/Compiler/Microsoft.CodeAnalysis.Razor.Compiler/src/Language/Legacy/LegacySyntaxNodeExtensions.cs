@@ -61,42 +61,10 @@ internal static partial class LegacySyntaxNodeExtensions
     }
 
     internal static ISpanChunkGenerator? GetChunkGenerator(this SyntaxNode node)
-        => node switch
-        {
-            MarkupStartTagSyntax syntax => syntax.ChunkGenerator,
-            MarkupEndTagSyntax syntax => syntax.ChunkGenerator,
-            MarkupEphemeralTextLiteralSyntax syntax => syntax.ChunkGenerator,
-            MarkupTagHelperStartTagSyntax syntax => syntax.ChunkGenerator,
-            MarkupTagHelperEndTagSyntax syntax => syntax.ChunkGenerator,
-            MarkupTextLiteralSyntax syntax => syntax.ChunkGenerator,
-            MarkupTransitionSyntax syntax => syntax.ChunkGenerator,
-            CSharpStatementLiteralSyntax syntax => syntax.ChunkGenerator,
-            CSharpExpressionLiteralSyntax syntax => syntax.ChunkGenerator,
-            CSharpEphemeralTextLiteralSyntax syntax => syntax.ChunkGenerator,
-            CSharpTransitionSyntax syntax => syntax.ChunkGenerator,
-            RazorMetaCodeSyntax syntax => syntax.ChunkGenerator,
-            UnclassifiedTextLiteralSyntax syntax => syntax.ChunkGenerator,
-            _ => null,
-        };
+        => (node as ILegacySyntax)?.ChunkGenerator;
 
     public static SpanEditHandler? GetEditHandler(this SyntaxNode node)
-        => node switch
-        {
-            MarkupStartTagSyntax syntax => syntax.EditHandler,
-            MarkupEndTagSyntax syntax => syntax.EditHandler,
-            MarkupEphemeralTextLiteralSyntax syntax => syntax.EditHandler,
-            MarkupTagHelperStartTagSyntax syntax => syntax.EditHandler,
-            MarkupTagHelperEndTagSyntax syntax => syntax.EditHandler,
-            MarkupTextLiteralSyntax syntax => syntax.EditHandler,
-            MarkupTransitionSyntax syntax => syntax.EditHandler,
-            CSharpStatementLiteralSyntax syntax => syntax.EditHandler,
-            CSharpExpressionLiteralSyntax syntax => syntax.EditHandler,
-            CSharpEphemeralTextLiteralSyntax syntax => syntax.EditHandler,
-            CSharpTransitionSyntax syntax => syntax.EditHandler,
-            RazorMetaCodeSyntax syntax => syntax.EditHandler,
-            UnclassifiedTextLiteralSyntax syntax => syntax.EditHandler,
-            _ => null,
-        };
+        => (node as ILegacySyntax)?.EditHandler;
 
     [Obsolete("Use FindToken or FindInnermostNode instead", error: false)]
     public static SyntaxNode? LocateOwner(this SyntaxNode node, SourceChange change)

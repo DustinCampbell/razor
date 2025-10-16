@@ -2,10 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
@@ -14,12 +12,8 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 [DebuggerDisplay("{GetDebuggerDisplay(), nq}")]
 internal abstract class GreenNode
 {
-    private static readonly RazorDiagnostic[] s_noDiagnostics = [];
-    private static readonly SyntaxAnnotation[] s_noAnnotations = [];
-    private static readonly IEnumerable<SyntaxAnnotation> s_noAnnotationsEnumerable = SpecializedCollections.EmptyEnumerable<SyntaxAnnotation>();
-
     private static readonly ConditionalWeakTable<GreenNode, RazorDiagnostic[]> s_diagnosticsTable = new();
-    private static readonly ConditionalWeakTable<GreenNode, SyntaxAnnotation[]> s_annotationsTable = new();
+    private static readonly RazorDiagnostic[] s_noDiagnostics = [];
 
     private int _width;
     private byte _slotCount;
@@ -35,32 +29,18 @@ internal abstract class GreenNode
         _width = width;
     }
 
-    protected GreenNode(SyntaxKind kind, RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations)
-        : this(kind, 0, diagnostics, annotations)
+    protected GreenNode(SyntaxKind kind, RazorDiagnostic[]? diagnostics)
+        : this(kind, 0, diagnostics)
     {
     }
 
-    protected GreenNode(SyntaxKind kind, int width, RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations)
+    protected GreenNode(SyntaxKind kind, int width, RazorDiagnostic[]? diagnostics)
         : this(kind, width)
     {
         if (diagnostics?.Length > 0)
         {
             Flags |= NodeFlags.ContainsDiagnostics;
             s_diagnosticsTable.Add(this, diagnostics);
-        }
-
-        if (annotations?.Length > 0)
-        {
-            foreach (var annotation in annotations)
-            {
-                if (annotation == null)
-                {
-                    throw new ArgumentException("Annotation cannot be null", nameof(annotations));
-                }
-            }
-
-            SetFlags(NodeFlags.HasAnnotationsDirectly | NodeFlags.ContainsAnnotations);
-            s_annotationsTable.Add(this, annotations);
         }
     }
 
@@ -176,10 +156,6 @@ internal abstract class GreenNode
     internal virtual bool IsMissing => (Flags & NodeFlags.IsMissing) != 0;
 
     public bool ContainsDiagnostics => (Flags & NodeFlags.ContainsDiagnostics) != 0;
-
-    public bool ContainsAnnotations => (Flags & NodeFlags.ContainsAnnotations) != 0;
-
-    public bool HasAnnotationsDirectly => (Flags & NodeFlags.HasAnnotationsDirectly) != 0;
     #endregion
 
     #region Diagnostics
@@ -197,134 +173,6 @@ internal abstract class GreenNode
 
         return s_noDiagnostics;
     }
-    #endregion
-
-    #region Annotations
-
-    public bool HasAnnotations(string annotationKind)
-    {
-        var annotations = GetAnnotations();
-        if (annotations == s_noAnnotations)
-        {
-            return false;
-        }
-
-        foreach (var a in annotations)
-        {
-            if (a.Kind == annotationKind)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public bool HasAnnotations(IEnumerable<string> annotationKinds)
-    {
-        var annotations = GetAnnotations();
-        if (annotations == s_noAnnotations)
-        {
-            return false;
-        }
-
-        foreach (var a in annotations)
-        {
-            if (annotationKinds.Contains(a.Kind))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public bool HasAnnotation([NotNullWhen(true)] SyntaxAnnotation? annotation)
-    {
-        var annotations = GetAnnotations();
-        if (annotations == s_noAnnotations)
-        {
-            return false;
-        }
-
-        foreach (var a in annotations)
-        {
-            if (a == annotation)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public IEnumerable<SyntaxAnnotation> GetAnnotations(string annotationKind)
-    {
-        ArgHelper.ThrowIfNullOrWhiteSpace(annotationKind);
-
-        var annotations = GetAnnotations();
-        if (annotations == s_noAnnotations)
-        {
-            return s_noAnnotationsEnumerable;
-        }
-
-        return GetAnnotationsSlow(annotations, annotationKind);
-
-        static IEnumerable<SyntaxAnnotation> GetAnnotationsSlow(SyntaxAnnotation[] annotations, string annotationKind)
-        {
-            foreach (var a in annotations)
-            {
-                if (a.Kind == annotationKind)
-                {
-                    yield return a;
-                }
-            }
-        }
-    }
-
-    public IEnumerable<SyntaxAnnotation> GetAnnotations(IEnumerable<string> annotationKinds)
-    {
-        ArgHelper.ThrowIfNull(annotationKinds);
-
-        var annotations = GetAnnotations();
-        if (annotations == s_noAnnotations)
-        {
-            return s_noAnnotationsEnumerable;
-        }
-
-        return GetAnnotationsSlow(annotations, annotationKinds);
-
-        static IEnumerable<SyntaxAnnotation> GetAnnotationsSlow(SyntaxAnnotation[] annotations, IEnumerable<string> annotationKinds)
-        {
-            foreach (var a in annotations)
-            {
-                if (annotationKinds.Contains(a.Kind))
-                {
-                    yield return a;
-                }
-            }
-        }
-    }
-
-    internal SyntaxAnnotation[] GetAnnotations()
-    {
-        if (!HasAnnotationsDirectly)
-        {
-            return s_noAnnotations;
-        }
-
-        var found = s_annotationsTable.TryGetValue(this, out var annotations);
-
-        Debug.Assert(found, "We must be able to find annotations since we had the bit set on ourselves");
-        Debug.Assert(annotations != null, "annotations should not be null");
-        Debug.Assert(annotations != s_noAnnotations, "annotations should not be s_noAnnotations");
-        Debug.Assert(annotations.Length != 0, "annotations should be non-empty");
-
-        return annotations;
-    }
-
-    internal abstract GreenNode SetAnnotations(SyntaxAnnotation[]? annotations);
-
     #endregion
 
     #region Text

@@ -2,11 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text;
-using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.CodeAnalysis.Text;
-using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -55,8 +53,5 @@ internal sealed class TestSyntaxSerializer : SyntaxSerializer
             base.WriteSpanEditHandlers(node);
             return;
         }
-
-        // If we don't allow SpanEditHandlers, assert that there aren't any.
-        Assert.All(node.GetAnnotations(), a => Assert.IsNotType<SpanEditHandler>(a.Data));
     }
 }

@@ -13,8 +13,8 @@ internal abstract class SyntaxList : GreenNode
     {
     }
 
-    internal SyntaxList(RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations)
-        : base(SyntaxKind.List, diagnostics, annotations)
+    internal SyntaxList(RazorDiagnostic[]? diagnostics)
+        : base(SyntaxKind.List, diagnostics)
     {
     }
 
@@ -145,8 +145,8 @@ internal abstract class SyntaxList : GreenNode
             _child1 = child1;
         }
 
-        internal WithTwoChildren(RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations, GreenNode child0, GreenNode child1)
-            : base(diagnostics, annotations)
+        internal WithTwoChildren(GreenNode child0, GreenNode child1, RazorDiagnostic[]? diagnostics)
+            : base(diagnostics)
         {
             SlotCount = 2;
             AdjustFlagsAndWidth(child0);
@@ -181,12 +181,7 @@ internal abstract class SyntaxList : GreenNode
 
         internal override GreenNode SetDiagnostics(RazorDiagnostic[]? diagnostics)
         {
-            return new WithTwoChildren(diagnostics, GetAnnotations(), _child0, _child1);
-        }
-
-        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
-        {
-            return new WithTwoChildren(GetDiagnostics(), annotations, _child0, _child1);
+            return new WithTwoChildren(_child0, _child1, diagnostics);
         }
     }
 
@@ -207,8 +202,8 @@ internal abstract class SyntaxList : GreenNode
             _child2 = child2;
         }
 
-        internal WithThreeChildren(RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations, GreenNode child0, GreenNode child1, GreenNode child2)
-            : base(diagnostics, annotations)
+        internal WithThreeChildren(GreenNode child0, GreenNode child1, GreenNode child2, RazorDiagnostic[]? diagnostics)
+            : base(diagnostics)
         {
             SlotCount = 3;
             AdjustFlagsAndWidth(child0);
@@ -248,12 +243,7 @@ internal abstract class SyntaxList : GreenNode
 
         internal override GreenNode SetDiagnostics(RazorDiagnostic[]? diagnostics)
         {
-            return new WithThreeChildren(diagnostics, GetAnnotations(), _child0, _child1, _child2);
-        }
-
-        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
-        {
-            return new WithThreeChildren(GetDiagnostics(), annotations, _child0, _child1, _child2);
+            return new WithThreeChildren(_child0, _child1, _child2, diagnostics);
         }
     }
 
@@ -267,8 +257,8 @@ internal abstract class SyntaxList : GreenNode
             this.InitializeChildren();
         }
 
-        internal WithManyChildrenBase(RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations, ArrayElement<GreenNode>[] children)
-            : base(diagnostics, annotations)
+        internal WithManyChildrenBase(ArrayElement<GreenNode>[] children, RazorDiagnostic[]? diagnostics)
+            : base(diagnostics)
         {
             this.children = children;
             this.InitializeChildren();
@@ -320,19 +310,14 @@ internal abstract class SyntaxList : GreenNode
         {
         }
 
-        internal WithManyChildren(RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations, ArrayElement<GreenNode>[] children)
-            : base(diagnostics, annotations, children)
+        internal WithManyChildren(ArrayElement<GreenNode>[] children, RazorDiagnostic[]? diagnostics)
+            : base(children, diagnostics)
         {
         }
 
         internal override GreenNode SetDiagnostics(RazorDiagnostic[]? diagnostics)
         {
-            return new WithManyChildren(diagnostics, GetAnnotations(), children);
-        }
-
-        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
-        {
-            return new WithManyChildren(GetDiagnostics(), annotations, children);
+            return new WithManyChildren(children, diagnostics);
         }
     }
 
@@ -346,8 +331,8 @@ internal abstract class SyntaxList : GreenNode
             _childOffsets = CalculateOffsets(children);
         }
 
-        internal WithLotsOfChildren(RazorDiagnostic[]? diagnostics, SyntaxAnnotation[]? annotations, ArrayElement<GreenNode>[] children, int[] childOffsets)
-            : base(diagnostics, annotations, children)
+        internal WithLotsOfChildren(ArrayElement<GreenNode>[] children, int[] childOffsets, RazorDiagnostic[]? diagnostics)
+            : base(children, diagnostics)
         {
             _childOffsets = childOffsets;
         }
@@ -387,12 +372,7 @@ internal abstract class SyntaxList : GreenNode
 
         internal override GreenNode SetDiagnostics(RazorDiagnostic[]? diagnostics)
         {
-            return new WithLotsOfChildren(diagnostics, GetAnnotations(), children, _childOffsets);
-        }
-
-        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
-        {
-            return new WithLotsOfChildren(GetDiagnostics(), annotations, children, _childOffsets);
+            return new WithLotsOfChildren(children, _childOffsets, diagnostics);
         }
 
         /// <summary>

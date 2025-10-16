@@ -9,11 +9,8 @@ namespace Microsoft.AspNetCore.Razor.Language.Syntax;
 internal enum NodeFlags : byte
 {
     None = 0,
-    ContainsDiagnostics = 1 << 0,
-    ContainsAnnotations = 1 << 1,
-    IsMissing = 1 << 2,
+    IsMissing = 1 << 0,
+    ContainsDiagnostics = 1 << 1,
 
-    HasAnnotationsDirectly = 1 << 3,
-
-    InheritMask = ContainsDiagnostics | ContainsAnnotations | IsMissing
+    InheritMask = ContainsDiagnostics | IsMissing
 }

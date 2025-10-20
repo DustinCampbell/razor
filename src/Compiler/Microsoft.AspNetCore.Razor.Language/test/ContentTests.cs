@@ -1352,4 +1352,380 @@ public class ContentTests
         Assert.Equal(4, chars.Count);
         Assert.Equal("Test", new string([.. chars]));
     }
+
+    [Fact]
+    public void Contains_EmptyContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act & Assert
+        Assert.False(content.Contains('a'));
+    }
+
+    [Fact]
+    public void Contains_SingleValue_CharacterExists_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content.Contains('H'));
+        Assert.True(content.Contains('o'));
+        Assert.True(content.Contains(' '));
+        Assert.True(content.Contains('d'));
+    }
+
+    [Fact]
+    public void Contains_SingleValue_CharacterNotExists_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.False(content.Contains('x'));
+        Assert.False(content.Contains('Z'));
+    }
+
+    [Fact]
+    public void Contains_MultiPart_CharacterExists_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act & Assert
+        Assert.True(content.Contains('H'));
+        Assert.True(content.Contains(' '));
+        Assert.True(content.Contains('W'));
+    }
+
+    [Fact]
+    public void Contains_MultiPart_CharacterNotExists_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act & Assert
+        Assert.False(content.Contains('x'));
+    }
+
+    [Fact]
+    public void Contains_Substring_EmptyValue_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act & Assert
+        Assert.True(content.Contains("".AsSpan(), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Contains_Substring_SingleValue_Exists_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content.Contains("Hello".AsSpan(), StringComparison.Ordinal));
+        Assert.True(content.Contains("World".AsSpan(), StringComparison.Ordinal));
+        Assert.True(content.Contains("lo Wo".AsSpan(), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Contains_Substring_SingleValue_NotExists_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.False(content.Contains("xyz".AsSpan(), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Contains_Substring_MultiPart_SpansMultipleParts_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act & Assert
+        Assert.True(content.Contains("lo Wo".AsSpan(), StringComparison.Ordinal));
+        Assert.True(content.Contains("Hello World".AsSpan(), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Contains_Substring_CaseInsensitive_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content.Contains("hello".AsSpan(), StringComparison.OrdinalIgnoreCase));
+        Assert.True(content.Contains("WORLD".AsSpan(), StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Contains_Substring_LongerThanContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hi");
+
+        // Act & Assert
+        Assert.False(content.Contains("Hello".AsSpan(), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ContainsAny_TwoChars_EmptyContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act & Assert
+        Assert.False(content.ContainsAny('a', 'b'));
+    }
+
+    [Fact]
+    public void ContainsAny_TwoChars_SingleValue_Found_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content.ContainsAny('H', 'x'));
+        Assert.True(content.ContainsAny('x', 'd'));
+        Assert.True(content.ContainsAny('o', 'x'));
+    }
+
+    [Fact]
+    public void ContainsAny_TwoChars_SingleValue_NotFound_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.False(content.ContainsAny('x', 'z'));
+    }
+
+    [Fact]
+    public void ContainsAny_ThreeChars_SingleValue_Found_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content.ContainsAny('H', 'x', 'y'));
+        Assert.True(content.ContainsAny('x', 'y', 'd'));
+    }
+
+    [Fact]
+    public void ContainsAny_ThreeChars_SingleValue_NotFound_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.False(content.ContainsAny('x', 'y', 'z'));
+    }
+
+    [Fact]
+    public void ContainsAny_Span_SingleValue_Found_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content.ContainsAny("Hxyz".AsSpan()));
+        Assert.True(content.ContainsAny("xyz ".AsSpan()));
+    }
+
+    [Fact]
+    public void ContainsAny_Span_SingleValue_NotFound_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.False(content.ContainsAny("xyz".AsSpan()));
+    }
+
+    [Fact]
+    public void ContainsAny_Span_EmptySpan_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act & Assert
+        Assert.False(content.ContainsAny([]));
+    }
+
+    [Fact]
+    public void ContainsAny_MultiPart_Found_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act & Assert
+        Assert.True(content.ContainsAny('H', 'x'));
+        Assert.True(content.ContainsAny('x', 'W', 'y'));
+        Assert.True(content.ContainsAny("Hxyz".AsSpan()));
+    }
+
+    [Fact]
+    public void ContainsAny_NestedContent_Found_ReturnsTrue()
+    {
+        // Arrange
+        var inner1 = new Content(["A", "B"]);
+        var inner2 = new Content(["C", "D"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act & Assert
+        Assert.True(content.ContainsAny('A', 'x'));
+        Assert.True(content.ContainsAny('x', 'y', 'D'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_SingleChar_EmptyContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act & Assert
+        Assert.False(content.ContainsAnyExcept('a'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_SingleChar_OnlyContainsExcluded_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("aaaa");
+
+        // Act & Assert
+        Assert.False(content.ContainsAnyExcept('a'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_SingleChar_ContainsOther_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("aaabaa");
+
+        // Act & Assert
+        Assert.True(content.ContainsAnyExcept('a'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_TwoChars_OnlyContainsExcluded_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("ababab");
+
+        // Act & Assert
+        Assert.False(content.ContainsAnyExcept('a', 'b'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_TwoChars_ContainsOther_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("ababcab");
+
+        // Act & Assert
+        Assert.True(content.ContainsAnyExcept('a', 'b'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_ThreeChars_OnlyContainsExcluded_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("abcabc");
+
+        // Act & Assert
+        Assert.False(content.ContainsAnyExcept('a', 'b', 'c'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_ThreeChars_ContainsOther_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("abcdabc");
+
+        // Act & Assert
+        Assert.True(content.ContainsAnyExcept('a', 'b', 'c'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_Span_OnlyContainsExcluded_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("abcabc");
+
+        // Act & Assert
+        Assert.False(content.ContainsAnyExcept("abc".AsSpan()));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_Span_ContainsOther_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("abcdabc");
+
+        // Act & Assert
+        Assert.True(content.ContainsAnyExcept("abc".AsSpan()));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_Span_EmptySpan_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act & Assert
+        Assert.True(content.ContainsAnyExcept([]));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_MultiPart_OnlyContainsExcluded_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["aaa", "bbb", "ccc"]);
+
+        // Act & Assert
+        Assert.False(content.ContainsAnyExcept("abc".AsSpan()));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_MultiPart_ContainsOther_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["aaa", "bbb", "ddd"]);
+
+        // Act & Assert
+        Assert.True(content.ContainsAnyExcept("abc".AsSpan()));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_Whitespace_ReturnsCorrectly()
+    {
+        // Arrange
+        var content1 = new Content("   \t\n");
+        var content2 = new Content("  a  ");
+
+        // Act & Assert
+        Assert.False(content1.ContainsAnyExcept(' ', '\t', '\n'));
+        Assert.True(content2.ContainsAnyExcept(' ', '\t', '\n'));
+    }
+
+    [Fact]
+    public void ContainsAnyExcept_NestedContent_ReturnsCorrectly()
+    {
+        // Arrange
+        var inner1 = new Content(["aaa", "bbb"]);
+        var inner2 = new Content(["ccc", "ddd"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act & Assert
+        Assert.False(content.ContainsAnyExcept("abcd".AsSpan()));
+        
+        var content2 = new Content([inner1, new Content("xyz")]);
+        Assert.True(content2.ContainsAnyExcept("ab".AsSpan()));
+    }
 }

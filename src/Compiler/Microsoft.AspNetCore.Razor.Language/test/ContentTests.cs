@@ -551,4 +551,406 @@ public class ContentTests
         Assert.Equal("12", items[11]);
         Assert.Equal("13", items[12]);
     }
+
+    [Fact]
+    public void Equals_EmptyContent_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = Content.Empty;
+        var content2 = new Content(string.Empty);
+        var content3 = new Content((string?)null);
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.True(content2.Equals(content1));
+        Assert.True(content1.Equals(content3));
+        Assert.True(content3.Equals(content1));
+        Assert.True(content2.Equals(content3));
+    }
+
+    [Fact]
+    public void Equals_SameString_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = new Content("Hello World");
+        var content2 = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.True(content2.Equals(content1));
+    }
+
+    [Fact]
+    public void Equals_DifferentStrings_ReturnsFalse()
+    {
+        // Arrange
+        var content1 = new Content("Hello");
+        var content2 = new Content("World");
+
+        // Act & Assert
+        Assert.False(content1.Equals(content2));
+        Assert.False(content2.Equals(content1));
+    }
+
+    [Fact]
+    public void Equals_SingleValueAndMultiPart_SameContent_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = new Content("Hello World");
+        var content2 = new Content(["Hello", " ", "World"]);
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.True(content2.Equals(content1));
+    }
+
+    [Fact]
+    public void Equals_DifferentPartBoundaries_SameContent_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = new Content(["Hello", " ", "World"]);
+        var content2 = new Content(["Hello ", "World"]);
+        var content3 = new Content(["Hel", "lo Wor", "ld"]);
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.True(content2.Equals(content1));
+        Assert.True(content1.Equals(content3));
+        Assert.True(content3.Equals(content1));
+        Assert.True(content2.Equals(content3));
+    }
+
+    [Fact]
+    public void Equals_NestedContent_SameData_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = new Content([new Content(["A", "B"]), new Content(["C", "D"])]);
+        var content2 = new Content(["A", "B", "C", "D"]);
+        var content3 = new Content("ABCD");
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.True(content2.Equals(content1));
+        Assert.True(content1.Equals(content3));
+        Assert.True(content3.Equals(content1));
+        Assert.True(content2.Equals(content3));
+    }
+
+    [Fact]
+    public void Equals_DifferentLengths_ReturnsFalse()
+    {
+        // Arrange
+        var content1 = new Content("Hello");
+        var content2 = new Content("Hello World");
+
+        // Act & Assert
+        Assert.False(content1.Equals(content2));
+        Assert.False(content2.Equals(content1));
+    }
+
+    [Fact]
+    public void Equals_ComplexNestedStructures_SameData_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = new Content([
+            new Content(["H", "e"]),
+            new Content("l"),
+            new Content(["l", "o"])
+        ]);
+        var content2 = new Content(["Hel", "lo"]);
+        var content3 = new Content("Hello");
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.True(content2.Equals(content3));
+        Assert.True(content1.Equals(content3));
+    }
+
+    [Fact]
+    public void Equals_MixedContentTypes_SameData_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = new Content(["Hello".AsMemory(), " ".AsMemory(), "World".AsMemory()]);
+        var content2 = new Content(["Hello", " ", "World"]);
+        var content3 = new Content("Hello World");
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.True(content2.Equals(content3));
+        Assert.True(content1.Equals(content3));
+    }
+
+    [Fact]
+    public void Equals_WithObject_ReturnsCorrectResult()
+    {
+        // Arrange
+        var content1 = new Content("Hello");
+        object content2 = new Content("Hello");
+        object content3 = new Content("World");
+        object notContent = "Hello";
+
+        // Act & Assert
+        Assert.True(content1.Equals(content2));
+        Assert.False(content1.Equals(content3));
+        Assert.False(content1.Equals(notContent));
+        Assert.False(content1.Equals(null!));
+    }
+
+    [Fact]
+    public void OperatorEquals_SameContent_ReturnsTrue()
+    {
+        // Arrange
+        var content1 = new Content("Hello World");
+        var content2 = new Content(["Hello", " ", "World"]);
+
+        // Act & Assert
+        Assert.True(content1 == content2);
+        Assert.False(content1 != content2);
+    }
+
+    [Fact]
+    public void OperatorEquals_DifferentContent_ReturnsFalse()
+    {
+        // Arrange
+        var content1 = new Content("Hello");
+        var content2 = new Content("World");
+
+        // Act & Assert
+        Assert.False(content1 == content2);
+        Assert.True(content1 != content2);
+    }
+
+    [Fact]
+    public void GetHashCode_EmptyContent_ReturnsSameValue()
+    {
+        // Arrange
+        var content1 = Content.Empty;
+        var content2 = new Content(string.Empty);
+        var content3 = new Content((string?)null);
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+        var hash3 = content3.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+        Assert.Equal(hash1, hash3);
+        Assert.Equal(0, hash1);
+    }
+
+    [Fact]
+    public void GetHashCode_SameString_ReturnsSameValue()
+    {
+        // Arrange
+        var content1 = new Content("Hello World");
+        var content2 = new Content("Hello World");
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+    }
+
+    [Fact]
+    public void GetHashCode_DifferentStrings_ReturnsDifferentValues()
+    {
+        // Arrange
+        var content1 = new Content("Hello");
+        var content2 = new Content("World");
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+
+        // Assert
+        Assert.NotEqual(hash1, hash2);
+    }
+
+    [Fact]
+    public void GetHashCode_SingleValueAndMultiPart_SameContent_ReturnsSameValue()
+    {
+        // Arrange
+        var content1 = new Content("Hello World");
+        var content2 = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+    }
+
+    [Fact]
+    public void GetHashCode_DifferentPartBoundaries_SameContent_ReturnsSameValue()
+    {
+        // Arrange
+        var content1 = new Content(["Hello", " ", "World"]);
+        var content2 = new Content(["Hello ", "World"]);
+        var content3 = new Content(["Hel", "lo Wor", "ld"]);
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+        var hash3 = content3.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+        Assert.Equal(hash1, hash3);
+    }
+
+    [Fact]
+    public void GetHashCode_NestedContent_SameData_ReturnsSameValue()
+    {
+        // Arrange
+        var content1 = new Content([new Content(["A", "B"]), new Content(["C", "D"])]);
+        var content2 = new Content(["A", "B", "C", "D"]);
+        var content3 = new Content("ABCD");
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+        var hash3 = content3.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+        Assert.Equal(hash1, hash3);
+    }
+
+    [Fact]
+    public void GetHashCode_ComplexNestedStructures_SameData_ReturnsSameValue()
+    {
+        // Arrange
+        var content1 = new Content([
+            new Content(["H", "e"]),
+            new Content("l"),
+            new Content(["l", "o"])
+        ]);
+        var content2 = new Content(["Hel", "lo"]);
+        var content3 = new Content("Hello");
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+        var hash3 = content3.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+        Assert.Equal(hash2, hash3);
+    }
+
+    [Fact]
+    public void GetHashCode_MixedContentTypes_SameData_ReturnsSameValue()
+    {
+        // Arrange
+        var content1 = new Content(["Hello".AsMemory(), " ".AsMemory(), "World".AsMemory()]);
+        var content2 = new Content(["Hello", " ", "World"]);
+        var content3 = new Content("Hello World");
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+        var hash3 = content3.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+        Assert.Equal(hash2, hash3);
+    }
+
+    [Fact]
+    public void GetHashCode_ConsistentAcrossMultipleCalls()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var hash1 = content.GetHashCode();
+        var hash2 = content.GetHashCode();
+        var hash3 = content.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+        Assert.Equal(hash2, hash3);
+    }
+
+    [Fact]
+    public void GetHashCode_DeeplyNestedContent_SameData_ReturnsSameValue()
+    {
+        // Arrange
+        var level1a = new Content(["A", "B"]);
+        var level2a = new Content([level1a, new Content("C")]);
+        var content1 = new Content([level2a, new Content("D")]);
+
+        var content2 = new Content("ABCD");
+
+        // Act
+        var hash1 = content1.GetHashCode();
+        var hash2 = content2.GetHashCode();
+
+        // Assert
+        Assert.Equal(hash1, hash2);
+    }
+
+    [Fact]
+    public void EqualityContract_EqualObjectsHaveEqualHashCodes()
+    {
+        // Arrange
+        var testCases = new[]
+        {
+            (new Content("Test"), new Content("Test")),
+            (new Content(["A", "B"]), new Content("AB")),
+            (new Content([new Content("X"), new Content("Y")]), new Content(["X", "Y"])),
+            (Content.Empty, new Content(string.Empty)),
+        };
+
+        // Act & Assert
+        foreach (var (content1, content2) in testCases)
+        {
+            Assert.True(content1.Equals(content2), "Contents should be equal");
+            Assert.Equal(content1.GetHashCode(), content2.GetHashCode());
+        }
+    }
+
+    [Fact]
+    public void GetHashCode_CanBeUsedInDictionary()
+    {
+        // Arrange
+        var dict = new Dictionary<Content, string>();
+        var key1 = new Content("Hello World");
+        var key2 = new Content(["Hello", " ", "World"]);
+        var key3 = new Content(["Hello ", "World"]);
+
+        // Act
+        dict[key1] = "value1";
+
+        // Assert - all three keys should map to the same value
+        Assert.Equal("value1", dict[key1]);
+        Assert.Equal("value1", dict[key2]);
+        Assert.Equal("value1", dict[key3]);
+        Assert.Single(dict);
+    }
+
+    [Fact]
+    public void GetHashCode_CanBeUsedInHashSet()
+    {
+        // Arrange
+        var set = new HashSet<Content>();
+        var item1 = new Content("Test");
+        var item2 = new Content(["Te", "st"]);
+        var item3 = new Content(["T", "e", "s", "t"]);
+
+        // Act
+        set.Add(item1);
+        set.Add(item2);
+        set.Add(item3);
+
+        // Assert - all three items represent the same content
+        Assert.Single(set);
+        Assert.Contains(item1, set);
+        Assert.Contains(item2, set);
+        Assert.Contains(item3, set);
+    }
 }

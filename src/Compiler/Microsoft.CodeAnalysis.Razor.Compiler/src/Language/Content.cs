@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -29,7 +30,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 ///   keeping the overall struct size small to minimize copying overhead.
 ///  </para>
 /// </remarks>
-public readonly partial struct Content
+public readonly partial struct Content : IEquatable<Content>
 {
     /// <summary>
     ///  Gets an empty <see cref="Content"/> instance.
@@ -285,6 +286,158 @@ public readonly partial struct Content
     ///  are traversed to expose only the leaf character sequences.
     /// </remarks>
     public PartList Parts => new(this);
+
+    /// <summary>
+    ///  Determines whether this <see cref="Content"/> represents the same character data as another <see cref="Content"/>.
+    /// </summary>
+    /// <param name="other">The <see cref="Content"/> to compare with.</param>
+    /// <returns>
+    ///  <see langword="true"/> if both instances represent the same sequence of characters;
+    ///  otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <remarks>
+    ///  This method performs value equality by comparing the actual character data,
+    ///  regardless of how the content is internally structured (single value vs. multi-part).
+    ///  Two <see cref="Content"/> instances are considered equal even if they have different
+    ///  numbers of parts or different part boundaries, as long as they represent the same
+    ///  character sequence.
+    /// </remarks>
+    public bool Equals(Content other)
+    {
+        // Fast path: If lengths differ, they can't be equal
+        if (Length != other.Length)
+        {
+            return false;
+        }
+
+        // Fast path: Empty content
+        if (Length == 0)
+        {
+            return true;
+        }
+
+        // Fast path: Both are single values - compare the memory directly
+        if (HasValue && other.HasValue)
+        {
+            return _value.Span.SequenceEqual(other._value.Span);
+        }
+
+        // Slow path: Compare character-by-character, handling different part boundaries
+        using var enumerator1 = Parts.GetEnumerator();
+        using var enumerator2 = other.Parts.GetEnumerator();
+
+        var part1 = ReadOnlyMemory<char>.Empty;
+        var part2 = ReadOnlyMemory<char>.Empty;
+        var offset1 = 0;
+        var offset2 = 0;
+
+        while (true)
+        {
+            // Get next part from enumerator1 if current part is exhausted
+            if (offset1 >= part1.Length)
+            {
+                if (!enumerator1.MoveNext())
+                {
+                    // enumerator1 is exhausted, check if enumerator2 is also exhausted
+                    return offset2 >= part2.Length && !enumerator2.MoveNext();
+                }
+
+                part1 = enumerator1.Current;
+                offset1 = 0;
+            }
+
+            // Get next part from enumerator2 if current part is exhausted
+            if (offset2 >= part2.Length)
+            {
+                if (!enumerator2.MoveNext())
+                {
+                    // enumerator2 is exhausted, enumerator1 is not
+                    return false;
+                }
+
+                part2 = enumerator2.Current;
+                offset2 = 0;
+            }
+
+            // Compare as many characters as possible from current parts
+            var remaining1 = part1.Length - offset1;
+            var remaining2 = part2.Length - offset2;
+            var compareLength = Math.Min(remaining1, remaining2);
+
+            if (!part1.Span.Slice(offset1, compareLength).SequenceEqual(part2.Span.Slice(offset2, compareLength)))
+            {
+                return false;
+            }
+
+            offset1 += compareLength;
+            offset2 += compareLength;
+        }
+    }
+
+    /// <summary>
+    ///  Determines whether this <see cref="Content"/> represents the same character data as the specified object.
+    /// </summary>
+    /// <param name="obj">The object to compare with.</param>
+    /// <returns>
+    ///  <see langword="true"/> if <paramref name="obj"/> is a <see cref="Content"/> that represents
+    ///  the same sequence of characters; otherwise, <see langword="false"/>.
+    /// </returns>
+    public override bool Equals(object? obj)
+        => obj is Content other && Equals(other);
+
+    /// <summary>
+    ///  Returns the hash code for this <see cref="Content"/>.
+    /// </summary>
+    /// <returns>
+    ///  A hash code based on the character data represented by this instance.
+    /// </returns>
+    /// <remarks>
+    ///  The hash code is computed from the actual character data to ensure that
+    ///  instances representing the same content produce the same hash code,
+    ///  regardless of how the content is internally structured.
+    /// </remarks>
+    public override int GetHashCode()
+    {
+        if (Length == 0)
+        {
+            return 0;
+        }
+
+        // Always use character-by-character hashing to ensure consistency
+        var hash = HashCodeCombiner.Start();
+
+        if (HasValue)
+        {
+            foreach (var ch in _value.Span)
+            {
+                hash.Add(ch);
+            }
+        }
+        else
+        {
+            foreach (var part in Parts)
+            {
+                foreach (var ch in part.Span)
+                {
+                    hash.Add(ch);
+                }
+            }
+        }
+
+        return hash.CombinedHash;
+    }
+
+    /// <summary>
+    ///  Determines whether two <see cref="Content"/> instances represent the same character data.
+    /// </summary>
+    public static bool operator ==(Content left, Content right)
+        => left.Equals(right);
+
+    /// <summary>
+    ///  Determines whether two <see cref="Content"/> instances represent different character data.
+    /// </summary>
+    public static bool operator !=(Content left, Content right)
+        => !left.Equals(right);
 
     /// <summary>
     ///  Implicitly converts a <see cref="ReadOnlyMemory{T}"/> of characters to <see cref="Content"/>.

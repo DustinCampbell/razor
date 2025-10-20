@@ -953,4 +953,373 @@ public class ContentTests
         Assert.Contains(item2, set);
         Assert.Contains(item3, set);
     }
+
+    [Fact]
+    public void CharEnumerator_WithEmptyContent_DoesNotEnumerate()
+    {
+        // Arrange
+        var content = Content.Empty;
+        var count = 0;
+
+        // Act
+        foreach (var _ in content)
+        {
+            count++;
+        }
+
+        // Assert
+        Assert.Equal(0, count);
+    }
+
+    [Fact]
+    public void CharEnumerator_WithSingleValue_EnumeratesAllCharacters()
+    {
+        // Arrange
+        var content = new Content("Hello");
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(5, chars.Count);
+        Assert.Equal('H', chars[0]);
+        Assert.Equal('e', chars[1]);
+        Assert.Equal('l', chars[2]);
+        Assert.Equal('l', chars[3]);
+        Assert.Equal('o', chars[4]);
+    }
+
+    [Fact]
+    public void CharEnumerator_WithMultipleParts_EnumeratesAllCharacters()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(11, chars.Count);
+        Assert.Equal("Hello World", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_WithNestedContent_EnumeratesAllCharacters()
+    {
+        // Arrange
+        var inner1 = new Content(["A", "B"]);
+        var inner2 = new Content(["C", "D"]);
+        var content = new Content([inner1, inner2]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(4, chars.Count);
+        Assert.Equal("ABCD", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_WithDeeplyNestedContent_EnumeratesCorrectly()
+    {
+        // Arrange
+        var level1 = new Content(["A", "B"]);
+        var level2 = new Content([level1, new Content("C")]);
+        var level3 = new Content([level2, new Content("D")]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in level3)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(4, chars.Count);
+        Assert.Equal("ABCD", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_ManualIteration_WorksCorrectly()
+    {
+        // Arrange
+        var content = new Content("ABC");
+        using var enumerator = content.GetEnumerator();
+
+        // Act & Assert
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal('A', enumerator.Current);
+
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal('B', enumerator.Current);
+
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal('C', enumerator.Current);
+
+        Assert.False(enumerator.MoveNext());
+        Assert.False(enumerator.MoveNext()); // Verify stays false
+    }
+
+    [Fact]
+    public void CharEnumerator_WithEmptyParts_SkipsEmptyParts()
+    {
+        // Arrange
+        var content = new Content(["", "A", "", "B", "", "C", ""]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(3, chars.Count);
+        Assert.Equal("ABC", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_WithMixedContentTypes_EnumeratesCorrectly()
+    {
+        // Arrange
+        var memoryPart = new Content("Hello".AsMemory());
+        var stringPart = new Content(" World");
+        var content = new Content([memoryPart, stringPart]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(11, chars.Count);
+        Assert.Equal("Hello World", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_WithSingleCharacterParts_EnumeratesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["H", "e", "l", "l", "o"]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(5, chars.Count);
+        Assert.Equal("Hello", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_WithComplexNestedStructure_EnumeratesCorrectly()
+    {
+        // Arrange
+        var branch1 = new Content([new Content("A"), new Content("B")]);
+        var branch2 = new Content([new Content(["C", "D"]), new Content("E")]);
+        var content = new Content([branch1, new Content("F"), branch2]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(6, chars.Count);
+        Assert.Equal("ABFCDE", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_MultipleEnumerations_ProduceSameResults()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var chars1 = new List<char>();
+        foreach (var ch in content)
+        {
+            chars1.Add(ch);
+        }
+
+        var chars2 = new List<char>();
+        foreach (var ch in content)
+        {
+            chars2.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(chars1.Count, chars2.Count);
+        for (var i = 0; i < chars1.Count; i++)
+        {
+            Assert.Equal(chars1[i], chars2[i]);
+        }
+    }
+
+    [Fact]
+    public void CharEnumerator_WithUnicodeCharacters_EnumeratesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "世界"]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(8, chars.Count);
+        Assert.Equal("Hello 世界", new string([.. chars]));
+    }
+
+    [Fact]
+    public void CharEnumerator_WithSpecialCharacters_EnumeratesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Tab:\t", "NewLine:\n", "Return:\r"]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Contains('\t', chars);
+        Assert.Contains('\n', chars);
+        Assert.Contains('\r', chars);
+    }
+
+    [Fact]
+    public void CharEnumerator_Dispose_CanBeCalledMultipleTimes()
+    {
+        // Arrange
+        var content = new Content("Test");
+        var enumerator = content.GetEnumerator();
+
+        // Act - Dispose multiple times should not throw
+        enumerator.Dispose();
+        enumerator.Dispose();
+        enumerator.Dispose();
+
+        // Assert - No exception thrown
+    }
+
+    [Fact]
+    public void CharEnumerator_AfterDispose_MoveNextReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Test");
+        var enumerator = content.GetEnumerator();
+
+        // Act
+        enumerator.MoveNext(); // Move to first character
+        enumerator.Dispose();
+        var result = enumerator.MoveNext();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void CharEnumerator_WithLongContent_EnumeratesAllCharacters()
+    {
+        // Arrange
+        var parts = new List<string>();
+        for (var i = 0; i < 100; i++)
+        {
+            parts.Add($"Part{i}");
+        }
+
+        var content = new Content(parts.ToImmutableArray());
+        var charCount = 0;
+
+        // Act
+        foreach (var _ in content)
+        {
+            charCount++;
+        }
+
+        // Assert
+        var expectedLength = 0;
+        foreach (var p in parts)
+        {
+            expectedLength += p.Length;
+        }
+
+        Assert.Equal(expectedLength, charCount);
+        Assert.Equal(content.Length, charCount);
+    }
+
+    [Fact]
+    public void CharEnumerator_MatchesStringEnumeration()
+    {
+        // Arrange
+        var text = "Hello World! This is a test.";
+        var content = new Content(text);
+        var contentChars = new List<char>();
+        var stringChars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            contentChars.Add(ch);
+        }
+
+        foreach (var ch in text)
+        {
+            stringChars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(stringChars.Count, contentChars.Count);
+
+        for (var i = 0; i < stringChars.Count; i++)
+        {
+            Assert.Equal(stringChars[i], contentChars[i]);
+        }
+    }
+
+    [Fact]
+    public void CharEnumerator_WithNestedEmptyParts_SkipsCorrectly()
+    {
+        // Arrange
+        var empty1 = new Content(string.Empty);
+        var nonEmpty = new Content("Test");
+        var empty2 = new Content(ImmutableArray<string>.Empty);
+        var content = new Content([empty1, nonEmpty, empty2]);
+        var chars = new List<char>();
+
+        // Act
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+
+        // Assert
+        Assert.Equal(4, chars.Count);
+        Assert.Equal("Test", new string([.. chars]));
+    }
 }

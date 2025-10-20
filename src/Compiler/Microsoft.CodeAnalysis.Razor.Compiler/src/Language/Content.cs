@@ -288,6 +288,18 @@ public readonly partial struct Content : IEquatable<Content>
     public PartList Parts => new(this);
 
     /// <summary>
+    ///  Returns an enumerator that iterates through all characters in the content.
+    /// </summary>
+    /// <returns>
+    ///  A <see cref="CharEnumerator"/> for iterating through the characters.
+    /// </returns>
+    /// <remarks>
+    ///  This method provides allocation-free enumeration of all characters across
+    ///  all parts in the content, handling nested structures automatically.
+    /// </remarks>
+    public CharEnumerator GetEnumerator() => new(this);
+
+    /// <summary>
     ///  Determines whether this <see cref="Content"/> represents the same character data as another <see cref="Content"/>.
     /// </summary>
     /// <param name="other">The <see cref="Content"/> to compare with.</param>
@@ -406,22 +418,9 @@ public readonly partial struct Content : IEquatable<Content>
         // Always use character-by-character hashing to ensure consistency
         var hash = HashCodeCombiner.Start();
 
-        if (HasValue)
+        foreach (var ch in this)
         {
-            foreach (var ch in _value.Span)
-            {
-                hash.Add(ch);
-            }
-        }
-        else
-        {
-            foreach (var part in Parts)
-            {
-                foreach (var ch in part.Span)
-                {
-                    hash.Add(ch);
-                }
-            }
+            hash.Add(ch);
         }
 
         return hash.CombinedHash;

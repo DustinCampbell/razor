@@ -76,6 +76,7 @@ public readonly partial struct Content
             private ContentKind _kind;
             private int _partsLength;
             private Content[]? _contentParts;
+            private bool _disposed;
 
             private MemoryBuilder<(Content content, int index, ContentKind kind, int partsLength, Content[]? contentParts)> _stack;
 
@@ -89,6 +90,7 @@ public readonly partial struct Content
                 _kind = list.Kind;
                 _partsLength = _content._parts?.Length ?? 0;
                 _contentParts = _kind == ContentKind.ContentArray ? _content.ContentParts : null;
+                _disposed = false;
             }
 
             /// <summary>
@@ -100,7 +102,11 @@ public readonly partial struct Content
             /// </remarks>
             public void Dispose()
             {
-                _stack.Dispose();
+                if (!_disposed)
+                {
+                    _disposed = true;
+                    _stack.Dispose();
+                }
             }
 
             /// <summary>
@@ -156,6 +162,11 @@ public readonly partial struct Content
             /// </remarks>
             public bool MoveNext()
             {
+                if (_disposed)
+                {
+                    return false;
+                }
+
                 while (true)
                 {
                     var nextIndex = _index + 1;

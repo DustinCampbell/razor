@@ -553,6 +553,36 @@ public class ContentTests
     }
 
     [Fact]
+    public void PartsEnumerator_Dispose_CanBeCalledMultipleTimes()
+    {
+        // Arrange
+        var content = new Content(["Test", "Data"]);
+        var enumerator = content.Parts.GetEnumerator();
+
+        // Act - Dispose multiple times should not throw
+        enumerator.Dispose();
+        enumerator.Dispose();
+        enumerator.Dispose();
+
+        // Assert - No exception thrown
+    }
+
+    [Fact]
+    public void PartsEnumerator_AfterDispose_MoveNextReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["Test", "Data"]);
+        var enumerator = content.Parts.GetEnumerator();
+
+        // Act
+        enumerator.MoveNext(); // Move to first part
+        enumerator.Dispose();
+        var result = enumerator.MoveNext();
+
+        // Assert
+        Assert.False(result);
+    }
+    [Fact]
     public void Equals_EmptyContent_ReturnsTrue()
     {
         // Arrange

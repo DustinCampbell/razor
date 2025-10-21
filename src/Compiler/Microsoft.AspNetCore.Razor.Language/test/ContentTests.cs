@@ -2096,4 +2096,530 @@ public class ContentTests
         // Assert
         Assert.Equal("Test", result);
     }
+
+    [Fact]
+    public void Slice_WithStart_EmptyContent_ReturnsEmpty()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = content[..];
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithStart_SingleValue_FromBeginning_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content[6..];
+
+        // Assert
+        Assert.Equal("World", result.ToString());
+        Assert.Equal(5, result.Length);
+        Assert.True(result.HasValue);
+    }
+
+    [Fact]
+    public void Slice_WithStart_SingleValue_FromMiddle_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content[3..];
+
+        // Assert
+        Assert.Equal("lo World", result.ToString());
+        Assert.Equal(8, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithStart_SingleValue_AtEnd_ReturnsEmpty()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = content[5..];
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithStart_SingleValue_InvalidStart_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => content[-1..]);
+        Assert.Throws<ArgumentOutOfRangeException>(() => content[6..]);
+    }
+
+    [Fact]
+    public void Slice_WithStartAndLength_SingleValue_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Slice(6, 5);
+
+        // Assert
+        Assert.Equal("World", result.ToString());
+        Assert.Equal(5, result.Length);
+        Assert.True(result.HasValue);
+    }
+
+    [Fact]
+    public void Slice_WithStartAndLength_SingleValue_MiddleSlice_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Slice(3, 5);
+
+        // Assert
+        Assert.Equal("lo Wo", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithStartAndLength_SingleValue_ZeroLength_ReturnsEmpty()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = content.Slice(2, 0);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithStartAndLength_SingleValue_EntireContent_ReturnsSameContent()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content[..11];
+
+        // Assert
+        Assert.Equal(content, result);
+        Assert.Equal("Hello World", result.ToString());
+    }
+
+    [Fact]
+    public void Slice_WithStartAndLength_SingleValue_InvalidArguments_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Slice(-1, 2));
+        Assert.Throws<ArgumentOutOfRangeException>(() => content[..-1]);
+        Assert.Throws<ArgumentOutOfRangeException>(() => content[..6]);
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Slice(3, 3));
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Slice(6, 0));
+    }
+
+    [Fact]
+    public void Slice_MultiPart_FromBeginning_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content[6..];
+
+        // Assert
+        Assert.Equal("World", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_FromMiddle_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content[3..];
+
+        // Assert
+        Assert.Equal("lo World", result.ToString());
+        Assert.Equal(8, result.Length);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_WithinSinglePart_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Slice(1, 3);
+
+        // Assert
+        Assert.Equal("ell", result.ToString());
+        Assert.Equal(3, result.Length);
+        Assert.True(result.HasValue);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_SpanningMultipleParts_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Slice(3, 5);
+
+        // Assert
+        Assert.Equal("lo Wo", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_EntireContent_ReturnsSameContent()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content[..11]  ;
+
+        // Assert
+        Assert.Equal(content, result);
+        Assert.Equal("Hello World", result.ToString());
+    }
+
+    [Fact]
+    public void Slice_MultiPart_ExactlyOnePart_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Slice(6, 5);
+
+        // Assert
+        Assert.Equal("World", result.ToString());
+        Assert.Equal(5, result.Length);
+        Assert.True(result.HasValue);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_SkipFirstPart_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Slice(5, 6);
+
+        // Assert
+        Assert.Equal(" World", result.ToString());
+        Assert.Equal(6, result.Length);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_SkipLastPart_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content[..6];
+
+        // Assert
+        Assert.Equal("Hello ", result.ToString());
+        Assert.Equal(6, result.Length);
+    }
+
+    [Fact]
+    public void Slice_NestedContent_ReturnsSlice()
+    {
+        // Arrange
+        var inner1 = new Content(["Hello", " "]);
+        var inner2 = new Content(["World", "!"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.Slice(6, 5);
+
+        // Assert
+        Assert.Equal("World", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Slice_NestedContent_SpanningMultipleParts_ReturnsSlice()
+    {
+        // Arrange
+        var inner1 = new Content(["A", "B", "C"]);
+        var inner2 = new Content(["D", "E", "F"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.Slice(1, 4);
+
+        // Assert
+        Assert.Equal("BCDE", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithMemoryParts_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["Hello".AsMemory(), " ".AsMemory(), "World".AsMemory()]);
+
+        // Act
+        var result = content.Slice(3, 5);
+
+        // Assert
+        Assert.Equal("lo Wo", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Slice_ComplexNestedStructure_ReturnsSlice()
+    {
+        // Arrange
+        var level1 = new Content(["A", "B"]);
+        var level2 = new Content([level1, new Content("C")]);
+        var level3 = new Content([level2, new Content("D")]);
+
+        // Act
+        var result = level3.Slice(1, 2);
+
+        // Assert
+        Assert.Equal("BC", result.ToString());
+        Assert.Equal(2, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithEmptyParts_SkipsEmptyParts()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", "", " ", "World", ""]);
+
+        // Act
+        var result = content.Slice(3, 5);
+
+        // Assert
+        Assert.Equal("lo Wo", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Slice_MultipleTimes_ReturnsCorrectSlices()
+    {
+        // Arrange
+        var content = new Content("Hello World!");
+
+        // Act
+        var slice1 = content[..5];
+        var slice2 = content.Slice(6, 5);
+        var slice3 = content.Slice(11, 1);
+
+        // Assert
+        Assert.Equal("Hello", slice1.ToString());
+        Assert.Equal("World", slice2.ToString());
+        Assert.Equal("!", slice3.ToString());
+    }
+
+    [Fact]
+    public void Slice_ChainedSlicing_ReturnsCorrectSlice()
+    {
+        // Arrange
+        var content = new Content("Hello World!");
+
+        // Act
+        var slice1 = content[..11];
+        var slice2 = slice1.Slice(6, 5);
+
+        // Assert
+        Assert.Equal("World", slice2.ToString());
+        Assert.Equal(5, slice2.Length);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_PartialFirstAndLastPart_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["ABCDE", "FGHIJ", "KLMNO"]);
+
+        // Act
+        var result = content.Slice(2, 9);
+
+        // Assert
+        Assert.Equal("CDEFGHIJK", result.ToString());
+        Assert.Equal(9, result.Length);
+    }
+
+    [Fact]
+    public void Slice_UnicodeCharacters_PreservesUnicode()
+    {
+        // Arrange
+        var content = new Content(["Hello ", "世界", "!"]);
+
+        // Act
+        var result = content.Slice(6, 2);
+
+        // Assert
+        Assert.Equal("世界", result.ToString());
+        Assert.Equal(2, result.Length);
+    }
+
+    [Fact]
+    public void Slice_WithSpecialCharacters_PreservesSpecialChars()
+    {
+        // Arrange
+        var content = new Content(["Line1\n", "Line2\r\n", "Tab:\t"]);
+
+        // Act
+        var result = content.Slice(5, 7);
+
+        // Assert
+        Assert.Equal("\nLine2\r", result.ToString());
+        Assert.Equal(7, result.Length);
+    }
+
+    [Fact]
+    public void Slice_SingleCharacter_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Slice(4, 1);
+
+        // Assert
+        Assert.Equal("o", result.ToString());
+        Assert.Equal(1, result.Length);
+        Assert.True(result.HasValue);
+    }
+
+    [Fact]
+    public void Slice_ResultEquality_WorksCorrectly()
+    {
+        // Arrange
+        var content1 = new Content("Hello World");
+        var content2 = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var slice1 = content1.Slice(6, 5);
+        var slice2 = content2.Slice(6, 5);
+        var slice3 = new Content("World");
+
+        // Assert
+        Assert.Equal(slice1, slice2);
+        Assert.Equal(slice2, slice3);
+        Assert.Equal(slice1, slice3);
+    }
+
+    [Fact]
+    public void Slice_ResultHashCode_ConsistentWithEquality()
+    {
+        // Arrange
+        var content1 = new Content("Hello World");
+        var content2 = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var slice1 = content1.Slice(6, 5);
+        var slice2 = content2.Slice(6, 5);
+
+        // Assert
+        Assert.Equal(slice1.GetHashCode(), slice2.GetHashCode());
+    }
+
+    [Fact]
+    public void Slice_PreservesOriginalContent()
+    {
+        // Arrange
+        var original = new Content(["Hello", " ", "World"]);
+        var originalString = original.ToString();
+
+        // Act
+        var _ = original.Slice(3, 5);
+
+        // Assert - original should be unchanged
+        Assert.Equal(originalString, original.ToString());
+        Assert.Equal(11, original.Length);
+    }
+
+    [Fact]
+    public void Slice_EdgeCase_SliceAtPartBoundary()
+    {
+        // Arrange
+        var content = new Content(["AAA", "BBB", "CCC"]);
+
+        // Act
+        var result1 = content[..3];
+        var result2 = content.Slice(3, 3);
+        var result3 = content.Slice(6, 3);
+
+        // Assert
+        Assert.Equal("AAA", result1.ToString());
+        Assert.Equal("BBB", result2.ToString());
+        Assert.Equal("CCC", result3.ToString());
+    }
+
+    [Fact]
+    public void Slice_EdgeCase_CrossPartBoundary()
+    {
+        // Arrange
+        var content = new Content(["AAA", "BBB", "CCC"]);
+
+        // Act
+        var result1 = content.Slice(2, 2);
+        var result2 = content.Slice(5, 2);
+
+        // Assert
+        Assert.Equal("AB", result1.ToString());
+        Assert.Equal("BC", result2.ToString());
+    }
+
+    [Fact]
+    public void Slice_MultiPart_AllButFirst_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["A", "B", "C", "D"]);
+
+        // Act
+        var result = content[1..];
+
+        // Assert
+        Assert.Equal("BCD", result.ToString());
+        Assert.Equal(3, result.Length);
+    }
+
+    [Fact]
+    public void Slice_MultiPart_AllButLast_ReturnsSlice()
+    {
+        // Arrange
+        var content = new Content(["A", "B", "C", "D"]);
+
+        // Act
+        var result = content[..3];
+
+        // Assert
+        Assert.Equal("ABC", result.ToString());
+        Assert.Equal(3, result.Length);
+    }
 }

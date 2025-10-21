@@ -1361,6 +1361,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.Contains('a'));
+        Assert.Equal(-1, content.IndexOf('a'));
     }
 
     [Fact]
@@ -1371,9 +1372,16 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.Contains('H'));
+        Assert.Equal(0, content.IndexOf('H'));
+
         Assert.True(content.Contains('o'));
+        Assert.Equal(4, content.IndexOf('o'));
+
         Assert.True(content.Contains(' '));
+        Assert.Equal(5, content.IndexOf(' '));
+
         Assert.True(content.Contains('d'));
+        Assert.Equal(10, content.IndexOf('d'));
     }
 
     [Fact]
@@ -1384,7 +1392,10 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.Contains('x'));
+        Assert.Equal(-1, content.IndexOf('x'));
+
         Assert.False(content.Contains('Z'));
+        Assert.Equal(-1, content.IndexOf('Z'));
     }
 
     [Fact]
@@ -1395,8 +1406,13 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.Contains('H'));
+        Assert.Equal(0, content.IndexOf('H'));
+
         Assert.True(content.Contains(' '));
+        Assert.Equal(5, content.IndexOf(' '));
+
         Assert.True(content.Contains('W'));
+        Assert.Equal(6, content.IndexOf('W'));
     }
 
     [Fact]
@@ -1407,6 +1423,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.Contains('x'));
+        Assert.Equal(-1, content.IndexOf('x'));
     }
 
     [Fact]
@@ -1417,6 +1434,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.Contains("".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(0, content.IndexOf("".AsSpan(), StringComparison.Ordinal));
     }
 
     [Fact]
@@ -1427,8 +1445,13 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.Contains("Hello".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(0, content.IndexOf("Hello".AsSpan(), StringComparison.Ordinal));
+
         Assert.True(content.Contains("World".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(6, content.IndexOf("World".AsSpan(), StringComparison.Ordinal));
+
         Assert.True(content.Contains("lo Wo".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(3, content.IndexOf("lo Wo".AsSpan(), StringComparison.Ordinal));
     }
 
     [Fact]
@@ -1439,6 +1462,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.Contains("xyz".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(-1, content.IndexOf("xyz".AsSpan(), StringComparison.Ordinal));
     }
 
     [Fact]
@@ -1449,7 +1473,10 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.Contains("lo Wo".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(3, content.IndexOf("lo Wo".AsSpan(), StringComparison.Ordinal));
+
         Assert.True(content.Contains("Hello World".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(0, content.IndexOf("Hello World".AsSpan(), StringComparison.Ordinal));
     }
 
     [Fact]
@@ -1460,7 +1487,10 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.Contains("hello".AsSpan(), StringComparison.OrdinalIgnoreCase));
+        Assert.Equal(0, content.IndexOf("hello".AsSpan(), StringComparison.OrdinalIgnoreCase));
+
         Assert.True(content.Contains("WORLD".AsSpan(), StringComparison.OrdinalIgnoreCase));
+        Assert.Equal(6, content.IndexOf("WORLD".AsSpan(), StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -1471,6 +1501,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.Contains("Hello".AsSpan(), StringComparison.Ordinal));
+        Assert.Equal(-1, content.IndexOf("Hello".AsSpan(), StringComparison.Ordinal));
     }
 
     [Fact]
@@ -1481,6 +1512,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAny('a', 'b'));
+        Assert.Equal(-1, content.IndexOfAny('a', 'b'));
     }
 
     [Fact]
@@ -1491,8 +1523,13 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAny('H', 'x'));
+        Assert.Equal(0, content.IndexOfAny('H', 'x'));
+
         Assert.True(content.ContainsAny('x', 'd'));
+        Assert.Equal(10, content.IndexOfAny('x', 'd'));
+
         Assert.True(content.ContainsAny('o', 'x'));
+        Assert.Equal(4, content.IndexOfAny('o', 'x'));
     }
 
     [Fact]
@@ -1503,6 +1540,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAny('x', 'z'));
+        Assert.Equal(-1, content.IndexOfAny('x', 'z'));
     }
 
     [Fact]
@@ -1513,7 +1551,10 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAny('H', 'x', 'y'));
+        Assert.Equal(0, content.IndexOfAny('H', 'x', 'y'));
+
         Assert.True(content.ContainsAny('x', 'y', 'd'));
+        Assert.Equal(10, content.IndexOfAny('x', 'y', 'd'));
     }
 
     [Fact]
@@ -1524,6 +1565,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAny('x', 'y', 'z'));
+        Assert.Equal(-1, content.IndexOfAny('x', 'y', 'z'));
     }
 
     [Fact]
@@ -1534,7 +1576,10 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAny("Hxyz".AsSpan()));
+        Assert.Equal(0, content.IndexOfAny("Hxyz".AsSpan()));
+
         Assert.True(content.ContainsAny("xyz ".AsSpan()));
+        Assert.Equal(5, content.IndexOfAny("xyz ".AsSpan()));
     }
 
     [Fact]
@@ -1545,6 +1590,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAny("xyz".AsSpan()));
+        Assert.Equal(-1, content.IndexOfAny("xyz".AsSpan()));
     }
 
     [Fact]
@@ -1555,6 +1601,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAny([]));
+        Assert.Equal(-1, content.IndexOfAny([]));
     }
 
     [Fact]
@@ -1565,8 +1612,13 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAny('H', 'x'));
+        Assert.Equal(0, content.IndexOfAny('H', 'x'));
+
         Assert.True(content.ContainsAny('x', 'W', 'y'));
+        Assert.Equal(6, content.IndexOfAny('x', 'W', 'y'));
+
         Assert.True(content.ContainsAny("Hxyz".AsSpan()));
+        Assert.Equal(0, content.IndexOfAny("Hxyz".AsSpan()));
     }
 
     [Fact]
@@ -1579,7 +1631,10 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAny('A', 'x'));
+        Assert.Equal(0, content.IndexOfAny('A', 'x'));
+
         Assert.True(content.ContainsAny('x', 'y', 'D'));
+        Assert.Equal(3, content.IndexOfAny('x', 'y', 'D'));
     }
 
     [Fact]
@@ -1590,6 +1645,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAnyExcept('a'));
+        Assert.Equal(-1, content.IndexOfAnyExcept('a'));
     }
 
     [Fact]
@@ -1600,6 +1656,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAnyExcept('a'));
+        Assert.Equal(-1, content.IndexOfAnyExcept('a'));
     }
 
     [Fact]
@@ -1610,6 +1667,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAnyExcept('a'));
+        Assert.Equal(3, content.IndexOfAnyExcept('a'));
     }
 
     [Fact]
@@ -1620,6 +1678,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAnyExcept('a', 'b'));
+        Assert.Equal(-1, content.IndexOfAnyExcept('a', 'b'));
     }
 
     [Fact]
@@ -1630,6 +1689,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAnyExcept('a', 'b'));
+        Assert.Equal(4, content.IndexOfAnyExcept('a', 'b'));
     }
 
     [Fact]
@@ -1640,6 +1700,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAnyExcept('a', 'b', 'c'));
+        Assert.Equal(-1, content.IndexOfAnyExcept('a', 'b', 'c'));
     }
 
     [Fact]
@@ -1650,6 +1711,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAnyExcept('a', 'b', 'c'));
+        Assert.Equal(3, content.IndexOfAnyExcept('a', 'b', 'c'));
     }
 
     [Fact]
@@ -1660,6 +1722,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAnyExcept("abc".AsSpan()));
+        Assert.Equal(-1, content.IndexOfAnyExcept("abc".AsSpan()));
     }
 
     [Fact]
@@ -1670,6 +1733,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAnyExcept("abc".AsSpan()));
+        Assert.Equal(3, content.IndexOfAnyExcept("abc".AsSpan()));
     }
 
     [Fact]
@@ -1680,6 +1744,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAnyExcept([]));
+        Assert.Equal(0, content.IndexOfAnyExcept([]));
     }
 
     [Fact]
@@ -1690,6 +1755,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAnyExcept("abc".AsSpan()));
+        Assert.Equal(-1, content.IndexOfAnyExcept("abc".AsSpan()));
     }
 
     [Fact]
@@ -1700,6 +1766,7 @@ public class ContentTests
 
         // Act & Assert
         Assert.True(content.ContainsAnyExcept("abc".AsSpan()));
+        Assert.Equal(6, content.IndexOfAnyExcept("abc".AsSpan()));
     }
 
     [Fact]
@@ -1711,7 +1778,10 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content1.ContainsAnyExcept(' ', '\t', '\n'));
+        Assert.Equal(-1, content1.IndexOfAnyExcept(' ', '\t', '\n'));
+
         Assert.True(content2.ContainsAnyExcept(' ', '\t', '\n'));
+        Assert.Equal(2, content2.IndexOfAnyExcept(' ', '\t', '\n'));
     }
 
     [Fact]
@@ -1724,9 +1794,11 @@ public class ContentTests
 
         // Act & Assert
         Assert.False(content.ContainsAnyExcept("abcd".AsSpan()));
+        Assert.Equal(-1, content.IndexOfAnyExcept("abcd".AsSpan()));
         
         var content2 = new Content([inner1, new Content("xyz")]);
         Assert.True(content2.ContainsAnyExcept("ab".AsSpan()));
+        Assert.Equal(6, content2.IndexOfAnyExcept("ab".AsSpan()));
     }
 
     [Fact]

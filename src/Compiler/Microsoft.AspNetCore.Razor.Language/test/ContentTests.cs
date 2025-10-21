@@ -1728,4 +1728,300 @@ public class ContentTests
         var content2 = new Content([inner1, new Content("xyz")]);
         Assert.True(content2.ContainsAnyExcept("ab".AsSpan()));
     }
+
+    [Fact]
+    public void ToString_EmptyContent_ReturnsEmptyString()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToString_EmptyStringContent_ReturnsEmptyString()
+    {
+        // Arrange
+        var content = new Content(string.Empty);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ToString_SingleValue_ReturnsString()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello World", result);
+    }
+
+    [Fact]
+    public void ToString_SingleValue_WithMemory_ReturnsString()
+    {
+        // Arrange
+        var content = new Content("Test Data".AsMemory());
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Test Data", result);
+    }
+
+    [Fact]
+    public void ToString_MultiPart_ReturnsConcat()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello World", result);
+    }
+
+    [Fact]
+    public void ToString_MultiPart_WithMemory_ReturnsConcatenated()
+    {
+        // Arrange
+        var content = new Content(["Hello".AsMemory(), " ".AsMemory(), "World".AsMemory()]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello World", result);
+    }
+
+    [Fact]
+    public void ToString_NestedContent_ReturnsFlattened()
+    {
+        // Arrange
+        var inner1 = new Content(["Hello", " "]);
+        var inner2 = new Content(["World", "!"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello World!", result);
+    }
+
+    [Fact]
+    public void ToString_DeeplyNestedContent_ReturnsFlattened()
+    {
+        // Arrange
+        var level1 = new Content(["A", "B"]);
+        var level2 = new Content([level1, new Content("C")]);
+        var level3 = new Content([level2, new Content("D")]);
+
+        // Act
+        var result = level3.ToString();
+
+        // Assert
+        Assert.Equal("ABCD", result);
+    }
+
+    [Fact]
+    public void ToString_WithEmptyParts_SkipsEmptyParts()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", "", "World", ""]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("HelloWorld", result);
+    }
+
+    [Fact]
+    public void ToString_ComplexNestedStructure_ReturnsCorrectString()
+    {
+        // Arrange
+        var branch1 = new Content([new Content("Hello"), new Content(" ")]);
+        var branch2 = new Content([new Content(["Wor", "ld"]), new Content("!")]);
+        var content = new Content([branch1, branch2]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello World!", result);
+    }
+
+    [Fact]
+    public void ToString_WithUnicodeCharacters_PreservesUnicode()
+    {
+        // Arrange
+        var content = new Content(["Hello ", "世界", "!"]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello 世界!", result);
+    }
+
+    [Fact]
+    public void ToString_WithSpecialCharacters_PreservesSpecialChars()
+    {
+        // Arrange
+        var content = new Content(["Line1\n", "Line2\r\n", "Tab:\t"]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Line1\nLine2\r\nTab:\t", result);
+    }
+
+    [Fact]
+    public void ToString_SingleCharacterParts_Concatenates()
+    {
+        // Arrange
+        var content = new Content(["H", "e", "l", "l", "o"]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello", result);
+    }
+
+    [Fact]
+    public void ToString_MixedContentTypes_ReturnsConcatenated()
+    {
+        // Arrange
+        var memoryPart = new Content("Memory".AsMemory());
+        var stringPart = new Content(" String");
+        var nestedPart = new Content([" ", "Nested"]);
+        var content = new Content([memoryPart, stringPart, nestedPart]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Memory String Nested", result);
+    }
+
+    [Fact]
+    public void ToString_LongContent_HandlesLargeStrings()
+    {
+        // Arrange
+        var parts = new List<string>();
+        for (var i = 0; i < 100; i++)
+        {
+            parts.Add($"Part{i}");
+        }
+        var content = new Content(parts.ToImmutableArray());
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        var expected = string.Concat(parts);
+        Assert.Equal(expected, result);
+        Assert.Equal(content.Length, result.Length);
+    }
+
+    [Fact]
+    public void ToString_CalledMultipleTimes_ReturnsSameResult()
+    {
+        // Arrange
+        var content = new Content(["Test", " ", "Data"]);
+
+        // Act
+        var result1 = content.ToString();
+        var result2 = content.ToString();
+        var result3 = content.ToString();
+
+        // Assert
+        Assert.Equal("Test Data", result1);
+        Assert.Equal(result1, result2);
+        Assert.Equal(result2, result3);
+    }
+
+    [Fact]
+    public void ToString_MatchesCharEnumerator()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World", "!"]);
+
+        // Act
+        var toStringResult = content.ToString();
+        
+        var chars = new List<char>();
+        foreach (var ch in content)
+        {
+            chars.Add(ch);
+        }
+        var enumeratorResult = new string([.. chars]);
+
+        // Assert
+        Assert.Equal(toStringResult, enumeratorResult);
+    }
+
+    [Fact]
+    public void ToString_DifferentPartBoundaries_SameContent_ReturnsSameString()
+    {
+        // Arrange
+        var content1 = new Content(["Hello", " ", "World"]);
+        var content2 = new Content(["Hello ", "World"]);
+        var content3 = new Content("Hello World");
+
+        // Act
+        var result1 = content1.ToString();
+        var result2 = content2.ToString();
+        var result3 = content3.ToString();
+
+        // Assert
+        Assert.Equal("Hello World", result1);
+        Assert.Equal(result1, result2);
+        Assert.Equal(result2, result3);
+    }
+
+    [Fact]
+    public void ToString_WithWhitespace_PreservesWhitespace()
+    {
+        // Arrange
+        var content = new Content(["  ", "Hello", "  ", "World", "  "]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("  Hello  World  ", result);
+    }
+
+    [Fact]
+    public void ToString_NestedEmptyContent_SkipsEmpty()
+    {
+        // Arrange
+        var empty1 = new Content(string.Empty);
+        var nonEmpty = new Content("Test");
+        var empty2 = new Content(ImmutableArray<string>.Empty);
+        var content = new Content([empty1, nonEmpty, empty2]);
+
+        // Act
+        var result = content.ToString();
+
+        // Assert
+        Assert.Equal("Test", result);
+    }
 }

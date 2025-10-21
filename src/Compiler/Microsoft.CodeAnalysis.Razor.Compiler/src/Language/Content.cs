@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -424,6 +424,51 @@ public readonly partial struct Content : IEquatable<Content>
         }
 
         return hash.CombinedHash;
+    }
+
+    /// <summary>
+    ///  Returns a string representation of the content.
+    /// </summary>
+    /// <returns>
+    ///  A string containing all characters from the content, regardless of how it is
+    ///  internally structured (single value or multi-part).
+    /// </returns>
+    /// <remarks>
+    ///  <para>
+    ///   This method materializes the entire content into a single string. For large
+    ///   content or multi-part content, this allocates a new string on the heap.
+    ///  </para>
+    ///  <para>
+    ///   For single-value content backed by a string, this method returns the
+    ///   underlying string directly when possible to avoid allocation.
+    ///  </para>
+    /// </remarks>
+    public override string ToString()
+    {
+        if (Length == 0)
+        {
+            return string.Empty;
+        }
+
+        // Fast path: single value that's backed by a string
+        if (HasValue)
+        {
+            return _value.ToString();
+        }
+
+        // Multi-part content: need to concatenate all parts
+        return string.Create(Length, this, static (destination, content) =>
+        {
+            foreach (var part in content.Parts)
+            {
+                var partSpan = part.Span;
+                partSpan.CopyTo(destination);
+
+                destination = destination[partSpan.Length..];
+            }
+
+            Debug.Assert(destination.IsEmpty);
+        });
     }
 
     /// <summary>

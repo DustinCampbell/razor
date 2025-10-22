@@ -30,7 +30,20 @@ public readonly partial struct Content
         ArgHelper.ThrowIfNegative(start);
         ArgHelper.ThrowIfGreaterThan(start, Length);
 
-        return Slice(start, Length - start);
+        // Fast path: slice is entire content
+        if (start == 0)
+        {
+            return this;
+        }
+
+        // Fast path: single value content - just slice the memory
+        if (HasValue)
+        {
+            return _value[start..];
+        }
+
+        // Multi-part content: need to find the affected parts
+        return SliceMultiPart(start, Length - start);
     }
 
     /// <summary>
@@ -72,7 +85,7 @@ public readonly partial struct Content
         // Fast path: single value content - just slice the memory
         if (HasValue)
         {
-            return new Content(_value.Slice(start, length));
+            return _value.Slice(start, length);
         }
 
         // Multi-part content: need to find the affected parts
@@ -86,12 +99,19 @@ public readonly partial struct Content
         Debug.Assert(length > 0);
         Debug.Assert(start + length <= Length);
 
-        using var builder = new PooledArrayBuilder<ReadOnlyMemory<char>>();
+        var parts = Parts;
+
+        using var builder = new PooledArrayBuilder<ReadOnlyMemory<char>>(capacity: parts.Count);
         var remaining = length;
         var currentPos = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
             var partLength = part.Length;
 
             // Skip parts entirely before the start position
@@ -110,22 +130,19 @@ public readonly partial struct Content
             {
                 builder.Add(part.Slice(partStart, partSliceLength));
                 remaining -= partSliceLength;
+
+                // Early exit if we've collected all required characters
+                if (remaining == 0)
+                {
+                    break;
+                }
             }
 
             currentPos += partLength;
-
-            // Early exit if we've collected all required characters
-            if (remaining == 0)
-            {
-                break;
-            }
         }
 
         Debug.Assert(remaining == 0, "Should have collected exactly the requested number of characters");
 
-        // Optimize for single-part result
-        return builder.Count == 1
-            ? new Content(builder[0])
-            : new Content(builder.ToImmutableAndClear());
+        return builder.ToContent();
     }
 }

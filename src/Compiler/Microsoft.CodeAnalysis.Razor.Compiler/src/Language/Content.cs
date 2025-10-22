@@ -2,11 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Buffers;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -273,6 +275,31 @@ public readonly partial struct Content : IEquatable<Content>
             Debug.Assert(_data.Kind == ContentKind.StringArray);
             return Unsafe.As<string[]>(_parts);
         }
+    }
+
+    /// <summary>
+    ///  Helper that gets only the non-empty parts of this content as a pooled array span.
+    /// </summary>
+    private PooledArray<ReadOnlyMemory<char>> GetNonEmptyParts(out ReadOnlySpan<ReadOnlyMemory<char>> result)
+    {
+        var pooledArray = ArrayPool<ReadOnlyMemory<char>>.Shared.GetPooledArraySpan(
+            minimumLength: _data.PartCount,
+            clearOnReturn: true,
+            out var parts);
+
+        var nonEmptyPartCount = 0;
+
+        foreach (var part in Parts)
+        {
+            if (!part.IsEmpty)
+            {
+                parts[nonEmptyPartCount++] = part;
+            }
+        }
+
+        result = parts;
+
+        return pooledArray;
     }
 
     /// <summary>

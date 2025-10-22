@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Buffers;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -27,16 +26,22 @@ public readonly partial struct Content
             return _value.Span.IndexOf(value);
         }
 
-        var offset = 0;
+        var partStart = 0;
+
         foreach (var part in Parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
             var index = part.Span.IndexOf(value);
             if (index >= 0)
             {
-                return offset + index;
+                return partStart + index;
             }
 
-            offset += part.Length;
+            partStart += part.Length;
         }
 
         return -1;
@@ -46,11 +51,11 @@ public readonly partial struct Content
     ///  Reports the zero-based index of the first occurrence of the specified substring.
     /// </summary>
     /// <param name="value">The substring to search for.</param>
-    /// <param name="comparison">The string comparison type to use.</param>
+    /// <param name="comparisonType">The string comparison type to use.</param>
     /// <returns>
     ///  The zero-based index position of <paramref name="value"/> if found, or -1 if not found.
     /// </returns>
-    public int IndexOf(ReadOnlySpan<char> value, StringComparison comparison)
+    public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType)
     {
         if (value.Length == 0)
         {
@@ -65,111 +70,84 @@ public readonly partial struct Content
         // Fast path: single value
         if (HasValue)
         {
-            return _value.Span.IndexOf(value, comparison);
+            return _value.Span.IndexOf(value, comparisonType);
         }
 
-        // Multi-part case: Try to search within individual parts first (common case)
-        var offset = 0;
-        foreach (var part in Parts)
+        using var _ = GetNonEmptyParts(out var parts);
+
+        var partStart = 0;
+
+        while (!parts.IsEmpty)
         {
-            var index = part.Span.IndexOf(value, comparison);
-            if (index >= 0)
+            var part = parts[0];
+
+            // If value is shorter than or the same length the part,
+            // try to find it within the part.
+            if (part.Length >= value.Length)
             {
-                return offset + index;
-            }
-
-            offset += part.Length;
-        }
-
-        // If we get here, the substring wasn't found in any single part
-        // It might span parts, so we need to check boundaries
-        if (Parts.Count <= 1)
-        {
-            return -1; // Already checked the single part above
-        }
-
-        // Check across part boundaries
-        return IndexOfAcrossPartBoundaries(value, comparison);
-    }
-
-    private int IndexOfAcrossPartBoundaries(ReadOnlySpan<char> value, StringComparison comparison)
-    {
-        // First, gather up all of the parts
-        using var _ = ArrayPool<ReadOnlyMemory<char>>.Shared.GetPooledArraySpan(
-            minimumLength: _data.PartCount,
-            clearOnReturn: true,
-            out var parts);
-
-        var index = 0;
-        foreach (var part in Parts)
-        {
-            parts[index++] = part;
-        }
-
-        // Try to match at positions that span part boundaries
-        // We only need to check the last (value.Length - 1) positions in each part
-        // since matches fully contained in a part were already checked
-        var offset = 0;
-        for (var startPartIndex = 0; startPartIndex < parts.Length - 1; startPartIndex++)
-        {
-            var partSpan = parts[startPartIndex].Span;
-
-            // Only check positions where the match would extend into the next part
-            var startPos = Math.Max(0, partSpan.Length - value.Length + 1);
-
-            for (var pos = startPos; pos < partSpan.Length; pos++)
-            {
-                if (TryMatchAcrossParts(parts[startPartIndex..], pos, value, comparison))
+                var index = part.Span.IndexOf(value, comparisonType);
+                if (index >= 0)
                 {
-                    return offset + pos;
+                    return index;
                 }
             }
 
-            offset += partSpan.Length;
+            // OK. It didn't match within the part, but can we make it partially
+            // match the end of the part?
+
+            var maxPrefixLength = Math.Min(part.Length, value.Length - 1);
+            var remainingValue = value[..maxPrefixLength];
+
+            while (!remainingValue.IsEmpty)
+            {
+                if (part.Span.EndsWith(remainingValue, comparisonType))
+                {
+                    // It matches the end of this part. See if we can match the rest
+                    var index = partStart + part.Length - remainingValue.Length;
+                    remainingValue = value[remainingValue.Length..];
+
+                    if (TryMatchAcrossParts(remainingValue, parts[1..], comparisonType))
+                    {
+                        return index;
+                    }
+                }
+
+                remainingValue = remainingValue[..^1];
+            }
+
+            partStart += part.Length;
+            parts = parts[1..];
         }
 
         return -1;
     }
 
-    private static bool TryMatchAcrossParts(
-        ReadOnlySpan<ReadOnlyMemory<char>> parts,
-        int startPos,
-        ReadOnlySpan<char> value,
-        StringComparison comparison)
+    private static bool TryMatchAcrossParts(ReadOnlySpan<char> value, ReadOnlySpan<ReadOnlyMemory<char>> parts, StringComparison comparisonType)
     {
-        // Start with the first part, sliced to begin at startPos
-        var currentPart = parts[0].Span[startPos..];
-        var remainingParts = parts[1..];
-        var remainingValue = value;
-
-        while (true)
+        foreach (var part in parts)
         {
-            var chunkSize = Math.Min(currentPart.Length, remainingValue.Length);
+            if (part.IsEmpty)
+            {
+                continue;
+            }
 
-            if (!currentPart[..chunkSize].Equals(remainingValue[..chunkSize], comparison))
+            // If value is shorter than or the same length the part,
+            // try to find it within the part.
+            if (value.Length <= part.Length)
+            {
+                return part.Span.StartsWith(value, comparisonType);
+            }
+
+            // Value is longer than part. Try to match it completely.
+            if (!part.Span.Equals(value[..part.Length], comparisonType))
             {
                 return false;
             }
 
-            // Advance the value
-            remainingValue = remainingValue[chunkSize..];
-
-            // Check if we've matched everything
-            if (remainingValue.Length == 0)
-            {
-                return true;
-            }
-
-            // Move to the next part
-            if (remainingParts.Length == 0)
-            {
-                // No more parts, but we still have value left to match
-                return false;
-            }
-
-            currentPart = remainingParts[0].Span;
-            remainingParts = remainingParts[1..];
+            value = value[part.Length..];
         }
+
+        return false;
     }
 
     /// <summary>
@@ -192,16 +170,22 @@ public readonly partial struct Content
             return _value.Span.IndexOfAny(value0, value1);
         }
 
-        var offset = 0;
+        var partStart = 0;
+
         foreach (var part in Parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
             var index = part.Span.IndexOfAny(value0, value1);
             if (index >= 0)
             {
-                return offset + index;
+                return partStart + index;
             }
 
-            offset += part.Length;
+            partStart += part.Length;
         }
 
         return -1;
@@ -228,16 +212,22 @@ public readonly partial struct Content
             return _value.Span.IndexOfAny(value0, value1, value2);
         }
 
-        var offset = 0;
+        var partStart = 0;
+
         foreach (var part in Parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
             var index = part.Span.IndexOfAny(value0, value1, value2);
             if (index >= 0)
             {
-                return offset + index;
+                return partStart + index;
             }
 
-            offset += part.Length;
+            partStart += part.Length;
         }
 
         return -1;
@@ -262,16 +252,22 @@ public readonly partial struct Content
             return _value.Span.IndexOfAny(values);
         }
 
-        var offset = 0;
+        var partOffset = 0;
+
         foreach (var part in Parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
             var index = part.Span.IndexOfAny(values);
             if (index >= 0)
             {
-                return offset + index;
+                return partOffset + index;
             }
 
-            offset += part.Length;
+            partOffset += part.Length;
         }
 
         return -1;
@@ -300,7 +296,8 @@ public readonly partial struct Content
 #endif
         }
 
-        var offset = 0;
+        var partStart = 0;
+
         foreach (var part in Parts)
         {
 #if NET
@@ -310,10 +307,10 @@ public readonly partial struct Content
 #endif
             if (index >= 0)
             {
-                return offset + index;
+                return partStart + index;
             }
 
-            offset += part.Length;
+            partStart += part.Length;
         }
 
         return -1;
@@ -358,9 +355,15 @@ public readonly partial struct Content
 #endif
         }
 
-        var offset = 0;
+        var partStart = 0;
+
         foreach (var part in Parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
 #if NET
             var index = part.Span.IndexOfAnyExcept(value0, value1);
 #else
@@ -368,10 +371,10 @@ public readonly partial struct Content
 #endif
             if (index >= 0)
             {
-                return offset + index;
+                return partStart + index;
             }
 
-            offset += part.Length;
+            partStart += part.Length;
         }
 
         return -1;
@@ -418,9 +421,15 @@ public readonly partial struct Content
 #endif
         }
 
-        var offset = 0;
+        var partStart = 0;
+
         foreach (var part in Parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
 #if NET
             var index = part.Span.IndexOfAnyExcept(value0, value1, value2);
 #else
@@ -428,10 +437,10 @@ public readonly partial struct Content
 #endif
             if (index >= 0)
             {
-                return offset + index;
+                return partStart + index;
             }
 
-            offset += part.Length;
+            partStart += part.Length;
         }
 
         return -1;
@@ -481,9 +490,15 @@ public readonly partial struct Content
 #endif
         }
 
-        var offset = 0;
+        var partStart = 0;
+
         foreach (var part in Parts)
         {
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
 #if NET
             var index = part.Span.IndexOfAnyExcept(values);
 #else
@@ -491,10 +506,10 @@ public readonly partial struct Content
 #endif
             if (index >= 0)
             {
-                return offset + index;
+                return partStart + index;
             }
 
-            offset += part.Length;
+            partStart += part.Length;
         }
 
         return -1;

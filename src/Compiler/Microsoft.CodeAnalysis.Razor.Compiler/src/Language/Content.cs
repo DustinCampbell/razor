@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -119,14 +119,14 @@ public readonly partial struct Content : IEquatable<Content>
                 var charLength = 0;
                 var partsCount = 0;
 
-                ref var partsRef = ref parts[0];
-
-                for (var i = 0; i < parts.Length; i++)
+                foreach (var part in parts)
                 {
-                    ref readonly var part = ref Unsafe.Add(ref partsRef, i);
-
                     charLength += part.Length;
-                    partsCount += part._data.PartCount;
+
+                    // Count at least one part for each nested content.
+                    // Empty content can't contain parts, so it has a PartCount of 0,
+                    // but it can still be used as a part.
+                    partsCount += Math.Max(1, part._data.PartCount);
                 }
 
                 _data = ContentData.ContentArray(charLength, partsCount);
@@ -239,6 +239,8 @@ public readonly partial struct Content : IEquatable<Content>
     /// </returns>
     [MemberNotNullWhen(true, nameof(_parts))]
     public bool IsMultiPart => _parts is not null && _value.IsEmpty;
+
+    private bool HasNestedContent => _parts?.Length < _data.PartCount;
 
     private Content[] ContentParts
     {

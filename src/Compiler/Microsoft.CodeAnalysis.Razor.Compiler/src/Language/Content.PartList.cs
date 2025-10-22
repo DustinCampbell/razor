@@ -22,13 +22,9 @@ public readonly partial struct Content
     ///   that avoids heap allocations for the common case.
     ///  </para>
     /// </remarks>
-    public struct PartList(Content content)
+    public readonly struct PartList(Content content)
     {
         private readonly Content _content = content;
-        private ContentKind? _kind;
-        private int? _count;
-
-        private ContentKind Kind => _kind ??= _content._data.Kind;
 
         /// <summary>
         ///  Gets the total number of flattened parts in the content.
@@ -37,10 +33,7 @@ public readonly partial struct Content
         ///  The number of individual character sequences after flattening all nested structures.
         ///  Returns 0 for empty content and 1 for single-value content.
         /// </returns>
-        public int Count
-            => _count ??= _content._parts is null
-                ? (_content._value.IsEmpty ? 0 : 1)
-                : _content._data.PartCount;
+        public int Count { get; } = content._data.PartCount;
 
         /// <summary>
         ///  Returns an enumerator that iterates through the flattened parts.
@@ -69,29 +62,13 @@ public readonly partial struct Content
         ///   This happens automatically when used in a foreach statement.
         ///  </para>
         /// </remarks>
-        public ref struct Enumerator
+        /// <param name="list">The <see cref="PartList"/> to enumerate.</param>
+        public ref struct Enumerator(PartList list)
         {
-            private Content _content;
-            private int _index = -1;
-            private ContentKind _kind;
-            private int _partsLength;
-            private Content[]? _contentParts;
+            private Context _context = new(list._content);
+            private readonly bool _hasNestedContent = list._content.HasNestedContent;
+            private MemoryBuilder<Context> _stack;
             private bool _disposed;
-
-            private MemoryBuilder<(Content content, int index, ContentKind kind, int partsLength, Content[]? contentParts)> _stack;
-
-            /// <summary>
-            ///  Initializes a new instance of the <see cref="Enumerator"/> struct.
-            /// </summary>
-            /// <param name="list">The <see cref="PartList"/> to enumerate.</param>
-            public Enumerator(PartList list)
-            {
-                _content = list._content;
-                _kind = list.Kind;
-                _partsLength = _content._parts?.Length ?? 0;
-                _contentParts = _kind == ContentKind.ContentArray ? _content.ContentParts : null;
-                _disposed = false;
-            }
 
             /// <summary>
             ///  Releases resources used by the enumerator.
@@ -105,7 +82,12 @@ public readonly partial struct Content
                 if (!_disposed)
                 {
                     _disposed = true;
-                    _stack.Dispose();
+
+                    // Only dispose stack if it was potentially used
+                    if (_hasNestedContent)
+                    {
+                        _stack.Dispose();
+                    }
                 }
             }
 
@@ -119,29 +101,7 @@ public readonly partial struct Content
             ///  This property is only valid after <see cref="MoveNext"/> has returned <see langword="true"/>
             ///  and before it returns false or <see cref="Dispose"/> is called.
             /// </remarks>
-            public readonly ReadOnlyMemory<char> Current
-            {
-                get
-                {
-                    if (_content.HasValue)
-                    {
-                        Debug.Assert(_index == 0);
-                        return _content.Value;
-                    }
-
-                    Debug.Assert(_content.IsMultiPart);
-                    Debug.Assert(_index >= 0 && _index < _partsLength);
-
-                    return _kind switch
-                    {
-                        ContentKind.ContentArray => _contentParts![_index]._value,
-                        ContentKind.MemoryArray => _content.MemoryParts[_index],
-                        ContentKind.StringArray => _content.StringParts[_index].AsMemory(),
-
-                        _ => Assumed.Unreachable<ReadOnlyMemory<char>>()
-                    };
-                }
-            }
+            public readonly ReadOnlyMemory<char> Current => _context.Current;
 
             /// <summary>
             ///  Advances the enumerator to the next part in the sequence.
@@ -167,7 +127,109 @@ public readonly partial struct Content
                     return false;
                 }
 
+                // Fast path: no nested content, use simple iteration
+                if (!_hasNestedContent)
+                {
+                    return !_context.IsEmpty && _context.TryMoveNext();
+                }
+
+                // Slow path: handle potential nested content
+                return MoveNextNested();
+            }
+
+            private bool MoveNextNested()
+            {
                 while (true)
+                {
+                    // Try to advance within current content
+                    if (_context.TryMoveNext())
+                    {
+                        // Check if we landed on nested content that needs descent
+                        if (_context.TryGetNestedContent(out var nestedContent))
+                        {
+                            // Push current position and descend into nested content
+                            _stack.Push(_context);
+                            _context = new(nestedContent);
+                            continue;
+                        }
+
+                        // Successfully advanced to a regular part
+                        return true;
+                    }
+
+                    // Current content exhausted, try to pop from stack
+                    if (_stack.IsEmpty)
+                    {
+                        return false;
+                    }
+
+                    _context = _stack.Pop();
+                }
+            }
+
+            private struct Context
+            {
+                private readonly Content _content;
+                private readonly ContentKind _kind;
+                private readonly int _partsLength;
+
+                private int _index;
+
+                public Context(Content content)
+                {
+                    _content = content;
+                    _kind = _content._data.Kind;
+                    _partsLength = _content._parts?.Length ?? 0;
+                    _index = -1;
+                }
+
+                public readonly bool IsEmpty => _content.IsEmpty;
+
+                /// <summary>
+                ///  Gets the character sequence at the current position.
+                /// </summary>
+                /// <returns>
+                ///  A <see cref="ReadOnlyMemory{T}"/> of characters representing the current part.
+                /// </returns>
+                /// <remarks>
+                ///  This property is only valid when the context represents a valid current position.
+                /// </remarks>
+                public readonly ReadOnlyMemory<char> Current
+                {
+                    get
+                    {
+                        if (_content.HasValue)
+                        {
+                            Debug.Assert(_index == 0);
+                            return _content.Value;
+                        }
+
+                        Debug.Assert(_content.IsMultiPart);
+                        Debug.Assert(_index >= 0 && _index < _partsLength);
+
+                        return _kind switch
+                        {
+                            ContentKind.ContentArray => _content.ContentParts[_index]._value,
+                            ContentKind.MemoryArray => _content.MemoryParts[_index],
+                            ContentKind.StringArray => _content.StringParts[_index].AsMemory(),
+
+                            _ => Assumed.Unreachable<ReadOnlyMemory<char>>()
+                        };
+                    }
+                }
+
+                /// <summary>
+                ///  Attempts to advance to the next part within the current content.
+                /// </summary>
+                /// <returns>
+                ///  <see langword="true"/> if the context successfully advanced to the next part;
+                ///  <see langword="false"/> if the context has passed the end of the current content.
+                /// </returns>
+                /// <remarks>
+                ///  This method handles basic advancement within the current content level.
+                ///  It does not handle nested content structures or stack operations.
+                /// </remarks>
+                public bool TryMoveNext()
                 {
                     var nextIndex = _index + 1;
 
@@ -179,46 +241,35 @@ public readonly partial struct Content
                             return true;
                         }
                     }
-                    else if (_content.IsMultiPart)
+                    else if (nextIndex < _partsLength)
                     {
-                        if (_kind == ContentKind.ContentArray)
+                        Debug.Assert(_content.IsMultiPart);
+                        _index = nextIndex;
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                /// <summary>
+                ///  Gets nested content at the current index, if it exists and is multi-part.
+                /// </summary>
+                /// <param name="nestedContent">The nested content if it exists and is multi-part.</param>
+                /// <returns>True if nested multi-part content exists at the current index.</returns>
+                public readonly bool TryGetNestedContent(out Content nestedContent)
+                {
+                    if (_kind == ContentKind.ContentArray && _index >= 0 && _index < _partsLength)
+                    {
+                        var content = _content.ContentParts[_index];
+                        
+                        if (content.IsMultiPart)
                         {
-                            if (nextIndex < _partsLength)
-                            {
-                                Debug.Assert(_contentParts is not null);
-
-                                ref readonly var content = ref _contentParts[nextIndex];
-
-                                if (content.IsMultiPart)
-                                {
-                                    // Push current position and descend into nested content
-                                    _stack.Push((_content, nextIndex, _kind, _partsLength, _contentParts));
-                                    _content = content;
-                                    _kind = content._data.Kind;
-                                    _partsLength = content._parts!.Length;
-                                    _contentParts = _kind == ContentKind.ContentArray ? content.ContentParts : null;
-                                    _index = -1;
-                                    continue;
-                                }
-
-                                _index = nextIndex;
-                                return true;
-                            }
-                        }
-                        else if (nextIndex < _partsLength)
-                        {
-                            _index = nextIndex;
+                            nestedContent = content;
                             return true;
                         }
                     }
 
-                    // Pop from stack if available
-                    if (!_stack.IsEmpty)
-                    {
-                        (_content, _index, _kind, _partsLength, _contentParts) = _stack.Pop();
-                        continue;
-                    }
-
+                    nestedContent = default;
                     return false;
                 }
             }

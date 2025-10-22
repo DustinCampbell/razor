@@ -361,6 +361,134 @@ public class ContentTests
     }
 
     [Fact]
+    public void Parts_EmptyContentHandling_BehavesConsistently()
+    {
+        // Arrange - Various scenarios with empty content
+        var standaloneEmpty = Content.Empty;
+        var standaloneEmptyString = new Content("");
+        var standaloneEmptyMemory = new Content(ReadOnlyMemory<char>.Empty);
+
+        var multiPartWithEmpty = new Content([Content.Empty, new Content("A"), Content.Empty, new Content("B"), Content.Empty]);
+        var nestedEmptyContent = new Content([Content.Empty, new Content([Content.Empty, Content.Empty]), Content.Empty]);
+        var mixedEmptyArrays = new Content(["", "A", "", "B", ""]);
+
+        // Act & Assert - Standalone empty content should have Count = 0 and no enumeration
+        Assert.Equal(0, standaloneEmpty.Parts.Count);
+        Assert.Equal(0, standaloneEmptyString.Parts.Count);
+        Assert.Equal(0, standaloneEmptyMemory.Parts.Count);
+
+        var enumeratedCount = 0;
+        foreach (var _ in standaloneEmpty.Parts)
+        {
+            enumeratedCount++;
+        }
+
+        Assert.Equal(0, enumeratedCount);
+
+        // Multi-part content should include empty parts in both Count and enumeration
+        Assert.Equal(5, multiPartWithEmpty.Parts.Count); // All 5 parts including empty ones
+
+        var parts = new List<string>();
+        foreach (var part in multiPartWithEmpty.Parts)
+        {
+            parts.Add(part.ToString());
+        }
+
+        Assert.Equal(5, parts.Count);
+        Assert.Equal("", parts[0]); // Empty part
+        Assert.Equal("A", parts[1]);
+        Assert.Equal("", parts[2]); // Empty part  
+        Assert.Equal("B", parts[3]);
+        Assert.Equal("", parts[4]); // Empty part
+
+        // Nested empty content should also be enumerated
+        Assert.Equal(4, nestedEmptyContent.Parts.Count); // 4 empty parts total
+
+        var nestedParts = new List<string>();
+        foreach (var part in nestedEmptyContent.Parts)
+        {
+            nestedParts.Add(part.ToString());
+        }
+
+        Assert.Equal(4, nestedParts.Count);
+        Assert.All(nestedParts, part => Assert.Equal("", part));
+
+        // Mixed empty arrays should behave the same
+        Assert.Equal(5, mixedEmptyArrays.Parts.Count);
+
+        var mixedParts = new List<string>();
+        foreach (var part in mixedEmptyArrays.Parts)
+        {
+            mixedParts.Add(part.ToString());
+        }
+
+        Assert.Equal(["", "A", "", "B", ""], mixedParts);
+    }
+
+    [Fact]
+    public void Parts_CountMatchesEnumeration_ForAllContentTypes()
+    {
+        // Arrange - Various content structures
+        var testCases = new[]
+        {
+            Content.Empty,
+            new Content(""),
+            new Content("Hello"),
+            new Content(["A", "B", "C"]),
+            new Content([Content.Empty, new Content("Test"), Content.Empty]),
+            new Content(["", "Hello", "", "World", ""]),
+            new Content([new Content(["A", "B"]), new Content(["C", "D"])]),
+            new Content([ReadOnlyMemory<char>.Empty, "Test".AsMemory(), ReadOnlyMemory<char>.Empty])
+        };
+
+        foreach (var content in testCases)
+        {
+            // Act
+            var reportedCount = content.Parts.Count;
+
+            var actualCount = 0;
+            foreach (var _ in content.Parts)
+            {
+                actualCount++;
+            }
+
+            // Assert
+            Assert.Equal(reportedCount, actualCount);
+        }
+    }
+
+    [Fact]
+    public void Parts_EmptyPartsPreserveStructure()
+    {
+        // Arrange - Content that should maintain empty parts
+        var content = new Content([
+            new Content("Start"),
+            Content.Empty,
+            new Content([Content.Empty, new Content("Middle"), Content.Empty]),
+            Content.Empty,
+            new Content("End")
+        ]);
+
+        // Act
+        var parts = new List<string>();
+        foreach (var part in content.Parts)
+        {
+            parts.Add(part.ToString());
+        }
+
+        // Assert - Should preserve all parts including empty ones
+        Assert.Equal(7, content.Parts.Count);
+        Assert.Equal(7, parts.Count);
+        Assert.Equal("Start", parts[0]);
+        Assert.Equal("", parts[1]);    // Empty part preserved
+        Assert.Equal("", parts[2]);    // Empty part from nested structure
+        Assert.Equal("Middle", parts[3]);
+        Assert.Equal("", parts[4]);    // Empty part from nested structure
+        Assert.Equal("", parts[5]);    // Empty part preserved
+        Assert.Equal("End", parts[6]);
+    }
+
+    [Fact]
     public void PartsEnumerator_WithSingleValue_EnumeratesOneItem()
     {
         // Arrange

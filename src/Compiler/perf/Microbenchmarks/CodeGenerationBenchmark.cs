@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Razor.Language;
 
 namespace Microsoft.AspNetCore.Razor.Microbenchmarks;
 
+[MemoryDiagnoser]
+[SimpleJob]
 public class CodeGenerationBenchmark
 {
     public CodeGenerationBenchmark()
@@ -33,27 +35,35 @@ public class CodeGenerationBenchmark
 
     public RazorProjectItem MSN { get; }
 
-    [Benchmark(Description = "Razor Design Time Code Generation of MSN.com")]
+    [Benchmark(Description = "Razor Design Time Code Generation of MSN.com", OperationsPerInvoke = 2)]
     public void CodeGeneration_DesignTime_LargeStaticFile()
     {
-        var codeDocument = ProjectEngine.ProcessDesignTime(MSN);
-        var generated = codeDocument.GetRequiredCSharpDocument();
-
-        if (generated.Diagnostics.Length > 0)
+        // Process 2 times to reach ~130ms (2 × 65ms)
+        for (var i = 0; i < 2; i++)
         {
-            throw new Exception("Error!" + Environment.NewLine + string.Join(Environment.NewLine, generated.Diagnostics));
+            var codeDocument = ProjectEngine.ProcessDesignTime(MSN);
+            var generated = codeDocument.GetRequiredCSharpDocument();
+
+            if (generated.Diagnostics.Length > 0)
+            {
+                throw new Exception("Error!" + Environment.NewLine + string.Join(Environment.NewLine, generated.Diagnostics));
+            }
         }
     }
 
-    [Benchmark(Description = "Razor Runtime Code Generation of MSN.com")]
+    [Benchmark(Description = "Razor Runtime Code Generation of MSN.com", OperationsPerInvoke = 2)]
     public void CodeGeneration_Runtime_LargeStaticFile()
     {
-        var codeDocument = ProjectEngine.Process(MSN);
-        var generated = codeDocument.GetRequiredCSharpDocument();
-
-        if (generated.Diagnostics.Length > 0)
+        // Process 2 times to reach ~150ms (2 × 76ms)
+        for (var i = 0; i < 2; i++)
         {
-            throw new Exception("Error!" + Environment.NewLine + string.Join(Environment.NewLine, generated.Diagnostics));
+            var codeDocument = ProjectEngine.Process(MSN);
+            var generated = codeDocument.GetRequiredCSharpDocument();
+
+            if (generated.Diagnostics.Length > 0)
+            {
+                throw new Exception("Error!" + Environment.NewLine + string.Join(Environment.NewLine, generated.Diagnostics));
+            }
         }
     }
 }

@@ -6163,4 +6163,805 @@ public class ContentTests
         // Assert
         Assert.Equal("A | B | C", result.ToString());
     }
+
+    [Fact]
+    public void IsWhiteSpace_EmptyContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_EmptyStringContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_AllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("   \t\n\r  ");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_OnlySpaces_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("     ");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_OnlyTabs_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("\t\t\t");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_OnlyNewlines_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("\n\r\n");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_MixedWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(" \t\n\r\v\f ");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_ContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("  Hello  ");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_OnlyNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_SingleValue_SingleNonWhitespaceChar_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("A");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_MultiPart_AllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["   ", "\t\t", "\n\r"]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_MultiPart_AllWhitespaceIncludingEmpty_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["", "   ", "", "\t\t", "", "\n\r", ""]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_MultiPart_ContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["   ", "Hello", "\t\t"]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_MultiPart_SingleNonWhitespacePart_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["   ", "A", "   "]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_MultiPart_OnlyEmptyParts_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["", "", "", ""]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_NestedContent_AllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var inner1 = new Content(["  ", "\t"]);
+        var inner2 = new Content(["\n", "  "]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_NestedContent_ContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var inner1 = new Content(["  ", "\t"]);
+        var inner2 = new Content(["\n", "Hello"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_WithMemoryParts_AllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content([
+            "   ".AsMemory(),
+            "\t\t".AsMemory(),
+            "\n\r".AsMemory()
+        ]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_WithMemoryParts_ContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content([
+            "   ".AsMemory(),
+            "Hello".AsMemory(),
+            "\t\t".AsMemory()
+        ]);
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_WithUnicodeWhitespace_ReturnsTrue()
+    {
+        // Arrange - Including various Unicode whitespace characters
+        var content = new Content(" \u00A0\u2000\u2001\u2002\u2003");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_WithNonBreakingSpace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("\u00A0\u00A0");
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_DeeplyNestedContent_AllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var level1 = new Content(["  ", "\t"]);
+        var level2 = new Content([level1, new Content("\n")]);
+        var level3 = new Content([level2, new Content("  ")]);
+
+        // Act
+        var result = level3.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_DeeplyNestedContent_ContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var level1 = new Content(["  ", "\t"]);
+        var level2 = new Content([level1, new Content("X")]);
+        var level3 = new Content([level2, new Content("  ")]);
+
+        // Act
+        var result = level3.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    // Tests for Content.IsNullOrEmpty functionality
+    [Fact]
+    public void IsNullOrEmpty_NullContent_ReturnsTrue()
+    {
+        // Arrange
+        Content? content = null;
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_EmptyContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_EmptyStringContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("");
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_EmptyMemoryContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(ReadOnlyMemory<char>.Empty);
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_EmptyArrayContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(ImmutableArray<string>.Empty);
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_NonEmptyContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_WhitespaceContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("   ");
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_SingleCharContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("A");
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_MultiPartContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_MultiPartWithEmptyParts_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", ""]);
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrEmpty_NestedContent_ReturnsFalse()
+    {
+        // Arrange
+        var inner = new Content("Test");
+        var content = new Content([inner]);
+
+        // Act
+        var result = Content.IsNullOrEmpty(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    // Tests for Content.IsNullOrWhiteSpace functionality
+    [Fact]
+    public void IsNullOrWhiteSpace_NullContent_ReturnsTrue()
+    {
+        // Arrange
+        Content? content = null;
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_EmptyContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_WhitespaceContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("   \t\n\r  ");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_EmptyStringContent_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_OnlySpaces_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("     ");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_OnlyTabs_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("\t\t\t");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_OnlyNewlines_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("\n\r\n");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_MultiPartAllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["   ", "\t\t", "\n\r"]);
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_MultiPartWithEmptyAndWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(["", "   ", "", "\t\t", ""]);
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_NonWhitespaceContent_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_MixedWhitespaceAndNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("  Hello  ");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_SingleNonWhitespaceChar_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content("A");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_MultiPartContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["   ", "Hello", "\t\t"]);
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_NestedContentAllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var inner1 = new Content(["  ", "\t"]);
+        var inner2 = new Content(["\n", "  "]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_NestedContentContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var inner1 = new Content(["  ", "\t"]);
+        var inner2 = new Content(["\n", "Hello"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_WithUnicodeWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content(" \u00A0\u2000\u2001\u2002\u2003");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_WithNonBreakingSpace_ReturnsTrue()
+    {
+        // Arrange
+        var content = new Content("\u00A0\u00A0");
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(content);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_DeeplyNestedAllWhitespace_ReturnsTrue()
+    {
+        // Arrange
+        var level1 = new Content(["  ", "\t"]);
+        var level2 = new Content([level1, new Content("\n")]);
+        var level3 = new Content([level2, new Content("  ")]);
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(level3);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsNullOrWhiteSpace_DeeplyNestedContainsNonWhitespace_ReturnsFalse()
+    {
+        // Arrange
+        var level1 = new Content(["  ", "\t"]);
+        var level2 = new Content([level1, new Content("X")]);
+        var level3 = new Content([level2, new Content("  ")]);
+
+        // Act
+        var result = Content.IsNullOrWhiteSpace(level3);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    // Edge case tests for all three methods
+    [Fact]
+    public void WhiteSpaceMethods_CompareResults_ConsistentBehavior()
+    {
+        // Arrange - Test various scenarios to ensure consistency
+        var testCases = new[]
+        {
+            (Content?)null,
+            Content.Empty,
+            new Content(""),
+            new Content("   "),
+            new Content("\t\n\r"),
+            new Content("Hello"),
+            new Content("  Hello  "),
+            new Content(["", "   ", ""]),
+            new Content(["  ", "Hello", "  "]),
+            new Content(["\t", "\n", "\r"]),
+        };
+
+        foreach (var content in testCases)
+        {
+            // Act
+            var isNullOrEmpty = Content.IsNullOrEmpty(content);
+            var isNullOrWhiteSpace = Content.IsNullOrWhiteSpace(content);
+            var isWhiteSpace = content?.IsWhiteSpace() ?? false;
+
+            // Assert logical relationships
+            if (content is null)
+            {
+                Assert.True(isNullOrEmpty);
+                Assert.True(isNullOrWhiteSpace);
+                Assert.False(isWhiteSpace); // Can't call IsWhiteSpace on null
+            }
+            else if (content.Value.IsEmpty)
+            {
+                Assert.True(isNullOrEmpty);
+                Assert.True(isNullOrWhiteSpace);
+                Assert.True(isWhiteSpace);
+            }
+            else
+            {
+                Assert.False(isNullOrEmpty);
+
+                // If content is not null or empty, IsNullOrWhiteSpace should match IsWhiteSpace
+                Assert.Equal(isWhiteSpace, isNullOrWhiteSpace);
+            }
+        }
+    }
+
+    [Fact]
+    public void IsWhiteSpace_PerformanceTest_LargeWhitespaceContent()
+    {
+        // Arrange - Create large whitespace-only content
+        var parts = new string[100];
+        for (var i = 0; i < 100; i++)
+        {
+            parts[i] = new string(' ', 10);
+        }
+        var content = new Content(parts.ToImmutableArray());
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsWhiteSpace_PerformanceTest_LargeContentWithNonWhitespace()
+    {
+        // Arrange - Create large content with one non-whitespace character
+        var parts = new string[100];
+        for (var i = 0; i < 100; i++)
+        {
+            parts[i] = i == 50 ? "X" : new string(' ', 10);
+        }
+        var content = new Content(parts.ToImmutableArray());
+
+        // Act
+        var result = content.IsWhiteSpace();
+
+        // Assert
+        Assert.False(result);
+    }
 }

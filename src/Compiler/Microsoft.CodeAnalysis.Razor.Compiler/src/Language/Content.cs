@@ -346,8 +346,8 @@ public readonly partial struct Content : IEquatable<Content>
         }
 
         // Slow path: Compare character-by-character, handling different part boundaries
-        using var enumerator1 = Parts.GetEnumerator();
-        using var enumerator2 = other.Parts.GetEnumerator();
+        using var enumerator1 = Parts.NonEmpty.GetEnumerator();
+        using var enumerator2 = other.Parts.NonEmpty.GetEnumerator();
 
         var part1 = ReadOnlyMemory<char>.Empty;
         var part2 = ReadOnlyMemory<char>.Empty;
@@ -481,6 +481,35 @@ public readonly partial struct Content : IEquatable<Content>
             Debug.Assert(destination.IsEmpty);
         });
     }
+
+    public bool IsWhiteSpace()
+    {
+        if (IsEmpty)
+        {
+            return true;
+        }
+
+        if (IsSingleValue)
+        {
+            return _value.Span.IsWhiteSpace();
+        }
+
+        foreach (var part in Parts.NonEmpty)
+        {
+            if (!part.Span.IsWhiteSpace())
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static bool IsNullOrEmpty(Content? content)
+        => content is null or { IsEmpty: true };
+
+    public static bool IsNullOrWhiteSpace(Content? content)
+        => content is not Content value || value.IsWhiteSpace();
 
     /// <summary>
     ///  Determines whether two <see cref="Content"/> instances represent the same character data.

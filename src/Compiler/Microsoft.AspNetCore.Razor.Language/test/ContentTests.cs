@@ -5359,4 +5359,808 @@ public class ContentTests
         Assert.Equal("ABC", result.ToString());
         Assert.Equal(3, result.Length);
     }
+
+    [Fact]
+    public void Join_WithContentArray_EmptyValues_ReturnsEmpty()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<Content> values = [];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithContentArray_SingleValue_ReturnsSingleValue()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<Content> values = [new Content("Hello")];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Hello", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithContentArray_MultipleValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<Content> values = [
+            new Content("Hello"),
+            new Content("World"),
+            new Content("Test")
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Hello, World, Test", result.ToString());
+        Assert.Equal(18, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithContentArray_EmptySeparator_JoinsWithoutSeparator()
+    {
+        // Arrange
+        var separator = Content.Empty;
+        ReadOnlySpan<Content> values = [
+            new Content("Hello"),
+            new Content("World")
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("HelloWorld", result.ToString());
+        Assert.Equal(10, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithContentArray_SkipsEmptyValues()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<Content> values = [
+            new Content("Hello"),
+            Content.Empty,
+            new Content("World"),
+            Content.Empty,
+            new Content("Test")
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Hello, World, Test", result.ToString());
+        Assert.Equal(18, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithContentArray_AllEmptyValues_ReturnsEmpty()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<Content> values = [Content.Empty, Content.Empty, Content.Empty];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithImmutableArrayContent_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" | ");
+        ImmutableArray<Content> values = [
+            new Content("A"),
+            new Content("B"),
+            new Content("C")
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("A | B | C", result.ToString());
+        Assert.Equal(9, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithMemoryArray_EmptyValues_ReturnsEmpty()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<ReadOnlyMemory<char>> values = [];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithMemoryArray_SingleValue_ReturnsSingleValue()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<ReadOnlyMemory<char>> values = ["Hello".AsMemory()];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Hello", result.ToString());
+        Assert.Equal(5, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithMemoryArray_MultipleValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" - ");
+        ReadOnlySpan<ReadOnlyMemory<char>> values = [
+            "Alpha".AsMemory(),
+            "Beta".AsMemory(),
+            "Gamma".AsMemory()
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Alpha - Beta - Gamma", result.ToString());
+        Assert.Equal(20, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithMemoryArray_SkipsEmptyValues()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<ReadOnlyMemory<char>> values = [
+            "Hello".AsMemory(),
+            ReadOnlyMemory<char>.Empty,
+            "World".AsMemory()
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Hello, World", result.ToString());
+        Assert.Equal(12, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithImmutableArrayMemory_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" & ");
+        ImmutableArray<ReadOnlyMemory<char>> values = [
+            "First".AsMemory(),
+            "Second".AsMemory(),
+            "Third".AsMemory()
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("First & Second & Third", result.ToString());
+        Assert.Equal(22, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithStringArray_EmptyValues_ReturnsEmpty()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<string> values = [];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithStringArray_SingleValue_ReturnsSingleValue()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<string> values = ["Single"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Single", result.ToString());
+        Assert.Equal(6, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithStringArray_MultipleValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" + ");
+        ReadOnlySpan<string> values = ["One", "Two", "Three"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("One + Two + Three", result.ToString());
+        Assert.Equal(17, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithStringArray_SkipsNullAndEmptyValues()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<string> values = ["Hello", null!, "", "World", null!];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Hello, World", result.ToString());
+        Assert.Equal(12, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithImmutableArrayString_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" -> ");
+        ImmutableArray<string> values = ["Start", "Middle", "End"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Start -> Middle -> End", result.ToString());
+        Assert.Equal(22, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableContent_EmptyEnumerable_ReturnsEmpty()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<Content> values = [];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableContent_SingleValue_ReturnsSingleValue()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<Content> values = [new Content("OnlyOne")];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("OnlyOne", result.ToString());
+        Assert.Equal(7, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableContent_MultipleValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" | ");
+        IEnumerable<Content> values = ["Item1", "Item2", "Item3" ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Item1 | Item2 | Item3", result.ToString());
+        Assert.Equal(21, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableContent_SkipsEmptyValues()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<Content> values = ["First", Content.Empty, "Second", Content.Empty];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("First, Second", result.ToString());
+        Assert.Equal(13, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableMemory_EmptyEnumerable_ReturnsEmpty()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<ReadOnlyMemory<char>> values = [];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableMemory_SingleValue_ReturnsSingleValue()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<ReadOnlyMemory<char>> values = ["Solo".AsMemory()];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Solo", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableMemory_MultipleValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" :: ");
+        IEnumerable<ReadOnlyMemory<char>> values = [
+            "Alpha".AsMemory(),
+            "Bravo".AsMemory(),
+            "Charlie".AsMemory()
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Alpha :: Bravo :: Charlie", result.ToString());
+        Assert.Equal(25, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableMemory_SkipsEmptyValues()
+    {
+        // Arrange
+        var separator = new Content(" - ");
+        IEnumerable<ReadOnlyMemory<char>> values = [
+            "Valid".AsMemory(),
+            ReadOnlyMemory<char>.Empty,
+            "Content".AsMemory()
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Valid - Content", result.ToString());
+        Assert.Equal(15, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableString_EmptyEnumerable_ReturnsEmpty()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<string> values = [];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableString_SingleValue_ReturnsSingleValue()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<string> values = ["Unique"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Unique", result.ToString());
+        Assert.Equal(6, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableString_MultipleValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" <-> ");
+        IEnumerable<string> values = ["Left", "Center", "Right"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Left <-> Center <-> Right", result.ToString());
+        Assert.Equal(25, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEnumerableString_SkipsNullAndEmptyValues()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        IEnumerable<string> values = ["Valid", null!, "", "Content"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Valid, Content", result.ToString());
+        Assert.Equal(14, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithComplexSeparator_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content([" >>> ", "SEPARATOR", " <<< "]);
+        ReadOnlySpan<Content> values = [
+            new Content("First"),
+            new Content("Second")
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("First >>> SEPARATOR <<< Second", result.ToString());
+    }
+
+    [Fact]
+    public void Join_WithNestedContentValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" | ");
+        var nestedContent1 = new Content(["Nested", "1"]);
+        var nestedContent2 = new Content(["Nested", "2"]);
+        ReadOnlySpan<Content> values = [nestedContent1, nestedContent2];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Nested1 | Nested2", result.ToString());
+    }
+
+    [Fact]
+    public void Join_WithUnicodeCharacters_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" 🔗 ");
+        ReadOnlySpan<Content> values = [
+            new Content("Hello"),
+            new Content("世界"),
+            new Content("🌍")
+        ];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Hello 🔗 世界 🔗 🌍", result.ToString());
+    }
+
+    [Fact]
+    public void Join_WithSpecialCharacters_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content("\n");
+        ReadOnlySpan<string> values = ["Line1", "Line2", "Line3"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Line1\nLine2\nLine3", result.ToString());
+        Assert.Contains('\n', result.ToString());
+    }
+
+    [Fact]
+    public void Join_WithWhitespaceValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content("|");
+        ReadOnlySpan<string> values = ["   ", "\t", " \n "];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("   |\t| \n ", result.ToString());
+    }
+
+    [Fact]
+    public void Join_LargeNumberOfValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(",");
+        var values = new Content[100];
+        for (var i = 0; i < 100; i++)
+        {
+            values[i] = new Content($"Item{i}");
+        }
+
+        // Act
+        var result = Content.Join(separator, values.AsSpan());
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        var expected = string.Join(",", values.Select(v => v.ToString()));
+        Assert.Equal(expected, result.ToString());
+    }
+
+    [Fact]
+    public void Join_WithSingleCharacterSeparator_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(",");
+        ReadOnlySpan<string> values = ["A", "B", "C", "D"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("A,B,C,D", result.ToString());
+        Assert.Equal(7, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithEmptyStringsInArray_SkipsEmpty()
+    {
+        // Arrange
+        var separator = new Content(" | ");
+        ReadOnlySpan<string> values = ["", "Valid", "", "Content", ""];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Valid | Content", result.ToString());
+    }
+
+    [Fact]
+    public void Join_ResultEquality_WorksCorrectly()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<Content> values1 = [new Content("A"), new Content("B")];
+        ReadOnlySpan<string> values2 = ["A", "B"];
+
+        // Act
+        var result1 = Content.Join(separator, values1);
+        var result2 = Content.Join(separator, values2);
+
+        // Assert
+        Assert.Equal(result1, result2);
+        Assert.Equal(result1.GetHashCode(), result2.GetHashCode());
+    }
+
+    [Fact]
+    public void Join_ResultHashCode_ConsistentWithEquality()
+    {
+        // Arrange
+        var separator = new Content(" - ");
+        ReadOnlySpan<Content> values = [new Content("X"), new Content("Y")];
+
+        // Act
+        var result1 = Content.Join(separator, values);
+        var result2 = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal(result1, result2);
+        Assert.Equal(result1.GetHashCode(), result2.GetHashCode());
+    }
+
+    [Fact]
+    public void Join_PreservesOriginalValues()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        var value1 = new Content("Hello");
+        var value2 = new Content("World");
+        ReadOnlySpan<Content> values = [value1, value2];
+
+        // Act
+        var _ = Content.Join(separator, values);
+
+        // Assert - Original values should be unchanged
+        Assert.Equal("Hello", value1.ToString());
+        Assert.Equal("World", value2.ToString());
+        Assert.Equal(", ", separator.ToString());
+    }
+
+    [Fact]
+    public void Join_WithVeryLongSeparator_JoinsCorrectly()
+    {
+        // Arrange
+        var longSeparator = new string('=', 50);
+        var separator = new Content(longSeparator);
+        ReadOnlySpan<string> values = ["Start", "End"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        var expected = $"Start{longSeparator}End";
+        Assert.Equal(expected, result.ToString());
+        Assert.Equal(expected.Length, result.Length);
+    }
+
+    [Fact]
+    public void Join_WithVeryLongValues_JoinsCorrectly()
+    {
+        // Arrange
+        var separator = new Content(" | ");
+        var longValue1 = new string('A', 1000);
+        var longValue2 = new string('B', 1000);
+        ReadOnlySpan<string> values = [longValue1, longValue2];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        var expected = $"{longValue1} | {longValue2}";
+        Assert.Equal(expected, result.ToString());
+        Assert.Equal(expected.Length, result.Length);
+    }
+
+    [Fact]
+    public void Join_MixedEnumerableTypes_ProduceSameResults()
+    {
+        // Arrange
+        var separator = new Content(" & ");
+
+        // Different ways to represent the same values
+        ReadOnlySpan<Content> contentValues = [new Content("X"), new Content("Y"), new Content("Z")];
+        ReadOnlySpan<string> stringValues = ["X", "Y", "Z"];
+        ReadOnlySpan<ReadOnlyMemory<char>> memoryValues = ["X".AsMemory(), "Y".AsMemory(), "Z".AsMemory()];
+
+        // Act
+        var result1 = Content.Join(separator, contentValues);
+        var result2 = Content.Join(separator, stringValues);
+        var result3 = Content.Join(separator, memoryValues);
+
+        // Assert
+        Assert.Equal(result1, result2);
+        Assert.Equal(result2, result3);
+        Assert.Equal("X & Y & Z", result1.ToString());
+    }
+
+    [Fact]
+    public void Join_EnumerableVsSpan_ProduceSameResults()
+    {
+        // Arrange
+        var separator = new Content(" -> ");
+        var values = new[] { "First", "Second", "Third" };
+
+        // Act
+        var spanResult = Content.Join(separator, values.AsSpan());
+        var enumerableResult = Content.Join(separator, (IEnumerable<string>)values);
+
+        // Assert
+        Assert.Equal(spanResult, enumerableResult);
+        Assert.Equal("First -> Second -> Third", spanResult.ToString());
+        Assert.Equal("First -> Second -> Third", enumerableResult.ToString());
+    }
+
+    [Fact]
+    public void Join_PerformanceTest_ManyValues()
+    {
+        // Arrange
+        var separator = new Content(",");
+        var values = new string[1000];
+        for (var i = 0; i < 1000; i++)
+        {
+            values[i] = $"Value{i}";
+        }
+
+        // Act
+        var result = Content.Join(separator, values.AsSpan());
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        var expected = string.Join(",", values);
+        Assert.Equal(expected, result.ToString());
+    }
+
+    [Fact]
+    public void Join_EdgeCase_OnlyEmptyValuesWithSeparator()
+    {
+        // Arrange
+        var separator = new Content(" SEPARATOR ");
+        ReadOnlySpan<Content> values = [Content.Empty, Content.Empty, Content.Empty];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Join_EdgeCase_SingleNonEmptyAmongEmpty()
+    {
+        // Arrange
+        var separator = new Content(" | ");
+        ReadOnlySpan<Content> values = [Content.Empty, new Content("OnlyOne"), Content.Empty];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("OnlyOne", result.ToString());
+        Assert.Equal(7, result.Length);
+    }
+
+    [Fact]
+    public void Join_EdgeCase_EmptyValuesAtBeginningAndEnd()
+    {
+        // Arrange
+        var separator = new Content(", ");
+        ReadOnlySpan<string> values = ["", "Middle1", "Middle2", ""];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("Middle1, Middle2", result.ToString());
+    }
+
+    [Fact]
+    public void Join_EdgeCase_AlternatingEmptyAndNonEmpty()
+    {
+        // Arrange
+        var separator = new Content(" | ");
+        ReadOnlySpan<string> values = ["A", "", "B", "", "C"];
+
+        // Act
+        var result = Content.Join(separator, values);
+
+        // Assert
+        Assert.Equal("A | B | C", result.ToString());
+    }
 }

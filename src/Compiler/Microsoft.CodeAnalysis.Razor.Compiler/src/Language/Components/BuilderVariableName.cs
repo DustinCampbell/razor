@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
+using static Microsoft.AspNetCore.Razor.Language.Legacy.TagHelperParseTreeRewriter;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -19,6 +20,19 @@ internal readonly struct BuilderVariableName(int index) : IWriteableValue
         1 => ComponentsApi.RenderTreeBuilder.BuilderParameter.Length,
         _ => ComponentsApi.RenderTreeBuilder.BuilderParameter.Length + Index.CountDigits()
     };
+
+    public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+    {
+        if (Index == 1)
+        {
+            builder.Append(ComponentsApi.RenderTreeBuilder.BuilderParameter);
+        }
+        else
+        {
+            builder.Append(ComponentsApi.RenderTreeBuilder.BuilderParameter);
+            builder.AppendIntegerLiteral(Index);
+        }
+    }
 
     public void WriteTo(CodeWriter writer)
     {

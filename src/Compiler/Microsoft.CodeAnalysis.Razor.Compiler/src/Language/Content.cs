@@ -2,13 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Buffers;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -63,6 +61,12 @@ public readonly partial struct Content : IEquatable<Content>
     {
     }
 
+    [OverloadResolutionPriority(1)]
+    public Content(ref ContentInterpolatedStringHandler handler)
+        : this(handler.ToParts())
+    {
+    }
+
     /// <summary>
     ///  Initializes a new instance of <see cref="Content"/> with multiple nested content parts.
     /// </summary>
@@ -71,7 +75,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  If <paramref name="parts"/> contains a single element, it will be unwrapped.
     ///  Empty or null arrays create empty content.
     /// </remarks>
-    [OverloadResolutionPriority(1)]
+    [OverloadResolutionPriority(2)]
     public Content(ImmutableArray<Content> parts)
         : this(ImmutableCollectionsMarshal.AsArray(parts))
     {
@@ -85,7 +89,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  If <paramref name="parts"/> contains a single element, it will be stored as a simple value.
     ///  Empty or null arrays create empty content.
     /// </remarks>
-    [OverloadResolutionPriority(1)]
+    [OverloadResolutionPriority(2)]
     public Content(ImmutableArray<ReadOnlyMemory<char>> parts)
         : this(ImmutableCollectionsMarshal.AsArray(parts))
     {
@@ -99,7 +103,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  If <paramref name="parts"/> contains a single element, it will be stored as a simple value.
     ///  Empty or null arrays create empty content.
     /// </remarks>
-    [OverloadResolutionPriority(1)]
+    [OverloadResolutionPriority(2)]
     public Content(ImmutableArray<string> parts)
         : this(ImmutableCollectionsMarshal.AsArray(parts))
     {

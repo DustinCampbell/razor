@@ -243,6 +243,108 @@ internal static class CodeWriterExtensions
         return writer;
     }
 
+    /// <summary>
+    ///  Writes an integer literal to the code writer using optimized precomputed lookup tables
+    ///  and efficient grouping for large numbers. This avoids string allocation and formatting overhead.
+    /// </summary>
+    /// <param name="writer">The code writer to write to.</param>
+    /// <param name="value">The integer value to write as a literal.</param>
+    /// <returns>
+    ///  The code writer for method chaining.
+    /// </returns>
+    /// <remarks>
+    ///  Performance optimizations:
+    ///  <list type="bullet">
+    ///   <item>Zero is written directly from a precomputed slice</item>
+    ///   <item>Numbers -999 to 999 use a precomputed lookup table</item>
+    ///   <item>Larger numbers are decomposed into groups of 3 digits, each using the lookup table</item>
+    ///   <item>Uses long arithmetic to handle int.MinValue correctly (avoids overflow when negating)</item>
+    ///  </list>
+    /// </remarks>
+    public static void AppendIntegerLiteral(this ref MemoryBuilder<ReadOnlyMemory<char>> builder, int value)
+    {
+        // Handle zero as a special case
+        if (value == 0)
+        {
+            builder.Append(s_integerTable[0]);
+            return;
+        }
+
+        var isNegative = value < 0;
+        if (isNegative)
+        {
+            // For negative numbers, write the minus sign first
+            builder.Append("-");
+        }
+
+        // Fast path: For small numbers (-999 to 999), use the precomputed lookup table directly
+        if (value is > -1000 and < 1000)
+        {
+            var index = isNegative ? -value : value;
+            builder.Append(s_integerTable[index]);
+            return;
+        }
+
+        // Slow path: For larger numbers, decompose into groups of three digits using the precomputed table.
+        // This approach avoids string formatting while maintaining readability of the output.
+
+        // Extract digits and write groups from most significant to least significant.
+        // Note: Use long to handle int.MinValue correctly. Math.Abs(int.MinValue) would throw.
+        var remaining = isNegative ? -(long)value : value;
+        long divisor = 1;
+
+        // Find the highest power of 1000 needed (1, 1000, 1000000, 1000000000)
+        // This determines how many 3-digit groups we need
+        while (remaining >= divisor * 1000)
+        {
+            divisor *= 1000;
+        }
+
+        // Process each group of 3 digits from most significant to least significant
+        var first = true;
+        while (divisor > 0)
+        {
+            var group = (int)(remaining / divisor);
+            remaining %= divisor;
+            divisor /= 1000;
+
+            Debug.Assert(group >= 0 && group < 1000, "Digit group should be in the range [0, 999]");
+
+            if (group == 0)
+            {
+                Debug.Assert(!first, "The first group should never be 0.");
+
+                // Entire group is zero: add "000" for proper place value
+                builder.Append(s_zeroes[..3]);
+                continue;
+            }
+
+            if (first)
+            {
+                // First group: no leading zeros needed (e.g., "123" not "0123")
+                builder.Append(s_integerTable[group]);
+                first = false;
+                continue;
+            }
+
+            // Groups after the first one with values 1-99 need leading zeros for proper formatting
+            // Example: 1234567 becomes "1" + "234" + "567", but 1000067 becomes "1" + "000" + "067"
+            var leadingZeros = group switch
+            {
+                < 10 => 2,  // 1-9: needs "00" prefix (e.g., "007")
+                < 100 => 1, // 10-99: needs "0" prefix (e.g., "067") 
+                _ => 0      // 100-999: no leading zeros needed
+            };
+
+            if (leadingZeros > 0)
+            {
+                builder.Append(s_zeroes[..leadingZeros]); // Add "00" or "0"
+            }
+
+            builder.Append(s_integerTable[group]); // Add the actual digit group
+        }
+    }
+
     public static CodeWriter WriteStartAssignment(
         this CodeWriter writer,
         [InterpolatedStringHandlerArgument(nameof(writer))] ref CodeWriter.WriteInterpolatedStringHandler left)

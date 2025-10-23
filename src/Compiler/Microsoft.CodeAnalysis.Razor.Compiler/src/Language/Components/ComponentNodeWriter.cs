@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using static Microsoft.AspNetCore.Razor.Language.Legacy.TagHelperParseTreeRewriter;
 
 namespace Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -580,6 +582,12 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct SeqName(int index) : IWriteableValue
     {
+        public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        {
+            builder.Append("__seq");
+            builder.AppendIntegerLiteral(index);
+        }
+
         public void WriteTo(CodeWriter writer)
         {
             writer.Write("__seq");
@@ -593,6 +601,20 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct ParameterName(int index, bool isSynthetic = false) : IWriteableValue
     {
+        public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        {
+            if (isSynthetic)
+            {
+                builder.Append("__syntheticArg");
+            }
+            else
+            {
+                builder.Append("__arg");
+            }
+
+            builder.AppendIntegerLiteral(index);
+        }
+
         public void WriteTo(CodeWriter writer)
         {
             if (isSynthetic)
@@ -614,6 +636,13 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct TypeInferenceArgName(int depth, ParameterName parameterName) : IWriteableValue
     {
+        public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        {
+            builder.Append("__typeInferenceArg_");
+            builder.AppendIntegerLiteral(depth);
+            builder.Append($"_{parameterName}");
+        }
+
         public void WriteTo(CodeWriter writer)
         {
             writer.Write("__typeInferenceArg_");

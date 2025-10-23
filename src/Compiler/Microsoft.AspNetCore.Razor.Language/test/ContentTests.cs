@@ -4701,4 +4701,662 @@ public class ContentTests
         // Assert
         Assert.Equal("XFGHX", result.ToString());
     }
+
+    [Fact]
+    public void Builder_Constructor_WithInitialCapacity_CreatesBuilder()
+    {
+        // Arrange & Act
+        using var builder = new Content.Builder(10);
+
+        // Assert
+        var result = builder.ToContent();
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Builder_Constructor_WithFlattenTrue_CreatesBuilder()
+    {
+        // Arrange & Act
+        using var builder = new Content.Builder(10, flatten: true);
+
+        // Assert
+        var result = builder.ToContent();
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Builder_Constructor_WithDefaultValues_CreatesBuilder()
+    {
+        // Arrange & Act
+        using var builder = new Content.Builder(5);
+
+        // Assert
+        var result = builder.ToContent();
+        Assert.True(result.IsEmpty);
+    }
+
+    [Fact]
+    public void Builder_AddContent_SingleContent_AddsCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var content = new Content("Hello World");
+
+        // Act
+        builder.Add(content);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.False(result.IsEmpty);
+        Assert.Equal("Hello World", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddContent_EmptyContent_IgnoresEmpty()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var emptyContent = Content.Empty;
+        var validContent = new Content("Test");
+
+        // Act
+        builder.Add(emptyContent);
+        builder.Add(validContent);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Test", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddContent_MultipleContent_CreatesMultiPart()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var content1 = new Content("Hello");
+        var content2 = new Content(" ");
+        var content3 = new Content("World");
+
+        // Act
+        builder.Add(content1);
+        builder.Add(content2);
+        builder.Add(content3);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        Assert.Equal("Hello World", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddContent_WithFlattenTrue_FlattensNestedContent()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: true);
+        var nestedContent = new Content(["A", "B", "C"]);
+        var singleContent = new Content("D");
+
+        // Act
+        builder.Add(nestedContent);
+        builder.Add(singleContent);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("ABCD", result.ToString());
+        Assert.Equal(4, result.Length);
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Builder_AddContent_WithFlattenFalse_PreservesNesting()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: false);
+        var nestedContent = new Content(["A", "B", "C"]);
+        var singleContent = new Content("D");
+
+        // Act
+        builder.Add(nestedContent);
+        builder.Add(singleContent);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("ABCD", result.ToString());
+        Assert.Equal(4, result.Length);
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Builder_AddContent_WithFlattenTrue_SkipsEmptyParts()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: true);
+        var contentWithEmpty = new Content(["", "Hello", "", "World", ""]);
+
+        // Act
+        builder.Add(contentWithEmpty);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("HelloWorld", result.ToString());
+        Assert.Equal(10, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddReadOnlyMemory_ValidValue_AddsCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var memory = "Hello World".AsMemory();
+
+        // Act
+        builder.Add(memory);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Hello World", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddReadOnlyMemory_EmptyValue_IgnoresEmpty()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var emptyMemory = ReadOnlyMemory<char>.Empty;
+        var validMemory = "Test".AsMemory();
+
+        // Act
+        builder.Add(emptyMemory);
+        builder.Add(validMemory);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Test", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddReadOnlyMemory_MultipleValues_CreatesMultiPart()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var memory1 = "Hello".AsMemory();
+        var memory2 = " ".AsMemory();
+        var memory3 = "World".AsMemory();
+
+        // Act
+        builder.Add(memory1);
+        builder.Add(memory2);
+        builder.Add(memory3);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        Assert.Equal("Hello World", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddString_ValidValue_AddsCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var text = "Hello World";
+
+        // Act
+        builder.Add(text);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Hello World", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddString_NullValue_IgnoresNull()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        string nullString = null!;
+        var validString = "Test";
+
+        // Act
+        builder.Add(nullString);
+        builder.Add(validString);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Test", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddString_EmptyValue_IgnoresEmpty()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var emptyString = "";
+        var validString = "Test";
+
+        // Act
+        builder.Add(emptyString);
+        builder.Add(validString);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Test", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddString_MultipleValues_CreatesMultiPart()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+
+        // Act
+        builder.Add("Hello");
+        builder.Add(" ");
+        builder.Add("World");
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        Assert.Equal("Hello World", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Builder_MixedAdd_ContentMemoryString_CreatesMultiPart()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        var content = new Content("Hello");
+        var memory = " ".AsMemory();
+        var text = "World";
+
+        // Act
+        builder.Add(content);
+        builder.Add(memory);
+        builder.Add(text);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        Assert.Equal("Hello World", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Builder_ToContent_EmptyBuilder_ReturnsEmpty()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+
+        // Act
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsEmpty);
+        Assert.Equal(0, result.Length);
+    }
+
+    [Fact]
+    public void Builder_ToContent_SingleItem_ReturnsSingleValue()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        builder.Add("Hello World");
+
+        // Act
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsSingleValue);
+        Assert.False(result.IsMultiPart);
+        Assert.Equal("Hello World", result.ToString());
+    }
+
+    [Fact]
+    public void Builder_ToContent_MultipleItems_ReturnsMultiPart()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        builder.Add("Hello");
+        builder.Add(" World");
+
+        // Act
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.False(result.IsSingleValue);
+        Assert.True(result.IsMultiPart);
+        Assert.Equal("Hello World", result.ToString());
+    }
+
+    [Fact]
+    public void Builder_ToContent_CalledMultipleTimes_ReturnsSameResult()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+        builder.Add("Hello");
+        builder.Add(" World");
+
+        // Act
+        var result1 = builder.ToContent();
+        var result2 = builder.ToContent();
+
+        // Assert
+        Assert.Equal(result1, result2);
+        Assert.Equal(result1.ToString(), result2.ToString());
+    }
+
+    [Fact]
+    public void Builder_Dispose_CanBeCalledMultipleTimes()
+    {
+        // Arrange
+        var builder = new Content.Builder(10);
+        builder.Add("Test");
+
+        // Act & Assert - Should not throw
+        builder.Dispose();
+        builder.Dispose();
+        builder.Dispose();
+    }
+
+    [Fact]
+    public void Builder_UsingStatement_DisposesCorrectly()
+    {
+        // Arrange & Act
+        Content result;
+        using (var builder = new Content.Builder(10))
+        {
+            builder.Add("Hello");
+            builder.Add(" World");
+            result = builder.ToContent();
+        }
+
+        // Assert
+        Assert.Equal("Hello World", result.ToString());
+    }
+
+    [Fact]
+    public void Builder_WithLargeCapacity_HandlesCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(1000);
+
+        // Act
+        for (var i = 0; i < 100; i++)
+        {
+            builder.Add($"Part{i}");
+        }
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        var expected = string.Concat(Enumerable.Range(0, 100).Select(i => $"Part{i}"));
+        Assert.Equal(expected, result.ToString());
+    }
+
+    [Fact]
+    public void Builder_FlattenTrue_WithDeeplyNestedContent_FlattensCompletely()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: true);
+        var level1 = new Content(["A", "B"]);
+        var level2 = new Content([level1, new Content("C")]);
+        var level3 = new Content([level2, new Content("D")]);
+
+        // Act
+        builder.Add(level3);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("ABCD", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Builder_FlattenTrue_WithEmptyAndNonEmptyContent_FiltersEmpty()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: true);
+        var contentWithEmpty = new Content([Content.Empty, new Content("Hello"), Content.Empty]);
+        var anotherContent = new Content(["", "World", ""]);
+
+        // Act
+        builder.Add(contentWithEmpty);
+        builder.Add(anotherContent);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("HelloWorld", result.ToString());
+    }
+
+    [Fact]
+    public void Builder_FlattenFalse_WithNestedContent_PreservesStructure()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: false);
+        var nestedContent = new Content(["A", "B", "C"]);
+
+        // Act
+        builder.Add(nestedContent);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("ABC", result.ToString());
+        Assert.Equal(3, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddUnicodeCharacters_HandlesCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+
+        // Act
+        builder.Add("Hello ");
+        builder.Add("世界");
+        builder.Add("!");
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Hello 世界!", result.ToString());
+        Assert.Equal(9, result.Length);
+    }
+
+    [Fact]
+    public void Builder_AddSpecialCharacters_HandlesCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+
+        // Act
+        builder.Add("Tab:\t");
+        builder.Add("NewLine:\n");
+        builder.Add("Return:\r");
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Contains('\t', result.ToString());
+        Assert.Contains('\n', result.ToString());
+        Assert.Contains('\r', result.ToString());
+    }
+
+    [Fact]
+    public void Builder_AddWhitespaceOnly_IncludesWhitespace()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+
+        // Act
+        builder.Add("   ");
+        builder.Add("\t\t");
+        builder.Add("\n\n");
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("   \t\t\n\n", result.ToString());
+        Assert.Equal(7, result.Length);
+    }
+
+    [Fact]
+    public void Builder_MixedEmptyAndValid_IgnoresOnlyEmpty()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+
+        // Act
+        builder.Add(Content.Empty);
+        builder.Add("");
+        builder.Add(ReadOnlyMemory<char>.Empty);
+        builder.Add("Valid");
+        builder.Add(Content.Empty);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Valid", result.ToString());
+        Assert.Equal(5, result.Length);
+        Assert.True(result.IsSingleValue);
+    }
+
+    [Fact]
+    public void Builder_SingleCharacterParts_HandlesCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10);
+
+        // Act
+        builder.Add("H");
+        builder.Add("e");
+        builder.Add("l");
+        builder.Add("l");
+        builder.Add("o");
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Hello", result.ToString());
+        Assert.Equal(5, result.Length);
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Builder_PerformanceTest_ManySmallAdditions()
+    {
+        // Arrange
+        using var builder = new Content.Builder(1000);
+
+        // Act
+        for (var i = 0; i < 500; i++)
+        {
+            builder.Add(i % 2 == 0 ? "A" : "B");
+        }
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal(500, result.Length);
+        Assert.True(result.IsMultiPart);
+        var expected = string.Concat(Enumerable.Range(0, 500).Select(i => i % 2 == 0 ? "A" : "B"));
+        Assert.Equal(expected, result.ToString());
+    }
+
+    [Fact]
+    public void Builder_ZeroInitialCapacity_WorksCorrectly()
+    {
+        // Arrange
+        using var builder = new Content.Builder(0);
+
+        // Act
+        builder.Add("Hello");
+        builder.Add(" World");
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("Hello World", result.ToString());
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Builder_FlattenTrue_WithComplexNesting_ProducesCorrectResult()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: true);
+        var branch1 = new Content([new Content("A"), new Content("B")]);
+        var branch2 = new Content([new Content(["C", "D"]), new Content("E")]);
+        var complexContent = new Content([branch1, new Content("F"), branch2]);
+
+        // Act
+        builder.Add(complexContent);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("ABFCDE", result.ToString());
+        Assert.Equal(6, result.Length);
+    }
+
+    [Fact]
+    public void Builder_ResultEquality_WithSameContent()
+    {
+        // Arrange
+        using var builder1 = new Content.Builder(10);
+        using var builder2 = new Content.Builder(10);
+
+        // Act
+        builder1.Add("Hello");
+        builder1.Add(" World");
+
+        builder2.Add("Hello World");
+
+        var result1 = builder1.ToContent();
+        var result2 = builder2.ToContent();
+
+        // Assert
+        Assert.Equal(result1, result2);
+        Assert.Equal(result1.GetHashCode(), result2.GetHashCode());
+    }
+
+    [Fact]
+    public void Builder_GrowthBehavior_ExceedsInitialCapacity()
+    {
+        // Arrange
+        using var builder = new Content.Builder(2); // Small initial capacity
+
+        // Act
+        for (var i = 0; i < 10; i++)
+        {
+            builder.Add($"Item{i}");
+        }
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        var expected = string.Concat(Enumerable.Range(0, 10).Select(i => $"Item{i}"));
+        Assert.Equal(expected, result.ToString());
+    }
+
+    [Fact]
+    public void Builder_FlattenTrue_OnlyNonEmptyParts_AreAdded()
+    {
+        // Arrange
+        using var builder = new Content.Builder(10, flatten: true);
+        var contentWithManyEmpty = new Content([
+            "", "A", "", "", "B", "", "C", "", "", ""
+        ]);
+
+        // Act
+        builder.Add(contentWithManyEmpty);
+        var result = builder.ToContent();
+
+        // Assert
+        Assert.Equal("ABC", result.ToString());
+        Assert.Equal(3, result.Length);
+    }
 }

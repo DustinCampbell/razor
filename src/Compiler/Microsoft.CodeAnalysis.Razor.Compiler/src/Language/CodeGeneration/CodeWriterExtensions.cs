@@ -261,12 +261,12 @@ internal static class CodeWriterExtensions
     ///   <item>Uses long arithmetic to handle int.MinValue correctly (avoids overflow when negating)</item>
     ///  </list>
     /// </remarks>
-    public static void AppendIntegerLiteral(this ref MemoryBuilder<ReadOnlyMemory<char>> builder, int value)
+    public static void AddIntegerLiteral(this ref Content.Builder builder, int value)
     {
         // Handle zero as a special case
         if (value == 0)
         {
-            builder.Append(s_integerTable[0]);
+            builder.Add(s_integerTable[0]);
             return;
         }
 
@@ -274,14 +274,14 @@ internal static class CodeWriterExtensions
         if (isNegative)
         {
             // For negative numbers, write the minus sign first
-            builder.Append("-");
+            builder.Add("-");
         }
 
         // Fast path: For small numbers (-999 to 999), use the precomputed lookup table directly
         if (value is > -1000 and < 1000)
         {
             var index = isNegative ? -value : value;
-            builder.Append(s_integerTable[index]);
+            builder.Add(s_integerTable[index]);
             return;
         }
 
@@ -315,14 +315,14 @@ internal static class CodeWriterExtensions
                 Debug.Assert(!first, "The first group should never be 0.");
 
                 // Entire group is zero: add "000" for proper place value
-                builder.Append(s_zeroes[..3]);
+                builder.Add(s_zeroes[..3]);
                 continue;
             }
 
             if (first)
             {
                 // First group: no leading zeros needed (e.g., "123" not "0123")
-                builder.Append(s_integerTable[group]);
+                builder.Add(s_integerTable[group]);
                 first = false;
                 continue;
             }
@@ -338,10 +338,10 @@ internal static class CodeWriterExtensions
 
             if (leadingZeros > 0)
             {
-                builder.Append(s_zeroes[..leadingZeros]); // Add "00" or "0"
+                builder.Add(s_zeroes[..leadingZeros]); // Add "00" or "0"
             }
 
-            builder.Append(s_integerTable[group]); // Add the actual digit group
+            builder.Add(s_integerTable[group]); // Add the actual digit group
         }
     }
 

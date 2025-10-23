@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 
@@ -15,18 +14,18 @@ internal readonly struct FormNameVariableName(int index, int builderIndex) : IWr
     public int Index { get; } = index;
     public int BuilderIndex { get; } = builderIndex;
 
-    public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+    public void AddTo(ref Content.Builder builder)
     {
         if (BuilderIndex == 1 && Index == 0)
         {
-            builder.Append(ComponentsApi.RenderTreeBuilder.FormNameVariableName);
+            builder.Add(ComponentsApi.RenderTreeBuilder.FormNameVariableName);
         }
         else
         {
-            builder.Append(ComponentsApi.RenderTreeBuilder.FormNameVariableName);
-            builder.AppendIntegerLiteral(BuilderIndex);
-            builder.Append("_");
-            builder.AppendIntegerLiteral(Index);
+            builder.Add(ComponentsApi.RenderTreeBuilder.FormNameVariableName);
+            builder.AddIntegerLiteral(BuilderIndex);
+            builder.Add("_");
+            builder.AddIntegerLiteral(Index);
         }
     }
 

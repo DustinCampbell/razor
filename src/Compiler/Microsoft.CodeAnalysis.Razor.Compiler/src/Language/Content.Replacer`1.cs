@@ -9,7 +9,7 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public readonly partial struct Content
 {
-    private delegate void AppendValue<T>(ref MemoryBuilder<ReadOnlyMemory<char>> builder, T value);
+    private delegate void AppendValue<T>(ref Builder builder, T value);
 
     private readonly ref struct Replacer<T>
     {
@@ -28,7 +28,7 @@ public readonly partial struct Content
 
         public bool TryReplace(ReadOnlySpan<ReadOnlyMemory<char>> parts, out Content newContent)
         {
-            var builder = new MemoryBuilder<ReadOnlyMemory<char>>(initialCapacity: parts.Length * 2);
+            var builder = new Builder(initialCapacity: parts.Length * 2);
 
             try
             {
@@ -62,7 +62,7 @@ public readonly partial struct Content
                         if (index > 0)
                         {
                             // There's a portion before the match. Add that first.
-                            builder.Append(part[..index]);
+                            builder.Add(part[..index]);
                         }
 
                         // Add the replacement value.
@@ -96,11 +96,7 @@ public readonly partial struct Content
                                     foundCrossPartMatch = true;
 
                                     // Add the portion before the match
-                                    var beforeMatch = part[..^prefixLength];
-                                    if (!beforeMatch.IsEmpty)
-                                    {
-                                        builder.Append(beforeMatch);
-                                    }
+                                    builder.Add(part[..^prefixLength]);
 
                                     // Add the replacement value
                                     _appendValue?.Invoke(ref builder, _newValue);
@@ -143,10 +139,7 @@ public readonly partial struct Content
                     if (!foundCrossPartMatch)
                     {
                         // No cross-part match found - add remaining part and advance
-                        if (!part.IsEmpty)
-                        {
-                            builder.Append(part);
-                        }
+                        builder.Add(part);
 
                         part = default; // Clear current part
                         partIndex++;
@@ -171,13 +164,13 @@ public readonly partial struct Content
             {
                 foreach (var part in newValue.Parts.NonEmpty)
                 {
-                    builder.Append(part);
+                    builder.Add(part);
                 }
             });
         }
 
         public static Replacer<ReadOnlyMemory<char>> ForValue(ReadOnlySpan<char> oldValue, ReadOnlyMemory<char> newValue, StringComparison comparisonType)
-            => new(oldValue, comparisonType, newValue, static (ref builder, newValue) => builder.Append(newValue));
+            => new(oldValue, comparisonType, newValue, static (ref builder, newValue) => builder.Add(newValue));
 
         public static Replacer<ReadOnlyMemory<char>> ForEmpty(ReadOnlySpan<char> oldValue, StringComparison comparisonType)
             => new(oldValue, comparisonType, ReadOnlyMemory<char>.Empty, appendValue: null);

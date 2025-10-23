@@ -17,27 +17,27 @@ public readonly partial struct Content
     [InterpolatedStringHandler]
     public ref struct ContentInterpolatedStringHandler
     {
-        private MemoryBuilder<ReadOnlyMemory<char>> _parts;
+        private Builder _builder;
 
         public ContentInterpolatedStringHandler(int literalLength, int formattedCount)
         {
-            _parts = new(initialCapacity: Math.Max(formattedCount, 16));
+            _builder = new(initialCapacity: Math.Max(formattedCount, 16));
         }
 
-        public ReadOnlyMemory<char>[] ToParts()
+        public Content ToContent()
         {
-            var parts = _parts.AsMemory().ToArray();
+            var result = _builder.ToContent();
 
-            _parts.Dispose();
+            _builder.Dispose();
 
-            return parts;
+            return result;
         }
 
         public void AppendLiteral(string value)
         {
             if (!value.IsNullOrEmpty())
             {
-                _parts.Append(value);
+                _builder.Add(value);
             }
         }
 
@@ -47,7 +47,7 @@ public readonly partial struct Content
             {
                 foreach (var part in value.Parts.NonEmpty)
                 {
-                    _parts.Append(part);
+                    _builder.Add(part);
                 }
             }
         }
@@ -56,7 +56,7 @@ public readonly partial struct Content
         {
             if (!value.IsEmpty)
             {
-                _parts.Append(value);
+                _builder.Add(value);
             }
         }
 
@@ -64,7 +64,7 @@ public readonly partial struct Content
         {
             if (!value.IsNullOrEmpty())
             {
-                _parts.Append(value);
+                _builder.Add(value);
             }
         }
 
@@ -111,36 +111,36 @@ public readonly partial struct Content
                     break;
 
                 case BuilderVariableName name:
-                    name.AppendTo(ref _parts);
+                    _builder.Add(name);
                     break;
 
                 case RenderModeVariableName name:
-                    name.AppendTo(ref _parts);
+                    _builder.Add(name);
                     break;
 
                 case FormNameVariableName name:
-                    name.AppendTo(ref _parts);
+                    _builder.Add(name);
                     break;
 
                 case ComponentNodeWriter.SeqName name:
-                    name.AppendTo(ref _parts);
+                    _builder.Add(name);
                     break;
 
                 case ComponentNodeWriter.ParameterName name:
-                    name.AppendTo(ref _parts);
+                    _builder.Add(name);
                     break;
 
                 case ComponentNodeWriter.TypeInferenceArgName name:
-                    name.AppendTo(ref _parts);
+                    _builder.Add(name);
                     break;
 
                 case IWriteableValue writeableValue:
                     Debug.Assert(!typeof(T).IsValueType, $"Handle {typeof(T).FullName} to avoid boxing to {nameof(IWriteableValue)}");
-                    writeableValue.AppendTo(ref _parts);
+                    _builder.Add(writeableValue);
                     break;
 
                 default:
-                    _parts.Append(value.ToString() ?? string.Empty);
+                    _builder.Add(value.ToString() ?? string.Empty);
                     break;
 
             }

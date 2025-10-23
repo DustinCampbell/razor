@@ -63,8 +63,8 @@ public readonly partial struct Content : IEquatable<Content>
 
     [OverloadResolutionPriority(1)]
     public Content(ref ContentInterpolatedStringHandler handler)
-        : this(handler.ToParts())
     {
+        this = handler.ToContent();
     }
 
     /// <summary>

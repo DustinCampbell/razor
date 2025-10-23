@@ -16,15 +16,15 @@ public readonly partial struct Content
 
         private char[]? _cell;
 
-        private void AppendNewValue(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        private void AppendNewValue(ref Builder builder)
         {
             _cell ??= [_newValue];
-            builder.Append(_cell);
+            builder.Add(_cell);
         }
 
         public bool TryReplace(ReadOnlyMemory<char> value, out Content newContent)
         {
-            var builder = new MemoryBuilder<ReadOnlyMemory<char>>();
+            var builder = new Builder();
             try
             {
                 if (TryReplaceInPart(value, ref builder))
@@ -57,7 +57,7 @@ public readonly partial struct Content
 
             Debug.Assert(content.IsMultiPart);
 
-            var builder = new MemoryBuilder<ReadOnlyMemory<char>>(content._data.PartCount * 2);
+            var builder = new Builder(initialCapacity: content._data.PartCount * 2);
             try
             {
                 var hasReplacements = false;
@@ -79,7 +79,7 @@ public readonly partial struct Content
             }
         }
 
-        private bool TryReplaceInPart(ReadOnlyMemory<char> part, ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        private bool TryReplaceInPart(ReadOnlyMemory<char> part, ref Builder builder)
         {
             var span = part.Span;
             var firstIndex = span.IndexOf(_oldValue);
@@ -87,7 +87,7 @@ public readonly partial struct Content
             if (firstIndex < 0)
             {
                 // No occurrences in this memory - add it as is.
-                builder.Append(part);
+                builder.Add(part);
                 return false;
             }
 
@@ -99,7 +99,7 @@ public readonly partial struct Content
                 // Add the portion before the match
                 if (firstIndex > lastIndex)
                 {
-                    builder.Append(part[lastIndex..firstIndex]);
+                    builder.Add(part[lastIndex..firstIndex]);
                 }
 
                 // Add the replacement character
@@ -119,7 +119,7 @@ public readonly partial struct Content
             // Add any remaining portion after the last match
             if (lastIndex < span.Length)
             {
-                builder.Append(part[lastIndex..]);
+                builder.Add(part[lastIndex..]);
             }
 
             return true;

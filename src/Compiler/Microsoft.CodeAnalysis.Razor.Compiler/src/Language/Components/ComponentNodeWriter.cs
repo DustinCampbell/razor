@@ -582,10 +582,10 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct SeqName(int index) : IWriteableValue
     {
-        public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        public void AddTo(ref Content.Builder builder)
         {
-            builder.Append("__seq");
-            builder.AppendIntegerLiteral(index);
+            builder.Add("__seq");
+            builder.AddIntegerLiteral(index);
         }
 
         public void WriteTo(CodeWriter writer)
@@ -601,18 +601,18 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct ParameterName(int index, bool isSynthetic = false) : IWriteableValue
     {
-        public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        public void AddTo(ref Content.Builder builder)
         {
             if (isSynthetic)
             {
-                builder.Append("__syntheticArg");
+                builder.Add("__syntheticArg");
             }
             else
             {
-                builder.Append("__arg");
+                builder.Add("__arg");
             }
 
-            builder.AppendIntegerLiteral(index);
+            builder.AddIntegerLiteral(index);
         }
 
         public void WriteTo(CodeWriter writer)
@@ -636,11 +636,11 @@ internal abstract class ComponentNodeWriter : IntermediateNodeWriter, ITemplateT
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     protected internal readonly struct TypeInferenceArgName(int depth, ParameterName parameterName) : IWriteableValue
     {
-        public void AppendTo(ref MemoryBuilder<ReadOnlyMemory<char>> builder)
+        public void AddTo(ref Content.Builder builder)
         {
-            builder.Append("__typeInferenceArg_");
-            builder.AppendIntegerLiteral(depth);
-            builder.Append($"_{parameterName}");
+            builder.Add("__typeInferenceArg_");
+            builder.AddIntegerLiteral(depth);
+            builder.Add($"_{parameterName}");
         }
 
         public void WriteTo(CodeWriter writer)

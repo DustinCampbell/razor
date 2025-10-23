@@ -160,7 +160,7 @@ public readonly partial struct Content
 
         var parts = Parts;
 
-        using var builder = new PooledArrayBuilder<Content>(capacity: parts.Count + 2);
+        using var builder = new Builder(initialCapacity: parts.Count + 2);
         var currentPos = 0;
         var inserted = false;
 
@@ -211,7 +211,7 @@ public readonly partial struct Content
 
         var parts = Parts;
 
-        using var builder = new PooledArrayBuilder<ReadOnlyMemory<char>>(capacity: parts.Count + 2);
+        using var builder = new Builder(initialCapacity: parts.Count + 2);
         var currentPos = 0;
         var inserted = false;
 
@@ -342,7 +342,7 @@ public readonly partial struct Content
 
         var parts = Parts;
 
-        using var builder = new PooledArrayBuilder<ReadOnlyMemory<char>>(capacity: parts.Count);
+        using var builder = new Builder(initialCapacity: parts.Count);
 
         var currentPos = 0;
 

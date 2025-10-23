@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -12,6 +13,7 @@ public readonly partial struct Content
     public static Content Join(Content separator, ImmutableArray<Content> values)
         => Join(separator, values.AsSpan());
 
+    [OverloadResolutionPriority(1)]
     public static Content Join(Content separator, params ReadOnlySpan<Content> values)
     {
         var nonEmptyValues = 0;
@@ -54,6 +56,7 @@ public readonly partial struct Content
     public static Content Join(Content separator, ImmutableArray<ReadOnlyMemory<char>> values)
         => Join(separator, values.AsSpan());
 
+    [OverloadResolutionPriority(1)]
     public static Content Join(Content separator, params ReadOnlySpan<ReadOnlyMemory<char>> values)
     {
         var nonEmptyValues = 0;
@@ -97,6 +100,7 @@ public readonly partial struct Content
     public static Content Join(Content separator, ImmutableArray<string> values)
         => Join(separator, values.AsSpan());
 
+    [OverloadResolutionPriority(1)]
     public static Content Join(Content separator, params ReadOnlySpan<string> values)
     {
         var nonEmptyValues = 0;

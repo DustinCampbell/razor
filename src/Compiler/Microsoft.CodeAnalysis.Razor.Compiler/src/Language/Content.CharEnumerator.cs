@@ -24,7 +24,7 @@ public readonly partial struct Content
     /// </remarks>
     public ref struct CharEnumerator
     {
-        private PartList.Enumerator _partsEnumerator;
+        private PartList.NonEmptyParts.Enumerator _partEnumerator;
         private ReadOnlySpan<char> _currentPart;
         private int _currentIndex;
         private char _current;
@@ -36,7 +36,7 @@ public readonly partial struct Content
         /// <param name="content">The <see cref="Content"/> to enumerate.</param>
         internal CharEnumerator(Content content)
         {
-            _partsEnumerator = content.Parts.GetEnumerator();
+            _partEnumerator = content.Parts.NonEmpty.GetEnumerator();
             _currentPart = default;
             _currentIndex = 0;
             _current = default;
@@ -51,7 +51,7 @@ public readonly partial struct Content
             if (!_disposed)
             {
                 _disposed = true;
-                _partsEnumerator.Dispose();
+                _partEnumerator.Dispose();
             }
         }
 
@@ -89,9 +89,9 @@ public readonly partial struct Content
             }
 
             // Current part is exhausted, try to move to the next part
-            while (_partsEnumerator.MoveNext())
+            while (_partEnumerator.MoveNext())
             {
-                _currentPart = _partsEnumerator.Current.Span;
+                _currentPart = _partEnumerator.Current.Span;
                 _currentIndex = 0;
 
                 if (_currentPart.Length > 0)

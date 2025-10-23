@@ -21,20 +21,15 @@ public readonly partial struct Content
             return -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value.Span.IndexOf(value);
         }
 
         var partStart = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
             var index = part.Span.IndexOf(value);
             if (index >= 0)
             {
@@ -68,12 +63,12 @@ public readonly partial struct Content
         }
 
         // Fast path: single value
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value.Span.IndexOf(value, comparisonType);
         }
 
-        using var _ = GetNonEmptyParts(out var parts);
+        using var _ = Parts.NonEmpty.AsPooledSpan(out var parts);
 
         var partStart = 0;
 
@@ -165,20 +160,15 @@ public readonly partial struct Content
             return -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value.Span.IndexOfAny(value0, value1);
         }
 
         var partStart = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
             var index = part.Span.IndexOfAny(value0, value1);
             if (index >= 0)
             {
@@ -207,20 +197,15 @@ public readonly partial struct Content
             return -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value.Span.IndexOfAny(value0, value1, value2);
         }
 
         var partStart = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
             var index = part.Span.IndexOfAny(value0, value1, value2);
             if (index >= 0)
             {
@@ -247,20 +232,15 @@ public readonly partial struct Content
             return -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value.Span.IndexOfAny(values);
         }
 
         var partOffset = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
             var index = part.Span.IndexOfAny(values);
             if (index >= 0)
             {
@@ -287,7 +267,7 @@ public readonly partial struct Content
             return -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
 #if NET
             return _value.Span.IndexOfAnyExcept(value);
@@ -298,7 +278,7 @@ public readonly partial struct Content
 
         var partStart = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
 #if NET
             var index = part.Span.IndexOfAnyExcept(value);
@@ -346,7 +326,7 @@ public readonly partial struct Content
             return -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
 #if NET
             return _value.Span.IndexOfAnyExcept(value0, value1);
@@ -357,13 +337,8 @@ public readonly partial struct Content
 
         var partStart = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
 #if NET
             var index = part.Span.IndexOfAnyExcept(value0, value1);
 #else
@@ -412,7 +387,7 @@ public readonly partial struct Content
             return -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
 #if NET
             return _value.Span.IndexOfAnyExcept(value0, value1, value2);
@@ -423,13 +398,8 @@ public readonly partial struct Content
 
         var partStart = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
 #if NET
             var index = part.Span.IndexOfAnyExcept(value0, value1, value2);
 #else
@@ -481,7 +451,7 @@ public readonly partial struct Content
             return Length > 0 ? 0 : -1;
         }
 
-        if (HasValue)
+        if (IsSingleValue)
         {
 #if NET
             return _value.Span.IndexOfAnyExcept(values);
@@ -492,13 +462,8 @@ public readonly partial struct Content
 
         var partStart = 0;
 
-        foreach (var part in Parts)
+        foreach (var part in Parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
 #if NET
             var index = part.Span.IndexOfAnyExcept(values);
 #else

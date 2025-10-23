@@ -37,7 +37,7 @@ public readonly partial struct Content
         }
 
         // Fast path: single value content - just slice the memory
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value[start..];
         }
@@ -83,7 +83,7 @@ public readonly partial struct Content
         }
 
         // Fast path: single value content - just slice the memory
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value.Slice(start, length);
         }
@@ -105,13 +105,8 @@ public readonly partial struct Content
         var remaining = length;
         var currentPos = 0;
 
-        foreach (var part in parts)
+        foreach (var part in parts.NonEmpty)
         {
-            if (part.IsEmpty)
-            {
-                continue;
-            }
-
             var partLength = part.Length;
 
             // Skip parts entirely before the start position

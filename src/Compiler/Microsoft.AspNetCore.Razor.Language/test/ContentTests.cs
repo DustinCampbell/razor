@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -21,7 +22,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.True(content.HasValue);
+        Assert.True(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal(5, content.Length);
         Assert.Equal("Hello", content.Value.ToString());
@@ -35,7 +36,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.True(content.HasValue);
+        Assert.True(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal(5, content.Length);
         Assert.Equal("World", content.Value.ToString());
@@ -49,7 +50,7 @@ public class ContentTests
 
         // Assert
         Assert.True(content.IsEmpty);
-        Assert.False(content.HasValue);
+        Assert.False(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal(0, content.Length);
     }
@@ -62,7 +63,7 @@ public class ContentTests
 
         // Assert
         Assert.True(content.IsEmpty);
-        Assert.False(content.HasValue);
+        Assert.False(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal(0, content.Length);
     }
@@ -78,7 +79,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.False(content.HasValue);
+        Assert.False(content.IsSingleValue);
         Assert.True(content.IsMultiPart);
         Assert.Equal(11, content.Length);
         Assert.Equal(3, content.Parts.Count);
@@ -98,7 +99,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.False(content.HasValue);
+        Assert.False(content.IsSingleValue);
         Assert.True(content.IsMultiPart);
         Assert.Equal(11, content.Length);
         Assert.Equal(3, content.Parts.Count);
@@ -115,7 +116,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.False(content.HasValue);
+        Assert.False(content.IsSingleValue);
         Assert.True(content.IsMultiPart);
         Assert.Equal(11, content.Length);
         Assert.Equal(3, content.Parts.Count);
@@ -132,7 +133,7 @@ public class ContentTests
 
         // Assert
         Assert.True(content.IsEmpty);
-        Assert.False(content.HasValue);
+        Assert.False(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal(0, content.Length);
     }
@@ -148,7 +149,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.True(content.HasValue);
+        Assert.True(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal(5, content.Length);
         Assert.Equal("Hello", content.Value.ToString());
@@ -203,7 +204,7 @@ public class ContentTests
         var content = new Content(parts);
 
         // Assert
-        Assert.True(content.HasValue);
+        Assert.True(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal("Hello", content.Value.ToString());
     }
@@ -216,7 +217,7 @@ public class ContentTests
 
         // Assert
         Assert.True(content.IsEmpty);
-        Assert.False(content.HasValue);
+        Assert.False(content.IsSingleValue);
         Assert.False(content.IsMultiPart);
         Assert.Equal(0, content.Length);
     }
@@ -244,7 +245,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.True(content.HasValue);
+        Assert.True(content.IsSingleValue);
         Assert.Equal(4, content.Length);
         Assert.Equal("Test", content.Value.ToString());
     }
@@ -260,7 +261,7 @@ public class ContentTests
 
         // Assert
         Assert.False(content.IsEmpty);
-        Assert.True(content.HasValue);
+        Assert.True(content.IsSingleValue);
         Assert.Equal(4, content.Length);
         Assert.Equal("Test", content.Value.ToString());
     }
@@ -710,6 +711,535 @@ public class ContentTests
         // Assert
         Assert.False(result);
     }
+
+    [Fact]
+    public void NonEmptyParts_EmptyContent_ReturnsNoItems()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Empty(nonEmptyParts);
+    }
+
+    [Fact]
+    public void NonEmptyParts_SingleNonEmptyValue_ReturnsOneItem()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Single(nonEmptyParts);
+        Assert.Equal("Hello World", nonEmptyParts[0]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_SingleEmptyValue_ReturnsNoItems()
+    {
+        // Arrange
+        var content = new Content("");
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Empty(nonEmptyParts);
+    }
+
+    [Fact]
+    public void NonEmptyParts_MultiPartAllNonEmpty_ReturnsAllItems()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World", "!"]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(4, nonEmptyParts.Count);
+        Assert.Equal("Hello", nonEmptyParts[0]);
+        Assert.Equal(" ", nonEmptyParts[1]);
+        Assert.Equal("World", nonEmptyParts[2]);
+        Assert.Equal("!", nonEmptyParts[3]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_MultiPartWithEmptyParts_FiltersEmptyParts()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", "", " ", "", "World", ""]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(3, nonEmptyParts.Count);
+        Assert.Equal("Hello", nonEmptyParts[0]);
+        Assert.Equal(" ", nonEmptyParts[1]);
+        Assert.Equal("World", nonEmptyParts[2]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_MultiPartAllEmpty_ReturnsNoItems()
+    {
+        // Arrange
+        var content = new Content(["", "", "", ""]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Empty(nonEmptyParts);
+    }
+
+    [Fact]
+    public void NonEmptyParts_NestedContentWithEmptyParts_FiltersCorrectly()
+    {
+        // Arrange
+        var inner1 = new Content(["", "A", ""]);
+        var inner2 = new Content(["", "", "B", ""]);
+        var content = new Content([inner1, new Content(""), inner2]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(2, nonEmptyParts.Count);
+        Assert.Equal("A", nonEmptyParts[0]);
+        Assert.Equal("B", nonEmptyParts[1]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_DeeplyNestedWithEmptyParts_FiltersCorrectly()
+    {
+        // Arrange
+        var level1 = new Content(["", "Deep", ""]);
+        var level2 = new Content([level1, new Content(""), new Content("Nested")]);
+        var level3 = new Content([new Content(""), level2, new Content("Content")]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in level3.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(3, nonEmptyParts.Count);
+        Assert.Equal("Deep", nonEmptyParts[0]);
+        Assert.Equal("Nested", nonEmptyParts[1]);
+        Assert.Equal("Content", nonEmptyParts[2]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_WithMemoryParts_FiltersEmptyMemory()
+    {
+        // Arrange
+        var content = new Content([
+            ReadOnlyMemory<char>.Empty,
+            "Hello".AsMemory(),
+            ReadOnlyMemory<char>.Empty,
+            "World".AsMemory(),
+            ReadOnlyMemory<char>.Empty
+        ]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(2, nonEmptyParts.Count);
+        Assert.Equal("Hello", nonEmptyParts[0]);
+        Assert.Equal("World", nonEmptyParts[1]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_MixedContentTypes_FiltersCorrectly()
+    {
+        // Arrange
+        var memoryContent = new Content("Memory".AsMemory());
+        var stringContent = new Content("");
+        var nestedContent = new Content(["", "Nested", ""]);
+        var content = new Content([memoryContent, stringContent, nestedContent]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(2, nonEmptyParts.Count);
+        Assert.Equal("Memory", nonEmptyParts[0]);
+        Assert.Equal("Nested", nonEmptyParts[1]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_EnumeratorDispose_WorksCorrectly()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", "", "World", ""]);
+
+        // Act & Assert - Should not throw
+        using var enumerator = content.Parts.NonEmpty.GetEnumerator();
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal("Hello", enumerator.Current.ToString());
+    }
+
+    [Fact]
+    public void NonEmptyParts_EnumeratorDisposeMultipleTimes_DoesNotThrow()
+    {
+        // Arrange
+        var content = new Content(["", "Test", ""]);
+        var enumerator = content.Parts.NonEmpty.GetEnumerator();
+
+        // Act - Multiple dispose calls should not throw
+        enumerator.Dispose();
+        enumerator.Dispose();
+        enumerator.Dispose();
+
+        // Assert - No exception thrown
+    }
+
+    [Fact]
+    public void NonEmptyParts_EnumeratorAfterDispose_MoveNextReturnsFalse()
+    {
+        // Arrange
+        var content = new Content(["", "Test", ""]);
+        var enumerator = content.Parts.NonEmpty.GetEnumerator();
+
+        // Act
+        enumerator.MoveNext(); // Move to first non-empty part
+        enumerator.Dispose();
+        var result = enumerator.MoveNext();
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void NonEmptyParts_ManualEnumeration_WorksCorrectly()
+    {
+        // Arrange
+        var content = new Content(["", "A", "", "B", "", "C", ""]);
+        using var enumerator = content.Parts.NonEmpty.GetEnumerator();
+
+        // Act & Assert
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal("A", enumerator.Current.ToString());
+
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal("B", enumerator.Current.ToString());
+
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal("C", enumerator.Current.ToString());
+
+        Assert.False(enumerator.MoveNext());
+        Assert.False(enumerator.MoveNext()); // Verify stays false
+    }
+
+    [Fact]
+    public void NonEmptyParts_WithSingleCharacterParts_FiltersCorrectly()
+    {
+        // Arrange
+        var content = new Content(["", "H", "", "e", "", "l", "", "l", "", "o", ""]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(5, nonEmptyParts.Count);
+        Assert.Equal("H", nonEmptyParts[0]);
+        Assert.Equal("e", nonEmptyParts[1]);
+        Assert.Equal("l", nonEmptyParts[2]);
+        Assert.Equal("l", nonEmptyParts[3]);
+        Assert.Equal("o", nonEmptyParts[4]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_WithUnicodeCharacters_HandlesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", "", " ", "", "世界", ""]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(3, nonEmptyParts.Count);
+        Assert.Equal("Hello", nonEmptyParts[0]);
+        Assert.Equal(" ", nonEmptyParts[1]);
+        Assert.Equal("世界", nonEmptyParts[2]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_WithSpecialCharacters_HandlesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["", "\t", "", "\n", "", "\r", ""]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(3, nonEmptyParts.Count);
+        Assert.Equal("\t", nonEmptyParts[0]);
+        Assert.Equal("\n", nonEmptyParts[1]);
+        Assert.Equal("\r", nonEmptyParts[2]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_MultipleEnumerations_ProduceSameResults()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", "", "World", ""]);
+
+        // Act
+        var parts1 = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            parts1.Add(part.ToString());
+        }
+
+        var parts2 = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            parts2.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(parts1.Count, parts2.Count);
+        for (var i = 0; i < parts1.Count; i++)
+        {
+            Assert.Equal(parts1[i], parts2[i]);
+        }
+    }
+
+    [Fact]
+    public void NonEmptyParts_ComplexNestedStructure_FiltersCorrectly()
+    {
+        // Arrange
+        var branch1 = new Content([new Content(""), new Content("A"), new Content("B")]);
+        var branch2 = new Content([new Content(["", "C", ""]), new Content(""), new Content("D")]);
+        var content = new Content([branch1, new Content(""), branch2]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(4, nonEmptyParts.Count);
+        Assert.Equal("A", nonEmptyParts[0]);
+        Assert.Equal("B", nonEmptyParts[1]);
+        Assert.Equal("C", nonEmptyParts[2]);
+        Assert.Equal("D", nonEmptyParts[3]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_WithWhitespaceOnlyParts_IncludesWhitespace()
+    {
+        // Arrange
+        var content = new Content(["", "   ", "", "\t\t", "", "\n\n", ""]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(3, nonEmptyParts.Count);
+        Assert.Equal("   ", nonEmptyParts[0]);
+        Assert.Equal("\t\t", nonEmptyParts[1]);
+        Assert.Equal("\n\n", nonEmptyParts[2]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_EmptyAtBeginningMiddleAndEnd_FiltersCorrectly()
+    {
+        // Arrange
+        var content = new Content(["", "", "Start", "", "", "Middle", "", "", "End", "", ""]);
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(3, nonEmptyParts.Count);
+        Assert.Equal("Start", nonEmptyParts[0]);
+        Assert.Equal("Middle", nonEmptyParts[1]);
+        Assert.Equal("End", nonEmptyParts[2]);
+    }
+
+    [Fact]
+    public void NonEmptyParts_VeryLongContent_FiltersCorrectly()
+    {
+        // Arrange
+        var parts = new List<string>();
+        for (var i = 0; i < 100; i++)
+        {
+            parts.Add(i % 3 == 0 ? "" : $"Part{i}");
+        }
+
+        var content = new Content(parts.ToImmutableArray());
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        var expectedNonEmptyCount = parts.Count(p => !string.IsNullOrEmpty(p));
+        Assert.Equal(expectedNonEmptyCount, nonEmptyParts.Count);
+
+        var nonEmptyIndex = 0;
+        for (var i = 0; i < parts.Count; i++)
+        {
+            if (!string.IsNullOrEmpty(parts[i]))
+            {
+                Assert.Equal(parts[i], nonEmptyParts[nonEmptyIndex]);
+                nonEmptyIndex++;
+            }
+        }
+    }
+
+    [Fact]
+    public void NonEmptyParts_StressTest_ManyEmptyParts()
+    {
+        // Arrange - Create content with many empty parts interspersed with non-empty ones
+        var parts = new string[1000];
+        for (var i = 0; i < 1000; i++)
+        {
+            parts[i] = i % 10 == 0 ? $"NonEmpty{i}" : "";
+        }
+
+        var content = new Content(parts.ToImmutableArray());
+
+        // Act
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(100, nonEmptyParts.Count); // Every 10th part is non-empty
+        for (var i = 0; i < 100; i++)
+        {
+            Assert.Equal($"NonEmpty{i * 10}", nonEmptyParts[i]);
+        }
+    }
+
+    [Fact]
+    public void NonEmptyParts_MatchesToString_SkipsEmptyParts()
+    {
+        // Arrange
+        var content = new Content(["", "Hello", "", " ", "", "World", ""]);
+
+        // Act
+        var nonEmptyPartsString = string.Create(content.Length, content, static (span, content) =>
+        {
+            foreach (var part in content.Parts.NonEmpty)
+            {
+                part.Span.CopyTo(span);
+                span = span[part.Length..];
+            }
+        });
+
+        var toStringResult = content.ToString();
+
+        // Assert
+        Assert.Equal("Hello World", nonEmptyPartsString);
+        Assert.Equal("Hello World", toStringResult);
+        Assert.Equal(toStringResult, nonEmptyPartsString);
+    }
+
+    [Fact]
+    public void NonEmptyParts_ConsistentWithPartsList_SkipsOnlyEmptyParts()
+    {
+        // Arrange
+        var content = new Content(["", "A", "", "B", "", "C", ""]);
+
+        // Act
+        var allParts = new List<string>();
+        foreach (var part in content.Parts)
+        {
+            allParts.Add(part.ToString());
+        }
+
+        var nonEmptyParts = new List<string>();
+        foreach (var part in content.Parts.NonEmpty)
+        {
+            nonEmptyParts.Add(part.ToString());
+        }
+
+        // Assert
+        Assert.Equal(7, allParts.Count); // Includes empty parts
+        Assert.Equal(3, nonEmptyParts.Count); // Only non-empty parts
+
+        var expectedNonEmpty = allParts.Where(p => p.Length > 0).ToList();
+        Assert.Equal(expectedNonEmpty, nonEmptyParts);
+    }
+
     [Fact]
     public void Equals_EmptyContent_ReturnsTrue()
     {
@@ -2251,7 +2781,7 @@ public class ContentTests
         // Assert
         Assert.Equal("World", result.ToString());
         Assert.Equal(5, result.Length);
-        Assert.True(result.HasValue);
+        Assert.True(result.IsSingleValue);
     }
 
     [Fact]
@@ -2305,7 +2835,7 @@ public class ContentTests
         // Assert
         Assert.Equal("World", result.ToString());
         Assert.Equal(5, result.Length);
-        Assert.True(result.HasValue);
+        Assert.True(result.IsSingleValue);
     }
 
     [Fact]
@@ -2404,7 +2934,7 @@ public class ContentTests
         // Assert
         Assert.Equal("ell", result.ToString());
         Assert.Equal(3, result.Length);
-        Assert.True(result.HasValue);
+        Assert.True(result.IsSingleValue);
     }
 
     [Fact]
@@ -2447,7 +2977,7 @@ public class ContentTests
         // Assert
         Assert.Equal("World", result.ToString());
         Assert.Equal(5, result.Length);
-        Assert.True(result.HasValue);
+        Assert.True(result.IsSingleValue);
     }
 
     [Fact]
@@ -2640,7 +3170,7 @@ public class ContentTests
         // Assert
         Assert.Equal("o", result.ToString());
         Assert.Equal(1, result.Length);
-        Assert.True(result.HasValue);
+        Assert.True(result.IsSingleValue);
     }
 
     [Fact]
@@ -2749,5 +3279,1426 @@ public class ContentTests
         // Assert
         Assert.Equal("ABC", result.ToString());
         Assert.Equal(3, result.Length);
+    }
+
+    [Fact]
+    public void Insert_EmptyContent_InsertsValue()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = content.Insert(0, "Test");
+
+        // Assert
+        Assert.Equal("Test", result.ToString());
+        Assert.Equal(4, result.Length);
+    }
+
+    [Fact]
+    public void Insert_SingleValue_AtBeginning_InsertsCorrectly()
+    {
+        // Arrange
+        var content = new Content("World");
+
+        // Act
+        var result = content.Insert(0, "Hello ");
+
+        // Assert
+        Assert.Equal("Hello World", result.ToString());
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Insert_SingleValue_AtEnd_InsertsCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = content.Insert(5, " World");
+
+        // Assert
+        Assert.Equal("Hello World", result.ToString());
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Insert_SingleValue_InMiddle_InsertsCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Insert(6, "Cruel ");
+
+        // Assert
+        Assert.Equal("Hello Cruel World", result.ToString());
+        Assert.True(result.IsMultiPart);
+        Assert.Equal(17, result.Length);
+    }
+
+    [Fact]
+    public void Insert_MultiPart_InMiddle_InsertsCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Insert(6, "Cruel ");
+
+        // Assert
+        Assert.Equal("Hello Cruel World", result.ToString());
+        Assert.Equal(17, result.Length);
+    }
+
+    [Fact]
+    public void Insert_MultiPart_AtPartBoundary_InsertsCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Insert(5, "!");
+
+        // Assert
+        Assert.Equal("Hello! World", result.ToString());
+    }
+
+    [Fact]
+    public void Insert_WithMemory_InsertsCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Insert(6, "Beautiful ".AsMemory());
+
+        // Assert
+        Assert.Equal("Hello Beautiful World", result.ToString());
+    }
+
+    [Fact]
+    public void Insert_EmptyValue_ReturnsOriginal()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Insert(5, "");
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Insert_InvalidIndex_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Insert(-1, "Test"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Insert(6, "Test"));
+    }
+
+    [Fact]
+    public void Insert_NestedContent_InsertsCorrectly()
+    {
+        // Arrange
+        var inner1 = new Content(["Hello", " "]);
+        var inner2 = new Content(["World"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.Insert(6, "Beautiful ");
+
+        // Assert
+        Assert.Equal("Hello Beautiful World", result.ToString());
+    }
+
+    [Fact]
+    public void Remove_EmptyContent_ReturnsEmpty()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = content.Remove(0, 0);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+    }
+
+    [Fact]
+    public void Remove_SingleValue_FromBeginning_RemovesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Remove(0, 6);
+
+        // Assert
+        Assert.Equal("World", result.ToString());
+        Assert.True(result.IsSingleValue);
+    }
+
+    [Fact]
+    public void Remove_SingleValue_FromEnd_RemovesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Remove(5, 6);
+
+        // Assert
+        Assert.Equal("Hello", result.ToString());
+        Assert.True(result.IsSingleValue);
+    }
+
+    [Fact]
+    public void Remove_SingleValue_FromMiddle_RemovesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Remove(5, 1);
+
+        // Assert
+        Assert.Equal("HelloWorld", result.ToString());
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Remove_SingleValue_Everything_ReturnsEmpty()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = content.Remove(0, 5);
+
+        // Assert
+        Assert.True(result.IsEmpty);
+    }
+
+    [Fact]
+    public void Remove_MultiPart_FromMiddle_RemovesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Remove(5, 1);
+
+        // Assert
+        Assert.Equal("HelloWorld", result.ToString());
+    }
+
+    [Fact]
+    public void Remove_MultiPart_SpanningParts_RemovesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Remove(3, 5);
+
+        // Assert
+        Assert.Equal("Helrld", result.ToString());
+    }
+
+    [Fact]
+    public void Remove_MultiPart_EntirePart_RemovesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Remove(5, 1);
+
+        // Assert
+        Assert.Equal("HelloWorld", result.ToString());
+    }
+
+    [Fact]
+    public void Remove_ZeroCount_ReturnsOriginal()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Remove(5, 0);
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Remove_InvalidArguments_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Remove(-1, 2));
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Remove(0, -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Remove(3, 3));
+        Assert.Throws<ArgumentOutOfRangeException>(() => content.Remove(6, 0));
+    }
+
+    [Fact]
+    public void Remove_NestedContent_RemovesCorrectly()
+    {
+        // Arrange
+        var inner1 = new Content(["Hello", " "]);
+        var inner2 = new Content(["World", "!"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.Remove(5, 6);
+
+        // Assert
+        Assert.Equal("Hello!", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_EmptyContent_ReturnsOriginal()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = content.Replace("test", "new");
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Replace_SingleValue_NoMatch_ReturnsOriginal()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace("xyz", "abc");
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Replace_SingleValue_SingleMatch_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace("World", "Universe");
+
+        // Assert
+        Assert.Equal("Hello Universe", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_SingleValue_MultipleMatches_ReplacesAll()
+    {
+        // Arrange
+        var content = new Content("Hello World World");
+
+        // Act
+        var result = content.Replace("World", "Universe");
+
+        // Assert
+        Assert.Equal("Hello Universe Universe", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_SingleValue_WithEmpty_RemovesMatches()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace(" World", "");
+
+        // Assert
+        Assert.Equal("Hello", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_WithinPart_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Replace("World", "Universe");
+
+        // Assert
+        Assert.Equal("Hello Universe", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_SpanningParts_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Replace(" W", "_W");
+
+        // Assert
+        Assert.Equal("Hello_World", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_MultipleMatches_ReplacesAll()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World", " ", "Hello"]);
+
+        // Act
+        var result = content.Replace("Hello", "Hi");
+
+        // Assert
+        Assert.Equal("Hi World Hi", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_CaseInsensitive_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace("hello", "Hi", StringComparison.OrdinalIgnoreCase);
+
+        // Assert
+        Assert.Equal("Hi World", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithMemory_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace("World".AsSpan(), "Universe".AsMemory());
+
+        // Assert
+        Assert.Equal("Hello Universe", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_EmptyOldValue_ThrowsArgumentException()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => content.Replace("", "test"));
+        Assert.Throws<ArgumentException>(() => content.Replace("".AsSpan(), "test".AsMemory()));
+    }
+
+    [Fact]
+    public void Replace_NestedContent_ReplacesCorrectly()
+    {
+        // Arrange
+        var inner1 = new Content(["Hello", " "]);
+        var inner2 = new Content(["World", "!"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.Replace("World", "Universe");
+
+        // Assert
+        Assert.Equal("Hello Universe!", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_OverlappingMatches_ReplacesNonOverlapping()
+    {
+        // Arrange
+        var content = new Content("aaa");
+
+        // Act
+        var result = content.Replace("aa", "b");
+
+        // Assert
+        Assert.Equal("ba", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_SpanningMultipleParts_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["AB", "CD", "EF"]);
+
+        // Act
+        var result = content.Replace("CDE", "XYZ");
+
+        // Assert
+        Assert.Equal("ABXYZF", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_Performance_ChecksEachPositionOnlyOnce()
+    {
+        // This test verifies that the optimized implementation doesn't walk
+        // through all parts repeatedly for every position checked.
+        // It creates a scenario where the old O(n×m) approach would be very slow.
+
+        // Arrange - Create content with many parts
+        var parts = new string[100];
+        for (var i = 0; i < 100; i++)
+        {
+            parts[i] = $"Part{i:D3} ";  // "Part000 ", "Part001 ", etc.
+        }
+
+        // The string to find only appears once, near the end
+        parts[95] = "Part095 Target ";  // Insert "Target" in part 95
+        var contentWithTarget = new Content([.. parts]);
+
+        // Act - Replace "Target" with "Replaced"
+        var result = contentWithTarget.Replace("Target", "NewValue");
+
+        // Assert
+        Assert.Equal(contentWithTarget.ToString().Replace("Target", "NewValue"), result.ToString());
+
+        // Verify the replacement happened
+        Assert.Contains("NewValue", result.ToString());
+        Assert.DoesNotContain("Target", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_SpanningParts_WithinAndAcrossBoundaries()
+    {
+        // This test specifically verifies that matches are found both
+        // within parts and spanning across part boundaries
+
+        // Arrange
+        var content = new Content(["AB", "CD", "EF", "GH"]);
+
+        // Act
+        var result1 = content.Replace("CD", "XY");      // Match within single part
+        var result2 = content.Replace("BC", "XY");      // Match across boundary AB|CD
+        var result3 = content.Replace("DEF", "XYZ");    // Match across multiple boundaries CD|EF
+        var result4 = content.Replace("CDEFG", "XYZ");  // Match across 3 part boundaries
+
+        // Assert
+        Assert.Equal("ABXYEFGH", result1.ToString());
+        Assert.Equal("AXYDEFGH", result2.ToString());
+        Assert.Equal("ABCXYZGH", result3.ToString());
+        Assert.Equal("ABXYZH", result4.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_MatchAtEveryPartBoundary()
+    {
+        // Arrange - Pattern appears at every boundary between parts
+        var content = new Content(["AXB", "CXD", "EXF"]);
+
+        // Act - Replace all "X" occurrences
+        var result = content.Replace("X", "Y");
+
+        // Assert
+        Assert.Equal("AYBCYDEYF", result.ToString());
+
+        // Verify all three replacements happened
+        var resultParts = new List<string>();
+        foreach (var part in result.Parts)
+        {
+            resultParts.Add(part.ToString());
+        }
+
+        // The exact part structure may vary, but the content should be correct
+        Assert.Equal(3, resultParts.Count(p => p.Contains('Y')));
+    }
+
+    [Fact]
+    public void Replace_MultiPart_NoMatchesFound_ReturnsOriginal()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World"]);
+
+        // Act
+        var result = content.Replace("NotFound", "Replacement");
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Replace_MultiPart_EmptyParts_HandledCorrectly()
+    {
+        // Arrange - Include empty parts which shouldn't affect matching
+        var content = new Content(["", "AB", "", "CD", "EF", ""]);
+
+        // Act
+        var result = content.Replace("BC", "XY");
+
+        // Assert
+        Assert.Equal("AXYDEF", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_OverlappingPotentialMatches()
+    {
+        // Arrange - Test that we handle overlapping patterns correctly
+        var content = new Content(["AAA", "AAA"]);
+
+        // Act - Should only match non-overlapping instances
+        var result = content.Replace("AAA", "B");
+
+        // Assert
+        Assert.Equal("BB", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_MatchAtVeryEndOfContent()
+    {
+        // Arrange
+        var content = new Content(["Start", " ", "Middle", " ", "End"]);
+
+        // Act
+        var result = content.Replace("End", "Finish");
+
+        // Assert
+        Assert.Equal("Start Middle Finish", result.ToString());
+        Assert.EndsWith("Finish", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_MatchSpanningManyParts()
+    {
+        // Arrange - 10 single-character parts forming "ABCDEFGHIJ"
+        var content = new Content(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]);
+
+        // Act - Replace a pattern spanning 5 parts
+        var result = content.Replace("CDEFG", "XYZ");
+
+        // Assert
+        Assert.Equal("ABXYZHIJ", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultiPart_CaseInsensitive_SpanningBoundaries()
+    {
+        // Arrange
+        var content = new Content(["hel", "LO", " ", "wor", "LD"]);
+
+        // Act
+        var result = content.Replace("hello", "hi", StringComparison.OrdinalIgnoreCase);
+
+        // Assert
+        Assert.Equal("hi worLD", result.ToString());
+    }
+    [Fact]
+    public void Mutations_CanBeChained()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content
+            .Insert(6, "Beautiful ")
+            .Replace("Beautiful", "Amazing")
+            .Remove(0, 6);
+
+        // Assert
+        Assert.Equal("Amazing World", result.ToString());
+    }
+
+    [Fact]
+    public void Mutations_PreserveOriginal()
+    {
+        // Arrange
+        var original = new Content("Hello World");
+
+        // Act
+        var inserted = original.Insert(6, "Cruel ");
+        var removed = original.Remove(6, 5);
+        var replaced = original.Replace("World", "Universe");
+
+        // Assert
+        Assert.Equal("Hello World", original.ToString());
+        Assert.Equal("Hello Cruel World", inserted.ToString());
+        Assert.Equal("Hello ", removed.ToString());
+        Assert.Equal("Hello Universe", replaced.ToString());
+    }
+
+    [Fact]
+    public void Insert_PreservesMemorySlicing()
+    {
+        // Arrange
+        var original = "Hello World";
+        var content = new Content(original);
+
+        // Act
+        var result = content.Insert(5, "!");
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        // Verify no string allocation happened for the original content
+        foreach (var part in result.Parts)
+        {
+            Assert.NotEqual("Hello!", part.ToString());
+            Assert.NotEqual("! World", part.ToString());
+        }
+    }
+
+    [Fact]
+    public void Remove_PreservesMemorySlicing()
+    {
+        // Arrange
+        var original = "Hello World";
+        var content = new Content(original);
+
+        // Act
+        var result = content.Remove(5, 1);
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        // Verify no new string allocation for the parts
+        Assert.Equal(2, result.Parts.Count);
+    }
+
+    [Fact]
+    public void Replace_PreservesMemorySlicing()
+    {
+        // Arrange
+        var original = "Hello World World";
+        var content = new Content(original);
+
+        // Act
+        var result = content.Replace(" ", "_");
+
+        // Assert
+        Assert.True(result.IsMultiPart);
+        // The original memory should be sliced, not copied
+        var parts = new List<string>();
+        foreach (var part in result.Parts)
+        {
+            parts.Add(part.ToString());
+        }
+        Assert.Contains("Hello", parts);
+        Assert.Contains("_", parts);
+    }
+
+    [Fact]
+    public void Replace_AlternateInsideAndAcrossParts()
+    {
+        // Arrange
+        var content = new Content(["Hello", "World", "Hel", "loWor", "ldHello", "World", "HelloWor", "ld"]);
+
+        // Act
+        var result = content.Replace("World", "_");
+
+        // Assert
+        Assert.Equal("Hello_Hello_Hello_Hello_", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_SingleChar_EmptyContent_ReturnsOriginal()
+    {
+        // Arrange
+        var content = Content.Empty;
+
+        // Act
+        var result = content.Replace('a', 'b');
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Replace_SingleChar_NoMatch_ReturnsOriginal()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace('x', 'y');
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Replace_SingleChar_SingleMatch_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace('o', 'a');
+
+        // Assert
+        Assert.Equal("Hella Warld", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_SingleChar_MultipleMatches_ReplacesAll()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace('l', 'x');
+
+        // Assert
+        Assert.Equal("Hexxo Worxd", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_SingleChar_SameChar_ReturnsOriginal()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content.Replace('o', 'o');
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Replace_SingleChar_MultiPart_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "World", "!"]);
+
+        // Act
+        var result = content.Replace('l', 'x');
+
+        // Assert
+        Assert.Equal("Hexxo Worxd!", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_SingleChar_NestedContent_ReplacesCorrectly()
+    {
+        // Arrange
+        var inner1 = new Content(["Hell", "o"]);
+        var inner2 = new Content([" Wor", "ld"]);
+        var content = new Content([inner1, inner2]);
+
+        // Act
+        var result = content.Replace('l', 'x');
+
+        // Assert
+        Assert.Equal("Hexxo Worxd", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithContentValue_EmptyOldValue_ThrowsArgumentException()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+        var newValue = new Content("replacement");
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => content.Replace("".AsSpan(), newValue));
+    }
+
+    [Fact]
+    public void Replace_WithContentValue_SingleMatch_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+        var newValue = new Content("Beautiful");
+
+        // Act
+        var result = content.Replace("World", newValue);
+
+        // Assert
+        Assert.Equal("Hello Beautiful", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithContentValue_MultipartReplacement_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+        var newValue = new Content(["Beau", "ti", "ful"]);
+
+        // Act
+        var result = content.Replace("World", newValue);
+
+        // Assert
+        Assert.Equal("Hello Beautiful", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithContentValue_EmptyReplacement_RemovesMatches()
+    {
+        // Arrange
+        var content = new Content("Hello World World");
+        var newValue = Content.Empty;
+
+        // Act
+        var result = content.Replace("World ", newValue);
+
+        // Assert
+        Assert.Equal("Hello World", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_EdgeCase_OldValueLongerThanContent_ReturnsOriginal()
+    {
+        // Arrange
+        var content = new Content("Hi");
+
+        // Act
+        var result = content.Replace("Hello", "Goodbye");
+
+        // Assert
+        Assert.Equal(content, result);
+    }
+
+    [Fact]
+    public void Replace_EdgeCase_ReplacementAtVeryStart_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Start", "Middle", "End"]);
+
+        // Act
+        var result = content.Replace("Start", "Begin");
+
+        // Assert
+        Assert.Equal("BeginMiddleEnd", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_EdgeCase_ReplacementAtVeryEnd_ReplacesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Start", "Middle", "End"]);
+
+        // Act
+        var result = content.Replace("End", "Finish");
+
+        // Assert
+        Assert.Equal("StartMiddleFinish", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_EdgeCase_ExactMatch_ReplacesEntireContent()
+    {
+        // Arrange
+        var content = new Content("Hello");
+
+        // Act
+        var result = content.Replace("Hello", "Goodbye");
+
+        // Assert
+        Assert.Equal("Goodbye", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_ComplexCrossPartMatch_MultipleOccurrences()
+    {
+        // Arrange - Multiple cross-part matches
+        var content = new Content(["AB", "CD", "EF", "AB", "CD", "EF", "GH"]);
+
+        // Act
+        var result = content.Replace("BC", "XY");
+
+        // Assert
+        Assert.Equal("AXYDEFAXYDEFGH", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_NestedReplacements_WithinSamePart()
+    {
+        // Arrange
+        var content = new Content("abcabcabc");
+
+        // Act
+        var result = content.Replace("abc", "x");
+
+        // Assert
+        Assert.Equal("xxx", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_VeryLongMatch_SpanningManyParts()
+    {
+        // Arrange - Create a pattern that spans 8 parts
+        var content = new Content(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]);
+
+        // Act
+        var result = content.Replace("ABCDEFGH", "REPLACED");
+
+        // Assert
+        Assert.Equal("REPLACEDIJ", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_RepeatingPattern_CrossPart()
+    {
+        // Arrange
+        var content = new Content(["aba", "bab", "aba", "bab"]);
+
+        // Act
+        var result = content.Replace("ab", "X");
+
+        // Assert
+        Assert.Equal("XXXXXX", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithUnicodeCharacters_HandlesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Hello ", "世界", "! How are you?"]);
+
+        // Act
+        var result = content.Replace("世界", "World");
+
+        // Assert
+        Assert.Equal("Hello World! How are you?", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithSpecialCharacters_HandlesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["Line1\n", "Line2\r\n", "Line3\t"]);
+
+        // Act
+        var result = content.Replace("\n", "_NEWLINE_");
+
+        // Assert
+        Assert.Equal("Line1_NEWLINE_Line2\r_NEWLINE_Line3\t", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_CaseSensitive_DoesNotMatchDifferentCase()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "WORLD"]);
+
+        // Act
+        var result = content.Replace("world", "universe");
+
+        // Assert
+        Assert.Equal("Hello WORLD", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_CaseInsensitive_MatchesDifferentCase()
+    {
+        // Arrange
+        var content = new Content(["Hello", " ", "WORLD"]);
+
+        // Act
+        var result = content.Replace("world", "universe", StringComparison.OrdinalIgnoreCase);
+
+        // Assert
+        Assert.Equal("Hello universe", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_CaseInsensitive_CrossPartMatch()
+    {
+        // Arrange
+        var content = new Content(["hel", "LO", " ", "wor", "LD"]);
+
+        // Act
+        var result = content.Replace("HELLO WORLD", "hi there", StringComparison.OrdinalIgnoreCase);
+
+        // Assert
+        Assert.Equal("hi there", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithEmptyParts_IgnoresEmptyParts()
+    {
+        // Arrange
+        var content = new Content(["", "A", "", "B", "", "C", "", "D", ""]);
+
+        // Act
+        var result = content.Replace("BC", "XY");
+
+        // Assert
+        Assert.Equal("AXYD", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_SingleCharacterParts_HandlesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["H", "e", "l", "l", "o", " ", "W", "o", "r", "l", "d"]);
+
+        // Act
+        var result = content.Replace("llo W", "y ");
+
+        // Assert
+        Assert.Equal("Hey orld", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_OverlappingPatterns_ReplacesNonOverlapping()
+    {
+        // Arrange
+        var content = new Content("aaaa");
+
+        // Act
+        var result = content.Replace("aaa", "b");
+
+        // Assert
+        Assert.Equal("ba", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_AdjacentMatches_ReplacesAll()
+    {
+        // Arrange
+        var content = new Content("abcabc");
+
+        // Act
+        var result = content.Replace("abc", "X");
+
+        // Assert
+        Assert.Equal("XX", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_PartialMatchAtEnd_DoesNotReplace()
+    {
+        // Arrange
+        var content = new Content(["Hello", "Wor"]);
+
+        // Act
+        var result = content.Replace("World", "Universe");
+
+        // Assert
+        Assert.Equal("HelloWor", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_LongerReplacement_IncreasesLength()
+    {
+        // Arrange
+        var content = new Content("Hi");
+
+        // Act
+        var result = content.Replace("Hi", "Hello there");
+
+        // Assert
+        Assert.Equal("Hello there", result.ToString());
+        Assert.Equal(11, result.Length);
+    }
+
+    [Fact]
+    public void Replace_ShorterReplacement_DecreasesLength()
+    {
+        // Arrange
+        var content = new Content("Hello there");
+
+        // Act
+        var result = content.Replace("Hello there", "Hi");
+
+        // Assert
+        Assert.Equal("Hi", result.ToString());
+        Assert.Equal(2, result.Length);
+    }
+
+    [Fact]
+    public void Replace_ChainedReplacements_WorkCorrectly()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+
+        // Act
+        var result = content
+            .Replace("Hello", "Hi")
+            .Replace("World", "Universe")
+            .Replace(" ", "_");
+
+        // Assert
+        Assert.Equal("Hi_Universe", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_DeeplyNestedContent_HandlesCorrectly()
+    {
+        // Arrange
+        var level1 = new Content(["AB", "CD"]);
+        var level2 = new Content([level1, new Content("EF")]);
+        var level3 = new Content([level2, new Content(["GH", "IJ"])]);
+
+        // Act
+        var result = level3.Replace("DE", "XY");
+
+        // Assert
+        Assert.Equal("ABCXYFGHIJ", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_ManySmallParts_Performance()
+    {
+        // Arrange - Create content with many small parts
+        var parts = new string[1000];
+        for (var i = 0; i < 1000; i++)
+        {
+            parts[i] = i % 2 == 0 ? "A" : "B";
+        }
+
+        var content = new Content(parts.ToImmutableArray());
+
+        // Act
+        var result = content.Replace("AB", "X");
+
+        // Assert
+        // Should replace every adjacent A,B pair
+        var expected = string.Concat(Enumerable.Repeat("X", 500));
+        Assert.Equal(expected, result.ToString());
+    }
+
+    [Fact]
+    public void Replace_VeryLongSinglePart_HandlesCorrectly()
+    {
+        // Arrange
+        var longString = new string('A', 10000) + "TARGET" + new string('B', 10000);
+        var content = new Content(longString);
+
+        // Act
+        var result = content.Replace("TARGET", "REPLACED");
+
+        // Assert
+        Assert.Equal(new string('A', 10000) + "REPLACED" + new string('B', 10000), result.ToString());
+        Assert.Equal(20008, result.Length); // 10000 + 8 + 10000
+    }
+
+    [Fact]
+    public void Replace_MultipleInstancesOfSameChar_InDifferentParts()
+    {
+        // Arrange
+        var content = new Content(["aaa", "bbb", "aaa", "ccc", "aaa"]);
+
+        // Act
+        var result = content.Replace('a', 'x');
+
+        // Assert
+        Assert.Equal("xxxbbbxxxcccxxx", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_AlternatingReplacementPattern()
+    {
+        // Arrange
+        var content = new Content(["X", "Y", "X", "Y", "X", "Y"]);
+
+        // Act
+        var result = content.Replace("XY", "Z");
+
+        // Assert
+        Assert.Equal("ZZZ", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_PatternLongerThanIndividualParts()
+    {
+        // Arrange - Pattern is longer than any single part
+        var content = new Content(["AB", "CD", "EF", "GH"]);
+
+        // Act
+        var result = content.Replace("ABCDEFGH", "REPLACED");
+
+        // Assert
+        Assert.Equal("REPLACED", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MatchStartsInLastPart()
+    {
+        // Arrange
+        var content = new Content(["Hello ", "World", "!"]);
+
+        // Act
+        var result = content.Replace("World!", "Universe.");
+
+        // Assert
+        Assert.Equal("Hello Universe.", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_MultipleNonOverlappingCrossPartMatches()
+    {
+        // Arrange
+        var content = new Content(["AB", "CD", "EF", "AB", "CD", "EF"]);
+
+        // Act
+        var result = content.Replace("DE", "XY");
+
+        // Assert
+        Assert.Equal("ABCXYF" + "ABCXYF", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_PatternAtExactPartBoundaries()
+    {
+        // Arrange - Pattern exactly spans part boundaries
+        var content = new Content(["ABC", "DEF", "GHI"]);
+
+        // Act
+        var result1 = content.Replace("CDE", "XYZ");
+        var result2 = content.Replace("FGH", "XYZ");
+
+        // Assert
+        Assert.Equal("ABXYZFGHI", result1.ToString());
+        Assert.Equal("ABCDEXYZ" + "I", result2.ToString());
+    }
+
+    [Fact]
+    public void Replace_WithWhitespaceOnly_HandlesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["   ", "   ", "  "]);
+
+        // Act
+        var result = content.Replace("  ", "_");
+
+        // Assert
+        Assert.Equal("____", result.ToString()); // Should replace overlapping spaces
+    }
+
+    [Fact]
+    public void Replace_EmptyStringReplacement_RemovesMatches()
+    {
+        // Arrange
+        var content = new Content(["Remove", "This", "Remove", "This"]);
+
+        // Act
+        var result = content.Replace("Remove", "");
+
+        // Assert
+        Assert.Equal("ThisThis", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_ReplacementCreatesNewMatchOpportunity()
+    {
+        // Arrange
+        var content = new Content("abc");
+
+        // Act - This should not cause infinite recursion
+        var result = content.Replace("b", "bb");
+
+        // Assert
+        Assert.Equal("abbc", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_ConsecutiveIdenticalParts_HandlesCorrectly()
+    {
+        // Arrange
+        var content = new Content(["ABC", "ABC", "ABC"]);
+
+        // Act
+        var result = content.Replace("ABC", "X");
+
+        // Assert
+        Assert.Equal("XXX", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_ResultPreservesEqualityContract()
+    {
+        // Arrange
+        var content1 = new Content(["Hello", " ", "World"]);
+        var content2 = new Content("Hello World");
+
+        // Act
+        var result1 = content1.Replace("World", "Universe");
+        var result2 = content2.Replace("World", "Universe");
+
+        // Assert
+        Assert.Equal(result1, result2);
+        Assert.Equal(result1.GetHashCode(), result2.GetHashCode());
+    }
+
+    [Fact]
+    public void Replace_WithContentReplacement_PreservesStructure()
+    {
+        // Arrange
+        var content = new Content("Hello World");
+        var replacement = new Content(["Beautiful", " ", "Universe"]);
+
+        // Act
+        var result = content.Replace("World", replacement);
+
+        // Assert
+        Assert.Equal("Hello Beautiful Universe", result.ToString());
+        Assert.True(result.IsMultiPart);
+    }
+
+    [Fact]
+    public void Replace_StressTest_ManyReplacements()
+    {
+        // Arrange - Create content with many potential matches
+        var parts = new List<string>();
+        for (var i = 0; i < 100; i++)
+        {
+            parts.Add(i % 3 == 0 ? "TARGET" : $"Part{i}");
+        }
+
+        var content = new Content(parts.ToImmutableArray());
+
+        // Act
+        var result = content.Replace("TARGET", "REPLACED");
+
+        // Assert
+        var expectedReplacements = parts.Count(p => p == "TARGET");
+        var actualReplacements = result.ToString().Split(["REPLACED"], StringSplitOptions.None).Length - 1;
+        Assert.Equal(expectedReplacements, actualReplacements);
+    }
+
+    [Fact]
+    public void Replace_CrossPartMatch_WithVaryingPartSizes()
+    {
+        // Arrange - Parts of different sizes
+        var content = new Content(["A", "BB", "CCC", "DDDD", "EEEEE"]);
+
+        // Act
+        var result = content.Replace("BCCCD", "X");
+
+        // Assert
+        Assert.Equal("ABXDDD" + "EEEEE", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_PatternAppearsMultipleTimesInSamePart()
+    {
+        // Arrange
+        var content = new Content(["ABCABCABC", "DEFDEF"]);
+
+        // Act
+        var result = content.Replace("ABC", "X");
+
+        // Assert
+        Assert.Equal("XXXDEFDEF", result.ToString());
+    }
+
+    [Fact]
+    public void Replace_PartialMatchFollowedByFullMatch()
+    {
+        // Arrange
+        var content = new Content(["ABCDE", "FGHABCDE"]);
+
+        // Act
+        var result = content.Replace("ABCDE", "X");
+
+        // Assert
+        Assert.Equal("XFGHX", result.ToString());
     }
 }

@@ -71,6 +71,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  If <paramref name="parts"/> contains a single element, it will be unwrapped.
     ///  Empty or null arrays create empty content.
     /// </remarks>
+    [OverloadResolutionPriority(1)]
     public Content(ImmutableArray<Content> parts)
         : this(ImmutableCollectionsMarshal.AsArray(parts))
     {
@@ -84,6 +85,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  If <paramref name="parts"/> contains a single element, it will be stored as a simple value.
     ///  Empty or null arrays create empty content.
     /// </remarks>
+    [OverloadResolutionPriority(1)]
     public Content(ImmutableArray<ReadOnlyMemory<char>> parts)
         : this(ImmutableCollectionsMarshal.AsArray(parts))
     {
@@ -97,6 +99,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  If <paramref name="parts"/> contains a single element, it will be stored as a simple value.
     ///  Empty or null arrays create empty content.
     /// </remarks>
+    [OverloadResolutionPriority(1)]
     public Content(ImmutableArray<string> parts)
         : this(ImmutableCollectionsMarshal.AsArray(parts))
     {
@@ -211,7 +214,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  The <see cref="ReadOnlyMemory{T}"/> of characters, or an empty memory if this is multi-part content.
     /// </returns>
     /// <remarks>
-    ///  Check <see cref="HasValue"/> to determine if this property contains meaningful data.
+    ///  Check <see cref="IsSingleValue"/> to determine if this property contains meaningful data.
     /// </remarks>
     public ReadOnlyMemory<char> Value => _value;
 
@@ -230,7 +233,7 @@ public readonly partial struct Content : IEquatable<Content>
     ///  <see langword="true"/> if this content is stored as a single <see cref="ReadOnlyMemory{T}"/>;
     ///  otherwise, <see langword="false"/>.
     /// </returns>
-    public bool HasValue => !_value.IsEmpty && _parts is null;
+    public bool IsSingleValue => !_value.IsEmpty && _parts is null;
 
     /// <summary>
     ///  Gets a value indicating whether this content is stored as multiple parts.
@@ -275,31 +278,6 @@ public readonly partial struct Content : IEquatable<Content>
             Debug.Assert(_data.Kind == ContentKind.StringArray);
             return Unsafe.As<string[]>(_parts);
         }
-    }
-
-    /// <summary>
-    ///  Helper that gets only the non-empty parts of this content as a pooled array span.
-    /// </summary>
-    private PooledArray<ReadOnlyMemory<char>> GetNonEmptyParts(out ReadOnlySpan<ReadOnlyMemory<char>> result)
-    {
-        var pooledArray = ArrayPool<ReadOnlyMemory<char>>.Shared.GetPooledArraySpan(
-            minimumLength: _data.PartCount,
-            clearOnReturn: true,
-            out var parts);
-
-        var nonEmptyPartCount = 0;
-
-        foreach (var part in Parts)
-        {
-            if (!part.IsEmpty)
-            {
-                parts[nonEmptyPartCount++] = part;
-            }
-        }
-
-        result = parts;
-
-        return pooledArray;
     }
 
     /// <summary>
@@ -358,7 +336,7 @@ public readonly partial struct Content : IEquatable<Content>
         }
 
         // Fast path: Both are single values - compare the memory directly
-        if (HasValue && other.HasValue)
+        if (IsSingleValue && other.IsSingleValue)
         {
             return _value.Span.SequenceEqual(other._value.Span);
         }
@@ -480,7 +458,7 @@ public readonly partial struct Content : IEquatable<Content>
         }
 
         // Fast path: single value that's backed by a string
-        if (HasValue)
+        if (IsSingleValue)
         {
             return _value.ToString();
         }
@@ -488,7 +466,7 @@ public readonly partial struct Content : IEquatable<Content>
         // Multi-part content: need to concatenate all parts
         return string.Create(Length, this, static (destination, content) =>
         {
-            foreach (var part in content.Parts)
+            foreach (var part in content.Parts.NonEmpty)
             {
                 var partSpan = part.Span;
                 partSpan.CopyTo(destination);

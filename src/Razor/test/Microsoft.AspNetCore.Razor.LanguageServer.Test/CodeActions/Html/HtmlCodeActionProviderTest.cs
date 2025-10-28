@@ -143,7 +143,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
         bool supportsFileCreation = true,
         bool supportsCodeActionResolve = true)
     {
-        var tagHelpers = ImmutableArray<TagHelperDescriptor>.Empty;
+        var tagHelpers = TagHelperCollection.Empty;
         var sourceDocument = TestRazorSourceDocument.Create(text, filePath: filePath, relativePath: filePath);
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
@@ -154,6 +154,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
                 builder.UseRoslynTokenizer = true;
             });
         });
+
         var codeDocument = projectEngine.Process(sourceDocument, RazorFileKind.Legacy, importSources: default, tagHelpers);
 
         var documentSnapshotMock = new StrictMock<IDocumentSnapshot>();
@@ -165,7 +166,7 @@ public class HtmlCodeActionProviderTest(ITestOutputHelper testOutput) : Language
             .ReturnsAsync(codeDocument.Source.Text);
         documentSnapshotMock
             .Setup(x => x.Project.GetTagHelpersAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(tagHelpers);
+            .ReturnsAsync(tagHelpers.ToImmutableArray());
 
         return new RazorCodeActionContext(
             request,

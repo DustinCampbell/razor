@@ -307,7 +307,7 @@ $$Path;
         bool supportsFileCreation = true,
         bool supportsCodeActionResolve = true)
     {
-        var tagHelpers = ImmutableArray<TagHelperDescriptor>.Empty;
+        var tagHelpers = TagHelperCollection.Empty;
         var sourceDocument = TestRazorSourceDocument.Create(text, filePath: filePath, relativePath: filePath);
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
@@ -336,7 +336,7 @@ $$Path;
             .ReturnsAsync(codeDocument.Source.Text);
         documentSnapshotMock
             .Setup(x => x.Project.GetTagHelpersAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(tagHelpers);
+            .ReturnsAsync(tagHelpers.ToImmutableArray());
 
         return new RazorCodeActionContext(
             request,

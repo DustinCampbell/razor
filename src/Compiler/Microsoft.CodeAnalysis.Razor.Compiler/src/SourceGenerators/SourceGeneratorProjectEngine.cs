@@ -54,7 +54,8 @@ internal sealed class SourceGeneratorProjectEngine
         Debug.Assert(_discoveryPhaseIndex < _rewritePhaseIndex);
     }
 
-    public SourceGeneratorRazorCodeDocument ProcessInitialParse(RazorProjectItem projectItem, bool designTime, CancellationToken cancellationToken)
+    public SourceGeneratorRazorCodeDocument ProcessInitialParse(
+        RazorProjectItem projectItem, bool designTime, CancellationToken cancellationToken)
     {
         var codeDocument = _projectEngine.CreateCodeDocument(projectItem, designTime);
 
@@ -65,7 +66,11 @@ internal sealed class SourceGeneratorProjectEngine
         return new SourceGeneratorRazorCodeDocument(codeDocument);
     }
 
-    public SourceGeneratorRazorCodeDocument ProcessTagHelpers(SourceGeneratorRazorCodeDocument sgDocument, IReadOnlyList<TagHelperDescriptor> tagHelpers, bool checkForIdempotency, CancellationToken cancellationToken)
+    public SourceGeneratorRazorCodeDocument ProcessTagHelpers(
+        SourceGeneratorRazorCodeDocument sgDocument, 
+        TagHelperCollection tagHelpers, 
+        bool checkForIdempotency, 
+        CancellationToken cancellationToken)
     {
         Debug.Assert(sgDocument.CodeDocument.GetPreTagHelperSyntaxTree() is not null);
 
@@ -75,7 +80,7 @@ internal sealed class SourceGeneratorProjectEngine
         if (checkForIdempotency && codeDocument.TryGetTagHelpers(out var previousTagHelpers))
         {
             // compare the tag helpers with the ones the document last used
-            if (Enumerable.SequenceEqual(tagHelpers, previousTagHelpers))
+            if (tagHelpers.Equals(previousTagHelpers))
             {
                 // tag helpers are the same, nothing to do!
                 return sgDocument;
@@ -114,7 +119,8 @@ internal sealed class SourceGeneratorProjectEngine
         return new SourceGeneratorRazorCodeDocument(codeDocument);
     }
 
-    public SourceGeneratorRazorCodeDocument ProcessRemaining(SourceGeneratorRazorCodeDocument sgDocument, CancellationToken cancellationToken)
+    public SourceGeneratorRazorCodeDocument ProcessRemaining(
+        SourceGeneratorRazorCodeDocument sgDocument, CancellationToken cancellationToken)
     {
         var codeDocument = sgDocument.CodeDocument;
         Debug.Assert(codeDocument.GetReferencedTagHelpers() is not null);
@@ -124,7 +130,8 @@ internal sealed class SourceGeneratorProjectEngine
         return new SourceGeneratorRazorCodeDocument(codeDocument);
     }
 
-    private static void ExecutePhases(ReadOnlySpan<IRazorEnginePhase> phases, RazorCodeDocument codeDocument, CancellationToken cancellationToken)
+    private static void ExecutePhases(
+        ReadOnlySpan<IRazorEnginePhase> phases, RazorCodeDocument codeDocument, CancellationToken cancellationToken)
     {
         foreach (var phase in phases)
         {

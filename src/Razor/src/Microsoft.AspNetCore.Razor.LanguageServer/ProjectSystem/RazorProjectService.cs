@@ -402,7 +402,7 @@ internal partial class RazorProjectService : IRazorProjectService, IRazorProject
 
                 if (!projectWorkspaceState.Equals(ProjectWorkspaceState.Default))
                 {
-                    _logger.LogInformation($"Updating project '{project.Key}' TagHelpers ({projectWorkspaceState.TagHelpers.Length}).");
+                    _logger.LogInformation($"Updating project '{project.Key}' TagHelpers ({projectWorkspaceState.TagHelpers.Count}).");
                 }
 
                 updater.UpdateProjectWorkspaceState(project.Key, projectWorkspaceState);

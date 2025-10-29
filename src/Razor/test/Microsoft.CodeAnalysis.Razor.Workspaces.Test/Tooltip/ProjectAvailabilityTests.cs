@@ -32,8 +32,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
         builder.TagMatchingRule(rule => rule.TagName = "Test");
         var tagHelperTypeName = "TestNamespace.TestTagHelper";
         builder.TypeName = tagHelperTypeName;
-        var tagHelpers = ImmutableArray.Create(builder.Build());
-        var projectWorkspaceState = ProjectWorkspaceState.Create(tagHelpers);
+        var projectWorkspaceState = ProjectWorkspaceState.Create([builder.Build()]);
 
         var hostProject = new HostProject(
             "C:/path/to/project.csproj",
@@ -70,8 +69,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
         builder.TagMatchingRule(rule => rule.TagName = "Test");
         var tagHelperTypeName = "TestNamespace.TestTagHelper";
         builder.TypeName = tagHelperTypeName;
-        var tagHelpers = ImmutableArray.Create(builder.Build());
-        var projectWorkspaceState = ProjectWorkspaceState.Create(tagHelpers);
+        var projectWorkspaceState = ProjectWorkspaceState.Create([builder.Build()]);
 
         var hostProject1 = new HostProject(
             "C:/path/to/project.csproj",
@@ -119,8 +117,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
         builder.TagMatchingRule(rule => rule.TagName = "Test");
         var tagHelperTypeName = "TestNamespace.TestTagHelper";
         builder.TypeName = tagHelperTypeName;
-        var tagHelpers = ImmutableArray.Create(builder.Build());
-        var projectWorkspaceState = ProjectWorkspaceState.Create(tagHelpers);
+        var projectWorkspaceState = ProjectWorkspaceState.Create([builder.Build()]);
 
         var hostProject1 = new HostProject(
             "C:/path/to/project.csproj",

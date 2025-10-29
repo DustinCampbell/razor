@@ -24,15 +24,31 @@ public partial class OutOfProcTagHelperResolverTest
         ITelemetryReporter telemetryReporter)
         : OutOfProcTagHelperResolver(remoteServiceInvoker, loggerFactory, telemetryReporter)
     {
-        public Func<ProjectSnapshot, ValueTask<ImmutableArray<TagHelperDescriptor>>>? OnResolveOutOfProcess { get; init; }
+        public Func<ProjectSnapshot, ValueTask<TagHelperCollection?>>? OnResolveOutOfProcess { get; init; }
 
-        public Func<ProjectSnapshot, ValueTask<ImmutableArray<TagHelperDescriptor>>>? OnResolveInProcess { get; init; }
+        public Func<ProjectSnapshot, ValueTask<TagHelperCollection?>>? OnResolveInProcess { get; init; }
 
-        protected override ValueTask<ImmutableArray<TagHelperDescriptor>> ResolveTagHelpersOutOfProcessAsync(Project project, ProjectSnapshot projectSnapshot, CancellationToken cancellationToken)
-            => OnResolveOutOfProcess?.Invoke(projectSnapshot) ?? default;
+        protected override async ValueTask<TagHelperCollection?> ResolveTagHelpersOutOfProcessAsync(Project project, ProjectSnapshot projectSnapshot, CancellationToken cancellationToken)
+        {
+            if (OnResolveOutOfProcess is { } handler)
+            {
+                var result = await handler.Invoke(projectSnapshot);
+                return result;
+            }
 
-        protected override ValueTask<ImmutableArray<TagHelperDescriptor>> ResolveTagHelpersInProcessAsync(Project project, ProjectSnapshot projectSnapshot, CancellationToken cancellationToken)
-            => OnResolveInProcess?.Invoke(projectSnapshot) ?? default;
+            return null;
+        }
+
+        protected override async ValueTask<TagHelperCollection> ResolveTagHelpersInProcessAsync(Project project, ProjectSnapshot projectSnapshot, CancellationToken cancellationToken)
+        {
+            if (OnResolveInProcess is { } handler)
+            {
+                var result = await handler.Invoke(projectSnapshot);
+                return result!;
+            }
+
+            return null!;
+        }
 
         public ImmutableArray<Checksum> PublicProduceChecksumsFromDelta(ProjectId projectId, int lastResultId, TagHelperDeltaResult deltaResult)
             => ProduceChecksumsFromDelta(projectId, lastResultId, deltaResult);

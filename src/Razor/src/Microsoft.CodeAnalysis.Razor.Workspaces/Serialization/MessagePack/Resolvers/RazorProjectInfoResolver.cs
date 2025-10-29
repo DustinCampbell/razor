@@ -54,7 +54,8 @@ internal sealed class RazorProjectInfoResolver : IFormatterResolver
             RequiredAttributeFormatter.Instance,
             TagHelperFormatter.Instance,
             TagMatchingRuleFormatter.Instance,
-            TypeNameObjectFormatter.Instance
+            TypeNameObjectFormatter.Instance,
+            TagHelperCollectionFormatter.Instance
         };
 
         public static object? GetFormatter(Type t)

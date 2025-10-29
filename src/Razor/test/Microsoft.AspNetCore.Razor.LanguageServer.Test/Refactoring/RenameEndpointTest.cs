@@ -617,15 +617,15 @@ public class RenameEndpointTest(ITestOutputHelper testOutput) : LanguageServerTe
         IEditMappingService? editMappingService = null,
         IClientConnection? clientConnection = null)
     {
-        using PooledArrayBuilder<TagHelperDescriptor> builder = [];
-        builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", RootNamespace1, "Component1"));
-        builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test", "Component2"));
-        builder.AddRange(CreateRazorComponentTagHelperDescriptors("Second", RootNamespace2, "Component3"));
-        builder.AddRange(CreateRazorComponentTagHelperDescriptors("Second", RootNamespace2, "Component4"));
-        builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test", "Component1337"));
-        builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test.Components", "Directory1"));
-        builder.AddRange(CreateRazorComponentTagHelperDescriptors("First", "Test.Components", "Directory2"));
-        var tagHelpers = builder.ToImmutable();
+        TagHelperCollection tagHelpers = [
+            .. CreateRazorComponentTagHelperDescriptors("First", RootNamespace1, "Component1"),
+            .. CreateRazorComponentTagHelperDescriptors("First", "Test", "Component2"),
+            .. CreateRazorComponentTagHelperDescriptors("Second", RootNamespace2, "Component3"),
+            .. CreateRazorComponentTagHelperDescriptors("Second", RootNamespace2, "Component4"),
+            .. CreateRazorComponentTagHelperDescriptors("First", "Test", "Component1337"),
+            .. CreateRazorComponentTagHelperDescriptors("First", "Test.Components", "Directory1"),
+            .. CreateRazorComponentTagHelperDescriptors("First", "Test.Components", "Directory2")
+        ];
 
         var projectManager = CreateProjectSnapshotManager();
 

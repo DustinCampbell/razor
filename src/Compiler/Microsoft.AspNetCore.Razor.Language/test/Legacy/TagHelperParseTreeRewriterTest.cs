@@ -1,10 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
 using Xunit;
 
@@ -12,31 +10,31 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy;
 
 public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
 {
-    public static TheoryData GetAttributeNameValuePairsData
+    private static KeyValuePair<string, string> KVP(string key, string value)
+        => KeyValuePair.Create(key, value);
+
+    public static TheoryData<string, ImmutableArray<KeyValuePair<string, string>>> GetAttributeNameValuePairsData
     {
         get
         {
-            Func<string, string, KeyValuePair<string, string>> kvp =
-                (key, value) => new KeyValuePair<string, string>(key, value);
-            var empty = Enumerable.Empty<KeyValuePair<string, string>>();
             var csharp = TagHelperParseTreeRewriter.Rewriter.InvalidAttributeValueMarker.ToString();
 
             // documentContent, expectedPairs
-            return new TheoryData<string, IEnumerable<KeyValuePair<string, string>>>
+            return new()
             {
-                { "<a>", empty },
-                { "<a @{ } href='~/home'>", new[] { kvp("href", "~/home") } },
-                { "<a href=\"@true\">", new[] { kvp("href", csharp) } },
-                { "<a href=\"prefix @true suffix\">", new[] { kvp("href", $"prefix{csharp} suffix") } },
-                { "<a href=~/home>", new[] { kvp("href", "~/home") } },
-                { "<a href=~/home @{ } nothing='something'>", new[] { kvp("href", "~/home"), kvp("nothing", "something") } },
+                { "<a>", [] },
+                { "<a @{ } href='~/home'>", [KVP("href", "~/home")] },
+                { "<a href=\"@true\">", [KVP("href", csharp)] },
+                { "<a href=\"prefix @true suffix\">", [KVP("href", $"prefix{csharp} suffix")] },
+                { "<a href=~/home>", [KVP("href", "~/home")] },
+                { "<a href=~/home @{ } nothing='something'>", [KVP("href", "~/home"), KVP("nothing", "something")] },
                 {
                     "<a href=\"@DateTime.Now::0\" class='btn btn-success' random>",
-                    new[] { kvp("href", $"{csharp}::0"), kvp("class", "btn btn-success"), kvp("random", "") }
+                    [KVP("href", $"{csharp}::0"), KVP("class", "btn btn-success"), KVP("random", "")]
                 },
-                { "<a href=>", new[] { kvp("href", "") } },
-                { "<a href='\">  ", new[] { kvp("href", "\">  ") } },
-                { "<a href'", new[] { kvp("href'", "") } },
+                { "<a href=>", [KVP("href", "")] },
+                { "<a href='\">  ", [KVP("href", "\">  ")] },
+                { "<a href'", [KVP("href'", "")] },
             };
         }
     }
@@ -45,7 +43,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [MemberData(nameof(GetAttributeNameValuePairsData))]
     public void GetAttributeNameValuePairs_ParsesPairsCorrectly(
         string documentContent,
-        IEnumerable<KeyValuePair<string, string>> expectedPairs)
+        ImmutableArray<KeyValuePair<string, string>> expectedPairs)
     {
         // Arrange
         using var errorSink = new ErrorSink();
@@ -63,10 +61,10 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
         var pairs = TagHelperParseTreeRewriter.Rewriter.GetAttributeNameValuePairs(element.StartTag);
 
         // Assert
-        Assert.Equal(expectedPairs, pairs);
+        Assert.Equal<KeyValuePair<string, string>>(expectedPairs, pairs);
     }
 
-    public static ImmutableArray<TagHelperDescriptor> PartialRequiredParentTags_Descriptors =
+    public static readonly TagHelperCollection PartialRequiredParentTags_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("StrongTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("strong"))
@@ -83,46 +81,40 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void UnderstandsPartialRequiredParentTags1()
     {
-        var document = "<p><strong>";
-        EvaluateData(PartialRequiredParentTags_Descriptors, document);
+        EvaluateData(PartialRequiredParentTags_Descriptors, "<p><strong>");
     }
 
     [Fact]
     public void UnderstandsPartialRequiredParentTags2()
     {
-        var document = "<p><strong></strong>";
-        EvaluateData(PartialRequiredParentTags_Descriptors, document);
+        EvaluateData(PartialRequiredParentTags_Descriptors, "<p><strong></strong>");
     }
 
     [Fact]
     public void UnderstandsPartialRequiredParentTags3()
     {
-        var document = "<p><strong></p><strong>";
-        EvaluateData(PartialRequiredParentTags_Descriptors, document);
+        EvaluateData(PartialRequiredParentTags_Descriptors, "<p><strong></p><strong>");
     }
 
     [Fact]
     public void UnderstandsPartialRequiredParentTags4()
     {
-        var document = "<<p><<strong></</strong</strong></p>";
-        EvaluateData(PartialRequiredParentTags_Descriptors, document);
+        EvaluateData(PartialRequiredParentTags_Descriptors, "<<p><<strong></</strong</strong></p>");
     }
 
     [Fact]
     public void UnderstandsPartialRequiredParentTags5()
     {
-        var document = "<<p><<strong></</strong></strong></p>";
-        EvaluateData(PartialRequiredParentTags_Descriptors, document);
+        EvaluateData(PartialRequiredParentTags_Descriptors, "<<p><<strong></</strong></strong></p>");
     }
 
     [Fact]
     public void UnderstandsPartialRequiredParentTags6()
     {
-        var document = "<<p><<custom></<</custom></custom></p>";
-        EvaluateData(PartialRequiredParentTags_Descriptors, document);
+        EvaluateData(PartialRequiredParentTags_Descriptors, "<<p><<custom></<</custom></custom></p>");
     }
 
-    public static ImmutableArray<TagHelperDescriptor> NestedVoidSelfClosingRequiredParent_Descriptors =
+    public static readonly TagHelperCollection NestedVoidSelfClosingRequiredParent_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
@@ -145,7 +137,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .Build(),
     ];
 
-    public static ImmutableArray<TagHelperDescriptor> CatchAllAttribute_Descriptors =
+    public static readonly TagHelperCollection CatchAllAttribute_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
@@ -160,67 +152,58 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void UnderstandsInvalidHtml()
     {
-        var document = @"<a onclick=""() => {}""><a/></a><strong>Miscolored!</strong>";
-        EvaluateData(CatchAllAttribute_Descriptors, document);
+        EvaluateData(CatchAllAttribute_Descriptors, @"<a onclick=""() => {}""><a/></a><strong>Miscolored!</strong>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent1()
     {
-        var document = "<input><strong></strong>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<input><strong></strong>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent2()
     {
-        var document = "<p><input><strong></strong></p>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<p><input><strong></strong></p>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent3()
     {
-        var document = "<p><br><strong></strong></p>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<p><br><strong></strong></p>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent4()
     {
-        var document = "<p><p><br></p><strong></strong></p>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<p><p><br></p><strong></strong></p>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent5()
     {
-        var document = "<input><strong></strong>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<input><strong></strong>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent6()
     {
-        var document = "<p><input /><strong /></p>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<p><input /><strong /></p>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent7()
     {
-        var document = "<p><br /><strong /></p>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<p><br /><strong /></p>");
     }
 
     [Fact]
     public void UnderstandsNestedVoidSelfClosingRequiredParent8()
     {
-        var document = "<p><p><br /></p><strong /></p>";
-        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, document);
+        EvaluateData(NestedVoidSelfClosingRequiredParent_Descriptors, "<p><p><br /></p><strong /></p>");
     }
 
-    public static ImmutableArray<TagHelperDescriptor> NestedRequiredParent_Descriptors =
+    public static readonly TagHelperCollection NestedRequiredParent_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("StrongTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
@@ -240,44 +223,37 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void UnderstandsNestedRequiredParent1()
     {
-        var document = "<strong></strong>";
-        EvaluateData(NestedRequiredParent_Descriptors, document);
+        EvaluateData(NestedRequiredParent_Descriptors, "<strong></strong>");
     }
 
     [Fact]
     public void UnderstandsNestedRequiredParent2()
     {
-        var document = "<p><strong></strong></p>";
-        EvaluateData(NestedRequiredParent_Descriptors, document);
+        EvaluateData(NestedRequiredParent_Descriptors, "<p><strong></strong></p>");
     }
 
     [Fact]
     public void UnderstandsNestedRequiredParent3()
     {
-        var document = "<div><strong></strong></div>";
-        EvaluateData(NestedRequiredParent_Descriptors, document);
+        EvaluateData(NestedRequiredParent_Descriptors, "<div><strong></strong></div>");
     }
 
     [Fact]
     public void UnderstandsNestedRequiredParent4()
     {
-        var document = "<strong><strong></strong></strong>";
-        EvaluateData(NestedRequiredParent_Descriptors, document);
+        EvaluateData(NestedRequiredParent_Descriptors, "<strong><strong></strong></strong>");
     }
 
     [Fact]
     public void UnderstandsNestedRequiredParent5()
     {
-        var document = "<p><strong><strong></strong></strong></p>";
-        EvaluateData(NestedRequiredParent_Descriptors, document);
+        EvaluateData(NestedRequiredParent_Descriptors, "<p><strong><strong></strong></strong></p>");
     }
 
     [Fact]
     public void UnderstandsTagHelperPrefixAndAllowedChildren()
     {
-        // Arrange
-        var documentContent = "<th:p><th:strong></th:strong></th:p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -288,19 +264,16 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(
-            descriptors,
-            documentContent,
+        EvaluateData(tagHelpers, """
+            <th:p><th:strong></th:strong></th:p>
+            """,
             tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void UnderstandsTagHelperPrefixAndAllowedChildrenAndRequireParent()
     {
-        // Arrange
-        var documentContent = "<th:p><th:strong></th:strong></th:p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -311,10 +284,9 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(
-            descriptors,
-            documentContent,
+        EvaluateData(tagHelpers, """
+            <th:p><th:strong></th:strong></th:p>
+            """,
             tagHelperPrefix: "th:");
     }
 
@@ -322,9 +294,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     public void InvalidStructure_UnderstandsTHPrefixAndAllowedChildrenAndRequireParent()
     {
         // Rewrite_InvalidStructure_UnderstandsTagHelperPrefixAndAllowedChildrenAndRequireParent
-        // Arrange
-        var documentContent = "<th:p></th:strong></th:p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -335,10 +305,9 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(
-            descriptors,
-            documentContent,
+        EvaluateData(tagHelpers, """
+            <th:p></th:strong></th:p>
+            """,
             tagHelperPrefix: "th:");
     }
 
@@ -346,8 +315,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     public void NonTagHelperChild_UnderstandsTagHelperPrefixAndAllowedChildren()
     {
         // Arrange
-        var documentContent = "<th:p><strong></strong></th:p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -356,80 +324,72 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
         ];
 
         // Act & Assert
-        EvaluateData(
-            descriptors,
-            documentContent,
+        EvaluateData(tagHelpers, """
+            <th:p><strong></strong></th:p>
+            """,
             tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void DoesNotUnderstandTagHelpersInInvalidHtmlTypedScriptTags1()
     {
-        var document = "<script type><input /></script>";
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest("<script type><input /></script>",
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void DoesNotUnderstandTagHelpersInInvalidHtmlTypedScriptTags2()
     {
-        var document = "<script types='text/html'><input /></script>";
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest("<script types='text/html'><input /></script>",
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void DoesNotUnderstandTagHelpersInInvalidHtmlTypedScriptTags3()
     {
-        var document = "<script type='text/html invalid'><input /></script>";
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest("<script type='text/html invalid'><input /></script>",
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void DoesNotUnderstandTagHelpersInInvalidHtmlTypedScriptTags4()
     {
-        var document = "<script type='text/ng-*' type='text/html'><input /></script>";
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest("<script type='text/ng-*' type='text/html'><input /></script>",
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void UnderstandsTagHelpersInHtmlTypedScriptTags1()
     {
-        var document = "<script type='text/html'><input /></script>";
-        RunParseTreeRewriterTest(document, "p", "input");
+        RunParseTreeRewriterTest("<script type='text/html'><input /></script>",
+            tagNames: ["p", "input"]);
     }
 
     [Fact]
     public void UnderstandsTagHelpersInHtmlTypedScriptTags2()
     {
-        var document = "<script id='scriptTag' type='text/html' class='something'><input /></script>";
-        RunParseTreeRewriterTest(document, "p", "input");
+        RunParseTreeRewriterTest("<script id='scriptTag' type='text/html' class='something'><input /></script>",
+            tagNames: ["p", "input"]);
     }
 
     [Fact]
     public void UnderstandsTagHelpersInHtmlTypedScriptTags3()
     {
-        var document = "<script type='text/html'><p><script type='text/html'><input /></script></p></script>";
-        RunParseTreeRewriterTest(document, "p", "input");
+        RunParseTreeRewriterTest("<script type='text/html'><p><script type='text/html'><input /></script></p></script>",
+            tagNames: ["p", "input"]);
     }
 
     [Fact]
     public void UnderstandsTagHelpersInHtmlTypedScriptTags4()
     {
-        var document = "<script type='text/html'><p><script type='text/ html'><input /></script></p></script>";
-        RunParseTreeRewriterTest(document, "p", "input");
+        RunParseTreeRewriterTest("<script type='text/html'><p><script type='text/ html'><input /></script></p></script>",
+            tagNames: ["p", "input"]);
     }
 
     [Fact]
     public void CanHandleInvalidChildrenWithWhitespace()
     {
-        // Arrange
-        var documentContent = """
-            <p>
-                <strong>
-                    Hello
-                </strong>
-            </p>
-            """;
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -437,16 +397,19 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, """
+            <p>
+                <strong>
+                    Hello
+                </strong>
+            </p>
+            """);
     }
 
     [Fact]
     public void RecoversWhenRequiredAttributeMismatchAndRestrictedChildren()
     {
-        // Arrange
-        var documentContent = "<strong required><strong></strong></strong>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("StrongTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule =>
@@ -457,16 +420,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<strong required><strong></strong></strong>");
     }
 
     [Fact]
     public void CanHandleMultipleTagHelpersWithAllowedChildren_OneNull()
     {
-        // Arrange
-        var documentContent = "<p><strong>Hello World</strong><br></p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper1", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -487,16 +447,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><strong>Hello World</strong><br></p>");
     }
 
     [Fact]
     public void CanHandleMultipleTagHelpersWithAllowedChildren()
     {
-        // Arrange
-        var documentContent = "<p><strong>Hello World</strong><br></p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper1", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -517,169 +474,126 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><strong>Hello World</strong><br></p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren1()
     {
-        // Arrange
-        var documentContent = "<p><br /></p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["br"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["br"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><br /></p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren2()
     {
-        // Arrange
-        var documentContent = $"""
+        var tagHelpers = GetAllowedChildrenTagHelpers(["br"]);
+
+        EvaluateData(tagHelpers, """
             <p>
             <br />
             </p>
-            """;
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["br"]);
-
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+            """);
     }
 
     [Fact]
     public void UnderstandsAllowedChildren3()
     {
-        // Arrange
-        var documentContent = "<p><br></p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["strong"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["strong"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><br></p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren4()
     {
-        // Arrange
-        var documentContent = "<p>Hello</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["strong"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["strong"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p>Hello</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren5()
     {
-        // Arrange
-        var documentContent = "<p><hr /></p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["br", "strong"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["br", "strong"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><hr /></p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren6()
     {
-        // Arrange
-        var documentContent = "<p><br>Hello</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["strong"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["strong"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><br>Hello</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren7()
     {
-        // Arrange
-        var documentContent = "<p><strong>Title:</strong><br />Something</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["strong"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["strong"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><strong>Title:</strong><br />Something</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren8()
     {
-        // Arrange
-        var documentContent = "<p><strong>Title:</strong><br />Something</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["strong", "br"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["strong", "br"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><strong>Title:</strong><br />Something</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren9()
     {
-        // Arrange
-        var documentContent = "<p>  <strong>Title:</strong>  <br />  Something</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["strong", "br"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["strong", "br"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p>  <strong>Title:</strong>  <br />  Something</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren10()
     {
-        // Arrange
-        var documentContent = "<p><strong>Title:<br><em>A Very Cool</em></strong><br />Something</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["strong"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["strong"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><strong>Title:<br><em>A Very Cool</em></strong><br />Something</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren11()
     {
-        // Arrange
-        var documentContent = "<p><custom>Title:<br><em>A Very Cool</em></custom><br />Something</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["custom"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["custom"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><custom>Title:<br><em>A Very Cool</em></custom><br />Something</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren12()
     {
-        // Arrange
-        var documentContent = "<p></</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["custom"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["custom"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p></</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren13()
     {
-        // Arrange
-        var documentContent = "<p><</p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["custom"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["custom"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><</p>");
     }
 
     [Fact]
     public void UnderstandsAllowedChildren14()
     {
-        // Arrange
-        var documentContent = "<p><custom><br>:<strong><strong>Hello</strong></strong>:<input></custom></p>";
-        var descriptors = GetAllowedChildrenTagHelperDescriptors(["custom", "strong"]);
+        var tagHelpers = GetAllowedChildrenTagHelpers(["custom", "strong"]);
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p><custom><br>:<strong><strong>Hello</strong></strong>:<input></custom></p>");
     }
 
-    private static ImmutableArray<TagHelperDescriptor> GetAllowedChildrenTagHelperDescriptors(string[] allowedChildren)
+    private static TagHelperCollection GetAllowedChildrenTagHelpers(string[] allowedChildren)
     {
         var pTagHelperBuilder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"));
@@ -708,54 +622,23 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void AllowsSimpleHtmlCommentsAsChildren()
     {
-        // Arrange
-        var allowedChildren = new List<string> { "b" };
-        var literal = "asdf";
-        var commentOutput = "Hello World";
-        var document = $"<p><b>{literal}</b><!--{commentOutput}--></p>";
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
+            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AllowChildTag("b")
+            .Build();
 
-        var pTagHelperBuilder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"));
-
-        foreach (var childTag in allowedChildren)
-        {
-            pTagHelperBuilder.AllowChildTag(childTag);
-        }
-
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
-            pTagHelperBuilder.Build()
-        ];
-
-        // Act & Assert
-        EvaluateData(descriptors, document);
+        EvaluateData([tagHelper], "<p><b>asdf</b><!--Hello World--></p>");
     }
 
     [Fact]
     public void DoesntAllowSimpleHtmlCommentsAsChildrenWhenFeatureFlagIsOff()
     {
-        // Arrange
-        var allowedChildren = new List<string> { "b" };
-        var comment1 = "Hello";
-        var document = $"<p><!--{comment1}--></p>";
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
+            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AllowChildTag("b")
+            .Build();
 
-        var pTagHelperBuilder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"));
-
-        foreach (var childTag in allowedChildren)
-        {
-            pTagHelperBuilder.AllowChildTag(childTag);
-        }
-
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
-            pTagHelperBuilder.Build()
-        ];
-
-        // Act & Assert
-        EvaluateData(
-            descriptors,
-            document,
+        EvaluateData([tagHelper], "<p><!--Hello--></p>",
             languageVersion: RazorLanguageVersion.Version_2_0,
             fileKind: RazorFileKind.Legacy);
     }
@@ -763,91 +646,41 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void FailsForContentWithCommentsAsChildren()
     {
-        // Arrange
-        var allowedChildren = new List<string> { "b" };
-        var comment1 = "Hello";
-        var literal = "asdf";
-        var comment2 = "World";
-        var document = $"<p><!--{comment1}-->{literal}<!--{comment2}--></p>";
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
+            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AllowChildTag("b")
+            .Build();
 
-        var pTagHelperBuilder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"));
-
-        foreach (var childTag in allowedChildren)
-        {
-            pTagHelperBuilder.AllowChildTag(childTag);
-        }
-
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
-            pTagHelperBuilder.Build()
-        ];
-
-        // Act & Assert
-        EvaluateData(descriptors, document);
+        EvaluateData([tagHelper], "<p><!--Hello-->asdf<!--World--></p>");
     }
 
     [Fact]
     public void AllowsRazorCommentsAsChildren()
     {
-        // Arrange
-        var allowedChildren = new List<string> { "b" };
-        var literal = "asdf";
-        var commentOutput = $"@*{literal}*@";
-        var document = $"<p><b>{literal}</b>{commentOutput}</p>";
-
-        var pTagHelperBuilder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"));
-
-        foreach (var childTag in allowedChildren)
-        {
-            pTagHelperBuilder.AllowChildTag(childTag);
-        }
-
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
-            pTagHelperBuilder.Build()
-        ];
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
+            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AllowChildTag("b")
+            .Build();
 
         // Act & Assert
-        EvaluateData(descriptors, document);
+        EvaluateData([tagHelper], "<p><b>asdf</b>@*asdf*@</p>");
     }
 
     [Fact]
     public void AllowsRazorMarkupInHtmlComment()
     {
-        // Arrange
-        var allowedChildren = new List<string> { "b" };
-        var literal = "asdf";
-        var part1 = "Hello ";
-        var part2 = "World";
-        var commentStart = "<!--";
-        var commentEnd = "-->";
-        var document = $"<p><b>{literal}</b>{commentStart}{part1}@{part2}{commentEnd}</p>";
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
+            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AllowChildTag("b")
+            .Build();
 
-        var pTagHelperBuilder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"));
-
-        foreach (var childTag in allowedChildren)
-        {
-            pTagHelperBuilder.AllowChildTag(childTag);
-        }
-
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
-            pTagHelperBuilder.Build()
-        ];
-
-        // Act & Assert
-        EvaluateData(descriptors, document);
+        EvaluateData([tagHelper], "<p><b>asdf}</b><!--Hello @World--></p>");
     }
 
     [Fact]
     public void UnderstandsNullTagNameWithAllowedChildrenForCatchAll()
     {
-        // Arrange
-        var documentContent = "<p></</p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -858,16 +691,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<p></</p>");
     }
 
     [Fact]
     public void UnderstandsNullTagNameWithAllowedChildrenForCatchAllWithPrefix()
     {
-        // Arrange
-        var documentContent = "<th:p></</th:p>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
@@ -878,16 +708,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent, "th:");
+        EvaluateData(tagHelpers, "<th:p></</th:p>", "th:");
     }
 
     [Fact]
     public void CanHandleStartTagOnlyTagTagMode()
     {
-        // Arrange
-        var documentContent = "<input>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule =>
@@ -897,16 +724,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<input>");
     }
 
     [Fact]
     public void CreatesErrorForWithoutEndTagTagStructureForEndTags()
     {
-        // Arrange
-        var documentContent = "</input>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule =>
@@ -916,16 +740,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "</input>");
     }
 
     [Fact]
     public void CreatesErrorForInconsistentTagStructures()
     {
-        // Arrange
-        var documentContent = "<input>";
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper1", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule =>
@@ -941,11 +762,10 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, documentContent);
+        EvaluateData(tagHelpers, "<input>");
     }
 
-    public static ImmutableArray<TagHelperDescriptor> RequiredAttribute_Descriptors =
+    public static readonly TagHelperCollection RequiredAttribute_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("pTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
@@ -1148,7 +968,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
         EvaluateData(RequiredAttribute_Descriptors, "<div style=\"\" class=\"btn\" catchAll=\"hi\" >words<strong>and</strong>spaces</div>");
     }
 
-    public static ImmutableArray<TagHelperDescriptor> NestedRequiredAttribute_Descriptors =
+    public static readonly TagHelperCollection NestedRequiredAttribute_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("pTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
@@ -1224,7 +1044,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
         EvaluateData(NestedRequiredAttribute_Descriptors, "<strong catchAll=\"hi\"><strong><strong><strong catchAll=\"hi\"><strong></strong></strong></strong></strong></strong>");
     }
 
-    public static ImmutableArray<TagHelperDescriptor> MalformedRequiredAttribute_Descriptors =
+    public static readonly TagHelperCollection MalformedRequiredAttribute_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("pTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
@@ -1297,11 +1117,10 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void RequiredAttributeDescriptorsCreateMalformedTagHelperBlocksCorrectly11()
     {
-        var document = "<p class='foo'>@if(true){</p>}</p>";
-        EvaluateData(MalformedRequiredAttribute_Descriptors, document);
+        EvaluateData(MalformedRequiredAttribute_Descriptors, "<p class='foo'>@if(true){</p>}</p>");
     }
 
-    public static ImmutableArray<TagHelperDescriptor> PrefixedTagHelperColon_Descriptors =
+    public static readonly TagHelperCollection PrefixedTagHelperColon_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("mythTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("myth"))
@@ -1316,7 +1135,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .Build()
     ];
 
-    public static ImmutableArray<TagHelperDescriptor> PrefixedTagHelperCatchAll_Descriptors =
+    public static readonly TagHelperCollection PrefixedTagHelperCatchAll_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("mythTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("*"))
@@ -1326,577 +1145,673 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void AllowsPrefixedTagHelpers1()
     {
-        EvaluateData(PrefixedTagHelperCatchAll_Descriptors, "<th: />", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperCatchAll_Descriptors, "<th: />",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers2()
     {
-        EvaluateData(PrefixedTagHelperCatchAll_Descriptors, "<th:>words and spaces</th:>", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperCatchAll_Descriptors, "<th:>words and spaces</th:>",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers3()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth />", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth />",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers4()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth></th:myth>", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth></th:myth>",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers5()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth><th:my2th></th:my2th></th:myth>", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth><th:my2th></th:my2th></th:myth>",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers6()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<!th:myth />", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<!th:myth />",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers7()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<!th:myth></!th:myth>", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<!th:myth></!th:myth>",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers8()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth class=\"btn\" />", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth class=\"btn\" />",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers9()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth2 class=\"btn\" />", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth2 class=\"btn\" />",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers10()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth class=\"btn\">words and spaces</th:myth>", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth class=\"btn\">words and spaces</th:myth>",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsPrefixedTagHelpers11()
     {
-        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth2 bound=\"@DateTime.Now\" />", tagHelperPrefix: "th:");
+        EvaluateData(PrefixedTagHelperColon_Descriptors, "<th:myth2 bound=\"@DateTime.Now\" />",
+            tagHelperPrefix: "th:");
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithAttrTextTag1()
     {
-        RunParseTreeRewriterTest("@{<!text class=\"btn\">}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text class=\"btn\">}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithAttrTextTag2()
     {
-        RunParseTreeRewriterTest("@{<!text class=\"btn\"></!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text class=\"btn\"></!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithAttrTextTag3()
     {
-        RunParseTreeRewriterTest("@{<!text class=\"btn\">words with spaces</!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text class=\"btn\">words with spaces</!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithAttrTextTag4()
     {
-        RunParseTreeRewriterTest("@{<!text class='btn1 btn2' class2=btn></!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text class='btn1 btn2' class2=btn></!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithAttrTextTag5()
     {
-        RunParseTreeRewriterTest("@{<!text class='btn1 @DateTime.Now btn2'></!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text class='btn1 @DateTime.Now btn2'></!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag1()
     {
-        RunParseTreeRewriterTest("@{<!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag2()
     {
-        RunParseTreeRewriterTest("@{</!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{</!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag3()
     {
-        RunParseTreeRewriterTest("@{<!text></!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text></!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag4()
     {
-        RunParseTreeRewriterTest("@{<!text>words and spaces</!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text>words and spaces</!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag5()
     {
-        RunParseTreeRewriterTest("@{<!text></text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text></text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag6()
     {
-        RunParseTreeRewriterTest("@{<text></!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<text></!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag7()
     {
-        RunParseTreeRewriterTest("@{<!text><text></text></!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text><text></text></!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag8()
     {
-        RunParseTreeRewriterTest("@{<text><!text></!text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<text><!text></!text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTHElementOptForCompleteTextTagInCSharpBlock_WithBlockTextTag9()
     {
-        RunParseTreeRewriterTest("@{<!text></!text></text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<!text></!text></text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteTextTagInCSharpBlock1()
     {
-        RunParseTreeRewriterTest("@{<!text}", "text");
+        RunParseTreeRewriterTest("@{<!text}",
+            tagNames: ["text"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteTextTagInCSharpBlock2()
     {
-        RunParseTreeRewriterTest("@{<!text /}", "text");
+        RunParseTreeRewriterTest("@{<!text /}",
+            tagNames: ["text"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteTextTagInCSharpBlock3()
     {
-        RunParseTreeRewriterTest("@{<!text class=}", "text");
+        RunParseTreeRewriterTest("@{<!text class=}",
+            tagNames: ["text"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteTextTagInCSharpBlock4()
     {
-        RunParseTreeRewriterTest("@{<!text class=\"btn}", "text");
+        RunParseTreeRewriterTest("@{<!text class=\"btn}",
+            tagNames: ["text"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteTextTagInCSharpBlock5()
     {
-        RunParseTreeRewriterTest("@{<!text class=\"btn\"}", "text");
+        RunParseTreeRewriterTest("@{<!text class=\"btn\"}",
+            tagNames: ["text"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteTextTagInCSharpBlock6()
     {
-        RunParseTreeRewriterTest("@{<!text class=\"btn\" /}", "text");
+        RunParseTreeRewriterTest("@{<!text class=\"btn\" /}",
+            tagNames: ["text"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock1()
     {
-        RunParseTreeRewriterTest("@{<!}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock2()
     {
-        RunParseTreeRewriterTest("@{<!p}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock3()
     {
-        RunParseTreeRewriterTest("@{<!p /}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p /}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock4()
     {
-        RunParseTreeRewriterTest("@{<!p class=}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock5()
     {
-        RunParseTreeRewriterTest("@{<!p class=\"btn}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=\"btn}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock6()
     {
-        RunParseTreeRewriterTest("@{<!p class=\"btn@@}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=\"btn@@}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock7()
     {
-        RunParseTreeRewriterTest("@{<!p class=\"btn\"}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=\"btn\"}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTMLInCSharpBlock8()
     {
-        RunParseTreeRewriterTest("@{<!p class=\"btn\" /}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=\"btn\" /}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTML1()
     {
-        RunParseTreeRewriterTest("<!", "strong", "p");
+        RunParseTreeRewriterTest("<!",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTML2()
     {
-        RunParseTreeRewriterTest("<!p", "strong", "p");
+        RunParseTreeRewriterTest("<!p",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTML3()
     {
-        RunParseTreeRewriterTest("<!p /", "strong", "p");
+        RunParseTreeRewriterTest("<!p /",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTML4()
     {
-        RunParseTreeRewriterTest("<!p class=", "strong", "p");
+        RunParseTreeRewriterTest("<!p class=",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTML5()
     {
-        RunParseTreeRewriterTest("<!p class=\"btn", "strong", "p");
+        RunParseTreeRewriterTest("<!p class=\"btn",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTML6()
     {
-        RunParseTreeRewriterTest("<!p class=\"btn\"", "strong", "p");
+        RunParseTreeRewriterTest("<!p class=\"btn\"",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptForIncompleteHTML7()
     {
-        RunParseTreeRewriterTest("<!p class=\"btn\" /", "strong", "p");
+        RunParseTreeRewriterTest("<!p class=\"btn\" /",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData1()
     {
-        RunParseTreeRewriterTest("@{<!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData2()
     {
-        RunParseTreeRewriterTest("@{</!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{</!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData3()
     {
-        RunParseTreeRewriterTest("@{<!p></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData4()
     {
-        RunParseTreeRewriterTest("@{<!p>words and spaces</!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p>words and spaces</!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData5()
     {
-        RunParseTreeRewriterTest("@{<!p></p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p></p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData6()
     {
-        RunParseTreeRewriterTest("@{<p></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<p></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData7()
     {
-        RunParseTreeRewriterTest("@{<p><!p></!p></p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<p><!p></!p></p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData8()
     {
-        RunParseTreeRewriterTest("@{<p><!p></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<p><!p></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData9()
     {
-        RunParseTreeRewriterTest("@{<!p></!p></p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p></!p></p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData10()
     {
-        RunParseTreeRewriterTest("@{<strong></!p></strong>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<strong></!p></strong>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData11()
     {
-        RunParseTreeRewriterTest("@{<strong></strong><!p></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<strong></strong><!p></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithBlockData12()
     {
-        RunParseTreeRewriterTest("@{<p><strong></!strong><!p></strong></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<p><strong></!strong><!p></strong></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithAttributeData1()
     {
-        RunParseTreeRewriterTest("@{<!p class=\"btn\">}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=\"btn\">}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithAttributeData2()
     {
-        RunParseTreeRewriterTest("@{<!p class=\"btn\"></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=\"btn\"></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithAttributeData3()
     {
-        RunParseTreeRewriterTest("@{<!p class=\"btn\">words with spaces</!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class=\"btn\">words with spaces</!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithAttributeData4()
     {
-        RunParseTreeRewriterTest("@{<!p class='btn1 btn2' class2=btn></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class='btn1 btn2' class2=btn></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutCSharp_WithAttributeData5()
     {
-        RunParseTreeRewriterTest("@{<!p class='btn1 @DateTime.Now btn2'></!p>}", "strong", "p");
+        RunParseTreeRewriterTest("@{<!p class='btn1 @DateTime.Now btn2'></!p>}",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData1()
     {
-        RunParseTreeRewriterTest("<!p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData2()
     {
-        RunParseTreeRewriterTest("</!p>", "strong", "p");
+        RunParseTreeRewriterTest("</!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData3()
     {
-        RunParseTreeRewriterTest("<!p></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData4()
     {
-        RunParseTreeRewriterTest("<!p>words and spaces</!p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p>words and spaces</!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData5()
     {
-        RunParseTreeRewriterTest("<!p></p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p></p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData6()
     {
-        RunParseTreeRewriterTest("<p></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<p></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData7()
     {
-        RunParseTreeRewriterTest("<p><!p></!p></p>", "strong", "p");
+        RunParseTreeRewriterTest("<p><!p></!p></p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData8()
     {
-        RunParseTreeRewriterTest("<p><!p></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<p><!p></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData9()
     {
-        RunParseTreeRewriterTest("<!p></!p></p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p></!p></p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData10()
     {
-        RunParseTreeRewriterTest("<strong></!p></strong>", "strong", "p");
+        RunParseTreeRewriterTest("<strong></!p></strong>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData11()
     {
-        RunParseTreeRewriterTest("<strong></strong><!p></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<strong></strong><!p></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithBlockData12()
     {
-        RunParseTreeRewriterTest("<p><strong></!strong><!p></strong></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<p><strong></!strong><!p></strong></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithAttributeData1()
     {
-        RunParseTreeRewriterTest("<!p class=\"btn\">", "strong", "p");
+        RunParseTreeRewriterTest("<!p class=\"btn\">",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithAttributeData2()
     {
-        RunParseTreeRewriterTest("<!p class=\"btn\"></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p class=\"btn\"></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithAttributeData3()
     {
-        RunParseTreeRewriterTest("<!p class=\"btn\">words and spaces</!p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p class=\"btn\">words and spaces</!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithAttributeData4()
     {
-        RunParseTreeRewriterTest("<!p class='btn1 btn2' class2=btn></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p class='btn1 btn2' class2=btn></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void AllowsTagHelperElementOptOutHTML_WithAttributeData5()
     {
-        RunParseTreeRewriterTest("<!p class='btn1 @DateTime.Now btn2'></!p>", "strong", "p");
+        RunParseTreeRewriterTest("<!p class='btn1 @DateTime.Now btn2'></!p>",
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void DoesNotRewriteTextTagTransitionTagHelpers1()
     {
-        RunParseTreeRewriterTest("<text>Hello World</text>", "p", "text");
+        RunParseTreeRewriterTest("<text>Hello World</text>",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void DoesNotRewriteTextTagTransitionTagHelpers2()
     {
-        RunParseTreeRewriterTest("@{<text>Hello World</text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<text>Hello World</text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void DoesNotRewriteTextTagTransitionTagHelpers3()
     {
-        RunParseTreeRewriterTest("@{<text><p>Hello World</p></text>}", "p", "text");
+        RunParseTreeRewriterTest("@{<text><p>Hello World</p></text>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void DoesNotRewriteTextTagTransitionTagHelpers4()
     {
-        RunParseTreeRewriterTest("@{<p><text>Hello World</text></p>}", "p", "text");
+        RunParseTreeRewriterTest("@{<p><text>Hello World</text></p>}",
+            tagNames: ["p", "text"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers1()
     {
-        RunParseTreeRewriterTest("<foo><!-- Hello World --></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><!-- Hello World --></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers2()
     {
-        RunParseTreeRewriterTest("<foo><!-- @foo --></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><!-- @foo --></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers3()
     {
-        RunParseTreeRewriterTest("<foo><?xml Hello World ?></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><?xml Hello World ?></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers4()
     {
-        RunParseTreeRewriterTest("<foo><?xml @foo ?></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><?xml @foo ?></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers5()
     {
-        RunParseTreeRewriterTest("<foo><!DOCTYPE @foo ></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><!DOCTYPE @foo ></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers6()
     {
-        RunParseTreeRewriterTest("<foo><!DOCTYPE hello=\"world\" ></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><!DOCTYPE hello=\"world\" ></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers7()
     {
-        RunParseTreeRewriterTest("<foo><![CDATA[ Hello World ]]></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><![CDATA[ Hello World ]]></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void DoesNotRewriteSpecialTagTagHelpers8()
     {
-        RunParseTreeRewriterTest("<foo><![CDATA[ @foo ]]></foo>", "!--", "?xml", "![CDATA[", "!DOCTYPE");
+        RunParseTreeRewriterTest("<foo><![CDATA[ @foo ]]></foo>",
+            tagNames: ["!--", "?xml", "![CDATA[", "!DOCTYPE"]);
     }
 
     [Fact]
     public void RewritesNestedTagHelperTagBlocks1()
     {
-        RunParseTreeRewriterTest("<p><div></div></p>", "p", "div");
+        RunParseTreeRewriterTest("<p><div></div></p>",
+            tagNames: ["p", "div"]);
     }
 
     [Fact]
     public void RewritesNestedTagHelperTagBlocks2()
     {
-        RunParseTreeRewriterTest("<p>Hello World <div></div></p>", "p", "div");
+        RunParseTreeRewriterTest("<p>Hello World <div></div></p>",
+            tagNames: ["p", "div"]);
     }
 
     [Fact]
     public void RewritesNestedTagHelperTagBlocks3()
     {
-        RunParseTreeRewriterTest("<p>Hel<p>lo</p></p> <p><div>World</div></p>", "p", "div");
+        RunParseTreeRewriterTest("<p>Hel<p>lo</p></p> <p><div>World</div></p>",
+            tagNames: ["p", "div"]);
     }
 
     [Fact]
     public void RewritesNestedTagHelperTagBlocks4()
     {
-        RunParseTreeRewriterTest("<p>Hel<strong>lo</strong></p> <p><span>World</span></p>", "p", "div");
+        RunParseTreeRewriterTest("<p>Hel<strong>lo</strong></p> <p><span>World</span></p>",
+            tagNames: ["p", "div"]);
     }
 
     [Fact]
@@ -1911,7 +1826,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
         RunParseTreeRewriterTest("<input>Foo</input>");
     }
 
-    public static ImmutableArray<TagHelperDescriptor> CaseSensitive_Descriptors =
+    public static readonly TagHelperCollection CaseSensitive_Descriptors =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("pTagHelper", "SomeAssembly")
             .SetCaseSensitive()

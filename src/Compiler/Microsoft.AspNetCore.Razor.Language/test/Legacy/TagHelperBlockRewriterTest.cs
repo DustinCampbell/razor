@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
 using Microsoft.AspNetCore.Razor.Language.Components;
 using Roslyn.Test.Utilities;
 using Xunit;
@@ -13,7 +11,7 @@ namespace Microsoft.AspNetCore.Razor.Language.Legacy;
 
 public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
 {
-    public static ImmutableArray<TagHelperDescriptor> SymbolBoundAttributes_Descriptors =
+    public static readonly TagHelperCollection SymbolBoundAttributes_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
@@ -49,46 +47,60 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void CanHandleSymbolBoundAttributes1()
     {
-        EvaluateData(SymbolBoundAttributes_Descriptors, "<ul bound [item]='items'></ul>");
+        EvaluateData(SymbolBoundAttributes_TagHelpers, """
+            <ul bound [item]='items'></ul>
+            """);
     }
 
     [Fact]
     public void CanHandleSymbolBoundAttributes2()
     {
-        EvaluateData(SymbolBoundAttributes_Descriptors, "<ul bound [(item)]='items'></ul>");
+        EvaluateData(SymbolBoundAttributes_TagHelpers, """
+            <ul bound [(item)]='items'></ul>
+            """);
     }
 
     [Fact]
     public void CanHandleSymbolBoundAttributes3()
     {
-        EvaluateData(SymbolBoundAttributes_Descriptors, "<button bound (click)='doSomething()'>Click Me</button>");
+        EvaluateData(SymbolBoundAttributes_TagHelpers, """
+            <button bound (click)='doSomething()'>Click Me</button>
+            """);
     }
 
     [Fact]
     public void CanHandleSymbolBoundAttributes4()
     {
-        EvaluateData(SymbolBoundAttributes_Descriptors, "<button bound (^click)='doSomething()'>Click Me</button>");
+        EvaluateData(SymbolBoundAttributes_TagHelpers, """
+            <button bound (^click)='doSomething()'>Click Me</button>
+            """);
     }
 
     [Fact]
     public void CanHandleSymbolBoundAttributes5()
     {
-        EvaluateData(SymbolBoundAttributes_Descriptors, "<template bound *something='value'></template>");
+        EvaluateData(SymbolBoundAttributes_TagHelpers, """
+            <template bound *something='value'></template>
+            """);
     }
 
     [Fact]
     public void CanHandleSymbolBoundAttributes6()
     {
-        EvaluateData(SymbolBoundAttributes_Descriptors, "<div bound #localminimized></div>");
+        EvaluateData(SymbolBoundAttributes_TagHelpers, """
+            <div bound #localminimized></div>
+            """);
     }
 
     [Fact]
     public void CanHandleSymbolBoundAttributes7()
     {
-        EvaluateData(SymbolBoundAttributes_Descriptors, "<div bound #local='value'></div>");
+        EvaluateData(SymbolBoundAttributes_TagHelpers, """
+            <div bound #local='value'></div>
+            """);
     }
 
-    public static ImmutableArray<TagHelperDescriptor> WithoutEndTag_Descriptors =
+    public static readonly TagHelperCollection WithoutEndTag_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
@@ -100,34 +112,44 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void CanHandleWithoutEndTagTagStructure1()
     {
-        EvaluateData(WithoutEndTag_Descriptors, "<input>");
+        EvaluateData(WithoutEndTag_TagHelpers, """
+            <input>
+            """);
     }
 
     [Fact]
     public void CanHandleWithoutEndTagTagStructure2()
     {
-        EvaluateData(WithoutEndTag_Descriptors, "<input type='text'>");
+        EvaluateData(WithoutEndTag_TagHelpers, """
+            <input type='text'>
+            """);
     }
 
     [Fact]
     public void CanHandleWithoutEndTagTagStructure3()
     {
-        EvaluateData(WithoutEndTag_Descriptors, "<input><input>");
+        EvaluateData(WithoutEndTag_TagHelpers, """
+            <input><input>
+            """);
     }
 
     [Fact]
     public void CanHandleWithoutEndTagTagStructure4()
     {
-        EvaluateData(WithoutEndTag_Descriptors, "<input type='text'><input>");
+        EvaluateData(WithoutEndTag_TagHelpers, """
+            <input type='text'><input>
+            """);
     }
 
     [Fact]
     public void CanHandleWithoutEndTagTagStructure5()
     {
-        EvaluateData(WithoutEndTag_Descriptors, "<div><input><input></div>");
+        EvaluateData(WithoutEndTag_TagHelpers, """
+            <div><input><input></div>
+            """);
     }
 
-    public static ImmutableArray<TagHelperDescriptor> GetTagStructureCompatibilityDescriptors(TagStructure structure1, TagStructure structure2)
+    public static TagHelperCollection GetTagStructureCompatibilityTagHelpers(TagStructure structure1, TagStructure structure2)
     {
         return
         [
@@ -147,88 +169,87 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void AllowsCompatibleTagStructures1()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.Unspecified, TagStructure.Unspecified);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.Unspecified, TagStructure.Unspecified);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input></input>");
+        EvaluateData(tagHelpers, """
+            <input></input>
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures2()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.Unspecified, TagStructure.Unspecified);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.Unspecified, TagStructure.Unspecified);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input />");
+        EvaluateData(tagHelpers, """
+            <input />
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures3()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.Unspecified, TagStructure.WithoutEndTag);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.Unspecified, TagStructure.WithoutEndTag);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input type='text'>");
+        EvaluateData(tagHelpers, """
+            <input type='text'>
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures4()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.WithoutEndTag, TagStructure.WithoutEndTag);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.WithoutEndTag, TagStructure.WithoutEndTag);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input><input>");
+        EvaluateData(tagHelpers, """
+            <input><input>
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures5()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.Unspecified, TagStructure.NormalOrSelfClosing);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.Unspecified, TagStructure.NormalOrSelfClosing);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input type='text'></input>");
+        EvaluateData(tagHelpers, """
+            <input type='text'></input>
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures6()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.Unspecified, TagStructure.WithoutEndTag);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.Unspecified, TagStructure.WithoutEndTag);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input />");
+        EvaluateData(tagHelpers, """
+            <input />
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures7()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.NormalOrSelfClosing, TagStructure.Unspecified);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.NormalOrSelfClosing, TagStructure.Unspecified);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input />");
+        EvaluateData(tagHelpers, """
+            <input />
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures8()
     {
-        // Arrange
-        var descriptors = GetTagStructureCompatibilityDescriptors(TagStructure.WithoutEndTag, TagStructure.Unspecified);
+        var tagHelpers = GetTagStructureCompatibilityTagHelpers(TagStructure.WithoutEndTag, TagStructure.Unspecified);
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input></input>");
+        EvaluateData(tagHelpers, """
+            <input></input>
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures_DirectiveAttribute_SelfClosing()
     {
-        // Arrange
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -239,15 +260,15 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input @onclick=\"@test\"/>");
+        EvaluateData(tagHelpers, """
+            <input @onclick="@test"/>
+            """);
     }
 
     [Fact]
     public void AllowsCompatibleTagStructures_DirectiveAttribute_Void()
     {
-        // Arrange
-        ImmutableArray<TagHelperDescriptor> descriptors =
+        TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
@@ -258,179 +279,264 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, "<input @onclick=\"@test\">");
+        EvaluateData(tagHelpers, """
+            <input @onclick="@test">
+            """);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes1()
     {
-        RunParseTreeRewriterTest("<p class='", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class='
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes2()
     {
-        RunParseTreeRewriterTest("<p bar=\"false\"\" <strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p bar="false"" <strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes3()
     {
-        RunParseTreeRewriterTest("<p bar='false  <strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p bar='false  <strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes4()
     {
-        RunParseTreeRewriterTest("<p bar='false  <strong'", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p bar='false  <strong'
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes5()
     {
-        RunParseTreeRewriterTest("<p bar=false'", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p bar=false'
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes6()
     {
-        RunParseTreeRewriterTest("<p bar=\"false'", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p bar="false'
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes7()
     {
-        RunParseTreeRewriterTest("<p bar=\"false' ></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p bar="false' ></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes8()
     {
-        RunParseTreeRewriterTest("<p foo bar<strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p foo bar<strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes9()
     {
-        RunParseTreeRewriterTest("<p class=btn\" bar<strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class=btn" bar<strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes10()
     {
-        RunParseTreeRewriterTest("<p class=btn\" bar=\"foo\"<strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class=btn" bar="foo"<strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes11()
     {
-        RunParseTreeRewriterTest("<p class=\"btn bar=\"foo\"<strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class="btn bar="foo"<strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes12()
     {
-        RunParseTreeRewriterTest("<p class=\"btn bar=\"foo\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class="btn bar="foo"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes13()
     {
-        RunParseTreeRewriterTest("<p @DateTime.Now class=\"btn\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p @DateTime.Now class="btn"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes14()
     {
-        RunParseTreeRewriterTest("<p @DateTime.Now=\"btn\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p @DateTime.Now="btn"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes15()
     {
-        RunParseTreeRewriterTest("<p class=@DateTime.Now\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class=@DateTime.Now"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes16()
     {
-        RunParseTreeRewriterTest("<p class=\"@do {", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class="@do {
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes17()
     {
-        RunParseTreeRewriterTest("<p class=\"@do {\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class="@do {"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes18()
     {
-        RunParseTreeRewriterTest("<p @do { someattribute=\"btn\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p @do { someattribute="btn"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes19()
     {
-        RunParseTreeRewriterTest("<p class=some=thing attr=\"@value\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class=some=thing attr="@value"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelpersWithAttributes20()
     {
-        RunParseTreeRewriterTest("<p attr=\"@if (true) <p attr='@foo'> }\"></p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p attr="@if (true) <p attr='@foo'> }"></p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper1()
     {
-        RunParseTreeRewriterTest("<p", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper2()
     {
-        RunParseTreeRewriterTest("<p></p", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p></p
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper3()
     {
-        RunParseTreeRewriterTest("<p><strong", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p><strong
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper4()
     {
-        RunParseTreeRewriterTest("<strong <p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <strong <p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper5()
     {
-        RunParseTreeRewriterTest("<strong </strong", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <strong </strong
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper6()
     {
-        RunParseTreeRewriterTest("<<</strong> <<p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <<</strong> <<p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper7()
     {
-        RunParseTreeRewriterTest("<<<strong>> <<>>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <<<strong>> <<>>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void CreatesErrorForMalformedTagHelper8()
     {
-        RunParseTreeRewriterTest("<str<strong></p></strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <str<strong></p></strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
-    public static ImmutableArray<TagHelperDescriptor> CodeTagHelperAttributes_Descriptors =
+    public static readonly TagHelperCollection CodeTagHelperAttributes_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("PersonTagHelper", "personAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("person"))
@@ -460,85 +566,110 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void UnderstandsMultipartNonStringTagHelperAttributes()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"(() => 123)()\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="(() => 123)()" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes1()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"12\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="12" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes2()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person birthday=\"DateTime.Now\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person birthday="DateTime.Now" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes3()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"@DateTime.Now.Year\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="@DateTime.Now.Year" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes4()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\" @DateTime.Now.Year\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age=" @DateTime.Now.Year" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes5()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person name=\"John\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person name="John" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes6()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person name=\"Time: @DateTime.Now\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person name="Time: @DateTime.Now" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes7()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"1 + @value + 2\" birthday='(bool)@Bag[\"val\"] ? @@DateTime : @DateTime.Now'/>");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="1 + @value + 2" birthday='(bool)@Bag["val"] ? @@DateTime : @DateTime.Now'/>
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes8()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"12\" birthday=\"DateTime.Now\" name=\"Time: @DateTime.Now\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="12" birthday="DateTime.Now" name="Time: @DateTime.Now" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes9()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"12\" birthday=\"DateTime.Now\" name=\"Time: @@ @DateTime.Now\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="12" birthday="DateTime.Now" name="Time: @@ @DateTime.Now" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes10()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"12\" birthday=\"DateTime.Now\" name=\"@@BoundStringAttribute\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="12" birthday="DateTime.Now" name="@@BoundStringAttribute" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes11()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"@@@(11+1)\" birthday=\"DateTime.Now\" name=\"Time: @DateTime.Now\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="@@@(11+1)" birthday="DateTime.Now" name="Time: @DateTime.Now" />
+            """);
     }
 
     [Fact]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes12()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, "<person age=\"@{flag == 0 ? 11 : 12}\" />");
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
+            <person age="@{flag == 0 ? 11 : 12}" />
+            """);
     }
-
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes13()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var count = "1";
             }
@@ -549,7 +680,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes14()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var @string = "1";
             }
@@ -560,7 +691,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes15()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var count = "1";
             }
@@ -571,7 +702,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes16()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var count = "1";
             }
@@ -582,7 +713,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes17()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var count = 1;
             }
@@ -593,7 +724,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes18()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var count = 1;
             }
@@ -604,7 +735,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes19()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var count = 1;
             }
@@ -615,7 +746,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes20()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var isAlive = true;
             }
@@ -626,7 +757,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes21()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var obj = new { Prop = (object)1 };
             }
@@ -637,7 +768,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes22()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             @{ 
                 var obj = new { Prop = (object)1 };
             }
@@ -648,16 +779,18 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10186")]
     public void CreatesMarkupCodeSpansForNonStringTagHelperAttributes23()
     {
-        EvaluateData(
-            [TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
+        TagHelperCollection tagHelpers = [
+            TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("tuple-dictionary")
                     .PropertyName("DictionaryOfBoolAndStringTupleProperty")
                     .TypeName(typeof(IDictionary<string, int>).Namespace + ".IDictionary<System.String, (System.Boolean, System.String)>")
                     .AsDictionaryAttribute("tuple-prefix-", typeof((bool, string)).FullName))
-                .Build()],
-            """
+                .Build()
+        ];
+
+        EvaluateData(tagHelpers, """
             @{ 
                 var item = new { Items = new System.List<string>() { "one", "two" } };
             }
@@ -668,7 +801,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_01()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag='@new string("1, 2")' />
             """);
     }
@@ -676,7 +809,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_02()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag="@(new string("1, 2"))" />
             """);
     }
@@ -684,7 +817,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_03()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag="@new string(@x("1, 2"))" />
             """);
     }
@@ -692,7 +825,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_04()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag='new string("1, 2")' />
             """);
     }
@@ -700,7 +833,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_05()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag='new string(@x("1, 2"))' />
             """);
     }
@@ -708,7 +841,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_06()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag='@new string("1 2")' />
             """);
     }
@@ -716,7 +849,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_07()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag="@(new string("1 2"))" />
             """);
     }
@@ -724,7 +857,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_08()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag="@(new string(@x("1 2")))" />
             """);
     }
@@ -732,7 +865,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_09()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag='"0" + new string("1 2")' />
             """);
     }
@@ -740,7 +873,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/10426")]
     public void CreatesMarkupCodeSpans_EscapedExpression_10()
     {
-        EvaluateData(CodeTagHelperAttributes_Descriptors, """
+        EvaluateData(CodeTagHelperAttributes_TagHelpers, """
             <person tag='"0" + new @String("1 2")' />
             """);
     }
@@ -748,316 +881,367 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void TagHelperParseTreeRewriter_CreatesErrorForIncompleteTagHelper1()
     {
-        RunParseTreeRewriterTest("<p class=foo dynamic=@DateTime.Now style=color:red;><strong></p></strong>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class=foo dynamic=@DateTime.Now style=color:red;><strong></p></strong>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_CreatesErrorForIncompleteTagHelper2()
     {
-        RunParseTreeRewriterTest("<div><p>Hello <strong>World</strong></div>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <div><p>Hello <strong>World</strong></div>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_CreatesErrorForIncompleteTagHelper3()
     {
-        RunParseTreeRewriterTest("<div><p>Hello <strong>World</div>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <div><p>Hello <strong>World</div>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_CreatesErrorForIncompleteTagHelper4()
     {
-        RunParseTreeRewriterTest("<p class=\"foo\">Hello <p style=\"color:red;\">World</p>", "strong", "p");
+        RunParseTreeRewriterTest("""
+            <p class="foo">Hello <p style="color:red;">World</p>
+            """,
+            tagNames: ["strong", "p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesOddlySpacedTagHelperTagBlocks1()
     {
-        RunParseTreeRewriterTest("<p      class=\"     foo\"    style=\"   color :  red  ;   \"    ></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p      class="     foo"    style="   color :  red  ;   "    ></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesOddlySpacedTagHelperTagBlocks2()
     {
-        RunParseTreeRewriterTest("<p      class=\"     foo\"    style=\"   color :  red  ;   \"    >Hello World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p      class="     foo"    style="   color :  red  ;   "    >Hello World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesOddlySpacedTagHelperTagBlocks3()
     {
-        RunParseTreeRewriterTest("<p     class=\"   foo  \" >Hello</p> <p    style=\"  color:red; \" >World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p     class="   foo  " >Hello</p> <p    style="  color:red; " >World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexAttributeTagHelperTagBlocks1()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p class=\"{0}\" style='{0}'></p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p class="{{expression}}" style='{{expression}}'></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexAttributeTagHelperTagBlocks2()
     {
-        // Arrange
-        var doWhileString = "@do { var foo = bar; <text>Foo</text> foo++; } while (foo<bar>);";
-        var currentFormattedString = "<p class=\"{0}\" style='{0}'></p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, doWhileString);
+        const string doWhile = "@do { var foo = bar; <text>Foo</text> foo++; } while (foo<bar>);";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p class="{{doWhile}}" style='{{doWhile}}'></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexAttributeTagHelperTagBlocks3()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p class=\"{0}\" style='{0}'>Hello World</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p class="{{expression}}" style='{{expression}}'>Hello World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexAttributeTagHelperTagBlocks4()
     {
-        // Arrange
-        var doWhileString = "@do { var foo = bar; <text>Foo</text> foo++; } while (foo<bar>);";
-        var currentFormattedString = "<p class=\"{0}\" style='{0}'>Hello World</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, doWhileString);
+        const string doWhile = "@do { var foo = bar; <text>Foo</text> foo++; } while (foo<bar>);";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p class="{{doWhile}}" style='{{doWhile}}'>Hello World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexAttributeTagHelperTagBlocks5()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p class=\"{0}\">Hello</p> <p style='{0}'>World</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p class="{{expression}}">Hello</p> <p style='{{expression}}'>World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexAttributeTagHelperTagBlocks6()
     {
-        // Arrange
-        var doWhileString = "@do { var foo = bar; <text>Foo</text> foo++; } while (foo<bar>);";
-        var currentFormattedString = "<p class=\"{0}\">Hello</p> <p style='{0}'>World</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, doWhileString);
+        const string expression = "@do { var foo = bar; <text>Foo</text> foo++; } while (foo<bar>);";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p class="{{expression}}">Hello</p> <p style='{{expression}}'>World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexAttributeTagHelperTagBlocks7()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p class=\"{0}\" style='{0}'>Hello World <strong class=\"{0}\">inside of strong tag</strong></p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p class="{{expression}}" style='{{expression}}'>Hello World <strong class="{{expression}}">inside of strong tag</strong></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks1()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p>{0}</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>{{expression}}</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks2()
     {
-        // Arrange
-        var doWhileString = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
-        var currentFormattedString = "<p>{0}</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, doWhileString);
+        const string doWhile = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>{{doWhile}}</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks3()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p>Hello World {0}</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>Hello World {{expression}}</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks4()
     {
-        // Arrange
-        var doWhileString = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
-        var currentFormattedString = "<p>Hello World {0}</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, doWhileString);
+        const string doWhile = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>Hello World {{doWhile}}</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks5()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p>{0}</p> <p>{0}</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>{{expression}}</p> <p>{{expression}}</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks6()
     {
-        // Arrange
-        var doWhileString = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
-        var currentFormattedString = "<p>{0}</p> <p>{0}</p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, doWhileString);
+        const string doWhile = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>{{doWhile}}</p> <p>{{doWhile}}</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks7()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var currentFormattedString = "<p>Hello {0}<strong>inside of {0} strong tag</strong></p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, dateTimeNowString);
+        const string expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>Hello {{expression}}<strong>inside of {{expression}} strong tag</strong></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesComplexTagHelperTagBlocks8()
     {
-        // Arrange
-        var doWhileString = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
-        var currentFormattedString = "<p>Hello {0}<strong>inside of {0} strong tag</strong></p>";
-        var document = string.Format(CultureInfo.InvariantCulture, currentFormattedString, doWhileString);
+        const string doWhile = "@do { var foo = bar; <p>Foo</p> foo++; } while (foo<bar>);";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "p");
+        RunParseTreeRewriterTest($$"""
+            <p>Hello {{doWhile}}<strong>inside of {{doWhile}} strong tag</strong></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml1()
     {
-        RunParseTreeRewriterTest("<<<p>>></p>", "p");
+        RunParseTreeRewriterTest("""
+            <<<p>>></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml2()
     {
-        RunParseTreeRewriterTest("<<p />", "p");
+        RunParseTreeRewriterTest("""
+            <<p />
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml3()
     {
-        RunParseTreeRewriterTest("< p />", "p");
+        RunParseTreeRewriterTest("""
+            < p />
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml4()
     {
-        RunParseTreeRewriterTest("<input <p />", "p");
+        RunParseTreeRewriterTest("""
+            <input <p />
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml5()
     {
-        RunParseTreeRewriterTest("< class=\"foo\" <p />", "p");
+        RunParseTreeRewriterTest("""
+            < class="foo" <p />
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml6()
     {
-        RunParseTreeRewriterTest("</<<p>/></p>>", "p");
+        RunParseTreeRewriterTest("""
+            </<<p>/></p>>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml7()
     {
-        RunParseTreeRewriterTest("</<<p>/><strong></p>>", "p");
+        RunParseTreeRewriterTest("""
+            </<<p>/><strong></p>>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml8()
     {
-        RunParseTreeRewriterTest("</<<p>@DateTime.Now/><strong></p>>", "p");
+        RunParseTreeRewriterTest("""
+            </<<p>@DateTime.Now/><strong></p>>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml9()
     {
-        RunParseTreeRewriterTest("</  /<  ><p>@DateTime.Now / ><strong></p></        >", "p");
+        RunParseTreeRewriterTest("""
+            </  /<  ><p>@DateTime.Now / ><strong></p></        >
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_AllowsInvalidHtml10()
     {
-        RunParseTreeRewriterTest("<p>< @DateTime.Now ></ @DateTime.Now ></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p>< @DateTime.Now ></ @DateTime.Now ></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void UnderstandsEmptyAttributeTagHelpers1()
     {
-        RunParseTreeRewriterTest("<p class=\"\"></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=""></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void UnderstandsEmptyAttributeTagHelpers2()
     {
-        RunParseTreeRewriterTest("<p class=''></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=''></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void UnderstandsEmptyAttributeTagHelpers3()
     {
-        RunParseTreeRewriterTest("<p class=></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void UnderstandsEmptyAttributeTagHelpers4()
     {
-        RunParseTreeRewriterTest("<p class1='' class2= class3=\"\" />", "p");
+        RunParseTreeRewriterTest("""
+            <p class1='' class2= class3="" />
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void UnderstandsEmptyAttributeTagHelpers5()
     {
-        RunParseTreeRewriterTest("<p class1=''class2=\"\"class3= />", "p");
+        RunParseTreeRewriterTest("""
+            <p class1=''class2=""class3= />
+            """,
+            tagNames: ["p"]);
     }
 
-    public static ImmutableArray<TagHelperDescriptor> EmptyTagHelperBoundAttribute_Descriptors =
+    public static readonly TagHelperCollection EmptyTagHelperBoundAttribute_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("mythTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule.RequireTagName("myth"))
@@ -1075,401 +1259,474 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes1()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound='' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound='' />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes2()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound='    true' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound='    true' />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes3()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound='    ' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound='    ' />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes4()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound=''  bound=\"\" />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound=''  bound="" />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes5()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound=' '  bound=\"  \" />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound=' '  bound="  " />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes6()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound='true' bound=  />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound='true' bound=  />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes7()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound= name='' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound= name='' />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes8()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound= name='  ' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound= name='  ' />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes9()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound='true' name='john' bound= name= />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound='true' name='john' bound= name= />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes10()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth BouND='' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth BouND='' />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes11()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth BOUND=''    bOUnd=\"\" />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth BOUND=''    bOUnd="" />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes12()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth BOUND= nAMe='john'></myth>");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth BOUND= nAMe='john'></myth>
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes13()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound='    @true  ' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound='    @true  ' />
+            """);
     }
 
     [Fact]
     public void CreatesErrorForEmptyTagHelperBoundAttributes14()
     {
-        EvaluateData(EmptyTagHelperBoundAttribute_Descriptors, "<myth bound='    @(true)  ' />");
+        EvaluateData(EmptyTagHelperBoundAttribute_TagHelpers, """
+            <myth bound='    @(true)  ' />
+            """);
     }
-
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesScriptTagHelpers1()
     {
-        RunParseTreeRewriterTest("<script><script></foo></script>", "p", "div", "script");
+        RunParseTreeRewriterTest("""
+            <script><script></foo></script>
+            """,
+            tagNames: ["p", "div", "script"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesScriptTagHelpers2()
     {
-        RunParseTreeRewriterTest("<script>Hello World <div></div></script>", "p", "div", "script");
+        RunParseTreeRewriterTest("""
+            <script>Hello World <div></div></script>
+            """,
+            tagNames: ["p", "div", "script"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesScriptTagHelpers3()
     {
-        RunParseTreeRewriterTest("<script>Hel<p>lo</p></script> <p><div>World</div></p>", "p", "div", "script");
+        RunParseTreeRewriterTest("""
+            <script>Hel<p>lo</p></script> <p><div>World</div></p>
+            """,
+            tagNames: ["p", "div", "script"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesScriptTagHelpers4()
     {
-        RunParseTreeRewriterTest("<script>Hel<strong>lo</strong></script> <script><span>World</span></script>", "p", "div", "script");
+        RunParseTreeRewriterTest("""
+            <script>Hel<strong>lo</strong></script> <script><span>World</span></script>
+            """,
+            tagNames: ["p", "div", "script"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesScriptTagHelpers5()
     {
-        RunParseTreeRewriterTest("<script class=\"foo\" style=\"color:red;\" />", "p", "div", "script");
+        RunParseTreeRewriterTest("""
+            <script class="foo" style="color:red;" />
+            """,
+            tagNames: ["p", "div", "script"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesScriptTagHelpers6()
     {
-        RunParseTreeRewriterTest("<p>Hello <script class=\"foo\" style=\"color:red;\"></script> World</p>", "p", "div", "script");
+        RunParseTreeRewriterTest("""
+            <p>Hello <script class="foo" style="color:red;"></script> World</p>
+            """,
+            tagNames: ["p", "div", "script"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesScriptTagHelpers7()
     {
-        RunParseTreeRewriterTest("<p>Hello <script class=\"@@foo@bar.com\" style=\"color:red;\"></script> World</p>", "p", "div", "script");
+        RunParseTreeRewriterTest("""
+            <p>Hello <script class="@@foo@bar.com" style="color:red;"></script> World</p>
+            """,
+            tagNames: ["p", "div", "script"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesSelfClosingTagHelpers1()
     {
-        RunParseTreeRewriterTest("<p class=\"foo\" style=\"color:red;\" />", "p");
+        RunParseTreeRewriterTest("""
+            <p class="foo" style="color:red;" />
+            """,
+            tagNames: ["p"]);
     }
 
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesSelfClosingTagHelpers2()
     {
-        RunParseTreeRewriterTest("<p>Hello <p class=\"foo\" style=\"color:red;\" /> World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p>Hello <p class="foo" style="color:red;" /> World</p>
+            """,
+            tagNames: ["p"]);
     }
 
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesSelfClosingTagHelpers3()
     {
-        RunParseTreeRewriterTest("Hello<p class=\"foo\" /> <p style=\"color:red;\" />World", "p");
+        RunParseTreeRewriterTest("""
+            Hello<p class="foo" /> <p style="color:red;" />World
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithQuotelessAttributes1()
     {
-        RunParseTreeRewriterTest("<p class=foo dynamic=@DateTime.Now style=color:red;></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=foo dynamic=@DateTime.Now style=color:red;></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithQuotelessAttributes2()
     {
-        RunParseTreeRewriterTest("<p class=foo dynamic=@DateTime.Now style=color:red;>Hello World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=foo dynamic=@DateTime.Now style=color:red;>Hello World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithQuotelessAttributes3()
     {
-        RunParseTreeRewriterTest("<p class=foo dynamic=@DateTime.Now style=color@@:red;>Hello World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=foo dynamic=@DateTime.Now style=color@@:red;>Hello World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithQuotelessAttributes4()
     {
-        RunParseTreeRewriterTest("<p class=foo dynamic=@DateTime.Now>Hello</p> <p style=color:red; dynamic=@DateTime.Now>World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=foo dynamic=@DateTime.Now>Hello</p> <p style=color:red; dynamic=@DateTime.Now>World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithQuotelessAttributes5()
     {
-        RunParseTreeRewriterTest("<p class=foo dynamic=@DateTime.Now style=color:red;>Hello World <strong class=\"foo\">inside of strong tag</strong></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class=foo dynamic=@DateTime.Now style=color:red;>Hello World <strong class="foo">inside of strong tag</strong></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithPlainAttributes1()
     {
-        RunParseTreeRewriterTest("<p class=\"foo\" style=\"color:red;\"></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class="foo" style="color:red;"></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithPlainAttributes2()
     {
-        RunParseTreeRewriterTest("<p class=\"foo\" style=\"color:red;\">Hello World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class="foo" style="color:red;">Hello World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithPlainAttributes3()
     {
-        RunParseTreeRewriterTest("<p class=\"foo\">Hello</p> <p style=\"color:red;\">World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class="foo">Hello</p> <p style="color:red;">World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesTagHelpersWithPlainAttributes4()
     {
-        RunParseTreeRewriterTest("<p class=\"foo\" style=\"color:red;\">Hello World <strong class=\"foo\">inside of strong tag</strong></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p class="foo" style="color:red;">Hello World <strong class="foo">inside of strong tag</strong></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesPlainTagHelperTagBlocks1()
     {
-        RunParseTreeRewriterTest("<p></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesPlainTagHelperTagBlocks2()
     {
-        RunParseTreeRewriterTest("<p>Hello World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p>Hello World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesPlainTagHelperTagBlocks3()
     {
-        RunParseTreeRewriterTest("<p>Hello</p> <p>World</p>", "p");
+        RunParseTreeRewriterTest("""
+            <p>Hello</p> <p>World</p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void TagHelperParseTreeRewriter_RewritesPlainTagHelperTagBlocks4()
     {
-        RunParseTreeRewriterTest("<p>Hello World <strong>inside of strong tag</strong></p>", "p");
+        RunParseTreeRewriterTest("""
+            <p>Hello World <strong>inside of strong tag</strong></p>
+            """,
+            tagNames: ["p"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Document1()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='{dateTimeNowString}' />";
+        var expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest($"""
+            <input data-required='{expression}' />
+            """,
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Document2()
     {
-        // Arrange
-        var document = "<input data-required='value' />";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest("""
+            <input data-required='value' />
+            """,
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Document3()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='prefix {dateTimeNowString}' />";
+        var expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest($"""
+            <input data-required='prefix {expression}' />
+            """,
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Document4()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='{dateTimeNowString} suffix' />";
+        var expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest($"""
+            <input data-required='{expression} suffix' />
+            """,
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Document5()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='prefix {dateTimeNowString} suffix' />";
+        var expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest($"""
+            <input data-required='prefix {expression} suffix' />
+            """,
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Document6()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input pre-attribute data-required='prefix {dateTimeNowString} suffix' post-attribute />";
+        var expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest($"""
+            <input pre-attribute data-required='prefix {expression} suffix' post-attribute />
+            """,
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Document7()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='{dateTimeNowString} middle {dateTimeNowString}' />";
+        var expression = "@DateTime.Now";
 
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest($"""
+            <input data-required='{expression} middle {expression}' />
+            """,
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Block1()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='{dateTimeNowString}' />";
+        var expression = "@DateTime.Now";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest(WrapInCSharpBlock($"""
+            <input data-required='{expression}' />
+            """),
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Block2()
     {
-        // Arrange
-        var document = "<input data-required='value' />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest(WrapInCSharpBlock("""
+            <input data-required='value' />
+            """),
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Block3()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='prefix {dateTimeNowString}' />";
+        var expression = "@DateTime.Now";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest(WrapInCSharpBlock($"""
+            <input data-required='prefix {expression}' />
+            """),
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Block4()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='{dateTimeNowString} suffix' />";
+        var expression = "@DateTime.Now";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest(WrapInCSharpBlock($"""
+            <input data-required='{expression} suffix' />
+            """),
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Block5()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='prefix {dateTimeNowString} suffix' />";
+        var expression = "@DateTime.Now";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest(WrapInCSharpBlock($"""
+            <input data-required='prefix {expression} suffix' />
+            """),
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Block6()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input pre-attribute data-required='prefix {dateTimeNowString} suffix' post-attribute />";
+        var expression = "@DateTime.Now";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest(WrapInCSharpBlock($"""
+            <input pre-attribute data-required='prefix {expression} suffix' post-attribute />
+            """),
+            tagNames: ["input"]);
     }
 
     [Fact]
     public void GeneratesExpectedOutputForUnboundDataDashAttributes_Block7()
     {
-        // Arrange
-        var dateTimeNowString = "@DateTime.Now";
-        var document = $"<input data-required='{dateTimeNowString} middle {dateTimeNowString}' />";
+        var expression = "@DateTime.Now";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        RunParseTreeRewriterTest(document, "input");
+        RunParseTreeRewriterTest(WrapInCSharpBlock($"""
+            <input data-required='{expression} middle {expression}' />
+            """),
+            tagNames: ["input"]);
     }
 
-    public static ImmutableArray<TagHelperDescriptor> MinimizedAttribute_Descriptors =
+    public static readonly TagHelperCollection MinimizedAttribute_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper1", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
@@ -1515,831 +1772,621 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 .Name("bound-int")
                 .PropertyName("BoundRequiredString")
                 .TypeName(typeof(int).FullName))
-            .Build(),
+            .Build()
     ];
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document1()
     {
-        // Arrange
-        var document = "<input unbound-required />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input unbound-required />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document2()
     {
-        // Arrange
-        var document = "<p bound-string></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-string></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document3()
     {
-        // Arrange
-        var document = "<input bound-required-string />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-string />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document4()
     {
-        // Arrange
-        var document = "<input bound-required-int />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-int />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document5()
     {
-        // Arrange
-        var document = "<p bound-int></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-int></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document6()
     {
-        // Arrange
-        var document = "<input int-dictionary/>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input int-dictionary/>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document7()
     {
-        // Arrange
-        var document = "<input string-dictionary />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input string-dictionary />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document8()
     {
-        // Arrange
-        var document = "<input int-prefix- />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input int-prefix- />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document9()
     {
-        // Arrange
-        var document = "<input string-prefix-/>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input string-prefix-/>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document10()
     {
-        // Arrange
-        var document = "<input int-prefix-value/>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input int-prefix-value/>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document11()
     {
-        // Arrange
-        var document = "<input string-prefix-value />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input string-prefix-value />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document12()
     {
-        // Arrange
-        var document = "<input int-prefix-value='' />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input int-prefix-value='' />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document13()
     {
-        // Arrange
-        var document = "<input string-prefix-value=''/>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input string-prefix-value=''/>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document14()
     {
-        // Arrange
-        var document = "<input int-prefix-value='3'/>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input int-prefix-value='3'/>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document15()
     {
-        // Arrange
-        var document = "<input string-prefix-value='some string' />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input string-prefix-value='some string' />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document16()
     {
-        // Arrange
-        var document = "<input unbound-required bound-required-string />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input unbound-required bound-required-string />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document17()
     {
-        // Arrange
-        var document = "<p bound-int bound-string></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-int bound-string></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document18()
     {
-        // Arrange
-        var document = "<input bound-required-int unbound-required bound-required-string />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-int unbound-required bound-required-string />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document19()
     {
-        // Arrange
-        var document = "<p bound-int bound-string bound-string></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-int bound-string bound-string></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document20()
     {
-        // Arrange
-        var document = "<input unbound-required class='btn' />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input unbound-required class='btn' />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document21()
     {
-        // Arrange
-        var document = "<p bound-string class='btn'></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-string class='btn'></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document22()
     {
-        // Arrange
-        var document = "<input class='btn' unbound-required />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input class='btn' unbound-required />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document23()
     {
-        // Arrange
-        var document = "<p class='btn' bound-string></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p class='btn' bound-string></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document24()
     {
-        // Arrange
-        var document = "<input bound-required-string class='btn' />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-string class='btn' />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document25()
     {
-        // Arrange
-        var document = "<input class='btn' bound-required-string />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input class='btn' bound-required-string />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document26()
     {
-        // Arrange
-        var document = "<input bound-required-int class='btn' />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-int class='btn' />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document27()
     {
-        // Arrange
-        var document = "<p bound-int class='btn'></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-int class='btn'></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document28()
     {
-        // Arrange
-        var document = "<input class='btn' bound-required-int />";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input class='btn' bound-required-int />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document29()
     {
-        // Arrange
-        var document = "<p class='btn' bound-int></p>";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p class='btn' bound-int></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document30()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<input class='{expressionString}' bound-required-int />";
+        const string expression = "@DateTime.Now + 1";
 
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, $"""
+            <input class='{expression}' bound-required-int />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document31()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<p class='{expressionString}' bound-int></p>";
+        const string expression = "@DateTime.Now + 1";
 
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, $"""
+            <p class='{expression}' bound-int></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document32()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<input    bound-required-int class='{expressionString}'   bound-required-string class='{expressionString}'  unbound-required  />";
+        const string expression = "@DateTime.Now + 1";
 
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, $"""
+            <input    bound-required-int class='{expression}'   bound-required-string class='{expression}'  unbound-required  />
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Document33()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<p    bound-int class='{expressionString}'   bound-string class='{expressionString}'  bound-string></p>";
+        const string expression = "@DateTime.Now + 1";
 
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, $"""
+            <p    bound-int class='{expression}'   bound-string class='{expression}'  bound-string></p>
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block1()
     {
-        // Arrange
-        var document = "<input unbound-required />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input unbound-required />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block2()
     {
-        // Arrange
-        var document = "<p bound-string></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p bound-string></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block3()
     {
-        // Arrange
-        var document = "<input bound-required-string />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input bound-required-string />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block4()
     {
-        // Arrange
-        var document = "<input bound-required-int />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input bound-required-int />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block5()
     {
-        // Arrange
-        var document = "<p bound-int></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p bound-int></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block6()
     {
-        // Arrange
-        var document = "<input int-dictionary/>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input int-dictionary/>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block7()
     {
-        // Arrange
-        var document = "<input string-dictionary />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input string-dictionary />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block8()
     {
-        // Arrange
-        var document = "<input int-prefix- />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input int-prefix- />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block9()
     {
-        // Arrange
-        var document = "<input string-prefix-/>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input string-prefix-/>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block10()
     {
-        // Arrange
-        var document = "<input int-prefix-value/>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input int-prefix-value/>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block11()
     {
-        // Arrange
-        var document = "<input string-prefix-value />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input string-prefix-value />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block12()
     {
-        // Arrange
-        var document = "<input int-prefix-value='' />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input int-prefix-value='' />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block13()
     {
-        // Arrange
-        var document = "<input string-prefix-value=''/>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input string-prefix-value=''/>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block14()
     {
-        // Arrange
-        var document = "<input int-prefix-value='3'/>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input int-prefix-value='3'/>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block15()
     {
-        // Arrange
-        var document = "<input string-prefix-value='some string' />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input string-prefix-value='some string' />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block16()
     {
-        // Arrange
-        var document = "<input unbound-required bound-required-string />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input unbound-required bound-required-string />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block17()
     {
-        // Arrange
-        var document = "<p bound-int bound-string></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p bound-int bound-string></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block18()
     {
-        // Arrange
-        var document = "<input bound-required-int unbound-required bound-required-string />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input bound-required-int unbound-required bound-required-string />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block19()
     {
-        // Arrange
-        var document = "<p bound-int bound-string bound-string></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p bound-int bound-string bound-string></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block20()
     {
-        // Arrange
-        var document = "<input unbound-required class='btn' />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input unbound-required class='btn' />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block21()
     {
-        // Arrange
-        var document = "<p bound-string class='btn'></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p bound-string class='btn'></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block22()
     {
-        // Arrange
-        var document = "<input class='btn' unbound-required />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input class='btn' unbound-required />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block23()
     {
-        // Arrange
-        var document = "<p class='btn' bound-string></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p class='btn' bound-string></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block24()
     {
-        // Arrange
-        var document = "<input bound-required-string class='btn' />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input bound-required-string class='btn' />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block25()
     {
-        // Arrange
-        var document = "<input class='btn' bound-required-string />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input class='btn' bound-required-string />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block26()
     {
-        // Arrange
-        var document = "<input bound-required-int class='btn' />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input bound-required-int class='btn' />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block27()
     {
-        // Arrange
-        var document = "<p bound-int class='btn'></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p bound-int class='btn'></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block28()
     {
-        // Arrange
-        var document = "<input class='btn' bound-required-int />";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <input class='btn' bound-required-int />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block29()
     {
-        // Arrange
-        var document = "<p class='btn' bound-int></p>";
-
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock("""
+            <p class='btn' bound-int></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block30()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<input class='{expressionString}' bound-required-int />";
+        const string expression = "@DateTime.Now + 1";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock($"""
+            <input class='{expression}' bound-required-int />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block31()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<p class='{expressionString}' bound-int></p>";
+        const string expression = "@DateTime.Now + 1";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock($"""
+            <p class='{expression}' bound-int></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block32()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<input    bound-required-int class='{expressionString}'   bound-required-string class='{expressionString}'  unbound-required  />";
+        const string expression = "@DateTime.Now + 1";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock($"""
+            <input    bound-required-int class='{expression}'   bound-required-string class='{expression}'  unbound-required  />
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_Block33()
     {
-        // Arrange
-        var expressionString = "@DateTime.Now + 1";
-        var document = $"<p    bound-int class='{expressionString}'   bound-string class='{expressionString}'  bound-string></p>";
+        const string expression = "@DateTime.Now + 1";
 
-        // Wrap in a CSharp block
-        document = $"@{{{document}}}";
-
-        // Act & Assert
-        EvaluateData(MinimizedAttribute_Descriptors, document);
+        EvaluateData(MinimizedAttribute_TagHelpers, WrapInCSharpBlock($"""
+            <p    bound-int class='{expression}'   bound-string class='{expression}'  bound-string></p>
+            """));
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags1()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<input unbound-required");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input unbound-required
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags2()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<input bound-required-string");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-string
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags3()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<input bound-required-int");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-int
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags4()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<input bound-required-int unbound-required bound-required-string");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-int unbound-required bound-required-string
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags5()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<p bound-string");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-string
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags6()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<p bound-int");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-int
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags7()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<p bound-int bound-string");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <p bound-int bound-string
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedAttributes_PartialTags8()
     {
-        EvaluateData(MinimizedAttribute_Descriptors, "<input bound-required-int unbound-required bound-required-string<p bound-int bound-string");
+        EvaluateData(MinimizedAttribute_TagHelpers, """
+            <input bound-required-int unbound-required bound-required-string<p bound-int bound-string
+            """);
     }
 
     [Fact]
     public void UnderstandsMinimizedBooleanBoundAttributes()
     {
-        // Arrange
-        var document = "<input boundbool boundbooldict-key />";
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
                     .RequireTagName("input"))
@@ -2355,17 +2402,15 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 .Build(),
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, document);
+        EvaluateData(tagHelpers, """
+            <input boundbool boundbooldict-key />
+            """);
     }
 
     [Fact]
     public void FeatureDisabled_AddsErrorForMinimizedBooleanBoundAttributes()
     {
-        // Arrange
-        var document = "<input boundbool boundbooldict-key />";
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
                     .RequireTagName("input"))
@@ -2378,20 +2423,20 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .PropertyName("BoundBoolDictProp")
                     .TypeName("System.Collections.Generic.IDictionary<string, bool>")
                     .AsDictionary("boundbooldict-", typeof(bool).FullName))
-                .Build(),
+                .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, document, languageVersion: RazorLanguageVersion.Version_2_0, fileKind: RazorFileKind.Legacy);
+        EvaluateData(tagHelpers, """
+            <input boundbool boundbooldict-key />
+            """,
+            languageVersion: RazorLanguageVersion.Version_2_0,
+            fileKind: RazorFileKind.Legacy);
     }
 
     [Fact]
     public void Rewrites_ComponentDirectiveAttributes()
     {
-        // Arrange
-        var document = @"<input @bind-value=""Message"" @bind-value:event=""onchange"" />";
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.Create(TagHelperKind.Bind, "Bind", ComponentsApi.AssemblyName)
                 .TypeName(
                     fullName: "Microsoft.AspNetCore.Components.Bind",
@@ -2419,23 +2464,22 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                         p.PropertyName = "Event";
                         p.TypeName = typeof(string).FullName;
                     }))
-                .Build(),
+                .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, document, configureParserOptions: builder =>
-        {
-            builder.AllowCSharpInMarkupAttributeArea = false;
-        });
+        EvaluateData(tagHelpers, """
+            <input @bind-value="Message" @bind-value:event="onchange" />
+            """,
+            configureParserOptions: builder =>
+            {
+                builder.AllowCSharpInMarkupAttributeArea = false;
+            });
     }
 
     [Fact]
     public void Rewrites_MinimizedComponentDirectiveAttributes()
     {
-        // Arrange
-        var document = @"<input @bind-foo @bind-foo:param />";
-        ImmutableArray<TagHelperDescriptor> descriptors =
-        [
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.Create(TagHelperKind.Bind, "Bind", ComponentsApi.AssemblyName)
                 .TypeName(
                     fullName: "Microsoft.AspNetCore.Components.Bind",
@@ -2463,21 +2507,22 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                         p.PropertyName = "Param";
                         p.TypeName = typeof(string).FullName;
                     }))
-                .Build(),
+                .Build()
         ];
 
-        // Act & Assert
-        EvaluateData(descriptors, document, configureParserOptions: builder =>
-        {
-            builder.AllowCSharpInMarkupAttributeArea = false;
-        });
+        EvaluateData(tagHelpers, """
+            <input @bind-foo @bind-foo:param />
+            """,
+            configureParserOptions: builder =>
+            {
+                builder.AllowCSharpInMarkupAttributeArea = false;
+            });
     }
 
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/12261")]
     public void TagHelper_AttributeAfterRazorComment()
     {
-        // Arrange
-        var descriptors = ImmutableArray.Create(
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
                 .BoundAttributeDescriptor(attribute => attribute
@@ -2488,10 +2533,10 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .Name("not-visible")
                     .PropertyName("NotVisible")
                     .TypeName(typeof(bool).FullName))
-                .Build());
+                .Build()
+        ];
 
-        // Act & Assert
-        EvaluateData(descriptors, """
+        EvaluateData(tagHelpers, """
             <p
               attribute-1="true"
               @* visible *@
@@ -2503,8 +2548,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/12261")]
     public void TagHelper_MultipleAttributesAfterRazorComment()
     {
-        // Arrange
-        var descriptors = ImmutableArray.Create(
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
                 .BoundAttributeDescriptor(attribute => attribute
@@ -2519,10 +2563,10 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .Name("attr-3")
                     .PropertyName("Attr3")
                     .TypeName(typeof(string).FullName))
-                .Build());
+                .Build()
+        ];
 
-        // Act & Assert
-        EvaluateData(descriptors, """
+        EvaluateData(tagHelpers, """
             <p attr-1="first" @* comment *@ attr-2="second" attr-3="third"></p>
             """);
     }
@@ -2530,8 +2574,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/12261")]
     public void TagHelper_MultipleInterleavedRazorComments()
     {
-        // Arrange
-        var descriptors = ImmutableArray.Create(
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
                 .BoundAttributeDescriptor(attribute => attribute
@@ -2542,10 +2585,10 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .Name("value")
                     .PropertyName("Value")
                     .TypeName(typeof(string).FullName))
-                .Build());
+                .Build()
+        ];
 
-        // Act & Assert
-        EvaluateData(descriptors, """
+        EvaluateData(tagHelpers, """
             <input @* comment1 *@ type="text" @* comment2 *@ value="test" @* comment3 *@ />
             """);
     }
@@ -2553,8 +2596,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     [Fact, WorkItem("https://github.com/dotnet/razor/issues/12261")]
     public void TagHelper_MinimizedAttributeAfterRazorComment()
     {
-        // Arrange
-        var descriptors = ImmutableArray.Create(
+        TagHelperCollection tagHelpers = [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "TestAssembly")
                 .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
                 .BoundAttributeDescriptor(attribute => attribute
@@ -2565,11 +2607,14 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .Name("checked")
                     .PropertyName("Checked")
                     .TypeName(typeof(bool).FullName))
-                .Build());
+                .Build()
+        ];
 
-        // Act & Assert
-        EvaluateData(descriptors, """
+        EvaluateData(tagHelpers, """
             <input type="checkbox" @* comment *@ checked />
             """);
     }
+
+    private static string WrapInCSharpBlock(string text)
+        => $"@{{{text.TrimEnd()}}}";
 }

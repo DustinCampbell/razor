@@ -475,7 +475,7 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
         var sourceDocument = TestRazorSourceDocument.Create(text, filePath: filePath, relativePath: filePath);
         var projectEngine = RazorProjectEngine.Create(builder =>
         {
-            builder.AddTagHelpers(tagHelpers);
+            builder.SetTagHelpers(tagHelpers);
 
             builder.ConfigureParserOptions(builder =>
             {

@@ -9,8 +9,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.NET.Sdk.Razor.SourceGenerators
 {
-    internal sealed class StaticCompilationTagHelperFeature(Compilation compilation)
-        : RazorEngineFeatureBase, ITagHelperFeature
+    internal sealed class StaticCompilationTagHelperFeature(Compilation compilation) : RazorEngineFeatureBase, ITagHelperFeature
     {
         private ImmutableArray<ITagHelperDescriptorProvider> _providers;
 
@@ -32,7 +31,7 @@ namespace Microsoft.NET.Sdk.Razor.SourceGenerators
             }
         }
 
-        IReadOnlyList<TagHelperDescriptor> ITagHelperFeature.GetDescriptors(CancellationToken cancellationToken)
+        TagHelperCollection ITagHelperFeature.GetTagHelpers(CancellationToken cancellationToken)
         {
             using var builder = new TagHelperCollection.Builder();
             CollectDescriptors(targetAssembly: null, builder, cancellationToken);

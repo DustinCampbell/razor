@@ -42,6 +42,8 @@ public abstract partial class TagHelperCollection
                 s_setPool.Return(set);
                 _set = null;
             }
+
+            _item = null;
         }
 
         [MemberNotNullWhen(true, nameof(_item))]
@@ -202,8 +204,16 @@ public abstract partial class TagHelperCollection
 
             if (Count == 1)
             {
-                Debug.Assert(_item is not null);
-                return new SingleItemCollection(_item);
+                if (_item is not null)
+                {
+                    Debug.Assert(_builder is null);
+                    return new SingleItemCollection(_item);
+                }
+                else
+                {
+                    Debug.Assert(_builder is { Count: 1 });
+                    return new SingleItemCollection(_builder[0]);
+                }
             }
 
             Debug.Assert(_builder is not null);

@@ -42,17 +42,25 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
         }
     }
 
+    internal static void AppendChecksumValues(
+        ref readonly Checksum.Builder builder,
+        string tagName, string? parentTag,
+        TagStructure tagStructure,
+        bool caseSensitive)
+    {
+        builder.Append(tagName);
+        builder.Append(parentTag);
+        builder.Append((int)tagStructure);
+        builder.Append(caseSensitive);
+    }
+
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
-        builder.Append(TagName);
-        builder.Append(ParentTag);
-        builder.Append((int)TagStructure);
+        AppendChecksumValues(in builder, TagName, ParentTag, TagStructure, CaseSensitive);
 
-        builder.Append(CaseSensitive);
-
-        foreach (var descriptor in Attributes)
+        foreach (var item in Attributes)
         {
-            builder.Append(descriptor.Checksum);
+            builder.Append(item.Checksum);
         }
     }
 

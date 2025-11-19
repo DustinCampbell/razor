@@ -56,11 +56,11 @@ public sealed partial class TagHelperObjectBuilderCollection<TObject, TBuilder> 
         }
     }
 
-    internal ImmutableArray<TObject> ToImmutable()
+    internal ImmutableArray<TObject> BuildAll()
     {
         if (_builders is not { Count: > 0 } builders)
         {
-            return ImmutableArray<TObject>.Empty;
+            return [];
         }
         else if (builders.Count == 1)
         {

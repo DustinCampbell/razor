@@ -5,6 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -43,15 +44,31 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
         Attributes.Add(builder);
     }
 
+    private protected override void BuildChecksum(ref readonly Checksum.Builder builder)
+    {
+        GetValues(out var tagName, out var parentTag, out var tagStructure, out var caseSensitive);
+
+        TagMatchingRuleDescriptor.AppendChecksumValues(in builder, tagName, parentTag, tagStructure, caseSensitive);
+
+        foreach (var attribute in Attributes)
+        {
+            builder.Append(attribute.GetChecksum());
+        }
+    }
+
     private protected override TagMatchingRuleDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        return new TagMatchingRuleDescriptor(
-            TagName ?? string.Empty,
-            ParentTag,
-            TagStructure,
-            CaseSensitive,
-            Attributes.ToImmutable(),
-            diagnostics);
+        GetValues(out var tagName, out var parentTag, out var tagStructure, out var caseSensitive);
+
+        return new(tagName, parentTag, tagStructure, caseSensitive, Attributes.BuildAll(), diagnostics);
+    }
+
+    private void GetValues(out string tagName, out string? parentTag, out TagStructure tagStructure, out bool caseSensitive)
+    {
+        tagName = TagName ?? string.Empty;
+        parentTag = ParentTag;
+        tagStructure = TagStructure;
+        caseSensitive = CaseSensitive;
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

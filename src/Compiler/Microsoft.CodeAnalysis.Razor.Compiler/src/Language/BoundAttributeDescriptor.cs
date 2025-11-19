@@ -81,22 +81,34 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
         }
     }
 
+    internal static void AppendChecksumValues(
+        ref readonly Checksum.Builder builder,
+        BoundAttributeFlags flags,
+        string name, string propertyName, string? indexerNamePrefix,
+        string displayName, string? containingType,
+        TypeNameObject typeNameObject, TypeNameObject indexerTypeNameObject, DocumentationObject documentationObject)
+    {
+        builder.Append((byte)flags);
+        builder.Append(name);
+        builder.Append(propertyName);
+        builder.Append(indexerNamePrefix);
+        builder.Append(displayName);
+        builder.Append(containingType);
+
+        typeNameObject.AppendToChecksum(in builder);
+        indexerTypeNameObject.AppendToChecksum(in builder);
+        documentationObject.AppendToChecksum(in builder);
+    }
+
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
-        builder.Append((byte)_flags);
-        builder.Append(Name);
-        builder.Append(PropertyName);
-        builder.Append(IndexerNamePrefix);
-        builder.Append(DisplayName);
-        builder.Append(ContainingType);
+        AppendChecksumValues(in builder,
+            _flags, Name, PropertyName, IndexerNamePrefix, DisplayName, ContainingType,
+            TypeNameObject, IndexerTypeNameObject, DocumentationObject);
 
-        TypeNameObject.AppendToChecksum(in builder);
-        IndexerTypeNameObject.AppendToChecksum(in builder);
-        DocumentationObject.AppendToChecksum(in builder);
-
-        foreach (var descriptor in Parameters)
+        foreach (var item in Parameters)
         {
-            builder.Append(descriptor.Checksum);
+            builder.Append(item.Checksum);
         }
 
         Metadata.AppendToChecksum(in builder);

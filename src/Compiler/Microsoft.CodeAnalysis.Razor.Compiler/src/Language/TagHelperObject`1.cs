@@ -11,20 +11,31 @@ namespace Microsoft.AspNetCore.Razor.Language;
 public abstract class TagHelperObject<T> : IEquatable<T>
     where T : TagHelperObject<T>
 {
-    private Checksum? _checksum;
+    private Checksum _checksum;
 
     public ImmutableArray<RazorDiagnostic> Diagnostics { get; }
 
     public bool HasErrors
         => Diagnostics.Any(static d => d.Severity == RazorDiagnosticSeverity.Error);
 
-    private protected TagHelperObject(ImmutableArray<RazorDiagnostic> diagnostics)
+    private protected TagHelperObject(ImmutableArray<RazorDiagnostic> diagnostics, Checksum checksum = default)
     {
         Diagnostics = diagnostics.NullToEmpty();
+        _checksum = checksum;
     }
 
     internal Checksum Checksum
-        => _checksum ??= ComputeChecksum();
+    {
+        get
+        {
+            if (_checksum == default)
+            {
+                _checksum = ComputeChecksum();
+            }
+
+            return _checksum;
+        }
+    }
 
     // Internal for benchmarks
     internal Checksum ComputeChecksum()

@@ -40,13 +40,22 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         ValueComparison = valueComparison;
     }
 
+    internal static void AppendChecksumValues(
+        ref readonly Checksum.Builder builder,
+        RequiredAttributeDescriptorFlags flags,
+        string name, RequiredAttributeNameComparison nameComparison,
+        string? value, RequiredAttributeValueComparison valueComparison)
+    {
+        builder.Append((byte)flags);
+        builder.Append(name);
+        builder.Append((byte)nameComparison);
+        builder.Append(value);
+        builder.Append((byte)valueComparison);
+    }
+
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
-        builder.Append((int)Flags);
-        builder.Append(Name);
-        builder.Append((int)NameComparison);
-        builder.Append(Value);
-        builder.Append((int)ValueComparison);
+        AppendChecksumValues(in builder, Flags, Name, NameComparison, Value, ValueComparison);
     }
 
     public TagMatchingRuleDescriptor Parent

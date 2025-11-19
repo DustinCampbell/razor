@@ -14,17 +14,25 @@ public sealed class AllowedChildTagDescriptor : TagHelperObject<AllowedChildTagD
     public string Name { get; }
     public string DisplayName { get; }
 
-    internal AllowedChildTagDescriptor(string name, string displayName, ImmutableArray<RazorDiagnostic> diagnostics)
+    internal AllowedChildTagDescriptor(
+        string name, string displayName, ImmutableArray<RazorDiagnostic> diagnostics)
         : base(diagnostics)
     {
         Name = name;
         DisplayName = displayName;
     }
 
+    internal static void AppendChecksumValues(
+        ref readonly Checksum.Builder builder,
+        string name, string displayName)
+    {
+        builder.Append(name);
+        builder.Append(displayName);
+    }
+
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
-        builder.Append(Name);
-        builder.Append(DisplayName);
+        AppendChecksumValues(in builder, Name, DisplayName);
     }
 
     public TagHelperDescriptor Parent

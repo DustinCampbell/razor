@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -37,22 +38,38 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
         set => _flags.UpdateFlag(RequiredAttributeDescriptorFlags.IsDirectiveAttribute, value);
     }
 
+    private protected override void BuildChecksum(ref readonly Checksum.Builder builder)
+    {
+        GetValues(out var flags, out var name, out var nameComparison, out var value, out var valueComparison);
+
+        RequiredAttributeDescriptor.AppendChecksumValues(in builder, flags, name, nameComparison, value, valueComparison);
+    }
+
     private protected override RequiredAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        var flags = _flags;
+        GetValues(out var flags, out var name, out var nameComparison, out var value, out var valueComparison);
+
+        return new(flags, name, nameComparison, value, valueComparison, diagnostics);
+    }
+
+    private void GetValues(
+        out RequiredAttributeDescriptorFlags flags,
+        out string name,
+        out RequiredAttributeNameComparison nameComparison,
+        out string? value,
+        out RequiredAttributeValueComparison valueComparison)
+    {
+        flags = _flags;
 
         if (CaseSensitive)
         {
             flags |= RequiredAttributeDescriptorFlags.CaseSensitive;
         }
 
-        return new RequiredAttributeDescriptor(
-            flags,
-            Name ?? string.Empty,
-            NameComparison,
-            Value,
-            ValueComparison,
-            diagnostics);
+        name = Name ?? string.Empty;
+        nameComparison = NameComparison;
+        value = Value;
+        valueComparison = ValueComparison;
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

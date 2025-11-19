@@ -66,8 +66,9 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         ImmutableArray<BoundAttributeDescriptor> attributeDescriptors,
         ImmutableArray<AllowedChildTagDescriptor> allowedChildTags,
         MetadataObject metadata,
-        ImmutableArray<RazorDiagnostic> diagnostics)
-        : base(diagnostics)
+        ImmutableArray<RazorDiagnostic> diagnostics,
+        Checksum checksum = default)
+        : base(diagnostics, checksum)
     {
         _flags = flags;
         RuntimeKind = runtimeKind;
@@ -99,32 +100,43 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         }
     }
 
+    internal static void AppendChecksumValues(
+        ref readonly Checksum.Builder builder,
+        TagHelperFlags flags, TagHelperKind kind, RuntimeKind runtimeKind,
+        string name, string assemblyName, string displayName, string? tagOutputHint,
+        TypeNameObject typeNameObject, DocumentationObject documentationObject)
+    {
+        builder.Append((byte)flags);
+        builder.Append((byte)kind);
+        builder.Append((byte)runtimeKind);
+        builder.Append(name);
+        builder.Append(assemblyName);
+        builder.Append(displayName);
+        builder.Append(tagOutputHint);
+
+        typeNameObject.AppendToChecksum(in builder);
+        documentationObject.AppendToChecksum(in builder);
+    }
+
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
-        builder.Append((byte)Flags);
-        builder.Append((byte)Kind);
-        builder.Append((byte)RuntimeKind);
-        builder.Append(Name);
-        builder.Append(AssemblyName);
-        builder.Append(DisplayName);
-        builder.Append(TagOutputHint);
+        AppendChecksumValues(in builder,
+            Flags, Kind, RuntimeKind, Name, AssemblyName, DisplayName,
+            TagOutputHint, TypeNameObject, DocumentationObject);
 
-        TypeNameObject.AppendToChecksum(in builder);
-        DocumentationObject.AppendToChecksum(in builder);
-
-        foreach (var descriptor in AllowedChildTags)
+        foreach (var item in AllowedChildTags)
         {
-            builder.Append(descriptor.Checksum);
+            builder.Append(item.Checksum);
         }
 
-        foreach (var descriptor in BoundAttributes)
+        foreach (var item in BoundAttributes)
         {
-            builder.Append(descriptor.Checksum);
+            builder.Append(item.Checksum);
         }
 
-        foreach (var descriptor in TagMatchingRules)
+        foreach (var item in TagMatchingRules)
         {
-            builder.Append(descriptor.Checksum);
+            builder.Append(item.Checksum);
         }
 
         Metadata.AppendToChecksum(in builder);

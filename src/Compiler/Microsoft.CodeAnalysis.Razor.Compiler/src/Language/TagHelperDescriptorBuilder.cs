@@ -3,6 +3,9 @@
 
 using System;
 using System.Collections.Immutable;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
+using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -109,10 +112,7 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
 
     public void AllowChildTag(Action<AllowedChildTagDescriptorBuilder> configure)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgHelper.ThrowIfNull(configure);
 
         var builder = AllowedChildTagDescriptorBuilder.GetInstance(this);
         configure(builder);
@@ -121,10 +121,7 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
 
     public void BindAttribute(Action<BoundAttributeDescriptorBuilder> configure)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgHelper.ThrowIfNull(configure);
 
         var builder = BoundAttributeDescriptorBuilder.GetInstance(this);
         configure(builder);
@@ -133,10 +130,7 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
 
     public void TagMatchingRule(Action<TagMatchingRuleDescriptorBuilder> configure)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgHelper.ThrowIfNull(configure);
 
         var builder = TagMatchingRuleDescriptorBuilder.GetInstance(this);
         configure(builder);
@@ -153,23 +147,100 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
         _documentationObject = new(documentation);
     }
 
+    private protected override void BuildChecksum(ref readonly Checksum.Builder builder)
+    {
+        GetValues(
+            out var flags, out var kind, out var runtimeKind,
+            out var name, out var assemblyName, out var displayName, out var tagOutputHint,
+            out var typeNameObject, out var documentationObject);
+
+        TagHelperDescriptor.AppendChecksumValues(
+            in builder, flags, kind, runtimeKind, name, assemblyName,
+            displayName, tagOutputHint, typeNameObject, documentationObject);
+
+        using var _ = HashSetPool<Checksum>.GetPooledObject(out var checksums);
+
+        foreach (var item in AllowedChildTags)
+        {
+            var checksum = item.GetChecksum();
+            if (checksums.Add(checksum))
+            {
+                builder.Append(checksum);
+            }
+        }
+
+        checksums.Clear();
+
+        foreach (var item in BoundAttributes)
+        {
+            var checksum = item.GetChecksum();
+            if (checksums.Add(checksum))
+            {
+                builder.Append(checksum);
+            }
+        }
+
+        checksums.Clear();
+
+        foreach (var item in TagMatchingRules)
+        {
+            var checksum = item.GetChecksum();
+            if (checksums.Add(checksum))
+            {
+                builder.Append(checksum);
+            }
+        }
+
+        MetadataObject.AppendToChecksum(in builder);
+    }
+
     private protected override TagHelperDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        return new TagHelperDescriptor(
-            _flags,
-            Kind,
-            RuntimeKind,
-            Name,
-            AssemblyName,
-            GetDisplayName(),
-            _typeNameObject,
-            _documentationObject,
-            TagOutputHint,
-            TagMatchingRules.ToImmutable(),
-            BoundAttributes.ToImmutable(),
-            AllowedChildTags.ToImmutable(),
-            MetadataObject,
-            diagnostics);
+        // First, compute the checksum for this TagHelperDescriptor. There's no need to
+        // create a TagHelperDescriptor if we already have a cached version.
+        var builder = new Checksum.Builder();
+
+        BuildChecksum(in builder);
+
+        foreach (var diagnostic in diagnostics)
+        {
+            builder.Append(diagnostic.Checksum);
+        }
+
+        var checksum = builder.FreeAndGetChecksum();
+
+        if (TagHelperCache.Default.TryGet(checksum, out var result))
+        {
+            return result;
+        }
+
+        GetValues(
+            out var flags, out var kind, out var runtimeKind,
+            out var name, out var assemblyName, out var displayName, out var tagOutputHint,
+            out var typeNameObject, out var documentationObject);
+
+        result = new(flags, kind, runtimeKind, name, assemblyName, displayName,
+            typeNameObject, documentationObject, tagOutputHint,
+            TagMatchingRules.BuildAll(), BoundAttributes.BuildAll(), AllowedChildTags.BuildAll(),
+            MetadataObject, diagnostics, checksum);
+
+        return TagHelperCache.Default.GetOrAdd(checksum, result);
+    }
+
+    private void GetValues(
+        out TagHelperFlags flags, out TagHelperKind kind, out RuntimeKind runtimeKind,
+        out string name, out string assemblyName, out string displayName, out string? tagOutputHint,
+        out TypeNameObject typeNameObject, out DocumentationObject documentationObject)
+    {
+        flags = _flags;
+        kind = Kind;
+        runtimeKind = RuntimeKind;
+        name = Name;
+        assemblyName = AssemblyName;
+        displayName = GetDisplayName();
+        tagOutputHint = TagOutputHint;
+        typeNameObject = _typeNameObject;
+        documentationObject = _documentationObject;
     }
 
     internal string GetDisplayName()

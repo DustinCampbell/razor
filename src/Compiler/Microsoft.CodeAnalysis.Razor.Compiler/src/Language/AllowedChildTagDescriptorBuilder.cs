@@ -5,6 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -25,14 +26,24 @@ public sealed partial class AllowedChildTagDescriptorBuilder : TagHelperObjectBu
     public string? Name { get; set; }
     public string? DisplayName { get; set; }
 
+    private protected override void BuildChecksum(ref readonly Checksum.Builder builder)
+    {
+        GetValues(out var name, out var displayName);
+
+        AllowedChildTagDescriptor.AppendChecksumValues(in builder, name, displayName);
+    }
+
     private protected override AllowedChildTagDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        var displayName = DisplayName ?? Name ?? string.Empty;
+        GetValues(out var name, out var displayName);
 
-        return new AllowedChildTagDescriptor(
-            Name ?? string.Empty,
-            displayName,
-            diagnostics);
+        return new(name, displayName, diagnostics);
+    }
+
+    private void GetValues(out string name, out string displayName)
+    {
+        name = Name ?? string.Empty;
+        displayName = DisplayName ?? Name ?? string.Empty;
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

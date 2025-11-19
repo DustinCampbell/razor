@@ -5,6 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -64,22 +65,37 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
         _documentationObject = new(documentation);
     }
 
+    private protected override void BuildChecksum(ref readonly Checksum.Builder builder)
+    {
+        GetValues(out var flags, out var name, out var propertyName, out var typeNameObject, out var documentationObject);
+
+        BoundAttributeParameterDescriptor.AppendChecksumValues(in builder, flags, name, propertyName, typeNameObject, documentationObject);
+    }
+
     private protected override BoundAttributeParameterDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        var flags = _flags;
+        GetValues(out var flags, out var name, out var propertyName, out var typeNameObject, out var documentationObject);
+
+        return new(flags, name, propertyName, typeNameObject, documentationObject, diagnostics);
+    }
+
+    private void GetValues(
+        out BoundAttributeParameterFlags flags,
+        out string name, out string propertyName,
+        out TypeNameObject typeNameObject, out DocumentationObject documentationObject)
+    {
+        flags = _flags;
 
         if (CaseSensitive)
         {
             flags |= BoundAttributeParameterFlags.CaseSensitive;
         }
 
-        return new BoundAttributeParameterDescriptor(
-            flags,
-            Name ?? string.Empty,
-            PropertyName ?? string.Empty,
-            _typeNameObject,
-            _documentationObject,
-            diagnostics);
+        name = Name ?? string.Empty;
+        propertyName = PropertyName ?? string.Empty;
+
+        typeNameObject = _typeNameObject;
+        documentationObject = _documentationObject;
     }
 
     private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)

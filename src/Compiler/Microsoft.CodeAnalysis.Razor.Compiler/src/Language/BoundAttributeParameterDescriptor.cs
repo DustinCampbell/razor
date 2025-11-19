@@ -47,14 +47,24 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         DocumentationObject = documentationObject;
     }
 
+    internal static void AppendChecksumValues(
+        ref readonly Checksum.Builder builder,
+        BoundAttributeParameterFlags flags,
+        string name, string propertyName,
+        TypeNameObject typeNameObject,
+        DocumentationObject documentationObject)
+    {
+        builder.Append((byte)flags);
+        builder.Append(name);
+        builder.Append(propertyName);
+
+        typeNameObject.AppendToChecksum(in builder);
+        documentationObject.AppendToChecksum(in builder);
+    }
+
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
-        builder.Append((byte)_flags);
-        builder.Append(Name);
-        builder.Append(PropertyName);
-
-        TypeNameObject.AppendToChecksum(in builder);
-        DocumentationObject.AppendToChecksum(in builder);
+        AppendChecksumValues(in builder, Flags, Name, PropertyName, TypeNameObject, DocumentationObject);
     }
 
     public BoundAttributeDescriptor Parent

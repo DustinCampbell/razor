@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -150,21 +151,57 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
         _documentationObject = new(documentation);
     }
 
+    private protected override void BuildChecksum(ref readonly Checksum.Builder builder)
+    {
+        GetValues(
+            out var flags, out var name, out var propertyName, out var indexerNamePrefix,
+            out var displayName, out var containingType,
+            out var typeNameObject, out var indexerTypeNameObject,
+            out var documentationObject, out var metadata);
+
+        BoundAttributeDescriptor.AppendChecksumValues(
+            in builder, flags, name, propertyName, indexerNamePrefix,
+            displayName, containingType,
+            typeNameObject, indexerTypeNameObject, documentationObject);
+
+        foreach (var parameter in Parameters)
+        {
+            builder.Append(parameter.GetChecksum());
+        }
+
+        metadata.AppendToChecksum(in builder);
+    }
+
     private protected override BoundAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        return new BoundAttributeDescriptor(
-            _flags,
-            Name ?? string.Empty,
-            PropertyName ?? string.Empty,
-            _typeNameObject,
-            IndexerAttributeNamePrefix,
-            _indexerTypeNameObject,
-            _documentationObject,
-            GetDisplayName(),
-            ContainingType,
-            Parameters.ToImmutable(),
-            _metadataObject ?? MetadataObject.None,
-            diagnostics);
+        GetValues(
+            out var flags, out var name, out var propertyName, out var indexerNamePrefix,
+            out var displayName, out var containingType,
+            out var typeNameObject, out var indexerTypeNameObject,
+            out var documentationObject, out var metadata);
+
+        return new(flags, name, propertyName, typeNameObject, indexerNamePrefix,
+            indexerTypeNameObject, documentationObject, displayName, containingType,
+            Parameters.BuildAll(), metadata, diagnostics);
+    }
+
+    private void GetValues(
+        out BoundAttributeFlags flags,
+        out string name, out string propertyName, out string? indexerNamePrefix,
+        out string displayName, out string? containingType,
+        out TypeNameObject typeNameObject, out TypeNameObject indexerTypeNameObject,
+        out DocumentationObject documentationObject, out MetadataObject metadata)
+    {
+        flags = _flags;
+        name = Name ?? string.Empty;
+        propertyName = PropertyName ?? string.Empty;
+        indexerNamePrefix = IndexerAttributeNamePrefix;
+        displayName = GetDisplayName();
+        containingType = ContainingType;
+        typeNameObject = _typeNameObject;
+        indexerTypeNameObject = _indexerTypeNameObject;
+        documentationObject = _documentationObject;
+        metadata = _metadataObject ?? MetadataObject.None;
     }
 
     private string GetDisplayName()

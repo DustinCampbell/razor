@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.PooledObjects;
+using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -19,6 +20,33 @@ public abstract partial class TagHelperObjectBuilder<T> : IPoolableObject
     private protected TagHelperObjectBuilder()
     {
     }
+
+    internal Checksum GetChecksum()
+    {
+        var diagnostics = new PooledHashSet<RazorDiagnostic>();
+        try
+        {
+            CollectDiagnostics(ref diagnostics);
+            diagnostics.UnionWith(_diagnostics);
+
+            var builder = new Checksum.Builder();
+
+            BuildChecksum(in builder);
+
+            foreach (var diagnostic in diagnostics.ToImmutableArray())
+            {
+                builder.Append(diagnostic.Checksum);
+            }
+
+            return builder.FreeAndGetChecksum();
+        }
+        finally
+        {
+            diagnostics.ClearAndFree();
+        }
+    }
+
+    private protected abstract void BuildChecksum(ref readonly Checksum.Builder builder);
 
     public T Build()
     {

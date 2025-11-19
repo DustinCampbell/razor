@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Immutable;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
 
@@ -120,12 +119,9 @@ internal static class SimpleTagHelpers
             attribute.IsDirectiveAttribute = true;
             attribute.TypeName = typeof(string).FullName;
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "something";
-                parameter.PropertyName = "Something";
-                parameter.TypeName = typeof(string).FullName;
-            });
+            attribute.AddParameter<string>(
+                name: "something",
+                propertyName: "Something");
         });
         directiveAttribute1.IsFullyQualifiedNameMatch = true;
         directiveAttribute1.ClassifyAttributesOnly = true;
@@ -157,12 +153,9 @@ internal static class SimpleTagHelpers
             attribute.PropertyName = "Minimized";
             attribute.TypeName = typeof(bool).FullName;
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "something";
-                parameter.PropertyName = "Something";
-                parameter.TypeName = typeof(string).FullName;
-            });
+            attribute.AddParameter<string>(
+                name: "something",
+                propertyName: "Something");
         });
         directiveAttribute2.IsFullyQualifiedNameMatch = true;
         directiveAttribute2.ClassifyAttributesOnly = true;

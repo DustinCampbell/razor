@@ -316,60 +316,40 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
             a.IsDirectiveAttribute = true;
             a.PropertyName = name;
 
-            a.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "format";
-                parameter.PropertyName = formatName;
-                parameter.TypeName = typeof(string).FullName;
-                parameter.SetDocumentation(
-                    DocumentationDescriptor.From(
-                        DocumentationId.BindTagHelper_Element_Format,
-                        attributeName));
-            });
+            a.AddParameter<string>(
+                name: "format",
+                propertyName: formatName,
+                documentation: DocumentationDescriptor.From(
+                    DocumentationId.BindTagHelper_Element_Format,
+                    attributeName));
 
-            a.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "event";
-                parameter.PropertyName = eventName;
-                parameter.TypeName = typeof(string).FullName;
-                parameter.SetDocumentation(
-                    DocumentationDescriptor.From(
-                        DocumentationId.BindTagHelper_Element_Event,
-                        attributeName));
-            });
+            a.AddParameter<string>(
+                name: "event",
+                propertyName: eventName,
+                documentation: DocumentationDescriptor.From(
+                    DocumentationId.BindTagHelper_Element_Event,
+                    attributeName));
 
-            a.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "culture";
-                parameter.PropertyName = "Culture";
-                parameter.TypeName = typeof(CultureInfo).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Culture);
-            });
+            a.AddParameter<CultureInfo>(
+                name: "culture",
+                propertyName: "Culture",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_Culture);
 
-            a.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "get";
-                parameter.PropertyName = "Get";
-                parameter.TypeName = typeof(object).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Get);
-                parameter.BindAttributeGetSet = true;
-            });
+            a.AddParameter<object>(
+                name: "get",
+                propertyName: "Get",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_Get,
+                bindAttributeGetSet: true);
 
-            a.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "set";
-                parameter.PropertyName = "Set";
-                parameter.TypeName = typeof(Delegate).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Set);
-            });
+            a.AddParameter<Delegate>(
+                name: "set",
+                propertyName: "Set",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_Set);
 
-            a.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "after";
-                parameter.PropertyName = "After";
-                parameter.TypeName = typeof(Delegate).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_After);
-            });
+            a.AddParameter<Delegate>(
+                name: "after",
+                propertyName: "After",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_After);
         });
 
         // This is no longer supported. This is just here so we can add a diagnostic later on when this matches.
@@ -515,30 +495,21 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
                 attribute.IsDirectiveAttribute = true;
                 attribute.PropertyName = valueAttribute.PropertyName;
 
-                attribute.BindAttributeParameter(parameter =>
-                {
-                    parameter.Name = "get";
-                    parameter.PropertyName = "Get";
-                    parameter.TypeName = typeof(object).FullName;
-                    parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Get);
-                    parameter.BindAttributeGetSet = true;
-                });
+                attribute.AddParameter<object>(
+                    name: "get",
+                    propertyName: "Get",
+                    documentation: DocumentationDescriptor.BindTagHelper_Element_Get,
+                    bindAttributeGetSet: true);
 
-                attribute.BindAttributeParameter(parameter =>
-                {
-                    parameter.Name = "set";
-                    parameter.PropertyName = "Set";
-                    parameter.TypeName = typeof(Delegate).FullName;
-                    parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Set);
-                });
+                attribute.AddParameter<Delegate>(
+                    name: "set",
+                    propertyName: "Set",
+                    documentation: DocumentationDescriptor.BindTagHelper_Element_Set);
 
-                attribute.BindAttributeParameter(parameter =>
-                {
-                    parameter.Name = "after";
-                    parameter.PropertyName = "After";
-                    parameter.TypeName = typeof(Delegate).FullName;
-                    parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_After);
-                });
+                attribute.AddParameter<Delegate>(
+                    name: "after",
+                    propertyName: "After",
+                    documentation: DocumentationDescriptor.BindTagHelper_Element_After);
             });
 
             if (tagHelper.IsFullyQualifiedNameMatch)
@@ -593,56 +564,37 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
 
             attribute.TypeName = "System.Collections.Generic.Dictionary<string, object>";
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "format";
-                parameter.PropertyName = "Format";
-                parameter.TypeName = typeof(string).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Fallback_Format);
-            });
+            attribute.AddParameter<string>(
+                name: "format",
+                propertyName: "Format",
+                documentation: DocumentationDescriptor.BindTagHelper_Fallback_Format);
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "event";
-                parameter.PropertyName = "Event";
-                parameter.TypeName = typeof(string).FullName;
-                parameter.SetDocumentation(
-                    DocumentationDescriptor.From(
-                        DocumentationId.BindTagHelper_Fallback_Event, attributeName));
-            });
+            attribute.AddParameter<string>(
+                name: "event",
+                propertyName: "Event",
+                documentation: DocumentationDescriptor.From(
+                    DocumentationId.BindTagHelper_Fallback_Event, attributeName));
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "culture";
-                parameter.PropertyName = "Culture";
-                parameter.TypeName = typeof(CultureInfo).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Culture);
-            });
+            attribute.AddParameter<CultureInfo>(
+                name: "culture",
+                propertyName: "Culture",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_Culture);
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "get";
-                parameter.PropertyName = "Get";
-                parameter.TypeName = typeof(object).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Get);
-                parameter.BindAttributeGetSet = true;
-            });
+            attribute.AddParameter<object>(
+                name: "get",
+                propertyName: "Get",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_Get,
+                bindAttributeGetSet: true);
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "set";
-                parameter.PropertyName = "Set";
-                parameter.TypeName = typeof(Delegate).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_Set);
-            });
+            attribute.AddParameter<Delegate>(
+                name: "set",
+                propertyName: "Set",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_Set);
 
-            attribute.BindAttributeParameter(parameter =>
-            {
-                parameter.Name = "after";
-                parameter.PropertyName = "After";
-                parameter.TypeName = typeof(Delegate).FullName;
-                parameter.SetDocumentation(DocumentationDescriptor.BindTagHelper_Element_After);
-            });
+            attribute.AddParameter<Delegate>(
+                name: "after",
+                propertyName: "After",
+                documentation: DocumentationDescriptor.BindTagHelper_Element_After);
         });
 
         return builder.Build();

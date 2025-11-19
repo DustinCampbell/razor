@@ -205,30 +205,22 @@ internal sealed partial class EventHandlerTagHelperProducer : TagHelperProducer
 
             if (enablePreventDefault)
             {
-                a.BindAttributeParameter(parameter =>
-                {
-                    parameter.Name = "preventDefault";
-                    parameter.PropertyName = "PreventDefault";
-                    parameter.TypeName = typeof(bool).FullName;
-                    parameter.SetDocumentation(
-                        DocumentationDescriptor.From(
-                            DocumentationId.EventHandlerTagHelper_PreventDefault,
-                            attributeName));
-                });
+                a.AddParameter<bool>(
+                    name: "preventDefault",
+                    propertyName: "PreventDefault",
+                    documentation: DocumentationDescriptor.From(
+                        DocumentationId.EventHandlerTagHelper_PreventDefault,
+                        attributeName));
             }
 
             if (enableStopPropagation)
             {
-                a.BindAttributeParameter(parameter =>
-                {
-                    parameter.Name = "stopPropagation";
-                    parameter.PropertyName = "StopPropagation";
-                    parameter.TypeName = typeof(bool).FullName;
-                    parameter.SetDocumentation(
-                        DocumentationDescriptor.From(
-                            DocumentationId.EventHandlerTagHelper_StopPropagation,
-                            attributeName));
-                });
+                a.AddParameter<bool>(
+                    name: "stopPropagation",
+                    propertyName: "StopPropagation",
+                    documentation: DocumentationDescriptor.From(
+                        DocumentationId.EventHandlerTagHelper_StopPropagation,
+                        attributeName));
             }
         });
 

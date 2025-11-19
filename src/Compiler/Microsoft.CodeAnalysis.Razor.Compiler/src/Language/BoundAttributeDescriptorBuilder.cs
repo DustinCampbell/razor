@@ -128,16 +128,36 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
     private TagHelperObjectBuilderCollection<BoundAttributeParameterDescriptor, BoundAttributeParameterDescriptorBuilder> Parameters { get; }
         = new(BoundAttributeParameterDescriptorBuilder.Pool);
 
-    public void BindAttributeParameter(Action<BoundAttributeParameterDescriptorBuilder> configure)
+    internal BoundAttributeDescriptorBuilder AddParameter<T>(string name, string propertyName,
+        DocumentationDescriptor? documentation = null,
+        bool bindAttributeGetSet = false)
+        => AddParameter(name, propertyName, typeof(T).FullName, documentation, bindAttributeGetSet);
+
+    internal BoundAttributeDescriptorBuilder AddParameter(
+        string name,
+        string propertyName,
+        string typeName,
+        DocumentationDescriptor? documentation = null,
+        bool bindAttributeGetSet = false)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgHelper.ThrowIfNull(name);
+        ArgHelper.ThrowIfNull(propertyName);
+        ArgHelper.ThrowIfNull(typeName);
 
         var builder = BoundAttributeParameterDescriptorBuilder.GetInstance(this);
-        configure(builder);
+        builder.Name = name;
+        builder.PropertyName = propertyName;
+        builder.TypeName = typeName;
+        builder.BindAttributeGetSet = bindAttributeGetSet;
+
+        if (documentation is not null)
+        {
+            builder.SetDocumentation(documentation);
+        }
+
         Parameters.Add(builder);
+
+        return this;
     }
 
     internal void SetDocumentation(string? text)

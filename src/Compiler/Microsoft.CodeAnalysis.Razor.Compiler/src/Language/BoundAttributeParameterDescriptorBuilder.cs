@@ -46,11 +46,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
         set => _documentationObject = new(value);
     }
 
-    internal void SetDocumentation(string? text)
-    {
-        _documentationObject = new(text);
-    }
-
     internal void SetDocumentation(DocumentationDescriptor? documentation)
     {
         _documentationObject = new(documentation);

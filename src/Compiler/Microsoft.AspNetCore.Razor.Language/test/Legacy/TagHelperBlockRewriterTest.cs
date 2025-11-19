@@ -2412,12 +2412,9 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .AsDictionaryAttribute("@bind-", typeof(object).FullName)
                     .TypeName("System.Collections.Generic.Dictionary<string, object>")
                     .IsDirectiveAttribute()
-                    .BindAttributeParameter(p =>
-                    {
-                        p.Name = "event";
-                        p.PropertyName = "Event";
-                        p.TypeName = typeof(string).FullName;
-                    }))
+                    .AddParameter<string>(
+                        name: "event",
+                        propertyName: "Event"))
                 .Build(),
         ];
 
@@ -2456,12 +2453,9 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .AsDictionaryAttribute("@bind-", typeof(object).FullName)
                     .TypeName("System.Collections.Generic.Dictionary<string, object>")
                     .IsDirectiveAttribute()
-                    .BindAttributeParameter(p =>
-                    {
-                        p.Name = "param";
-                        p.PropertyName = "Param";
-                        p.TypeName = typeof(string).FullName;
-                    }))
+                    .AddParameter<string>(
+                        name: "param",
+                        propertyName: "Param"))
                 .Build(),
         ];
 

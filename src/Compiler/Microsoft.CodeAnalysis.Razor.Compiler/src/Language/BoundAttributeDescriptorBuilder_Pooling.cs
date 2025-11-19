@@ -29,12 +29,12 @@ public partial class BoundAttributeDescriptorBuilder
         _documentationObject = default;
         _metadataObject = null;
         _caseSensitiveSet = false;
+        _parameters.Clear();
 
         Name = null;
         PropertyName = null;
         IndexerAttributeNamePrefix = null;
         DisplayName = null;
         ContainingType = null;
-        Parameters.Clear();
     }
 }

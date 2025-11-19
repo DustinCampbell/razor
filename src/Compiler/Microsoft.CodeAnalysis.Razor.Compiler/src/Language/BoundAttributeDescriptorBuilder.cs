@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -125,11 +126,35 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
         }
     }
 
-    private TagHelperObjectBuilderCollection<BoundAttributeParameterDescriptor, BoundAttributeParameterDescriptorBuilder> Parameters { get; }
-        = new(BoundAttributeParameterDescriptorBuilder.Pool);
+    private readonly struct ParameterData
+    {
+        public BoundAttributeParameterFlags Flags { get; }
+        public string Name { get; }
+        public string PropertyName { get; }
+        public TypeNameObject TypeNameObject { get; }
+        public DocumentationObject DocumentationObject { get; }
 
-    internal BoundAttributeDescriptorBuilder AddParameter<T>(string name, string propertyName,
-        DocumentationDescriptor? documentation = null,
+        public ParameterData(
+            BoundAttributeParameterFlags flags,
+            string name,
+            string propertyName,
+            TypeNameObject typeNameObject,
+            DocumentationObject documentationObject)
+        {
+            Flags = flags;
+            Name = name;
+            PropertyName = propertyName;
+            TypeNameObject = typeNameObject;
+            DocumentationObject = documentationObject;
+        }
+    }
+
+    private readonly List<ParameterData> _parameters = [];
+
+    internal BoundAttributeDescriptorBuilder AddParameter<T>(
+        string name,
+        string propertyName,
+        DocumentationObject documentation = default,
         bool bindAttributeGetSet = false)
         => AddParameter(name, propertyName, typeof(T).FullName, documentation, bindAttributeGetSet);
 
@@ -137,25 +162,26 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
         string name,
         string propertyName,
         string typeName,
-        DocumentationDescriptor? documentation = null,
+        DocumentationObject documentation = default,
         bool bindAttributeGetSet = false)
     {
         ArgHelper.ThrowIfNull(name);
         ArgHelper.ThrowIfNull(propertyName);
         ArgHelper.ThrowIfNull(typeName);
 
-        var builder = BoundAttributeParameterDescriptorBuilder.GetInstance(this);
-        builder.Name = name;
-        builder.PropertyName = propertyName;
-        builder.TypeName = typeName;
-        builder.BindAttributeGetSet = bindAttributeGetSet;
+        BoundAttributeParameterFlags flags = 0;
 
-        if (documentation is not null)
+        if (bindAttributeGetSet)
         {
-            builder.SetDocumentation(documentation);
+            flags |= BoundAttributeParameterFlags.BindAttributeGetSet;
         }
 
-        Parameters.Add(builder);
+        _parameters.Add(new(
+            flags,
+            name,
+            propertyName,
+            TypeNameObject.From(typeName),
+            documentation));
 
         return this;
     }
@@ -179,19 +205,80 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
             flags |= BoundAttributeFlags.CaseSensitive;
         }
 
+        var name = Name ?? string.Empty;
+        var propertyName = PropertyName ?? string.Empty;
+
+        var parameters = CreateParameters(_parameters, name);
+
         return new BoundAttributeDescriptor(
             flags,
-            Name ?? string.Empty,
-            PropertyName ?? string.Empty,
+            name,
+            propertyName,
             _typeNameObject,
             IndexerAttributeNamePrefix,
             _indexerTypeNameObject,
             _documentationObject,
             GetDisplayName(),
             ContainingType,
-            Parameters.ToImmutable(),
+            parameters,
             _metadataObject ?? MetadataObject.None,
             diagnostics);
+    }
+
+    private static ImmutableArray<BoundAttributeParameterDescriptor> CreateParameters(List<ParameterData> parameters, string attributeName)
+    {
+        if (parameters.Count == 0)
+        {
+            return [];
+        }
+
+        // Create parameters from the collected data
+        var array = new BoundAttributeParameterDescriptor[parameters.Count];
+
+        for (var i = 0; i < parameters.Count; i++)
+        {
+            var parameterData = parameters[i];
+
+            array[i] = new(
+                flags: parameterData.Flags,
+                name: parameterData.Name,
+                propertyName: parameterData.PropertyName,
+                typeNameObject: parameterData.TypeNameObject,
+                documentationObject: parameterData.DocumentationObject,
+                diagnostics: GetDiagnostics(in parameterData, attributeName));
+        }
+
+
+        return ImmutableCollectionsMarshal.AsImmutableArray(array);
+
+        static ImmutableArray<RazorDiagnostic> GetDiagnostics(ref readonly ParameterData parameterData, string attributeName)
+        {
+            var name = parameterData.Name;
+
+            if (name.IsNullOrWhiteSpace())
+            {
+                var diagnostic = RazorDiagnosticFactory.CreateTagHelper_InvalidBoundAttributeParameterNullOrWhitespace(attributeName);
+
+                return [diagnostic];
+            }
+            else
+            {
+                foreach (var character in name)
+                {
+                    if (char.IsWhiteSpace(character) || HtmlConventions.IsInvalidNonWhitespaceHtmlCharacters(character))
+                    {
+                        var diagnostic = RazorDiagnosticFactory.CreateTagHelper_InvalidBoundAttributeParameterName(
+                            attributeName,
+                            name,
+                            character);
+
+                        return [diagnostic];
+                    }
+                }
+            }
+
+            return [];
+        }
     }
 
     private string GetDisplayName()

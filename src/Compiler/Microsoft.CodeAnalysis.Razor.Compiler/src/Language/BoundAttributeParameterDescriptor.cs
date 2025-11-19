@@ -44,6 +44,21 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         DocumentationObject = documentationObject;
     }
 
+    internal BoundAttributeParameterDescriptor(
+        ref readonly BoundAttributeParameterData data,
+        BoundAttributeDescriptor parent,
+        ImmutableArray<RazorDiagnostic> diagnostics)
+        : base(diagnostics)
+    {
+        _flags = data.Flags;
+        Name = data.Name;
+        PropertyName = data.PropertyName;
+        TypeNameObject = data.TypeNameObject;
+        DocumentationObject = data.DocumentationObject;
+
+        _parent = parent;
+    }
+
     private protected override void BuildChecksum(in Checksum.Builder builder)
     {
         builder.Append((byte)_flags);

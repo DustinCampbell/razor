@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -79,6 +80,56 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
         {
             parameter.SetParent(this);
         }
+    }
+
+    internal BoundAttributeDescriptor(
+        BoundAttributeFlags flags,
+        string name,
+        string propertyName,
+        TypeNameObject typeNameObject,
+        string? indexerNamePrefix,
+        TypeNameObject indexerTypeNameObject,
+        DocumentationObject documentationObject,
+        string displayName,
+        string? containingType,
+        List<BoundAttributeParameterData> parameters,
+        MetadataObject metadata,
+        ImmutableArray<RazorDiagnostic> diagnostics)
+        : base(diagnostics)
+    {
+        _flags = flags;
+
+        Name = name;
+        PropertyName = propertyName;
+        TypeNameObject = typeNameObject;
+        IndexerNamePrefix = indexerNamePrefix;
+        IndexerTypeNameObject = indexerTypeNameObject;
+        DocumentationObject = documentationObject;
+        DisplayName = displayName;
+        ContainingType = containingType;
+        Parameters = CreateParameters(parameters, name);
+        Metadata = metadata;
+    }
+
+    private ImmutableArray<BoundAttributeParameterDescriptor> CreateParameters(
+        List<BoundAttributeParameterData> parameters,
+        string attributeName)
+    {
+        if (parameters.Count == 0)
+        {
+            return [];
+        }
+
+        var array = new BoundAttributeParameterDescriptor[parameters.Count];
+
+        for (var i = 0; i < parameters.Count; i++)
+        {
+            var parameterData = parameters[i];
+
+            array[i] = new(in parameterData, parent: this, parameterData.GetDiagnostics(attributeName));
+        }
+
+        return ImmutableCollectionsMarshal.AsImmutableArray(array);
     }
 
     private protected override void BuildChecksum(in Checksum.Builder builder)

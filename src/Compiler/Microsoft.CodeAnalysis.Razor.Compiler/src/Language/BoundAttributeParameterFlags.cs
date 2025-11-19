@@ -8,7 +8,5 @@ namespace Microsoft.AspNetCore.Razor.Language;
 [Flags]
 public enum BoundAttributeParameterFlags : byte
 {
-    CaseSensitive = 1 << 0,
-    IsEnum = 1 << 1,
-    BindAttributeGetSet = 1 << 2
+    BindAttributeGetSet = 1 << 0
 }

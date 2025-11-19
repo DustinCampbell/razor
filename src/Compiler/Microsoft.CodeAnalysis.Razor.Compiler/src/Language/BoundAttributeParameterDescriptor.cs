@@ -11,21 +11,18 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
 {
     private readonly BoundAttributeParameterFlags _flags;
     private BoundAttributeDescriptor? _parent;
-    private string? _displayName;
 
     public BoundAttributeParameterFlags Flags => _flags;
     public string Name { get; }
     public string PropertyName { get; }
     public string TypeName => TypeNameObject.FullName.AssumeNotNull();
-    public string DisplayName => _displayName ??= ":" + Name;
+    public string DisplayName => field ??= $":{Name}";
 
     public string? Documentation => DocumentationObject.GetText();
 
     internal TypeNameObject TypeNameObject { get; }
     internal DocumentationObject DocumentationObject { get; }
 
-    public bool CaseSensitive => _flags.IsFlagSet(BoundAttributeParameterFlags.CaseSensitive);
-    public bool IsEnum => _flags.IsFlagSet(BoundAttributeParameterFlags.IsEnum);
     public bool IsStringProperty => TypeNameObject.IsString;
     public bool IsBooleanProperty => TypeNameObject.IsBoolean;
     public bool BindAttributeGetSet => _flags.IsFlagSet(BoundAttributeParameterFlags.BindAttributeGetSet);

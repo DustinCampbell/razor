@@ -532,7 +532,6 @@ namespace Test
             Assert.Equal("System.String", parameter.TypeName);
             Assert.True(parameter.IsStringProperty);
             Assert.False(parameter.IsBooleanProperty);
-            Assert.False(parameter.IsEnum);
 
             parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("culture"));
 
@@ -554,7 +553,6 @@ namespace Test
             Assert.Equal("System.Globalization.CultureInfo", parameter.TypeName);
             Assert.False(parameter.IsStringProperty);
             Assert.False(parameter.IsBooleanProperty);
-            Assert.False(parameter.IsEnum);
 
             parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("get"));
 
@@ -576,7 +574,6 @@ namespace Test
             Assert.Equal("System.Object", parameter.TypeName);
             Assert.False(parameter.IsStringProperty);
             Assert.False(parameter.IsBooleanProperty);
-            Assert.False(parameter.IsEnum);
 
             parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("set"));
 
@@ -598,7 +595,6 @@ namespace Test
             Assert.Equal("System.Delegate", parameter.TypeName);
             Assert.False(parameter.IsStringProperty);
             Assert.False(parameter.IsBooleanProperty);
-            Assert.False(parameter.IsEnum);
 
             parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("after"));
 
@@ -620,7 +616,6 @@ namespace Test
             Assert.Equal("System.Delegate", parameter.TypeName);
             Assert.False(parameter.IsStringProperty);
             Assert.False(parameter.IsBooleanProperty);
-            Assert.False(parameter.IsEnum);
         }
     }
 
@@ -1115,7 +1110,6 @@ namespace Test
         Assert.Equal("System.String", parameter.TypeName);
         Assert.True(parameter.IsStringProperty);
         Assert.False(parameter.IsBooleanProperty);
-        Assert.False(parameter.IsEnum);
 
         parameter = Assert.Single(attribute.Parameters, a => a.Name.Equals("culture"));
 
@@ -1137,7 +1131,6 @@ namespace Test
         Assert.Equal("System.Globalization.CultureInfo", parameter.TypeName);
         Assert.False(parameter.IsStringProperty);
         Assert.False(parameter.IsBooleanProperty);
-        Assert.False(parameter.IsEnum);
     }
 
     private static TagHelperCollection GetBindTagHelpers(TagHelperCollection collection)

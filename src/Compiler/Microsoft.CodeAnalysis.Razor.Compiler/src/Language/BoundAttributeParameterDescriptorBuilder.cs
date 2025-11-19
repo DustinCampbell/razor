@@ -34,12 +34,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
         set => _typeNameObject = TypeNameObject.From(value);
     }
 
-    public bool IsEnum
-    {
-        get => _flags.IsFlagSet(BoundAttributeParameterFlags.IsEnum);
-        set => _flags.UpdateFlag(BoundAttributeParameterFlags.IsEnum, value);
-    }
-
     public bool BindAttributeGetSet
     {
         get => _flags.IsFlagSet(BoundAttributeParameterFlags.BindAttributeGetSet);
@@ -51,8 +45,6 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
         get => _documentationObject.GetText();
         set => _documentationObject = new(value);
     }
-
-    internal bool CaseSensitive => _parent.CaseSensitive;
 
     internal void SetDocumentation(string? text)
     {
@@ -66,15 +58,8 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
 
     private protected override BoundAttributeParameterDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
-        var flags = _flags;
-
-        if (CaseSensitive)
-        {
-            flags |= BoundAttributeParameterFlags.CaseSensitive;
-        }
-
         return new BoundAttributeParameterDescriptor(
-            flags,
+            _flags,
             Name ?? string.Empty,
             PropertyName ?? string.Empty,
             _typeNameObject,

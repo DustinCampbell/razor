@@ -152,8 +152,15 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
     private protected override BoundAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var flags = _flags;
+
+        if (CaseSensitive)
+        {
+            flags |= BoundAttributeFlags.CaseSensitive;
+        }
+
         return new BoundAttributeDescriptor(
-            _flags,
+            flags,
             Name ?? string.Empty,
             PropertyName ?? string.Empty,
             _typeNameObject,

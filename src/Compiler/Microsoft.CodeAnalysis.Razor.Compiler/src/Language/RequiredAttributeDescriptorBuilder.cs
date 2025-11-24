@@ -55,7 +55,7 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
             diagnostics);
     }
 
-    private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)
+    private protected override void CollectDiagnostics(ref PooledArrayBuilder<RazorDiagnostic> diagnostics)
     {
         var name = Name;
 

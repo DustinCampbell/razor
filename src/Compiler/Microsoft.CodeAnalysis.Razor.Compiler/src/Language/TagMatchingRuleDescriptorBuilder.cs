@@ -54,7 +54,7 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
             diagnostics);
     }
 
-    private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)
+    private protected override void CollectDiagnostics(ref PooledArrayBuilder<RazorDiagnostic> diagnostics)
     {
         if (TagName.IsNullOrWhiteSpace())
         {

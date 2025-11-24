@@ -35,7 +35,7 @@ public sealed partial class AllowedChildTagDescriptorBuilder : TagHelperObjectBu
             diagnostics);
     }
 
-    private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)
+    private protected override void CollectDiagnostics(ref PooledArrayBuilder<RazorDiagnostic> diagnostics)
     {
         if (Name.IsNullOrWhiteSpace())
         {

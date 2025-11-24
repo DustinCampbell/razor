@@ -193,7 +193,7 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
         return Name ?? string.Empty;
     }
 
-    private protected override void CollectDiagnostics(ref PooledHashSet<RazorDiagnostic> diagnostics)
+    private protected override void CollectDiagnostics(ref PooledArrayBuilder<RazorDiagnostic> diagnostics)
     {
         // data-* attributes are explicitly not implemented by user agents and are not intended for use on
         // the server; therefore it's invalid for TagHelpers to bind to them.

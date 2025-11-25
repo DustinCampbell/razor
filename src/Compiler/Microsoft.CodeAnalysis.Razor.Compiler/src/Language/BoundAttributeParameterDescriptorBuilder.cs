@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -73,13 +74,16 @@ public sealed partial class BoundAttributeParameterDescriptorBuilder : TagHelper
             flags |= BoundAttributeParameterFlags.CaseSensitive;
         }
 
+        var name = Name ?? string.Empty;
+        var propertyName = PropertyName ?? string.Empty;
+        var typeNameObject = _typeNameObject;
+        var documentationObject = _documentationObject;
+
+        var checksum = ChecksumFactory.ComputeForBoundAttributeParameter(
+            flags, name, propertyName, typeNameObject, documentationObject, diagnostics);
+
         return new BoundAttributeParameterDescriptor(
-            flags,
-            Name ?? string.Empty,
-            PropertyName ?? string.Empty,
-            _typeNameObject,
-            _documentationObject,
-            diagnostics);
+            flags, name, propertyName, typeNameObject, documentationObject, checksum, diagnostics);
     }
 
     private protected override void CollectDiagnostics(ref PooledArrayBuilder<RazorDiagnostic> diagnostics)

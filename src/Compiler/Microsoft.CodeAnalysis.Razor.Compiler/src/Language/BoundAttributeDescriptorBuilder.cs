@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -152,19 +153,26 @@ public sealed partial class BoundAttributeDescriptorBuilder : TagHelperObjectBui
 
     private protected override BoundAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var flags = _flags;
+        var name = Name ?? string.Empty;
+        var propertyName = PropertyName ?? string.Empty;
+        var typeNameObject = _typeNameObject;
+        var indexerNamePrefix = IndexerAttributeNamePrefix;
+        var indexerTypeNameObject = _indexerTypeNameObject;
+        var documentationObject = _documentationObject;
+        var displayName = GetDisplayName();
+        var containingType = ContainingType;
+        var parameters = Parameters.ToImmutable();
+        var metadataObject = _metadataObject ?? MetadataObject.None;
+
+        var checksum = ChecksumFactory.ComputeForBoundAttribute(
+            flags, name, propertyName, typeNameObject, indexerNamePrefix, indexerTypeNameObject,
+            documentationObject, displayName, containingType, parameters, metadataObject, diagnostics);
+
         return new BoundAttributeDescriptor(
-            _flags,
-            Name ?? string.Empty,
-            PropertyName ?? string.Empty,
-            _typeNameObject,
-            IndexerAttributeNamePrefix,
-            _indexerTypeNameObject,
-            _documentationObject,
-            GetDisplayName(),
-            ContainingType,
-            Parameters.ToImmutable(),
-            _metadataObject ?? MetadataObject.None,
-            diagnostics);
+            flags, name, propertyName, typeNameObject, indexerNamePrefix, indexerTypeNameObject,
+            documentationObject, displayName, containingType, parameters, metadataObject,
+            checksum, diagnostics);
     }
 
     private string GetDisplayName()

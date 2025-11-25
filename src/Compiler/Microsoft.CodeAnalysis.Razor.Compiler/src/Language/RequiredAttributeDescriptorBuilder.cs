@@ -5,6 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -46,13 +47,16 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
             flags |= RequiredAttributeFlags.CaseSensitive;
         }
 
+        var name = Name ?? string.Empty;
+        var nameComparison = NameComparison;
+        var value = Value;
+        var valueComparison = ValueComparison;
+
+        var checksum = ChecksumFactory.ComputeForRequiredAttribute(
+            flags, name, nameComparison, value, valueComparison, diagnostics);
+
         return new RequiredAttributeDescriptor(
-            flags,
-            Name ?? string.Empty,
-            NameComparison,
-            Value,
-            ValueComparison,
-            diagnostics);
+            flags, name, nameComparison, value, valueComparison, checksum, diagnostics);
     }
 
     private protected override void CollectDiagnostics(ref PooledArrayBuilder<RazorDiagnostic> diagnostics)

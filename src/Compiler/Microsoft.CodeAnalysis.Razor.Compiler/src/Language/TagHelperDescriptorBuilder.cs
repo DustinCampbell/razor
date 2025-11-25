@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Immutable;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -155,21 +156,31 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
 
     private protected override TagHelperDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var flags = _flags;
+        var kind = Kind;
+        var runtimeKind = RuntimeKind;
+        var name = Name;
+        var assemblyName = AssemblyName;
+        var displayName = GetDisplayName();
+        var typeNameObject = _typeNameObject;
+        var documentationObject = _documentationObject;
+        var tagOutputHint = TagOutputHint;
+        var allowedChildTags = AllowedChildTags.ToImmutable();
+        var boundAttributes = BoundAttributes.ToImmutable();
+        var tagMatchingRules = TagMatchingRules.ToImmutable();
+        var metadataObject = MetadataObject;
+
+        var checksum = ChecksumFactory.ComputeForTagHelper(
+            flags, kind, runtimeKind, name, assemblyName, displayName,
+            typeNameObject, documentationObject, tagOutputHint,
+            allowedChildTags, boundAttributes, tagMatchingRules,
+            metadataObject, diagnostics);
+
         return new TagHelperDescriptor(
-            _flags,
-            Kind,
-            RuntimeKind,
-            Name,
-            AssemblyName,
-            GetDisplayName(),
-            _typeNameObject,
-            _documentationObject,
-            TagOutputHint,
-            AllowedChildTags.ToImmutable(),
-            BoundAttributes.ToImmutable(),
-            TagMatchingRules.ToImmutable(),
-            MetadataObject,
-            diagnostics);
+            flags, kind, runtimeKind, name, assemblyName, displayName,
+            typeNameObject, documentationObject, tagOutputHint,
+            allowedChildTags, boundAttributes, tagMatchingRules,
+            metadataObject, checksum, diagnostics);
     }
 
     internal string GetDisplayName()

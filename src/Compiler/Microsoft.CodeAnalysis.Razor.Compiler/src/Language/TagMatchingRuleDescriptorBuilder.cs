@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -45,13 +46,17 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
 
     private protected override TagMatchingRuleDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        var tagName = TagName ?? string.Empty;
+        var parentTag = ParentTag;
+        var tagStructure = TagStructure;
+        var caseSensitive = CaseSensitive;
+        var attributes = Attributes.ToImmutable();
+
+        var checksum = ChecksumFactory.ComputeForTagMatchingRule(
+            tagName, parentTag, tagStructure, caseSensitive, attributes, diagnostics);
+
         return new TagMatchingRuleDescriptor(
-            TagName ?? string.Empty,
-            ParentTag,
-            TagStructure,
-            CaseSensitive,
-            Attributes.ToImmutable(),
-            diagnostics);
+            tagName, parentTag, tagStructure, caseSensitive, attributes, checksum, diagnostics);
     }
 
     private protected override void CollectDiagnostics(ref PooledArrayBuilder<RazorDiagnostic> diagnostics)

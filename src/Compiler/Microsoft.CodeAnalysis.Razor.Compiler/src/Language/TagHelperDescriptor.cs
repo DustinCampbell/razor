@@ -63,9 +63,9 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         TypeNameObject typeNameObject,
         DocumentationObject documentationObject,
         string? tagOutputHint,
-        ImmutableArray<TagMatchingRuleDescriptor> tagMatchingRules,
-        ImmutableArray<BoundAttributeDescriptor> attributeDescriptors,
         ImmutableArray<AllowedChildTagDescriptor> allowedChildTags,
+        ImmutableArray<BoundAttributeDescriptor> boundAttributes,
+        ImmutableArray<TagMatchingRuleDescriptor> tagMatchingRules,
         MetadataObject metadata,
         Checksum checksum,
         ImmutableArray<RazorDiagnostic> diagnostics)
@@ -81,7 +81,7 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         DocumentationObject = documentationObject;
         TagOutputHint = tagOutputHint;
         TagMatchingRules = tagMatchingRules.NullToEmpty();
-        BoundAttributes = attributeDescriptors.NullToEmpty();
+        BoundAttributes = boundAttributes.NullToEmpty();
         AllowedChildTags = allowedChildTags.NullToEmpty();
         Metadata = metadata;
 
@@ -111,14 +111,14 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         TypeNameObject typeNameObject,
         DocumentationObject documentationObject,
         string? tagOutputHint,
-        ImmutableArray<TagMatchingRuleDescriptor> tagMatchingRules,
-        ImmutableArray<BoundAttributeDescriptor> attributeDescriptors,
         ImmutableArray<AllowedChildTagDescriptor> allowedChildTags,
+        ImmutableArray<BoundAttributeDescriptor> boundAttributes,
+        ImmutableArray<TagMatchingRuleDescriptor> tagMatchingRules,
         MetadataObject metadata,
         ImmutableArray<RazorDiagnostic> diagnostics)
         : this(
-            flags, kind, runtimeKind, name, assemblyName, displayName, typeNameObject, documentationObject, tagOutputHint, tagMatchingRules, attributeDescriptors, allowedChildTags, metadata,
-            ChecksumFactory.ComputeForTagHelper(flags, kind, runtimeKind, name, assemblyName, displayName, typeNameObject, documentationObject, tagOutputHint, allowedChildTags, attributeDescriptors, tagMatchingRules, metadata, diagnostics),
+            flags, kind, runtimeKind, name, assemblyName, displayName, typeNameObject, documentationObject, tagOutputHint, allowedChildTags, boundAttributes, tagMatchingRules, metadata,
+            ChecksumFactory.ComputeForTagHelper(flags, kind, runtimeKind, name, assemblyName, displayName, typeNameObject, documentationObject, tagOutputHint, allowedChildTags, boundAttributes, tagMatchingRules, metadata, diagnostics),
             diagnostics)
     {
     }
@@ -203,7 +203,7 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         return new(
             Flags, Kind, RuntimeKind, name, AssemblyName, DisplayName,
             TypeNameObject, DocumentationObject, TagOutputHint,
-            TagMatchingRules, BoundAttributes, AllowedChildTags,
+            AllowedChildTags, BoundAttributes, TagMatchingRules,
             Metadata, Diagnostics);
     }
 }

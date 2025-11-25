@@ -94,7 +94,7 @@ internal static partial class ObjectReaders
         tagHelper = new TagHelperDescriptor(
             flags, kind, runtimeKind, Cached(name), Cached(assemblyName),
             Cached(displayName)!, typeNameObject, documentationObject, Cached(tagOutputHint),
-            tagMatchingRules, boundAttributes, allowedChildTags,
+            allowedChildTags, boundAttributes, tagMatchingRules,
             metadata, diagnostics);
 
 #if JSONSERIALIZATION_ENABLETAGHELPERCACHE

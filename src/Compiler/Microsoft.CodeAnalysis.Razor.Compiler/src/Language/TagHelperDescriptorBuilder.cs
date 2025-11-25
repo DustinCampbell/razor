@@ -165,9 +165,9 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
             _typeNameObject,
             _documentationObject,
             TagOutputHint,
-            TagMatchingRules.ToImmutable(),
-            BoundAttributes.ToImmutable(),
             AllowedChildTags.ToImmutable(),
+            BoundAttributes.ToImmutable(),
+            TagMatchingRules.ToImmutable(),
             MetadataObject,
             diagnostics);
     }

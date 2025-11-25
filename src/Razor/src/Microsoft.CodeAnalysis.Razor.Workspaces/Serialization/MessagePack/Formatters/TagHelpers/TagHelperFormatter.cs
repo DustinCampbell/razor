@@ -43,7 +43,7 @@ internal sealed class TagHelperFormatter : ValueFormatter<TagHelperDescriptor>
         return new TagHelperDescriptor(
             flags, kind, runtimeKind, name, assemblyName,
             displayName, typeNameObject, documentationObject, tagOutputHint,
-            tagMatchingRules, boundAttributes, allowedChildTags,
+            allowedChildTags, boundAttributes, tagMatchingRules,
             metadata, diagnostics);
     }
 

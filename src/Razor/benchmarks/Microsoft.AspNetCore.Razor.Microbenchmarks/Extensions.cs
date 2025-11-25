@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Reports;
+using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.Razor.Microbenchmarks;
 
@@ -34,4 +36,13 @@ internal static class SummaryExtensions
     public static bool HasAnyErrors(this BenchmarkReport report)
         => !report.BuildResult.IsBuildSuccess ||
            !report.AllMeasurements.Any();
+
+    internal static TagHelperDescriptor WithName(this TagHelperDescriptor value, string name)
+    {
+        return new(
+            value.Flags, value.Kind, value.RuntimeKind, name, value.AssemblyName, value.DisplayName,
+            value.TypeNameObject, value.DocumentationObject, value.TagOutputHint,
+            value.AllowedChildTags, value.BoundAttributes, value.TagMatchingRules,
+            value.Metadata, value.Checksum, value.Diagnostics);
+    }
 }

@@ -197,13 +197,4 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
     {
         return $"{DisplayName} - {string.Join(" | ", TagMatchingRules.Select(r => r.GetDebuggerDisplay()))}";
     }
-
-    internal TagHelperDescriptor WithName(string name)
-    {
-        return new(
-            Flags, Kind, RuntimeKind, name, AssemblyName, DisplayName,
-            TypeNameObject, DocumentationObject, TagOutputHint,
-            AllowedChildTags, BoundAttributes, TagMatchingRules,
-            Metadata, Diagnostics);
-    }
 }

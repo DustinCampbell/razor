@@ -149,10 +149,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
         TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("*")
-                .RequireAttributeDescriptor(b =>
-                {
-                    b.Name = "onclick";
-                }))
+                .AddAttribute("onclick"))
             .Build(),
     ];
 
@@ -451,7 +448,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
                 .TagMatchingRuleDescriptor(rule =>
                     rule
                     .RequireTagName("strong")
-                    .RequireAttributeDescriptor(attribute => attribute.Name("required")))
+                    .AddAttribute("required"))
                 .AllowChildTag("br")
                 .Build()
         ];
@@ -950,20 +947,20 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("p")
-                .RequireAttributeDescriptor(attribute => attribute.Name("class")))
+                .AddAttribute("class"))
             .Build(),
         TagHelperDescriptorBuilder.CreateTagHelper("divTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("div")
-                .RequireAttributeDescriptor(attribute => attribute.Name("class"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("style")))
+                .AddAttribute("class")
+                .AddAttribute("style"))
             .Build(),
         TagHelperDescriptorBuilder.CreateTagHelper("catchAllTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("*")
-                .RequireAttributeDescriptor(attribute => attribute.Name("catchAll")))
+                .AddAttribute("catchAll"))
             .Build()
     ];
 
@@ -1153,13 +1150,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("p")
-                .RequireAttributeDescriptor(attribute => attribute.Name("class")))
+                .AddAttribute("class"))
             .Build(),
         TagHelperDescriptorBuilder.CreateTagHelper("catchAllTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("*")
-                .RequireAttributeDescriptor(attribute => attribute.Name("catchAll")))
+                .AddAttribute("catchAll"))
             .Build(),
     ];
 
@@ -1229,7 +1226,7 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("p")
-                .RequireAttributeDescriptor(attribute => attribute.Name("class")))
+                .AddAttribute("class"))
             .Build(),
     ];
 
@@ -1922,13 +1919,13 @@ public class TagHelperParseTreeRewriterTest : TagHelperRewritingTestBase
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("p")
-                .RequireAttributeDescriptor(attribute => attribute.Name("class")))
+                .AddAttribute("class"))
             .Build(),
         TagHelperDescriptorBuilder.CreateTagHelper("catchAllTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("*")
-                .RequireAttributeDescriptor(attribute => attribute.Name("catchAll")))
+                .AddAttribute("catchAll"))
             .Build(),
     ];
 

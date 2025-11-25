@@ -16,7 +16,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("*")
-                .RequireAttributeDescriptor(attribute => attribute.Name("bound")))
+                .AddAttribute("bound"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("[item]")
                 .PropertyName("ListItems")
@@ -231,9 +231,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
             TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
                     .RequireTagName("*")
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("@onclick")
-                        .IsDirectiveAttribute()))
+                    .AddAttribute("@onclick", isDirectiveAttribute: true))
                 .Build(),
         ];
 
@@ -250,9 +248,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
             TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
                 .TagMatchingRuleDescriptor(rule => rule
                     .RequireTagName("*")
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("@onclick")
-                        .IsDirectiveAttribute()))
+                    .AddAttribute("@onclick", isDirectiveAttribute: true))
                 .Build(),
         ];
 
@@ -1254,10 +1250,10 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper1", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("input")
-                .RequireAttributeDescriptor(attribute => attribute.Name("unbound-required")))
+                .AddAttribute("unbound-required"))
             .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("input")
-                .RequireAttributeDescriptor(attribute => attribute.Name("bound-required-string")))
+                .AddAttribute("bound-required-string"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound-required-string")
                 .PropertyName("BoundRequiredString")
@@ -1266,7 +1262,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper2", "SomeAssembly")
             .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("input")
-                .RequireAttributeDescriptor(attribute => attribute.Name("bound-required-int")))
+                .AddAttribute("bound-required-int"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound-required-int")
                 .PropertyName("BoundRequiredInt")
@@ -2184,9 +2180,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 })
                 .TagMatchingRuleDescriptor(rule => rule
                     .RequireTagName("*")
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("@bind-", RequiredAttributeNameComparison.PrefixMatch)
-                        .IsDirectiveAttribute()))
+                    .AddAttribute("@bind-", RequiredAttributeNameComparison.PrefixMatch, isDirectiveAttribute: true))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("@bind-...")
                     .PropertyName("Bind")
@@ -2228,9 +2222,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 })
                 .TagMatchingRuleDescriptor(rule => rule
                     .RequireTagName("*")
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("@bind-", RequiredAttributeNameComparison.PrefixMatch)
-                        .IsDirectiveAttribute()))
+                    .AddAttribute("@bind-", RequiredAttributeNameComparison.PrefixMatch, isDirectiveAttribute: true))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("@bind-...")
                     .PropertyName("Bind")

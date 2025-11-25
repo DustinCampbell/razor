@@ -25,7 +25,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
                     .PropertyName("RouteValues")
                     .AsDictionary("asp-route-", typeof(string).FullName))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -58,7 +58,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
                     .PropertyName("RouteValues")
                     .AsDictionary("asp-route-", typeof(string).FullName))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -87,15 +87,15 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "form", static b => b
-                    .RequiredAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
+                    .AddAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
                 .TagMatchingRule(tagName: "form", static b => b
-                    .RequiredAttribute(name: "asp-all-route-data"))
+                    .AddAttribute(name: "asp-all-route-data"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("asp-all-route-data")
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
                     .PropertyName("RouteValues")
                     .AsDictionary("asp-route-", typeof(string).FullName))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -124,7 +124,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
                     .TypeName(typeof(bool).FullName)
@@ -136,7 +136,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .Name("class")
                     .TypeName(typeof(string).FullName)
                     .PropertyName("Class"))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -167,7 +167,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
                     .TypeName(typeof(bool).FullName)
@@ -179,7 +179,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .Name("class")
                     .TypeName(typeof(string).FullName)
                     .PropertyName("Class"))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -212,7 +212,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("visible")
                     .TypeName(typeof(bool).FullName)
@@ -224,7 +224,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .Name("class")
                     .TypeName(typeof(string).FullName)
                     .PropertyName("Class"))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -256,12 +256,12 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "*", static b => b
-                    .RequiredAttribute(name: "class"))
-                .Build(),
+                    .AddAttribute(name: "class"))
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -290,7 +290,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("repeat")
                     .TypeName(typeof(bool).FullName)
@@ -302,12 +302,12 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "*", static b => b
-                    .RequiredAttribute(name: "class"))
+                    .AddAttribute(name: "class"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("class")
                     .TypeName(typeof(string).FullName)
                     .PropertyName("Class"))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -347,7 +347,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "*", static b => b
-                    .RequiredAttribute(name: "class"))
+                    .AddAttribute(name: "class"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("class")
                     .TypeName(typeof(string).FullName)
@@ -359,7 +359,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .Name("visible")
                     .TypeName(typeof(bool).FullName)
                     .PropertyName("Visible"))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -394,7 +394,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .TypeName(typeof(bool).FullName)
                     .PropertyName("Repeat"))
                 .TagOutputHint("div")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -426,7 +426,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .Name("repeat")
                     .TypeName(typeof(bool).FullName)
                     .PropertyName("Repeat"))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -457,7 +457,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     .Name("repeat")
                     .TypeName(typeof(bool).FullName)
                     .PropertyName("Repeat"))
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -505,8 +505,8 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "special"))
-                .Build(),
+                    .AddAttribute(name: "special"))
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -534,8 +534,8 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
         [
             TagHelperDescriptorBuilder.CreateTagHelper("MyTableTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "table", static b => b
-                    .RequiredAttribute(name: "special"))
-                .Build(),
+                    .AddAttribute(name: "special"))
+                .Build()
         ];
 
         var expectedCompletions = AttributeCompletionResult.Create(new()
@@ -568,7 +568,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                     builder.IsDirectiveAttribute = true;
                 })
                 .TagOutputHint("table")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -604,7 +604,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
             TagHelperDescriptorBuilder.CreateTagHelper("Test2TagHelper", "TestAssembly")
                 .TagMatchingRule("Test2Assembly.Test")
                 .IsFullyQualifiedNameMatch(true)
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -638,7 +638,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
             TagHelperDescriptorBuilder.CreateTagHelper("MyTrTagHelper", "TestAssembly")
                 .TagMatchingRule("my-tr")
                 .TagOutputHint("tr")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -670,7 +670,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
                 .TagMatchingRule("li")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -702,7 +702,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
                 .TagMatchingRule("li")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -737,7 +737,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
             TagHelperDescriptorBuilder.CreateTagHelper("MYLITagHelper", "TestAssembly")
                 .TagMatchingRule("MYLI")
                 .SetCaseSensitive()
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -771,7 +771,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
                 .TagMatchingRule("li")
                 .SetCaseSensitive()
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -802,7 +802,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly")
                 .TagMatchingRule(tagName: "*")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -833,7 +833,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly")
                 .TagMatchingRule(tagName: "*")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -867,7 +867,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("BoldTagHelper2", "TestAssembly")
                 .TagMatchingRule(tagName: "strong")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -899,7 +899,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper2", "TestAssembly")
                 .TagMatchingRule(tagName: "li")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -933,7 +933,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -966,7 +966,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "li")
                 .TagOutputHint("strong")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -997,7 +997,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper2", "TestAssembly")
                 .TagMatchingRule(tagName: "li", parentTagName: "ol")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -1029,7 +1029,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
             TagHelperDescriptorBuilder.CreateTagHelper("Tag2", "TestAssembly")
                 .TagMatchingRule(tagName: "parent-tag")
                 .AllowChildTag("child-tag")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -1063,7 +1063,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
             TagHelperDescriptorBuilder.CreateTagHelper("Tag2", "TestAssembly")
                 .TagMatchingRule(tagName: "parent-tag")
                 .AllowChildTag("child-tag")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -1094,7 +1094,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .AllowChildTag("div")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create([]);
@@ -1122,7 +1122,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .AllowChildTag("div")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -1154,7 +1154,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .TagMatchingRule("div")
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -1186,7 +1186,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .AllowChildTag("div")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()
@@ -1224,7 +1224,7 @@ public class LegacyTagHelperCompletionServiceTest(ITestOutputHelper testOutput) 
                 .TagMatchingRule("div")
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
-                .Build(),
+                .Build()
         ];
 
         var expectedCompletions = ElementCompletionResult.Create(new()

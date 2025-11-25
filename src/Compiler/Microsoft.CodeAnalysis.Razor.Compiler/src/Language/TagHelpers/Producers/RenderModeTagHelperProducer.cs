@@ -50,11 +50,7 @@ internal sealed partial class RenderModeTagHelperProducer : TagHelperProducer
         builder.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.Attribute(attribute =>
-            {
-                attribute.Name = "@rendermode";
-                attribute.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute($"@rendermode", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

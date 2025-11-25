@@ -263,11 +263,9 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
             ruleBuilders:
             [
                 ruleBuilder => ruleBuilder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("a", RequiredAttributeNameComparison.FullMatch)),
+                    .AddAttribute("a", RequiredAttributeNameComparison.FullMatch),
                 ruleBuilder => ruleBuilder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("b", RequiredAttributeNameComparison.FullMatch)),
+                    .AddAttribute("b", RequiredAttributeNameComparison.FullMatch),
             ]);
 
         var content = @"
@@ -305,11 +303,9 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
             ruleBuilders:
             [
                 ruleBuilder => ruleBuilder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("a", RequiredAttributeNameComparison.FullMatch)),
+                    .AddAttribute("a", RequiredAttributeNameComparison.FullMatch),
                 ruleBuilder => ruleBuilder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("b", RequiredAttributeNameComparison.FullMatch)),
+                    .AddAttribute("b", RequiredAttributeNameComparison.FullMatch),
             ]);
 
         var content = @"

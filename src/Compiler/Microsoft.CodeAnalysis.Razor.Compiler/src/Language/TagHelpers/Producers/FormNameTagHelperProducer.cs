@@ -53,11 +53,7 @@ internal sealed partial class FormNameTagHelperProducer : TagHelperProducer
         builder.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.Attribute(attribute =>
-            {
-                attribute.Name = "@formname";
-                attribute.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute($"@formname", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

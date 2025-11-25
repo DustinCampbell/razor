@@ -86,9 +86,9 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "form", static b => b
-                    .RequiredAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
+                    .AddAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
                 .TagMatchingRule(tagName: "form", static b => b
-                    .RequiredAttribute(name: "asp-all-route-data"))
+                    .AddAttribute(name: "asp-all-route-data"))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("asp-all-route-data")
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
@@ -123,7 +123,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
@@ -160,7 +160,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
@@ -199,7 +199,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
@@ -237,11 +237,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "*", static b => b
-                    .RequiredAttribute(name: "class"))
+                    .AddAttribute(name: "class"))
                 .Build(),
         ];
 
@@ -271,13 +271,13 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttribute<bool>(name: "repeat", propertyName: "Repeat")
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "*", static b => b
-                    .RequiredAttribute(name: "class"))
+                    .AddAttribute(name: "class"))
                 .BoundAttribute<string>(name: "class", propertyName: "Class")
                 .Build(),
         ];
@@ -308,13 +308,13 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "repeat"))
+                    .AddAttribute(name: "repeat"))
                 .BoundAttribute<bool>(name: "repeat", propertyName: "Repeat")
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "*", static b => b
-                    .RequiredAttribute(name: "class"))
+                    .AddAttribute(name: "class"))
                 .BoundAttribute<string>(name: "class", propertyName: "Class")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
@@ -458,7 +458,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute("special"))
+                    .AddAttribute("special"))
                 .Build(),
         ];
 
@@ -487,7 +487,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("MyTableTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "table", static b => b
-                    .RequiredAttribute("special"))
+                    .AddAttribute("special"))
                 .Build(),
         ];
 
@@ -1199,7 +1199,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "form", static b => b
-                    .RequiredAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
+                    .AddAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
                 .Build()
         ];
 
@@ -1229,7 +1229,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "form", static b => b
-                    .RequiredAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
+                    .AddAttribute(name: "asp-route-", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
                 .Build(),
         ];
 
@@ -1255,7 +1255,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         [
             TagHelperDescriptorBuilder.CreateTagHelper("ComponentTagHelper", "TestAssembly")
                 .TagMatchingRule(tagName: "component", static b => b
-                    .RequiredAttribute(name: "type", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
+                    .AddAttribute(name: "type", nameComparison: RequiredAttributeNameComparison.PrefixMatch))
                 .Build(),
         ];
 

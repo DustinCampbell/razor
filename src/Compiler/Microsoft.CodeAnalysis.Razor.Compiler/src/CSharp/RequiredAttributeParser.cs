@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -40,18 +40,12 @@ internal static class RequiredAttributeParser
             if (result.Success || result.HasDiagnostics)
             {
                 // If we failed to parse, we still want to add the attribute with the diagnostics.
-                ruleBuilder.Attribute(builder =>
-                {
-                    builder.Name = result.Name;
-                    builder.NameComparison = result.NameComparison;
-                    builder.Value = result.Value;
-                    builder.ValueComparison = result.ValueComparison;
-
-                    if (result.HasDiagnostics)
-                    {
-                        builder.Diagnostics.AddRange(result.Diagnostics);
-                    }
-                });
+                ruleBuilder.AddAttribute(
+                    result.Name,
+                    nameComparison: result.NameComparison,
+                    value: result.Value,
+                    valueComparison: result.ValueComparison,
+                    diagnostics: result.Diagnostics);
             }
         }
         while (result.Success);

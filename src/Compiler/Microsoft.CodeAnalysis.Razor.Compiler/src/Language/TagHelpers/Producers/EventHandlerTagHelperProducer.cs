@@ -143,13 +143,7 @@ internal sealed partial class EventHandlerTagHelperProducer : TagHelperProducer
         builder.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-
-            rule.Attribute(a =>
-            {
-                a.Name = attributeName;
-                a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                a.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute(attributeName, RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
         });
 
         if (enablePreventDefault)
@@ -157,13 +151,7 @@ internal sealed partial class EventHandlerTagHelperProducer : TagHelperProducer
             builder.TagMatchingRule(rule =>
             {
                 rule.TagName = "*";
-
-                rule.Attribute(a =>
-                {
-                    a.Name = attributeName + ":preventDefault";
-                    a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                    a.IsDirectiveAttribute = true;
-                });
+                rule.AddAttribute($"{attributeName}:preventDefault", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
             });
         }
 
@@ -172,13 +160,7 @@ internal sealed partial class EventHandlerTagHelperProducer : TagHelperProducer
             builder.TagMatchingRule(rule =>
             {
                 rule.TagName = "*";
-
-                rule.Attribute(a =>
-                {
-                    a.Name = attributeName + ":stopPropagation";
-                    a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                    a.IsDirectiveAttribute = true;
-                });
+                rule.AddAttribute($"{attributeName}:stopPropagation", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
             });
         }
 

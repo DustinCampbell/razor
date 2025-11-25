@@ -91,7 +91,7 @@ public class TestTagHelperDescriptors
                         builder => builder
                             .Name("age")
                             .PropertyName("AgeProp")
-                            .TypeName("System.Int32"),
+                            .TypeName("System.Int32")
                     ])
             ];
         }
@@ -113,9 +113,9 @@ public class TestTagHelperDescriptors
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute
-                                .Name("href", RequiredAttributeNameComparison.FullMatch)
-                                .Value("~/", RequiredAttributeValueComparison.FullMatch)),
+                            .AddAttribute(
+                                name: "href", RequiredAttributeNameComparison.FullMatch,
+                                value: "~/", RequiredAttributeValueComparison.FullMatch)
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "a",
@@ -124,12 +124,12 @@ public class TestTagHelperDescriptors
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute
-                                .Name("href", RequiredAttributeNameComparison.FullMatch)
-                                .Value("~/", RequiredAttributeValueComparison.PrefixMatch))
-                            .RequireAttributeDescriptor(attribute => attribute
-                                .Name("href", RequiredAttributeNameComparison.FullMatch)
-                                .Value("?hello=world", RequiredAttributeValueComparison.SuffixMatch)),
+                            .AddAttribute(
+                                name: "href", RequiredAttributeNameComparison.FullMatch,
+                                value: "~/", RequiredAttributeValueComparison.PrefixMatch)
+                            .AddAttribute(
+                                name: "href", RequiredAttributeNameComparison.FullMatch,
+                                value: "?hello=world", RequiredAttributeValueComparison.SuffixMatch)
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "input",
@@ -137,14 +137,14 @@ public class TestTagHelperDescriptors
                     assemblyName: "TestAssembly",
                     attributes:
                     [
-                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", inputTypePropertyInfo),
+                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", inputTypePropertyInfo)
                     ],
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute
-                                .Name("type", RequiredAttributeNameComparison.FullMatch)
-                                .Value("text", RequiredAttributeValueComparison.FullMatch)),
+                            .AddAttribute(
+                                name: "type", RequiredAttributeNameComparison.FullMatch,
+                                value: "text", RequiredAttributeValueComparison.FullMatch)
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "input",
@@ -152,13 +152,12 @@ public class TestTagHelperDescriptors
                     assemblyName: "TestAssembly",
                     attributes:
                     [
-                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", inputTypePropertyInfo),
+                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", inputTypePropertyInfo)
                     ],
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute
-                                .Name("ty", RequiredAttributeNameComparison.PrefixMatch)),
+                            .AddAttribute("ty", RequiredAttributeNameComparison.PrefixMatch)
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "*",
@@ -167,9 +166,9 @@ public class TestTagHelperDescriptors
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute
-                                .Name("href", RequiredAttributeNameComparison.FullMatch)
-                                .Value("~/", RequiredAttributeValueComparison.PrefixMatch)),
+                            .AddAttribute(
+                                name: "href", RequiredAttributeNameComparison.FullMatch,
+                                value: "~/", RequiredAttributeValueComparison.PrefixMatch)
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "*",
@@ -178,8 +177,7 @@ public class TestTagHelperDescriptors
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute
-                                .Name("type", RequiredAttributeNameComparison.FullMatch)),
+                            .AddAttribute("type", RequiredAttributeNameComparison.FullMatch)
                     ]),
             ];
         }
@@ -201,7 +199,7 @@ public class TestTagHelperDescriptors
                             .Name("catch-all")
                             .PropertyName("CatchAll")
                             .AsEnum()
-                            .TypeName("Microsoft.AspNetCore.Razor.Language.IntegrationTests.TestTagHelperDescriptors.MyEnum"),
+                            .TypeName("Microsoft.AspNetCore.Razor.Language.IntegrationTests.TestTagHelperDescriptors.MyEnum")
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "input",
@@ -213,7 +211,7 @@ public class TestTagHelperDescriptors
                             .Name("value")
                             .PropertyName("Value")
                             .AsEnum()
-                            .TypeName("Microsoft.AspNetCore.Razor.Language.IntegrationTests.TestTagHelperDescriptors.MyEnum"),
+                            .TypeName("Microsoft.AspNetCore.Razor.Language.IntegrationTests.TestTagHelperDescriptors.MyEnum")
                     ]),
             ];
         }
@@ -254,11 +252,11 @@ public class TestTagHelperDescriptors
                         builder => builder
                             .Name("#local")
                             .PropertyName("StringProperty2")
-                            .TypeName(typeof(string).FullName),
+                            .TypeName(typeof(string).FullName)
                     ],
                     ruleBuilders:
                     [
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("bound")),
+                        builder => builder.AddAttribute("bound")
                     ]),
             ];
         }
@@ -283,7 +281,7 @@ public class TestTagHelperDescriptors
                     ],
                     ruleBuilders:
                     [
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("catchall-unbound-required")),
+                        builder => builder.AddAttribute("catchall-unbound-required")
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "input",
@@ -298,13 +296,13 @@ public class TestTagHelperDescriptors
                         builder => builder
                             .Name("input-bound-string")
                             .PropertyName("BoundString")
-                            .TypeName(typeof(string).FullName),
+                            .TypeName(typeof(string).FullName)
                     ],
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute.Name("input-bound-required-string"))
-                            .RequireAttributeDescriptor(attribute => attribute.Name("input-unbound-required")),
+                            .AddAttribute("input-bound-required-string")
+                            .AddAttribute("input-unbound-required")
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "div",
@@ -320,7 +318,7 @@ public class TestTagHelperDescriptors
                             .Name("booldict")
                             .PropertyName("BoolDictProp")
                             .TypeName("System.Collections.Generic.IDictionary<string, bool>")
-                            .AsDictionaryAttribute("booldict-prefix-", typeof(bool).FullName),
+                            .AsDictionaryAttribute("booldict-prefix-", typeof(bool).FullName)
                     ]),
             ];
         }
@@ -363,12 +361,12 @@ public class TestTagHelperDescriptors
                     attributes:
                     [
                         builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", typePropertyInfo),
-                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "checked", checkedPropertyInfo),
+                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "checked", checkedPropertyInfo)
                     ],
                     ruleBuilders:
                     [
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("type")),
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("checked"))
+                        builder => builder.AddAttribute("type"),
+                        builder => builder.AddAttribute("checked")
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "input",
@@ -377,12 +375,12 @@ public class TestTagHelperDescriptors
                     attributes:
                     [
                         builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", typePropertyInfo),
-                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "checked", checkedPropertyInfo),
+                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "checked", checkedPropertyInfo)
                     ],
                     ruleBuilders:
                     [
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("type")),
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("checked"))
+                        builder => builder.AddAttribute("type"),
+                        builder => builder.AddAttribute("checked")
                     ])
             ];
         }
@@ -403,7 +401,7 @@ public class TestTagHelperDescriptors
                     assemblyName: "TestAssembly",
                     ruleBuilders:
                     [
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("class")),
+                        builder => builder.AddAttribute("class")
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "input",
@@ -411,11 +409,11 @@ public class TestTagHelperDescriptors
                     assemblyName: "TestAssembly",
                     attributes:
                     [
-                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", inputTypePropertyInfo),
+                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", inputTypePropertyInfo)
                     ],
                     ruleBuilders:
                     [
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("type")),
+                        builder => builder.AddAttribute("type")
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "input",
@@ -424,13 +422,13 @@ public class TestTagHelperDescriptors
                     attributes:
                     [
                         builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "type", inputTypePropertyInfo),
-                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "checked", inputCheckedPropertyInfo),
+                        builder => BuildBoundAttributeDescriptorFromPropertyInfo(builder, "checked", inputCheckedPropertyInfo)
                     ],
                     ruleBuilders:
                     [
                         builder => builder
-                            .RequireAttributeDescriptor(attribute => attribute.Name("type"))
-                            .RequireAttributeDescriptor(attribute => attribute.Name("checked")),
+                            .AddAttribute("type")
+                            .AddAttribute("checked")
                     ]),
                 CreateTagHelperDescriptor(
                     tagName: "*",
@@ -438,7 +436,7 @@ public class TestTagHelperDescriptors
                     assemblyName: "TestAssembly",
                     ruleBuilders:
                     [
-                        builder => builder.RequireAttributeDescriptor(attribute => attribute.Name("catchAll")),
+                        builder => builder.AddAttribute("catchAll")
                     ]),
             ];
         }

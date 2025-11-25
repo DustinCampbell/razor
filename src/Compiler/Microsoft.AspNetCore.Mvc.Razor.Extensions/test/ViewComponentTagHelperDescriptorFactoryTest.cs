@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -27,8 +26,8 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .DisplayName("StringParameterViewComponentTagHelper")
             .TagMatchingRuleDescriptor(rule => rule
                 .RequireTagName("vc:string-parameter")
-                .RequireAttributeDescriptor(attribute => attribute.Name("foo"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("bar")))
+                .AddAttribute("foo")
+                .AddAttribute("bar"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("foo")
                 .PropertyName("foo")
@@ -63,8 +62,8 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:various-parameter")
-                .RequireAttributeDescriptor(attribute => attribute.Name("test-enum"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("test-string")))
+                .AddAttribute("test-enum")
+                .AddAttribute("test-string"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("test-enum")
@@ -108,7 +107,7 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:generic-parameter")
-                .RequireAttributeDescriptor(attribute => attribute.Name("foo")))
+                .AddAttribute("foo"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("foo")
@@ -145,8 +144,8 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:sync-derived")
-                .RequireAttributeDescriptor(attribute => attribute.Name("foo"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("bar")))
+                .AddAttribute("foo")
+                .AddAttribute("bar"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("foo")

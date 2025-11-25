@@ -50,11 +50,7 @@ internal sealed partial class KeyTagHelperProducer : TagHelperProducer
         builder.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.Attribute(attribute =>
-            {
-                attribute.Name = "@key";
-                attribute.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute($"@key", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

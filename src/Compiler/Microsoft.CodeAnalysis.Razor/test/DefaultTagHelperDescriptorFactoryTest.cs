@@ -21,105 +21,80 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
 
     private Compilation Compilation { get; }
 
-    public static TheoryData<string, Action<RequiredAttributeDescriptorBuilder>> RequiredAttributeParserErrorData
+    public static TheoryData<string, Action<TagMatchingRuleDescriptorBuilder>> RequiredAttributeParserErrorData
         => new()
         {
             ("name,", static b => b
-                .Name("name")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("name,"))),
+                .AddAttribute("name",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("name,")])),
             (" ", static b => b
-                .Name(string.Empty)
-                .AddDiagnostic(AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeNameNullOrWhitespace())),
+                .AddAttribute(string.Empty,
+                    diagnostics: [AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeNameNullOrWhitespace()])),
             ("n@me", static b => b
-                .Name("n@me")
-                .AddDiagnostic(AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeName("n@me", '@'))),
+                .AddAttribute("n@me",
+                    diagnostics: [AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeName("n@me", '@')])),
             ("name extra", static b => b
-                .Name("name")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeCharacter('e', "name extra"))),
+                .AddAttribute("name",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeCharacter('e', "name extra")])),
             ("[[ ", static b => b
-                .Name("[")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[[ "))
-            ),
+                .AddAttribute("[",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[[ ")])),
             ("[ ", static b => b
-                .Name("")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[ "))
-            ),
+                .AddAttribute("",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[ ")])),
             ("[name='unended]", static b => b
-                .Name("name")
-                .ValueComparison(RequiredAttributeValueComparison.FullMatch)
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended]"))
-            ),
+                .AddAttribute("name", valueComparison: RequiredAttributeValueComparison.FullMatch,
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended]")])),
             ("[name='unended", static b => b
-                .Name("name")
-                .ValueComparison(RequiredAttributeValueComparison.FullMatch)
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended"))
-            ),
+                .AddAttribute("name", valueComparison: RequiredAttributeValueComparison.FullMatch,
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended")])),
             ("[name", static b => b
-                .Name("name")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name"))
-            ),
+                .AddAttribute("name",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name")])),
             ("[ ]", static b => b
-                .Name(string.Empty)
-                .AddDiagnostic(AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeNameNullOrWhitespace())
-            ),
+                .AddAttribute(string.Empty,
+                    diagnostics: [AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeNameNullOrWhitespace()])),
             ("[name='unended]", static b => b
-                .Name("name")
-                .ValueComparison(RequiredAttributeValueComparison.FullMatch)
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended]"))
-            ),
+                .AddAttribute("name", valueComparison: RequiredAttributeValueComparison.FullMatch,
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended]")])),
             ("[name='unended", static b => b
-                .Name("name")
-                .ValueComparison(RequiredAttributeValueComparison.FullMatch)
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended"))
-            ),
+                .AddAttribute("name", valueComparison: RequiredAttributeValueComparison.FullMatch,
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeMismatchedQuotes('\'', "[name='unended")])),
             ("[name", static b => b
-                .Name("name")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name"))
-            ),
+                .AddAttribute("name",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name")])),
             ("[n@me]", static b => b
-                .Name("n@me")
-                .AddDiagnostic(AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeName("n@me", '@'))
-            ),
+                .AddAttribute("n@me",
+                    diagnostics: [AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeName("n@me", '@')])),
             ("[name@]", static b => b
-                .Name("name@")
-                .AddDiagnostic(AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeName("name@", '@'))
-            ),
+                .AddAttribute("name@",
+                    diagnostics: [AspNetCore.Razor.Language.RazorDiagnosticFactory.CreateTagHelper_InvalidTargetedAttributeName("name@", '@')])),
             ("[name^]", static b => b
-                .Name("name")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_PartialRequiredAttributeOperator('^', "[name^]"))
-            ),
+                .AddAttribute("name",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_PartialRequiredAttributeOperator('^', "[name^]")])),
             ("[name='value'", static b => b
-                .Name("name")
-                .Value("value", RequiredAttributeValueComparison.FullMatch)
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name='value'"))
-            ),
+                .AddAttribute("name", value: "value", valueComparison: RequiredAttributeValueComparison.FullMatch,
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name='value'")])),
             ("[name ", static b => b
-                .Name("name")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name "))
-            ),
+                .AddAttribute("name",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name ")])),
             ("[name extra]", static b => b
-                .Name("name")
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeOperator('e', "[name extra]"))
-            ),
+                .AddAttribute("name",
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_InvalidRequiredAttributeOperator('e', "[name extra]")])),
             ("[name=value ", static b => b
-                .Name("name")
-                .Value("value", RequiredAttributeValueComparison.FullMatch)
-                .AddDiagnostic(RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name=value "))
-            )
+                .AddAttribute("name", value: "value", valueComparison: RequiredAttributeValueComparison.FullMatch,
+                    diagnostics: [RazorDiagnosticFactory.CreateTagHelper_CouldNotFindMatchingEndBrace("[name=value ")]))
         };
 
     [Theory]
     [MemberData(nameof(RequiredAttributeParserErrorData))]
     public void RequiredAttributeParser_ParsesRequiredAttributesAndLogsDiagnosticsCorrectly(
         string requiredAttributes,
-        Action<RequiredAttributeDescriptorBuilder> configure)
+        Action<TagMatchingRuleDescriptorBuilder> configure)
     {
         // Arrange
         var expected = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
-            .TagMatchingRuleDescriptor(rule =>
-            {
-                rule.Attribute(configure);
-            })
+            .TagMatchingRuleDescriptor(rule => configure(rule))
             .Build();
 
         // Act
@@ -134,7 +109,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
         Assert.Equal<RequiredAttributeDescriptor>(expected.TagMatchingRules[0].Attributes, actual.TagMatchingRules[0].Attributes);
     }
 
-    public static TheoryData<string, ImmutableArray<Action<RequiredAttributeDescriptorBuilder>>> RequiredAttributeParserData
+    public static TheoryData<string, ImmutableArray<Action<TagMatchingRuleDescriptorBuilder>>> RequiredAttributeParserData
     {
         get
         {
@@ -175,17 +150,16 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
                     plain("extra", RequiredAttributeNameComparison.FullMatch)]),
             };
 
-            static Action<RequiredAttributeDescriptorBuilder> plain(string name, RequiredAttributeNameComparison nameComparison)
+            static Action<TagMatchingRuleDescriptorBuilder> plain(string name, RequiredAttributeNameComparison nameComparison)
             {
                 return builder => builder
-                    .Name(name, nameComparison);
+                    .AddAttribute(name, nameComparison);
             }
 
-            static Action<RequiredAttributeDescriptorBuilder> css(string name, string? value, RequiredAttributeValueComparison valueComparison)
+            static Action<TagMatchingRuleDescriptorBuilder> css(string name, string? value, RequiredAttributeValueComparison valueComparison)
             {
                 return builder => builder
-                    .Name(name)
-                    .Value(value, valueComparison);
+                    .AddAttribute(name, value: value, valueComparison: valueComparison);
             }
         }
     }
@@ -194,7 +168,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     [MemberData(nameof(RequiredAttributeParserData))]
     public void RequiredAttributeParser_ParsesRequiredAttributesCorrectly(
         string requiredAttributes,
-        ImmutableArray<Action<RequiredAttributeDescriptorBuilder>> configures)
+        ImmutableArray<Action<TagMatchingRuleDescriptorBuilder>> configures)
     {
         // Arrange
         var expected = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
@@ -202,7 +176,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
             {
                 foreach (var configure in configures)
                 {
-                    rule.Attribute(configure);
+                    configure(rule);
                 }
             })
             .Build();
@@ -418,54 +392,54 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
         {
             NameAndTagHelper("AttributeTargetingTagHelper", static b => b
                 .TagMatchingRule(tagName: TagHelperMatchingConventions.ElementCatchAllName, static b => b
-                    .RequiredAttribute(name: "class"))),
+                    .AddAttribute(name: "class"))),
             NameAndTagHelper("MultiAttributeTargetingTagHelper", static b => b
                 .TagMatchingRule(tagName: TagHelperMatchingConventions.ElementCatchAllName, static b => b
-                    .RequiredAttribute(name: "class")
-                    .RequiredAttribute(name: "style"))),
+                    .AddAttribute(name: "class")
+                    .AddAttribute(name: "style"))),
             NameAndTagHelper("MultiAttributeAttributeTargetingTagHelper", static b => b
                 .TagMatchingRule(tagName: TagHelperMatchingConventions.ElementCatchAllName, static b => b
-                    .RequiredAttribute(name: "custom"))
+                    .AddAttribute(name: "custom"))
                 .TagMatchingRule(tagName: TagHelperMatchingConventions.ElementCatchAllName, static b => b
-                    .RequiredAttribute(name: "class")
-                    .RequiredAttribute(name: "style"))),
+                    .AddAttribute(name: "class")
+                    .AddAttribute(name: "style"))),
             NameAndTagHelper("InheritedAttributeTargetingTagHelper", static b => b
                 .TagMatchingRule(tagName: TagHelperMatchingConventions.ElementCatchAllName, static b => b
-                    .RequiredAttribute(name: "style"))),
+                    .AddAttribute(name: "style"))),
             NameAndTagHelper("RequiredAttributeTagHelper", static b => b
                 .TagMatchingRule(tagName: "input", static b => b
-                    .RequiredAttribute(name: "class"))),
+                    .AddAttribute(name: "class"))),
             NameAndTagHelper("InheritedRequiredAttributeTagHelper", static b => b
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "class"))),
+                    .AddAttribute(name: "class"))),
             NameAndTagHelper("MultiAttributeRequiredAttributeTagHelper", static b => b
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "class"))
+                    .AddAttribute(name: "class"))
                 .TagMatchingRule(tagName: "input", static b => b
-                    .RequiredAttribute(name: "class"))),
+                    .AddAttribute(name: "class"))),
             NameAndTagHelper("MultiAttributeSameTagRequiredAttributeTagHelper", static b => b
                 .TagMatchingRule(tagName: "input", static b => b
-                    .RequiredAttribute(name: "style"))
+                    .AddAttribute(name: "style"))
                 .TagMatchingRule(tagName: "input", static b => b
-                    .RequiredAttribute(name: "class"))),
+                    .AddAttribute(name: "class"))),
             NameAndTagHelper("MultiRequiredAttributeTagHelper", static b => b
                 .TagMatchingRule(tagName: "input", static b => b
-                    .RequiredAttribute(name: "class")
-                    .RequiredAttribute(name: "style"))),
+                    .AddAttribute(name: "class")
+                    .AddAttribute(name: "style"))),
             NameAndTagHelper("MultiTagMultiRequiredAttributeTagHelper", static b => b
                 .TagMatchingRule(tagName: "div", static b => b
-                    .RequiredAttribute(name: "class")
-                    .RequiredAttribute(name: "style"))
+                    .AddAttribute(name: "class")
+                    .AddAttribute(name: "style"))
                 .TagMatchingRule(tagName: "input", static b => b
-                    .RequiredAttribute(name: "class")
-                    .RequiredAttribute(name: "style"))),
+                    .AddAttribute(name: "class")
+                    .AddAttribute(name: "style"))),
             NameAndTagHelper("AttributeWildcardTargetingTagHelper", static b => b
                 .TagMatchingRule(tagName: TagHelperMatchingConventions.ElementCatchAllName, static b => b
-                    .RequiredAttribute(name: "class", nameComparison: RequiredAttributeNameComparison.PrefixMatch))),
+                    .AddAttribute(name: "class", nameComparison: RequiredAttributeNameComparison.PrefixMatch))),
             NameAndTagHelper("MultiAttributeWildcardTargetingTagHelper", static b => b
                 .TagMatchingRule(tagName: TagHelperMatchingConventions.ElementCatchAllName, static b => b
-                    .RequiredAttribute(name: "class", nameComparison: RequiredAttributeNameComparison.PrefixMatch)
-                    .RequiredAttribute(name: "style", nameComparison: RequiredAttributeNameComparison.PrefixMatch)))
+                    .AddAttribute(name: "class", nameComparison: RequiredAttributeNameComparison.PrefixMatch)
+                    .AddAttribute(name: "style", nameComparison: RequiredAttributeNameComparison.PrefixMatch)))
         };
 
     [Theory]

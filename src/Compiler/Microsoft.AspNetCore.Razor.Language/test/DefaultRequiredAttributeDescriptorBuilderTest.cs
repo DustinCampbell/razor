@@ -13,8 +13,7 @@ public class DefaultRequiredAttributeDescriptorBuilderTest
         // Arrange
         var builder = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
             .TagMatchingRuleDescriptor(rule => rule
-                .RequireAttributeDescriptor(attribute => attribute
-                    .Name("asp-action", RequiredAttributeNameComparison.FullMatch)));
+                .AddAttribute("asp-action", RequiredAttributeNameComparison.FullMatch));
 
         // Act
         var tagHelper = builder.Build();
@@ -30,8 +29,7 @@ public class DefaultRequiredAttributeDescriptorBuilderTest
         // Arrange
         var builder = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
             .TagMatchingRuleDescriptor(rule => rule
-                .RequireAttributeDescriptor(attribute => attribute
-                    .Name("asp-route-", RequiredAttributeNameComparison.PrefixMatch)));
+                .AddAttribute("asp-route-", RequiredAttributeNameComparison.PrefixMatch));
 
         // Act
         var tagHelper = builder.Build();

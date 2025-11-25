@@ -34,8 +34,8 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:string-parameter")
-                .RequireAttributeDescriptor(attribute => attribute.Name("foo"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("bar")))
+                .AddAttribute("foo")
+                .AddAttribute("bar"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("foo")
@@ -72,9 +72,9 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:various-parameter")
-                .RequireAttributeDescriptor(attribute => attribute.Name("test-enum"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("test-string"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("baz")))
+                .AddAttribute("test-enum")
+                .AddAttribute("test-string")
+                .AddAttribute("baz"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("test-enum")
@@ -118,7 +118,7 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:generic-parameter")
-                .RequireAttributeDescriptor(attribute => attribute.Name("foo")))
+                .AddAttribute("foo"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("foo")
@@ -155,8 +155,8 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:sync-derived")
-                .RequireAttributeDescriptor(attribute => attribute.Name("foo"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("bar")))
+                .AddAttribute("foo")
+                .AddAttribute("bar"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("foo")

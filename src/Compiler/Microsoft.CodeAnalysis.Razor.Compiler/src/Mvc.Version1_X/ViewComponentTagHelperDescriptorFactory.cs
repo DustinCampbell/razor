@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
@@ -165,11 +166,7 @@ internal class ViewComponentTagHelperDescriptorFactory
             {
                 // Set required attributes only for non-indexer attributes. Indexer attributes can't be required attributes
                 // because there are two ways of setting values for the attribute.
-                builder.Attribute(attributeBuilder =>
-                {
-                    var lowerKebabName = HtmlConventions.ToHtmlCase(parameter.Name);
-                    attributeBuilder.Name = lowerKebabName;
-                });
+                builder.AddAttribute(HtmlConventions.ToHtmlCase(parameter.Name));
             }
         }
     }

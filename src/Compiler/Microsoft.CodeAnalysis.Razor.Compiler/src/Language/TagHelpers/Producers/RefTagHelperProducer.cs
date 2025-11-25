@@ -50,11 +50,7 @@ internal sealed partial class RefTagHelperProducer : TagHelperProducer
         builder.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.Attribute(attribute =>
-            {
-                attribute.Name = "@ref";
-                attribute.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute($"@ref", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

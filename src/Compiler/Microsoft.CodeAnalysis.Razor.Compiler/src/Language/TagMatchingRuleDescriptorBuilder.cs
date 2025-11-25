@@ -32,16 +32,29 @@ public sealed partial class TagMatchingRuleDescriptorBuilder : TagHelperObjectBu
     public TagHelperObjectBuilderCollection<RequiredAttributeDescriptor, RequiredAttributeDescriptorBuilder> Attributes { get; }
         = new(RequiredAttributeDescriptorBuilder.Pool);
 
-    public void Attribute(Action<RequiredAttributeDescriptorBuilder> configure)
+    public TagMatchingRuleDescriptorBuilder AddAttribute(
+        string name,
+        RequiredAttributeNameComparison nameComparison = default,
+        string? value = null,
+        RequiredAttributeValueComparison valueComparison = default,
+        bool isDirectiveAttribute = false,
+        ImmutableArray<RazorDiagnostic> diagnostics = default)
     {
-        if (configure == null)
+        var builder = RequiredAttributeDescriptorBuilder.GetInstance(this);
+        Attributes.Add(builder);
+
+        builder.Name = name;
+        builder.NameComparison = nameComparison;
+        builder.Value = value;
+        builder.ValueComparison = valueComparison;
+        builder.IsDirectiveAttribute = isDirectiveAttribute;
+
+        if (!diagnostics.IsDefaultOrEmpty)
         {
-            throw new ArgumentNullException(nameof(configure));
+            builder.Diagnostics.AddRange(diagnostics);
         }
 
-        var builder = RequiredAttributeDescriptorBuilder.GetInstance(this);
-        configure(builder);
-        Attributes.Add(builder);
+        return this;
     }
 
     private protected override TagMatchingRuleDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)

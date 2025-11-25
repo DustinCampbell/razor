@@ -39,8 +39,8 @@ public class ViewComponentTagHelperProducerTest
             .TagMatchingRuleDescriptor(rule =>
                 rule
                 .RequireTagName("vc:string-parameter")
-                .RequireAttributeDescriptor(attribute => attribute.Name("foo"))
-                .RequireAttributeDescriptor(attribute => attribute.Name("bar")))
+                .AddAttribute("foo")
+                .AddAttribute("bar"))
             .BoundAttributeDescriptor(attribute =>
                 attribute
                 .Name("foo")

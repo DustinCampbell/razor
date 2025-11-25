@@ -257,21 +257,12 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
             rule.TagName = element;
             if (typeAttribute != null)
             {
-                rule.Attribute(a =>
-                {
-                    a.Name = "type";
-                    a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                    a.Value = typeAttribute;
-                    a.ValueComparison = RequiredAttributeValueComparison.FullMatch;
-                });
+                rule.AddAttribute(
+                    name: "type", RequiredAttributeNameComparison.FullMatch,
+                    value: typeAttribute, RequiredAttributeValueComparison.FullMatch);
             }
 
-            rule.Attribute(a =>
-            {
-                a.Name = attributeName;
-                a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                a.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute(attributeName, RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
         });
 
         builder.TagMatchingRule(rule =>
@@ -279,28 +270,13 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
             rule.TagName = element;
             if (typeAttribute != null)
             {
-                rule.Attribute(a =>
-                {
-                    a.Name = "type";
-                    a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                    a.Value = typeAttribute;
-                    a.ValueComparison = RequiredAttributeValueComparison.FullMatch;
-                });
+                rule.AddAttribute(
+                    name: "type", RequiredAttributeNameComparison.FullMatch,
+                    value: typeAttribute, RequiredAttributeValueComparison.FullMatch);
             }
 
-            rule.Attribute(a =>
-            {
-                a.Name = $"{attributeName}:get";
-                a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                a.IsDirectiveAttribute = true;
-            });
-
-            rule.Attribute(a =>
-            {
-                a.Name = $"{attributeName}:set";
-                a.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                a.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute($"{attributeName}:get", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
+            rule.AddAttribute($"{attributeName}:set", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(a =>
@@ -475,29 +451,14 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
             builder.TagMatchingRule(rule =>
             {
                 rule.TagName = tagHelper.TagMatchingRules.Single().TagName;
-                rule.Attribute(attribute =>
-                {
-                    attribute.Name = "@bind-" + valueAttribute.Name;
-                    attribute.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                    attribute.IsDirectiveAttribute = true;
-                });
+                rule.AddAttribute($"@bind-{valueAttribute.Name}", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
             });
 
             builder.TagMatchingRule(rule =>
             {
                 rule.TagName = tagHelper.TagMatchingRules.Single().TagName;
-                rule.Attribute(attribute =>
-                {
-                    attribute.Name = "@bind-" + valueAttribute.Name + ":get";
-                    attribute.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                    attribute.IsDirectiveAttribute = true;
-                });
-                rule.Attribute(attribute =>
-                {
-                    attribute.Name = "@bind-" + valueAttribute.Name + ":set";
-                    attribute.NameComparison = RequiredAttributeNameComparison.FullMatch;
-                    attribute.IsDirectiveAttribute = true;
-                });
+                rule.AddAttribute($"@bind-{valueAttribute.Name}:get", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
+                rule.AddAttribute($"@bind-{valueAttribute.Name}:set", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
             });
 
             builder.BindAttribute(attribute =>
@@ -572,12 +533,7 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
         builder.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.Attribute(attribute =>
-            {
-                attribute.Name = "@bind-";
-                attribute.NameComparison = RequiredAttributeNameComparison.PrefixMatch;
-                attribute.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute($"@bind-", RequiredAttributeNameComparison.PrefixMatch, isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

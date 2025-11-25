@@ -50,11 +50,7 @@ internal sealed partial class SplatTagHelperProducer : TagHelperProducer
         builder.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.Attribute(attribute =>
-            {
-                attribute.Name = "@attributes";
-                attribute.IsDirectiveAttribute = true;
-            });
+            rule.AddAttribute("@attributes", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

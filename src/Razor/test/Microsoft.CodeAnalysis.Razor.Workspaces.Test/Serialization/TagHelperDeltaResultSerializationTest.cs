@@ -61,18 +61,17 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
                 builder => builder
                     .Name("test-attribute")
                     .PropertyName("TestAttribute")
-                    .TypeName("string"),
+                    .TypeName("string")
             ],
             ruleBuilders:
             [
                 builder => builder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch))
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("required-attribute-two", RequiredAttributeNameComparison.FullMatch)
-                        .Value("something", RequiredAttributeValueComparison.PrefixMatch))
+                    .AddAttribute("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch)
+                    .AddAttribute(
+                        name: "required-attribute-two", RequiredAttributeNameComparison.FullMatch,
+                        value: "something", RequiredAttributeValueComparison.PrefixMatch)
                     .RequireParentTag("parent-name")
-                    .RequireTagStructure(TagStructure.WithoutEndTag),
+                    .RequireTagStructure(TagStructure.WithoutEndTag)
             ],
             configureAction: builder =>
             {
@@ -107,18 +106,17 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
                 builder => builder
                     .Name("test-attribute")
                     .PropertyName("TestAttribute")
-                    .TypeName("string"),
+                    .TypeName("string")
             ],
             ruleBuilders:
             [
                 builder => builder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch))
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("required-attribute-two", RequiredAttributeNameComparison.FullMatch)
-                        .Value("something", RequiredAttributeValueComparison.PrefixMatch))
+                    .AddAttribute("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch)
+                    .AddAttribute(
+                        name: "required-attribute-two", RequiredAttributeNameComparison.FullMatch,
+                        value: "something", RequiredAttributeValueComparison.PrefixMatch)
                     .RequireParentTag("parent-name")
-                    .RequireTagStructure(TagStructure.WithoutEndTag),
+                    .RequireTagStructure(TagStructure.WithoutEndTag)
             ],
             configureAction: builder =>
             {
@@ -153,17 +151,16 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
                 builder => builder
                     .Name("test-attribute")
                     .PropertyName("TestAttribute")
-                    .TypeName("string"),
+                    .TypeName("string")
             ],
             ruleBuilders:
             [
                 builder => builder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch))
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("required-attribute-two", RequiredAttributeNameComparison.FullMatch)
-                        .Value("something", RequiredAttributeValueComparison.PrefixMatch))
-                    .RequireParentTag("parent-name"),
+                    .AddAttribute("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch)
+                    .AddAttribute(name:
+                        "required-attribute-two", RequiredAttributeNameComparison.FullMatch,
+                        value: "something", RequiredAttributeValueComparison.PrefixMatch)
+                    .RequireParentTag("parent-name")
             ],
             configureAction: builder => builder.AllowChildTag("allowed-child-one")
                 .AddDiagnostic(RazorDiagnostic.Create(
@@ -204,13 +201,12 @@ public class TagHelperDeltaResultSerializationTest(ITestOutputHelper testOutput)
                     .Name("test-attribute2")
                     .PropertyName("TestAttribute2")
                     .TypeName("SomeDictionary")
-                    .AsDictionaryAttribute("dict-prefix-", "string"),
+                    .AsDictionaryAttribute("dict-prefix-", "string")
             ],
             ruleBuilders:
             [
                 builder => builder
-                    .RequireAttributeDescriptor(attribute => attribute
-                        .Name("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch))
+                    .AddAttribute("required-attribute-one", RequiredAttributeNameComparison.PrefixMatch)
             ],
             configureAction: builder => builder
                 .AllowChildTag("allowed-child-one")

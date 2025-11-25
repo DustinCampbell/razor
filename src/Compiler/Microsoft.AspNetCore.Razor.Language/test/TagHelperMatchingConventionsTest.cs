@@ -9,119 +9,118 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public class TagHelperMatchingConventionsTest
 {
-    public static TheoryData RequiredAttributeDescriptorData
+    // requiredAttributeDescriptor, attributeName, attributeValue, expectedResult
+    public static TheoryData<Action<TagMatchingRuleDescriptorBuilder>, string, string, bool> RequiredAttributeDescriptorData
     {
         get
         {
-            // requiredAttributeDescriptor, attributeName, attributeValue, expectedResult
-            return new TheoryData<Action<RequiredAttributeDescriptorBuilder>, string, string, bool>
+            return new()
+            {
                 {
-                    {
-                        builder => builder.Name("key"),
-                        "KeY",
-                        "value",
-                        true
-                    },
-                    {
-                        builder => builder.Name("key"),
-                        "keys",
-                        "value",
-                        false
-                    },
-                    {
-                        builder => builder.Name("route-", RequiredAttributeNameComparison.PrefixMatch),
-                        "ROUTE-area",
-                        "manage",
-                        true
-                    },
-                    {
-                        builder => builder.Name("route-", RequiredAttributeNameComparison.PrefixMatch),
-                        "routearea",
-                        "manage",
-                        false
-                    },
-                    {
-                        builder => builder.Name("route-", RequiredAttributeNameComparison.PrefixMatch),
-                        "route-",
-                        "manage",
-                        false
-                    },
-                    {
-                        builder => builder.Name("key", RequiredAttributeNameComparison.FullMatch),
-                        "KeY",
-                        "value",
-                        true
-                    },
-                    {
-                        builder => builder.Name("key", RequiredAttributeNameComparison.FullMatch),
-                        "keys",
-                        "value",
-                        false
-                    },
-                    {
-                        builder => builder
-                            .Name("key", RequiredAttributeNameComparison.FullMatch)
-                            .Value("value", RequiredAttributeValueComparison.FullMatch),
-                        "key",
-                        "value",
-                        true
-                    },
-                    {
-                        builder => builder
-                            .Name("key", RequiredAttributeNameComparison.FullMatch)
-                            .Value("value", RequiredAttributeValueComparison.FullMatch),
-                        "key",
-                        "Value",
-                        false
-                    },
-                    {
-                        builder => builder
-                            .Name("class", RequiredAttributeNameComparison.FullMatch)
-                            .Value("btn", RequiredAttributeValueComparison.PrefixMatch),
-                        "class",
-                        "btn btn-success",
-                        true
-                    },
-                    {
-                        builder => builder
-                            .Name("class", RequiredAttributeNameComparison.FullMatch)
-                            .Value("btn", RequiredAttributeValueComparison.PrefixMatch),
-                        "class",
-                        "BTN btn-success",
-                        false
-                    },
-                    {
-                        builder => builder
-                            .Name("href", RequiredAttributeNameComparison.FullMatch)
-                            .Value("#navigate", RequiredAttributeValueComparison.SuffixMatch),
-                        "href",
-                        "/home/index#navigate",
-                        true
-                    },
-                    {
-                        builder => builder
-                            .Name("href", RequiredAttributeNameComparison.FullMatch)
-                            .Value("#navigate", RequiredAttributeValueComparison.SuffixMatch),
-                        "href",
-                        "/home/index#NAVigate",
-                        false
-                    },
-                };
+                    builder => builder.AddAttribute("key"),
+                    "KeY",
+                    "value",
+                    true
+                },
+                {
+                    builder => builder.AddAttribute("key"),
+                    "keys",
+                    "value",
+                    false
+                },
+                {
+                    builder => builder.AddAttribute("route-", RequiredAttributeNameComparison.PrefixMatch),
+                    "ROUTE-area",
+                    "manage",
+                    true
+                },
+                {
+                    builder => builder.AddAttribute("route-", RequiredAttributeNameComparison.PrefixMatch),
+                    "routearea",
+                    "manage",
+                    false
+                },
+                {
+                    builder => builder.AddAttribute("route-", RequiredAttributeNameComparison.PrefixMatch),
+                    "route-",
+                    "manage",
+                    false
+                },
+                {
+                    builder => builder.AddAttribute("key", RequiredAttributeNameComparison.FullMatch),
+                    "KeY",
+                    "value",
+                    true
+                },
+                {
+                    builder => builder.AddAttribute("key", RequiredAttributeNameComparison.FullMatch),
+                    "keys",
+                    "value",
+                    false
+                },
+                {
+                    builder => builder.AddAttribute(
+                        name: "key", RequiredAttributeNameComparison.FullMatch,
+                        value: "value", RequiredAttributeValueComparison.FullMatch),
+                    "key",
+                    "value",
+                    true
+                },
+                {
+                    builder => builder.AddAttribute(
+                        name: "key", RequiredAttributeNameComparison.FullMatch,
+                        value: "value", RequiredAttributeValueComparison.FullMatch),
+                    "key",
+                    "Value",
+                    false
+                },
+                {
+                    builder => builder.AddAttribute(
+                        name: "class", RequiredAttributeNameComparison.FullMatch,
+                        value: "btn", RequiredAttributeValueComparison.PrefixMatch),
+                    "class",
+                    "btn btn-success",
+                    true
+                },
+                {
+                    builder => builder.AddAttribute(
+                        name: "class", RequiredAttributeNameComparison.FullMatch,
+                        value: "btn", RequiredAttributeValueComparison.PrefixMatch),
+                    "class",
+                    "BTN btn-success",
+                    false
+                },
+                {
+                    builder => builder.AddAttribute(
+                        name: "href", RequiredAttributeNameComparison.FullMatch,
+                        value: "#navigate", RequiredAttributeValueComparison.SuffixMatch),
+                    "href",
+                    "/home/index#navigate",
+                    true
+                },
+                {
+                    builder => builder.AddAttribute(
+                        name: "href", RequiredAttributeNameComparison.FullMatch,
+                        value: "#navigate", RequiredAttributeValueComparison.SuffixMatch),
+                    "href",
+                    "/home/index#NAVigate",
+                    false
+                },
+            };
         }
     }
 
     [Theory]
     [MemberData(nameof(RequiredAttributeDescriptorData))]
     public void Matches_ReturnsExpectedResult(
-        Action<RequiredAttributeDescriptorBuilder> configure,
+        Action<TagMatchingRuleDescriptorBuilder> configure,
         string attributeName,
         string attributeValue,
         bool expectedResult)
     {
         // Arrange
         var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequiredAttribute(builder => configure(builder)))
+            .TagMatchingRuleDescriptor(builder => configure(builder))
             .Build();
 
         var requiredAttribute = tagHelper.TagMatchingRules[0].Attributes[0];

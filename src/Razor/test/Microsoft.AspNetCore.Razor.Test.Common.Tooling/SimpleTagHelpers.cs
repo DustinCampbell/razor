@@ -98,20 +98,12 @@ internal static class SimpleTagHelpers
         directiveAttribute1.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.RequireAttributeDescriptor(b =>
-            {
-                b.Name = "@test";
-                b.NameComparison = RequiredAttributeNameComparison.PrefixMatch;
-            });
+            rule.AddAttribute("@test", RequiredAttributeNameComparison.PrefixMatch);
         });
         directiveAttribute1.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.RequireAttributeDescriptor(b =>
-            {
-                b.Name = "@test";
-                b.NameComparison = RequiredAttributeNameComparison.FullMatch;
-            });
+            rule.AddAttribute("@test", RequiredAttributeNameComparison.FullMatch);
         });
         directiveAttribute1.BindAttribute(attribute =>
         {
@@ -135,20 +127,12 @@ internal static class SimpleTagHelpers
         directiveAttribute2.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.RequireAttributeDescriptor(b =>
-            {
-                b.Name = "@minimized";
-                b.NameComparison = RequiredAttributeNameComparison.PrefixMatch;
-            });
+            rule.AddAttribute("@minimized", RequiredAttributeNameComparison.PrefixMatch);
         });
         directiveAttribute2.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.RequireAttributeDescriptor(b =>
-            {
-                b.Name = "@minimized";
-                b.NameComparison = RequiredAttributeNameComparison.FullMatch;
-            });
+            rule.AddAttribute("@minimized", RequiredAttributeNameComparison.FullMatch);
         });
         directiveAttribute2.BindAttribute(attribute =>
         {
@@ -175,16 +159,12 @@ internal static class SimpleTagHelpers
         directiveAttribute3.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.RequireAttributeDescriptor(attribute => attribute
-                .Name("@onclick", RequiredAttributeNameComparison.FullMatch)
-                .IsDirectiveAttribute());
+            rule.AddAttribute("@onclick", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
         });
         directiveAttribute3.TagMatchingRule(rule =>
         {
             rule.TagName = "*";
-            rule.RequireAttributeDescriptor(attribute => attribute
-                .Name("@onclick", RequiredAttributeNameComparison.PrefixMatch)
-                .IsDirectiveAttribute());
+            rule.AddAttribute("@onclick", RequiredAttributeNameComparison.PrefixMatch, isDirectiveAttribute: true);
         });
         directiveAttribute3.BindAttribute(attribute =>
         {
@@ -205,10 +185,7 @@ internal static class SimpleTagHelpers
         htmlTagMutator.TagMatchingRule(rule =>
         {
             rule.TagName = "title";
-            rule.RequireAttributeDescriptor(attributeRule =>
-            {
-                attributeRule.Name = "mutator";
-            });
+            rule.AddAttribute("mutator");
         });
         htmlTagMutator.TypeName = "HtmlMutator";
         htmlTagMutator.BindAttribute(attribute =>

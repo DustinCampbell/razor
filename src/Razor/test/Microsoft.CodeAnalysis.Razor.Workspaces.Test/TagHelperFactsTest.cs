@@ -42,7 +42,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
                 .TagMatchingRule(tagName: "a", static b => b
-                    .RequiredAttribute(name: "asp-for"))
+                    .AddAttribute(name: "asp-for"))
                 .BoundAttribute<string>(name: "asp-for", propertyName: "AspFor")
                 .BoundAttribute(name: "asp-route", propertyName: "AspRoute", typeName: typeof(IDictionary<,>).Namespace + "IDictionary<string, string>", static b => b
                     .AsDictionaryAttribute<string>("asp-route-"))

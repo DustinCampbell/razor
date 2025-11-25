@@ -21,7 +21,7 @@ internal sealed class RequiredAttributeFormatter : ValueFormatter<RequiredAttrib
     {
         reader.ReadArrayHeaderAndVerify(PropertyCount);
 
-        var flags = (RequiredAttributeDescriptorFlags)reader.ReadByte();
+        var flags = (RequiredAttributeFlags)reader.ReadByte();
         var name = CachedStringFormatter.Instance.Deserialize(ref reader, options);
         var nameComparison = (RequiredAttributeNameComparison)reader.ReadByte();
         var value = CachedStringFormatter.Instance.Deserialize(ref reader, options);

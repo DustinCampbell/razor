@@ -133,7 +133,7 @@ internal static partial class ObjectReaders
 
             static RequiredAttributeDescriptor ReadFromProperties(JsonDataReader reader)
             {
-                var flags = (RequiredAttributeDescriptorFlags)reader.ReadByte(nameof(RequiredAttributeDescriptor.Flags));
+                var flags = (RequiredAttributeFlags)reader.ReadByte(nameof(RequiredAttributeDescriptor.Flags));
                 var name = reader.ReadString(nameof(RequiredAttributeDescriptor.Name));
                 var nameComparison = (RequiredAttributeNameComparison)reader.ReadByteOrZero(nameof(RequiredAttributeDescriptor.NameComparison));
                 var value = reader.ReadStringOrNull(nameof(RequiredAttributeDescriptor.Value));

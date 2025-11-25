@@ -13,7 +13,7 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 {
     [AllowNull]
     private TagMatchingRuleDescriptorBuilder _parent;
-    private RequiredAttributeDescriptorFlags _flags;
+    private RequiredAttributeFlags _flags;
 
     private RequiredAttributeDescriptorBuilder()
     {
@@ -33,8 +33,8 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
     public bool IsDirectiveAttribute
     {
-        get => _flags.IsFlagSet(RequiredAttributeDescriptorFlags.IsDirectiveAttribute);
-        set => _flags.UpdateFlag(RequiredAttributeDescriptorFlags.IsDirectiveAttribute, value);
+        get => _flags.IsFlagSet(RequiredAttributeFlags.IsDirectiveAttribute);
+        set => _flags.UpdateFlag(RequiredAttributeFlags.IsDirectiveAttribute, value);
     }
 
     private protected override RequiredAttributeDescriptor BuildCore(ImmutableArray<RazorDiagnostic> diagnostics)
@@ -43,7 +43,7 @@ public sealed partial class RequiredAttributeDescriptorBuilder : TagHelperObject
 
         if (CaseSensitive)
         {
-            flags |= RequiredAttributeDescriptorFlags.CaseSensitive;
+            flags |= RequiredAttributeFlags.CaseSensitive;
         }
 
         return new RequiredAttributeDescriptor(

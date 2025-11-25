@@ -9,11 +9,11 @@ namespace Microsoft.AspNetCore.Razor.Language;
 
 public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttributeDescriptor>
 {
-    private readonly RequiredAttributeDescriptorFlags _flags;
+    private readonly RequiredAttributeFlags _flags;
     private TagMatchingRuleDescriptor? _parent;
     private string? _displayName;
 
-    internal RequiredAttributeDescriptorFlags Flags => _flags;
+    internal RequiredAttributeFlags Flags => _flags;
 
     public string Name { get; }
     public RequiredAttributeNameComparison NameComparison { get; }
@@ -21,11 +21,11 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
     public RequiredAttributeValueComparison ValueComparison { get; }
     public string DisplayName => _displayName ??= GetDisplayName(Name, NameComparison);
 
-    public bool CaseSensitive => _flags.IsFlagSet(RequiredAttributeDescriptorFlags.CaseSensitive);
-    public bool IsDirectiveAttribute => _flags.IsFlagSet(RequiredAttributeDescriptorFlags.IsDirectiveAttribute);
+    public bool CaseSensitive => _flags.IsFlagSet(RequiredAttributeFlags.CaseSensitive);
+    public bool IsDirectiveAttribute => _flags.IsFlagSet(RequiredAttributeFlags.IsDirectiveAttribute);
 
     internal RequiredAttributeDescriptor(
-        RequiredAttributeDescriptorFlags flags,
+        RequiredAttributeFlags flags,
         string name,
         RequiredAttributeNameComparison nameComparison,
         string? value,

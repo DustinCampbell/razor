@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis;
 
@@ -27,8 +28,9 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
         TagStructure tagStructure,
         bool caseSensitive,
         ImmutableArray<RequiredAttributeDescriptor> attributes,
+        Checksum checksum,
         ImmutableArray<RazorDiagnostic> diagnostics)
-        : base(diagnostics)
+        : base(checksum, diagnostics)
     {
         TagName = tagName;
         ParentTag = parentTag;
@@ -42,18 +44,18 @@ public sealed class TagMatchingRuleDescriptor : TagHelperObject<TagMatchingRuleD
         }
     }
 
-    private protected override void BuildChecksum(in Checksum.Builder builder)
+    internal TagMatchingRuleDescriptor(
+        string tagName,
+        string? parentTag,
+        TagStructure tagStructure,
+        bool caseSensitive,
+        ImmutableArray<RequiredAttributeDescriptor> attributes,
+        ImmutableArray<RazorDiagnostic> diagnostics)
+        : this(
+            tagName, parentTag, tagStructure, caseSensitive, attributes,
+            ChecksumFactory.ComputeForTagMatchingRule(tagName, parentTag, tagStructure, caseSensitive, attributes, diagnostics),
+            diagnostics)
     {
-        builder.Append(TagName);
-        builder.Append(ParentTag);
-        builder.Append((int)TagStructure);
-
-        builder.Append(CaseSensitive);
-
-        foreach (var descriptor in Attributes)
-        {
-            builder.Append(descriptor.Checksum);
-        }
     }
 
     public TagHelperDescriptor Parent

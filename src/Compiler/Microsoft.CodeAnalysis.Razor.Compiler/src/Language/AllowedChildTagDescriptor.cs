@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -14,17 +15,19 @@ public sealed class AllowedChildTagDescriptor : TagHelperObject<AllowedChildTagD
     public string Name { get; }
     public string DisplayName { get; }
 
-    internal AllowedChildTagDescriptor(string name, string displayName, ImmutableArray<RazorDiagnostic> diagnostics)
-        : base(diagnostics)
+    internal AllowedChildTagDescriptor(string name, string displayName, Checksum checksum, ImmutableArray<RazorDiagnostic> diagnostics)
+        : base(checksum, diagnostics)
     {
         Name = name;
         DisplayName = displayName;
     }
 
-    private protected override void BuildChecksum(in Checksum.Builder builder)
+    internal AllowedChildTagDescriptor(string name, string displayName, ImmutableArray<RazorDiagnostic> diagnostics)
+        : this(
+            name, displayName,
+            ChecksumFactory.ComputeForAllowedChildTag(name, displayName, diagnostics),
+            diagnostics)
     {
-        builder.Append(Name);
-        builder.Append(DisplayName);
     }
 
     public TagHelperDescriptor Parent

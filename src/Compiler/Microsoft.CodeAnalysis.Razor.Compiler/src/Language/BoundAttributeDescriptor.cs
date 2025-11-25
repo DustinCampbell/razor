@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -59,8 +60,9 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
         string? containingType,
         ImmutableArray<BoundAttributeParameterDescriptor> parameters,
         MetadataObject metadata,
+        Checksum checksum,
         ImmutableArray<RazorDiagnostic> diagnostics)
-        : base(diagnostics)
+        : base(checksum, diagnostics)
     {
         _flags = flags;
 
@@ -81,25 +83,24 @@ public sealed class BoundAttributeDescriptor : TagHelperObject<BoundAttributeDes
         }
     }
 
-    private protected override void BuildChecksum(in Checksum.Builder builder)
+    internal BoundAttributeDescriptor(
+        BoundAttributeFlags flags,
+        string name,
+        string propertyName,
+        TypeNameObject typeNameObject,
+        string? indexerNamePrefix,
+        TypeNameObject indexerTypeNameObject,
+        DocumentationObject documentationObject,
+        string displayName,
+        string? containingType,
+        ImmutableArray<BoundAttributeParameterDescriptor> parameters,
+        MetadataObject metadata,
+        ImmutableArray<RazorDiagnostic> diagnostics)
+        : this(
+            flags, name, propertyName, typeNameObject, indexerNamePrefix, indexerTypeNameObject, documentationObject, displayName, containingType, parameters, metadata,
+            ChecksumFactory.ComputeForBoundAttribute(flags, name, propertyName, typeNameObject, indexerNamePrefix, indexerTypeNameObject, documentationObject, displayName, containingType, parameters, metadata, diagnostics),
+            diagnostics)
     {
-        builder.Append((byte)_flags);
-        builder.Append(Name);
-        builder.Append(PropertyName);
-        builder.Append(IndexerNamePrefix);
-        builder.Append(DisplayName);
-        builder.Append(ContainingType);
-
-        TypeNameObject.AppendToChecksum(in builder);
-        IndexerTypeNameObject.AppendToChecksum(in builder);
-        DocumentationObject.AppendToChecksum(in builder);
-
-        foreach (var descriptor in Parameters)
-        {
-            builder.Append(descriptor.Checksum);
-        }
-
-        Metadata.AppendToChecksum(in builder);
     }
 
     public TagHelperDescriptor Parent

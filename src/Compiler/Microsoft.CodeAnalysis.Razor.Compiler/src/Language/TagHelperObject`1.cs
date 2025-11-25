@@ -11,37 +11,18 @@ namespace Microsoft.AspNetCore.Razor.Language;
 public abstract class TagHelperObject<T> : IEquatable<T>
     where T : TagHelperObject<T>
 {
-    private Checksum? _checksum;
+    internal Checksum Checksum { get; }
 
     public ImmutableArray<RazorDiagnostic> Diagnostics { get; }
 
     public bool HasErrors
         => Diagnostics.Any(static d => d.Severity == RazorDiagnosticSeverity.Error);
 
-    private protected TagHelperObject(ImmutableArray<RazorDiagnostic> diagnostics)
+    private protected TagHelperObject(Checksum checksum, ImmutableArray<RazorDiagnostic> diagnostics)
     {
+        Checksum = checksum;
         Diagnostics = diagnostics.NullToEmpty();
     }
-
-    internal Checksum Checksum
-        => _checksum ??= ComputeChecksum();
-
-    // Internal for benchmarks
-    internal Checksum ComputeChecksum()
-    {
-        var builder = new Checksum.Builder();
-
-        BuildChecksum(in builder);
-
-        foreach (var diagnostic in Diagnostics)
-        {
-            builder.Append(diagnostic.Checksum);
-        }
-
-        return builder.FreeAndGetChecksum();
-    }
-
-    private protected abstract void BuildChecksum(in Checksum.Builder builder);
 
     public sealed override bool Equals(object? obj)
         => obj is T other &&

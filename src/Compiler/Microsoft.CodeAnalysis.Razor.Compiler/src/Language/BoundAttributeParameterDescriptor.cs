@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -36,8 +37,9 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         string propertyName,
         TypeNameObject typeNameObject,
         DocumentationObject documentationObject,
+        Checksum checksum,
         ImmutableArray<RazorDiagnostic> diagnostics)
-        : base(diagnostics)
+        : base(checksum, diagnostics)
     {
         _flags = flags;
 
@@ -47,14 +49,18 @@ public sealed class BoundAttributeParameterDescriptor : TagHelperObject<BoundAtt
         DocumentationObject = documentationObject;
     }
 
-    private protected override void BuildChecksum(in Checksum.Builder builder)
+    internal BoundAttributeParameterDescriptor(
+        BoundAttributeParameterFlags flags,
+        string name,
+        string propertyName,
+        TypeNameObject typeNameObject,
+        DocumentationObject documentationObject,
+        ImmutableArray<RazorDiagnostic> diagnostics)
+        : this(
+            flags, name, propertyName, typeNameObject, documentationObject,
+            ChecksumFactory.ComputeForBoundAttributeParameter(flags, name, propertyName, typeNameObject, documentationObject, diagnostics),
+            diagnostics)
     {
-        builder.Append((byte)_flags);
-        builder.Append(Name);
-        builder.Append(PropertyName);
-
-        TypeNameObject.AppendToChecksum(in builder);
-        DocumentationObject.AppendToChecksum(in builder);
     }
 
     public BoundAttributeDescriptor Parent

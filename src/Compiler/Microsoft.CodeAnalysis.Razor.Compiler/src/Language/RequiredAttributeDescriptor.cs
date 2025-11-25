@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Language;
@@ -30,8 +31,9 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         RequiredAttributeNameComparison nameComparison,
         string? value,
         RequiredAttributeValueComparison valueComparison,
+        Checksum checksum,
         ImmutableArray<RazorDiagnostic> diagnostics)
-        : base(diagnostics)
+        : base(checksum, diagnostics)
     {
         _flags = flags;
         Name = name;
@@ -40,13 +42,18 @@ public sealed class RequiredAttributeDescriptor : TagHelperObject<RequiredAttrib
         ValueComparison = valueComparison;
     }
 
-    private protected override void BuildChecksum(in Checksum.Builder builder)
+    internal RequiredAttributeDescriptor(
+        RequiredAttributeFlags flags,
+        string name,
+        RequiredAttributeNameComparison nameComparison,
+        string? value,
+        RequiredAttributeValueComparison valueComparison,
+        ImmutableArray<RazorDiagnostic> diagnostics)
+        : this(
+            flags, name, nameComparison, value, valueComparison,
+            ChecksumFactory.ComputeForRequiredAttribute(flags, name, nameComparison, value, valueComparison, diagnostics),
+            diagnostics)
     {
-        builder.Append((int)Flags);
-        builder.Append(Name);
-        builder.Append((int)NameComparison);
-        builder.Append(Value);
-        builder.Append((int)ValueComparison);
     }
 
     public TagMatchingRuleDescriptor Parent

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.PooledObjects;
 using Microsoft.AspNetCore.Razor.Utilities;
 using Microsoft.CodeAnalysis;
@@ -66,8 +67,9 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         ImmutableArray<BoundAttributeDescriptor> attributeDescriptors,
         ImmutableArray<AllowedChildTagDescriptor> allowedChildTags,
         MetadataObject metadata,
+        Checksum checksum,
         ImmutableArray<RazorDiagnostic> diagnostics)
-        : base(diagnostics)
+        : base(checksum, diagnostics)
     {
         _flags = flags;
         RuntimeKind = runtimeKind;
@@ -99,35 +101,26 @@ public sealed class TagHelperDescriptor : TagHelperObject<TagHelperDescriptor>
         }
     }
 
-    private protected override void BuildChecksum(in Checksum.Builder builder)
+    internal TagHelperDescriptor(
+        TagHelperFlags flags,
+        TagHelperKind kind,
+        RuntimeKind runtimeKind,
+        string name,
+        string assemblyName,
+        string displayName,
+        TypeNameObject typeNameObject,
+        DocumentationObject documentationObject,
+        string? tagOutputHint,
+        ImmutableArray<TagMatchingRuleDescriptor> tagMatchingRules,
+        ImmutableArray<BoundAttributeDescriptor> attributeDescriptors,
+        ImmutableArray<AllowedChildTagDescriptor> allowedChildTags,
+        MetadataObject metadata,
+        ImmutableArray<RazorDiagnostic> diagnostics)
+        : this(
+            flags, kind, runtimeKind, name, assemblyName, displayName, typeNameObject, documentationObject, tagOutputHint, tagMatchingRules, attributeDescriptors, allowedChildTags, metadata,
+            ChecksumFactory.ComputeForTagHelper(flags, kind, runtimeKind, name, assemblyName, displayName, typeNameObject, documentationObject, tagOutputHint, allowedChildTags, attributeDescriptors, tagMatchingRules, metadata, diagnostics),
+            diagnostics)
     {
-        builder.Append((byte)Flags);
-        builder.Append((byte)Kind);
-        builder.Append((byte)RuntimeKind);
-        builder.Append(Name);
-        builder.Append(AssemblyName);
-        builder.Append(DisplayName);
-        builder.Append(TagOutputHint);
-
-        TypeNameObject.AppendToChecksum(in builder);
-        DocumentationObject.AppendToChecksum(in builder);
-
-        foreach (var descriptor in AllowedChildTags)
-        {
-            builder.Append(descriptor.Checksum);
-        }
-
-        foreach (var descriptor in BoundAttributes)
-        {
-            builder.Append(descriptor.Checksum);
-        }
-
-        foreach (var descriptor in TagMatchingRules)
-        {
-            builder.Append(descriptor.Checksum);
-        }
-
-        Metadata.AppendToChecksum(in builder);
     }
 
     internal ImmutableArray<BoundAttributeDescriptor> EditorRequiredAttributes

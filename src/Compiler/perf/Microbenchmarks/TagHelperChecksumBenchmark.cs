@@ -4,6 +4,7 @@
 using System.Collections.Immutable;
 using BenchmarkDotNet.Attributes;
 using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 using Microsoft.AspNetCore.Razor.Utilities;
 
 namespace Microsoft.AspNetCore.Razor.Microbenchmarks.Compiler;
@@ -35,7 +36,7 @@ public class TagHelperChecksumBenchmarks
 
         for (var i = 0; i < _tagHelpers.Length; i++)
         {
-            _checksums[i] = _tagHelpers[i].ComputeChecksum();
+            _checksums[i] = ChecksumFactory.Compute(_tagHelpers[i]);
         }
     }
 
@@ -48,11 +49,13 @@ public class TagHelperChecksumBenchmarks
     [Benchmark(Description = "Create Checksums", OperationsPerInvoke = OperationsPerInvoke)]
     public void CreateChecksums()
     {
+        Assumed.NotNull(_checksums);
+
         for (var operation = 0; operation < OperationsPerInvoke; operation++)
         {
             for (var i = 0; i < _tagHelpers.Length; i++)
             {
-                _checksums![i] = _tagHelpers[i].ComputeChecksum();
+                _checksums[i] = ChecksumFactory.Compute(_tagHelpers[i]);
             }
         }
     }

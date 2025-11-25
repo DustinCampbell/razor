@@ -6,8 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.Razor.Extensions;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Components;
+
 #if JSONSERIALIZATION_ENABLETAGHELPERCACHE
-using Microsoft.CodeAnalysis.Razor.Utilities;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 #endif
 
 namespace Microsoft.AspNetCore.Razor.Serialization.Json;

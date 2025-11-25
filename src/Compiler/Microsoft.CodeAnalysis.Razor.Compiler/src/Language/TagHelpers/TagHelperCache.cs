@@ -1,10 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Utilities;
 
-namespace Microsoft.CodeAnalysis.Razor.Utilities;
+namespace Microsoft.AspNetCore.Razor.Language.TagHelpers;
 
 internal sealed class TagHelperCache : CleanableWeakCache<Checksum, TagHelperDescriptor>
 {

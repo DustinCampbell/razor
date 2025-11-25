@@ -4,7 +4,7 @@
 using System.Diagnostics;
 using MessagePack;
 using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.CodeAnalysis.Razor.Utilities;
+using Microsoft.AspNetCore.Razor.Language.TagHelpers;
 
 namespace Microsoft.CodeAnalysis.Razor.Serialization.MessagePack.Formatters.TagHelpers;
 

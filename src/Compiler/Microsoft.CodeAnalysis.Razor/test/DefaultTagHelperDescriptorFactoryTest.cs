@@ -94,12 +94,12 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expected = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
-            .TagMatchingRuleDescriptor(rule => configure(rule))
+            .TagMatchingRule(configure)
             .Build();
 
         // Act
         var actual = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
-            .TagMatchingRuleDescriptor(rule =>
+            .TagMatchingRule(rule =>
             {
                 RequiredAttributeParser.AddRequiredAttributes(requiredAttributes, rule);
             })
@@ -172,7 +172,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expected = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
-            .TagMatchingRuleDescriptor(rule =>
+            .TagMatchingRule(rule =>
             {
                 foreach (var configure in configures)
                 {
@@ -183,7 +183,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
 
         // Act
         var actual = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
-            .TagMatchingRuleDescriptor(rule =>
+            .TagMatchingRule(rule =>
             {
                 RequiredAttributeParser.AddRequiredAttributes(requiredAttributes, rule);
             })
@@ -198,18 +198,18 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
         => new()
         {
             NameAndTagHelper("EnumTagHelper", static b => b
-                .TagMatchingRule(tagName: "enum")
+                .AddTagMatchingRule(tagName: "enum")
                 .BoundAttribute<int>(name: "non-enum-property", propertyName: "NonEnumProperty")
                 .BoundAttribute(name: "enum-property", propertyName: "EnumProperty", typeName: "TestNamespace.CustomEnum", static b => b
                     .AsEnum())),
             NameAndTagHelper("MultiEnumTagHelper", static b => b
-                .TagMatchingRule(tagName: "p")
-                .TagMatchingRule(tagName: "input")
+                .AddTagMatchingRule(tagName: "p")
+                .AddTagMatchingRule(tagName: "input")
                 .BoundAttribute<int>(name: "non-enum-property", propertyName: "NonEnumProperty")
                 .BoundAttribute(name: "enum-property", propertyName: "EnumProperty", typeName: "TestNamespace.CustomEnum", static b => b
                     .AsEnum())),
             NameAndTagHelper("NestedEnumTagHelper", static b => b
-                .TagMatchingRule(tagName: "nested-enum")
+                .AddTagMatchingRule(tagName: "nested-enum")
                 .BoundAttribute(name: "nested-enum-property", propertyName: "NestedEnumProperty", typeName: "TestNamespace.NestedEnumTagHelper.NestedEnum", static b => b
                     .AsEnum())
                 .BoundAttribute<int>(name: "non-enum-property", propertyName: "NonEnumProperty")
@@ -238,13 +238,13 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
         => new()
         {
             NameAndTagHelper("RequiredParentTagHelper", static b => b
-                .TagMatchingRule(tagName: "input", parentTagName: "div")),
+                .AddTagMatchingRule(tagName: "input", parentTagName: "div")),
             NameAndTagHelper("MultiSpecifiedRequiredParentTagHelper", static b => b
-                .TagMatchingRule(tagName: "p", parentTagName: "div")
-                .TagMatchingRule(tagName: "input", parentTagName: "section")),
+                .AddTagMatchingRule(tagName: "p", parentTagName: "div")
+                .AddTagMatchingRule(tagName: "input", parentTagName: "section")),
             NameAndTagHelper("MultiWithUnspecifiedRequiredParentTagHelper", static b => b
-                .TagMatchingRule(tagName: "p")
-                .TagMatchingRule(tagName: "input", parentTagName: "div"))
+                .AddTagMatchingRule(tagName: "p")
+                .AddTagMatchingRule(tagName: "input", parentTagName: "div"))
         };
 
     [Theory]
@@ -268,15 +268,15 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
         => new()
         {
             NameAndTagHelper("RestrictChildrenTagHelper", static b => b
-                .TagMatchingRule(tagName: "restrict-children")
+                .AddTagMatchingRule(tagName: "restrict-children")
                 .AllowedChildTag(tagName: "p")),
             NameAndTagHelper("DoubleRestrictChildrenTagHelper", static b => b
-                .TagMatchingRule(tagName: "double-restrict-children")
+                .AddTagMatchingRule(tagName: "double-restrict-children")
                 .AllowedChildTag(tagName: "p")
                 .AllowedChildTag(tagName: "strong")),
             NameAndTagHelper("MultiTargetRestrictChildrenTagHelper", static b => b
-                .TagMatchingRule(tagName: "p")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "p")
+                .AddTagMatchingRule(tagName: "div")
                 .AllowedChildTag(tagName: "p")
                 .AllowedChildTag(tagName: "strong")),
         };
@@ -302,13 +302,13 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
         => new()
         {
             NameAndTagHelper("TagStructureTagHelper", static b => b
-                .TagMatchingRule(tagName: "input", tagStructure: TagStructure.WithoutEndTag)),
+                .AddTagMatchingRule(tagName: "input", tagStructure: TagStructure.WithoutEndTag)),
             NameAndTagHelper("MultiSpecifiedTagStructureTagHelper", static b => b
-                .TagMatchingRule(tagName: "p", tagStructure: TagStructure.NormalOrSelfClosing)
-                .TagMatchingRule(tagName: "input", tagStructure: TagStructure.WithoutEndTag)),
+                .AddTagMatchingRule(tagName: "p", tagStructure: TagStructure.NormalOrSelfClosing)
+                .AddTagMatchingRule(tagName: "input", tagStructure: TagStructure.WithoutEndTag)),
             NameAndTagHelper("MultiWithUnspecifiedTagStructureTagHelper", static b => b
-                .TagMatchingRule(tagName: "p")
-                .TagMatchingRule(tagName: "input", tagStructure: TagStructure.WithoutEndTag))
+                .AddTagMatchingRule(tagName: "p")
+                .AddTagMatchingRule(tagName: "input", tagStructure: TagStructure.WithoutEndTag))
         };
 
     [Theory]
@@ -335,35 +335,35 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
             return new()
             {
                 NameAndTagHelper("InheritedEditorBrowsableTagHelper", designTime: true, static b => b
-                    .TagMatchingRule(tagName: "inherited-editor-browsable")
+                    .AddTagMatchingRule(tagName: "inherited-editor-browsable")
                     .BoundAttribute<int>(name: "property", propertyName: "Property")),
                 NameAndTagHelper("EditorBrowsableTagHelper", designTime: true, configure: null),
                 NameAndTagHelper("EditorBrowsableTagHelper", designTime: false, static b => b
-                    .TagMatchingRule(tagName: "editor-browsable")
+                    .AddTagMatchingRule(tagName: "editor-browsable")
                     .BoundAttribute<int>(name: "property", propertyName: "Property")),
                 NameAndTagHelper("HiddenPropertyEditorBrowsableTagHelper", designTime: true, static b => b
-                    .TagMatchingRule(tagName: "hidden-property-editor-browsable")),
+                    .AddTagMatchingRule(tagName: "hidden-property-editor-browsable")),
                 NameAndTagHelper("HiddenPropertyEditorBrowsableTagHelper", designTime: false, static b => b
-                    .TagMatchingRule(tagName: "hidden-property-editor-browsable")
+                    .AddTagMatchingRule(tagName: "hidden-property-editor-browsable")
                     .BoundAttribute<int>(name: "property", propertyName: "Property")),
                 NameAndTagHelper("OverriddenEditorBrowsableTagHelper", designTime: true, static b => b
-                    .TagMatchingRule(tagName: "overridden-editor-browsable")
+                    .AddTagMatchingRule(tagName: "overridden-editor-browsable")
                     .BoundAttribute<int>(name: "property", propertyName: "Property")),
                 NameAndTagHelper("MultiPropertyEditorBrowsableTagHelper", designTime: true, static b => b
-                    .TagMatchingRule(tagName: "multi-property-editor-browsable")
+                    .AddTagMatchingRule(tagName: "multi-property-editor-browsable")
                     .BoundAttribute<int>(name: "property2", propertyName: "Property2")),
                 NameAndTagHelper("MultiPropertyEditorBrowsableTagHelper", designTime: false, static b => b
-                    .TagMatchingRule(tagName: "multi-property-editor-browsable")
+                    .AddTagMatchingRule(tagName: "multi-property-editor-browsable")
                     .BoundAttribute<int>(name: "property", propertyName: "Property")
                     .BoundAttribute<int>(name: "property2", propertyName: "Property2")),
                 NameAndTagHelper("OverriddenPropertyEditorBrowsableTagHelper", designTime: true, static b => b
-                    .TagMatchingRule(tagName: "overridden-property-editor-browsable")),
+                    .AddTagMatchingRule(tagName: "overridden-property-editor-browsable")),
                 NameAndTagHelper("OverriddenPropertyEditorBrowsableTagHelper", designTime: false, static b => b
-                    .TagMatchingRule(tagName: "overridden-property-editor-browsable")
+                    .AddTagMatchingRule(tagName: "overridden-property-editor-browsable")
                     .BoundAttribute<int>(name: "property2", propertyName: "Property2")
                     .BoundAttribute<int>(name: "property", propertyName: "Property")),
                 NameAndTagHelper("DefaultEditorBrowsableTagHelper", designTime: true, static b => b
-                    .TagMatchingRule(tagName: "default-editor-browsable")
+                    .AddTagMatchingRule(tagName: "default-editor-browsable")
                     .BoundAttribute<int>(name: "property", propertyName: "Property")),
                 NameAndTagHelper("MultiEditorBrowsableTagHelper", designTime: true, configure: null)
             };
@@ -497,7 +497,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("OverriddenAttributeTagHelper", static b => b
-            .TagMatchingRule(tagName: "overridden-attribute")
+            .AddTagMatchingRule(tagName: "overridden-attribute")
             .BoundAttribute<string>(name: "SomethingElse", propertyName: "ValidAttribute1")
             .BoundAttribute<string>(name: "Something-Else", propertyName: "ValidAttribute2"));
 
@@ -517,7 +517,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("InheritedOverriddenAttributeTagHelper", static b => b
-            .TagMatchingRule(tagName: "inherited-overridden-attribute")
+            .AddTagMatchingRule(tagName: "inherited-overridden-attribute")
             .BoundAttribute<string>(name: "valid-attribute1", propertyName: "ValidAttribute1")
             .BoundAttribute<string>(name: "Something-Else", propertyName: "ValidAttribute2"));
 
@@ -537,7 +537,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("InheritedNotOverriddenAttributeTagHelper", static b => b
-            .TagMatchingRule(tagName: "inherited-not-overridden-attribute")
+            .AddTagMatchingRule(tagName: "inherited-not-overridden-attribute")
             .BoundAttribute<string>(name: "SomethingElse", propertyName: "ValidAttribute1")
             .BoundAttribute<string>(name: "Something-Else", propertyName: "ValidAttribute2"));
 
@@ -557,7 +557,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("InheritedSingleAttributeTagHelper", static b => b
-            .TagMatchingRule(tagName: "inherited-single-attribute")
+            .AddTagMatchingRule(tagName: "inherited-single-attribute")
             .BoundAttribute<int>(name: "int-attribute", propertyName: "IntAttribute"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
@@ -576,7 +576,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("SingleAttributeTagHelper", static b => b
-            .TagMatchingRule(tagName: "single-attribute")
+            .AddTagMatchingRule(tagName: "single-attribute")
             .BoundAttribute<int>(name: "int-attribute", propertyName: "IntAttribute"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
@@ -595,7 +595,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("MissingAccessorTagHelper", static b => b
-            .TagMatchingRule(tagName: "missing-accessor")
+            .AddTagMatchingRule(tagName: "missing-accessor")
             .BoundAttribute<string>(name: "valid-attribute", propertyName: "ValidAttribute"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
@@ -614,7 +614,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("NonPublicAccessorTagHelper", static b => b
-            .TagMatchingRule(tagName: "non-public-accessor")
+            .AddTagMatchingRule(tagName: "non-public-accessor")
             .BoundAttribute<string>(name: "valid-attribute", propertyName: "ValidAttribute"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
@@ -633,7 +633,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("NotBoundAttributeTagHelper", static b => b
-            .TagMatchingRule(tagName: "not-bound-attribute")
+            .AddTagMatchingRule(tagName: "not-bound-attribute")
             .BoundAttribute<object>(name: "bound-property", propertyName: "BoundProperty"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
@@ -652,8 +652,8 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("MultiTagTagHelper", static b => b
-            .TagMatchingRule(tagName: "p")
-            .TagMatchingRule(tagName: "div")
+            .AddTagMatchingRule(tagName: "p")
+            .AddTagMatchingRule(tagName: "div")
             .BoundAttribute<string>(name: "valid-attribute", propertyName: "ValidAttribute"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
@@ -672,7 +672,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("InheritedMultiTagTagHelper", static b => b
-            .TagMatchingRule(tagName: "inherited-multi-tag")
+            .AddTagMatchingRule(tagName: "inherited-multi-tag")
             .BoundAttribute<string>(name: "valid-attribute", propertyName: "ValidAttribute"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
@@ -691,8 +691,8 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("DuplicateTagNameTagHelper", static b => b
-            .TagMatchingRule(tagName: "p")
-            .TagMatchingRule(tagName: "div"));
+            .AddTagMatchingRule(tagName: "p")
+            .AddTagMatchingRule(tagName: "div"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
         var typeSymbol = Compilation.GetTypeByMetadataName("TestNamespace.DuplicateTagNameTagHelper");
@@ -710,7 +710,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
     {
         // Arrange
         var expectedDescriptor = CreateTagHelper("OverrideNameTagHelper", static b => b
-            .TagMatchingRule(tagName: "data-condition"));
+            .AddTagMatchingRule(tagName: "data-condition"));
 
         var factory = new DefaultTagHelperDescriptorFactory(includeDocumentation: false, excludeHidden: false);
         var typeSymbol = Compilation.GetTypeByMetadataName("TestNamespace.OverrideNameTagHelper");
@@ -1123,7 +1123,7 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
             @namespace: typeSymbol.ContainingNamespace.GetDefaultDisplayString(),
             typeName: typeSymbol.Name,
             assemblyName: typeSymbol.ContainingAssembly.Identity.Name, static b => b
-                .TagMatchingRule("enumerable"));
+                .AddTagMatchingRule("enumerable"));
 
         // Act
         var descriptor = factory.CreateDescriptor(typeSymbol);
@@ -1275,16 +1275,16 @@ public class DefaultTagHelperDescriptorFactoryTest : TagHelperDescriptorProvider
         => new()
         {
             NameAndTagHelper("MultipleDescriptorTagHelperWithOutputElementHint", static b => b
-                .TagMatchingRule(tagName: "a")
-                .TagMatchingRule(tagName: "p")
+                .AddTagMatchingRule(tagName: "a")
+                .AddTagMatchingRule(tagName: "p")
                 .TagOutputHint("div")),
             NameAndTagHelper("TestNamespace2", "InheritedOutputElementHintTagHelper", static b => b
-                .TagMatchingRule(tagName: "inherited-output-element-hint")),
+                .AddTagMatchingRule(tagName: "inherited-output-element-hint")),
             NameAndTagHelper("TestNamespace2", "OutputElementHintTagHelper", static b => b
-                .TagMatchingRule(tagName: "output-element-hint")
+                .AddTagMatchingRule(tagName: "output-element-hint")
                 .TagOutputHint("hinted-value")),
             NameAndTagHelper("TestNamespace2", "OverriddenOutputElementHintTagHelper", static b => b
-                .TagMatchingRule(tagName: "overridden-output-element-hint")
+                .AddTagMatchingRule(tagName: "overridden-output-element-hint")
                 .TagOutputHint("overridden"))
         };
 

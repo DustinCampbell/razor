@@ -115,7 +115,7 @@ public class TagHelpersIntegrationTest() : IntegrationTestBase(layer: TestProjec
             }
         }
 
-        builder.TagMatchingRuleDescriptor(ruleBuilder => ruleBuilder.RequireTagName(tagName));
+        builder.AddTagMatchingRule(tagName);
 
         var descriptor = builder.Build();
 

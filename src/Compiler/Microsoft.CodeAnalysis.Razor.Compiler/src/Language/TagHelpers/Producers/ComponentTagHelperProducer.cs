@@ -112,19 +112,13 @@ internal sealed partial class ComponentTagHelperProducer : TagHelperProducer
                 ? type.Name
                 : $"{type.ContainingNamespace.GetFullName()}.{type.Name}";
 
-            builder.TagMatchingRule(r =>
-            {
-                r.TagName = fullName;
-            });
+            builder.AddTagMatchingRule(fullName);
 
             builder.IsFullyQualifiedNameMatch = true;
         }
         else
         {
-            builder.TagMatchingRule(r =>
-            {
-                r.TagName = type.Name;
-            });
+            builder.AddTagMatchingRule(type.Name);
         }
 
         if (type.IsGenericType)
@@ -565,11 +559,7 @@ internal sealed partial class ComponentTagHelperProducer : TagHelperProducer
         }
 
         // Child content matches the property name, but only as a direct child of the component.
-        builder.TagMatchingRule(r =>
-        {
-            r.TagName = attribute.Name;
-            r.ParentTag = component.TagMatchingRules[0].TagName;
-        });
+        builder.AddTagMatchingRule(tagName: attribute.Name, parentTagName: component.TagMatchingRules[0].TagName);
 
         if (attribute.IsParameterizedChildContentProperty())
         {

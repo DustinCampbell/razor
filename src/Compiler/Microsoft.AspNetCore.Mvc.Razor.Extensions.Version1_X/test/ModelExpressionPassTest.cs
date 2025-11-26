@@ -32,8 +32,7 @@ public class ModelExpressionPassTest : RazorProjectEngineTestBase
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("Foo")
                 .TypeName("System.Int32"))
-            .TagMatchingRuleDescriptor(rule =>
-                rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .Build();
 
         var codeDocument = ProjectEngine.CreateCodeDocument(@"
@@ -63,8 +62,7 @@ public class ModelExpressionPassTest : RazorProjectEngineTestBase
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("Foo")
                 .TypeName("Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExpression"))
-            .TagMatchingRuleDescriptor(rule =>
-                rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .Build();
 
         // Using \r\n here because we verify line mappings
@@ -99,8 +97,7 @@ public class ModelExpressionPassTest : RazorProjectEngineTestBase
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("Foo")
                 .TypeName("Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExpression"))
-            .TagMatchingRuleDescriptor(rule =>
-                rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .Build();
 
         // Using \r\n here because we verify line mappings

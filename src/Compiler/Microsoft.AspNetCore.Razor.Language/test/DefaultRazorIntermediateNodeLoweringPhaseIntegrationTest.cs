@@ -476,7 +476,7 @@ public class DefaultRazorIntermediateNodeLoweringPhaseIntegrationTest : RazorPro
             builder.BoundAttributeDescriptor(attributeBuilder);
         }
 
-        builder.TagMatchingRuleDescriptor(ruleBuilder => ruleBuilder.RequireTagName(tagName));
+        builder.AddTagMatchingRule(tagName);
 
         return builder.Build();
     }

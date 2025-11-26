@@ -102,7 +102,7 @@ public class TagHelperDescriptorComparerTest
             }
         }
 
-        builder.TagMatchingRuleDescriptor(ruleBuilder => ruleBuilder.RequireTagName(tagMatchingRuleName ?? tagName));
+        builder.AddTagMatchingRule(tagMatchingRuleName ?? tagName);
 
         var descriptor = builder.Build();
 

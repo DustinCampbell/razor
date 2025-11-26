@@ -19,7 +19,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "form")
+                .AddTagMatchingRule(tagName: "form")
                 .BoundAttributeDescriptor(attribute => attribute
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
                     .PropertyName("RouteValues")
@@ -51,7 +51,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("FormTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "form")
+                .AddTagMatchingRule(tagName: "form")
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("asp-all-route-data")
                     .TypeName("System.Collections.Generic.IDictionary<System.String, System.String>")
@@ -127,7 +127,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .BoundAttribute<string>(name: "class", propertyName: "Class")
                 .Build(),
         ];
@@ -164,7 +164,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .BoundAttribute<string>(name: "class", propertyName: "Class")
                 .Build(),
         ];
@@ -203,7 +203,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .BoundAttribute<string>(name: "class", propertyName: "Class")
                 .Build(),
         ];
@@ -318,7 +318,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
                 .BoundAttribute<string>(name: "class", propertyName: "Class")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("StyleTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .BoundAttribute<bool>(name: "visible", propertyName: "Visible")
                 .Build(),
         ];
@@ -349,7 +349,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CustomTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "custom")
+                .AddTagMatchingRule(tagName: "custom")
                 .BoundAttribute<bool>(name: "repeat", propertyName: "Repeat")
                 .TagOutputHint("div")
                 .Build(),
@@ -379,7 +379,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CustomTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "custom")
+                .AddTagMatchingRule(tagName: "custom")
                 .BoundAttribute<bool>(name: "repeat", propertyName: "Repeat")
                 .Build(),
         ];
@@ -408,7 +408,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .BoundAttribute<bool>(name: "repeat", propertyName: "Repeat")
                 .Build(),
         ];
@@ -514,7 +514,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BindAttribute", "TestAssembly")
-                .TagMatchingRule(tagName: "input")
+                .AddTagMatchingRule(tagName: "input")
                 .BoundAttributeDescriptor(builder =>
                 {
                     builder.Name = "@bind";
@@ -545,14 +545,14 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "Test")
+                .AddTagMatchingRule(tagName: "Test")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "TestAssembly.Test")
+                .AddTagMatchingRule(tagName: "TestAssembly.Test")
                 .IsFullyQualifiedNameMatch(true)
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("Test2TagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "Test2Assembly.Test")
+                .AddTagMatchingRule(tagName: "Test2Assembly.Test")
                 .IsFullyQualifiedNameMatch(true)
                 .Build(),
         ];
@@ -582,11 +582,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("MyTableTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "my-table")
+                .AddTagMatchingRule(tagName: "my-table")
                 .TagOutputHint("table")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("MyTrTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "my-tr")
+                .AddTagMatchingRule(tagName: "my-tr")
                 .TagOutputHint("tr")
                 .Build(),
         ];
@@ -615,10 +615,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .Build(),
         ];
 
@@ -646,10 +646,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "superli")
+                .AddTagMatchingRule(tagName: "superli")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .Build(),
         ];
 
@@ -678,11 +678,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("MyliTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "myli")
+                .AddTagMatchingRule(tagName: "myli")
                 .SetCaseSensitive()
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("MYLITagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "MYLI")
+                .AddTagMatchingRule(tagName: "MYLI")
                 .SetCaseSensitive()
                 .Build(),
         ];
@@ -711,11 +711,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("LITagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "LI")
+                .AddTagMatchingRule(tagName: "LI")
                 .SetCaseSensitive()
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .SetCaseSensitive()
                 .Build(),
         ];
@@ -744,10 +744,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "superli")
+                .AddTagMatchingRule(tagName: "superli")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .Build()
         ];
 
@@ -774,10 +774,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "superli")
+                .AddTagMatchingRule(tagName: "superli")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .Build(),
         ];
 
@@ -805,12 +805,12 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldTagHelper1", "TestAssembly")
-                .TagMatchingRule(tagName: "strong")
-                .TagMatchingRule(tagName: "b")
-                .TagMatchingRule(tagName: "bold")
+                .AddTagMatchingRule(tagName: "strong")
+                .AddTagMatchingRule(tagName: "b")
+                .AddTagMatchingRule(tagName: "bold")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("BoldTagHelper2", "TestAssembly")
-                .TagMatchingRule(tagName: "strong")
+                .AddTagMatchingRule(tagName: "strong")
                 .Build(),
         ];
 
@@ -839,10 +839,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper1", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper2", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .Build(),
         ];
 
@@ -869,14 +869,14 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("SuperLiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "superli")
+                .AddTagMatchingRule(tagName: "superli")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .TagOutputHint("strong")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .Build(),
         ];
 
@@ -904,11 +904,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .TagOutputHint("li")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .TagOutputHint("strong")
                 .Build(),
         ];
@@ -937,10 +937,10 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper1", "TestAssembly")
-                .TagMatchingRule(tagName: "li")
+                .AddTagMatchingRule(tagName: "li")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("LiTagHelper2", "TestAssembly")
-                .TagMatchingRule(tagName: "li", parentTagName: "ol")
+                .AddTagMatchingRule(tagName: "li", parentTagName: "ol")
                 .Build(),
         ];
 
@@ -967,11 +967,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("Tag1", "TestAssembly")
-                .TagMatchingRule(tagName: "outer-child-tag")
-                .TagMatchingRule(tagName: "child-tag", parentTagName: "parent-tag")
+                .AddTagMatchingRule(tagName: "outer-child-tag")
+                .AddTagMatchingRule(tagName: "child-tag", parentTagName: "parent-tag")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("Tag2", "TestAssembly")
-                .TagMatchingRule(tagName: "parent-tag")
+                .AddTagMatchingRule(tagName: "parent-tag")
                 .AllowChildTag("child-tag")
                 .Build(),
         ];
@@ -1001,11 +1001,11 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("Tag1", "TestAssembly")
-                .TagMatchingRule(tagName: "outer-child-tag")
-                .TagMatchingRule(tagName: "child-tag", parentTagName: "parent-tag")
+                .AddTagMatchingRule(tagName: "outer-child-tag")
+                .AddTagMatchingRule(tagName: "child-tag", parentTagName: "parent-tag")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("Tag2", "TestAssembly")
-                .TagMatchingRule(tagName: "parent-tag")
+                .AddTagMatchingRule(tagName: "parent-tag")
                 .AllowChildTag("child-tag")
                 .Build(),
         ];
@@ -1034,7 +1034,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .AllowChildTag("div")
@@ -1062,7 +1062,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParent", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .AllowChildTag("div")
@@ -1095,7 +1095,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParent", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .Build(),
@@ -1126,7 +1126,7 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParent", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .AllowChildTag("div")
@@ -1159,13 +1159,13 @@ public class LanguageServerTagHelperCompletionServiceTest(ITestOutputHelper test
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParentCatchAll", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .AllowChildTag("strong")
                 .AllowChildTag("div")
                 .AllowChildTag("b")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("BoldParent", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .AllowChildTag("b")
                 .AllowChildTag("bold")
                 .Build(),

@@ -31,9 +31,7 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TypeName("__Generated__StringParameterViewComponentTagHelper")
             .Metadata(new ViewComponentMetadata("StringParameter", TypeNameObject.From("StringParameter")))
             .DisplayName("StringParameterViewComponentTagHelper")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
-                .RequireTagName("vc:string-parameter")
+            .TagMatchingRule("vc:string-parameter", builder => builder
                 .AddAttribute("foo")
                 .AddAttribute("bar"))
             .BoundAttributeDescriptor(attribute =>
@@ -69,9 +67,7 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TypeName("__Generated__VariousParameterViewComponentTagHelper")
             .Metadata(new ViewComponentMetadata("VariousParameter", TypeNameObject.From("VariousParameter")))
             .DisplayName("VariousParameterViewComponentTagHelper")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
-                .RequireTagName("vc:various-parameter")
+            .TagMatchingRule("vc:various-parameter", builder => builder
                 .AddAttribute("test-enum")
                 .AddAttribute("test-string")
                 .AddAttribute("baz"))
@@ -115,9 +111,7 @@ public class ViewComponentTagHelperDescriptorFactoryTest
             .TypeName("__Generated__GenericParameterViewComponentTagHelper")
             .Metadata(new ViewComponentMetadata("GenericParameter", TypeNameObject.From("GenericParameter")))
             .DisplayName("GenericParameterViewComponentTagHelper")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
-                .RequireTagName("vc:generic-parameter")
+            .TagMatchingRule("vc:generic-parameter", builder => builder
                 .AddAttribute("foo"))
             .BoundAttributeDescriptor(attribute =>
                 attribute

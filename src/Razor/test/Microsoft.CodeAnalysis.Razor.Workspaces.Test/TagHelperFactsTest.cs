@@ -19,7 +19,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .Build()
         ];
 
@@ -48,7 +48,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
                     .AsDictionaryAttribute<string>("asp-route-"))
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
+                .AddTagMatchingRule("input")
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("asp-for")
                     .TypeName(typeof(string).FullName)
@@ -78,7 +78,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "a")
+                .AddTagMatchingRule(tagName: "a")
                 .BoundAttribute<string>(name: "asp-for", propertyName: "AspFor")
                 .BoundAttribute(name: "asp-route", propertyName: "AspRoute", typeName: typeof(IDictionary<,>).Namespace + "IDictionary<string, string>", static b => b
                     .AsDictionaryAttribute<string>("asp-route-"))
@@ -109,7 +109,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "input")
+                .AddTagMatchingRule(tagName: "input")
                 .BoundAttribute<string>(name: "asp-for", propertyName: "AspFor")
                 .BoundAttribute<string>(name: "asp-extra", propertyName: "AspExtra")
                 .Build()
@@ -145,7 +145,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "*")
+                .AddTagMatchingRule(tagName: "*")
                 .Build()
         ];
 
@@ -165,7 +165,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "strong")
+                .AddTagMatchingRule(tagName: "strong")
                 .Build()
         ];
 
@@ -185,10 +185,10 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "a", parentTagName: "div")
+                .AddTagMatchingRule(tagName: "a", parentTagName: "div")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("TestType2", "TestAssembly")
-                .TagMatchingRule(tagName: "strong", parentTagName: "div")
+                .AddTagMatchingRule(tagName: "strong", parentTagName: "div")
                 .Build()
         ];
 
@@ -208,10 +208,10 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "strong")
+                .AddTagMatchingRule(tagName: "strong")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("TestType2", "TestAssembly")
-                .TagMatchingRule(tagName: "thstrong")
+                .AddTagMatchingRule(tagName: "thstrong")
                 .Build()
         ];
 
@@ -231,10 +231,10 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "strong", parentTagName: "div")
+                .AddTagMatchingRule(tagName: "strong", parentTagName: "div")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("TestType2", "TestAssembly")
-                .TagMatchingRule(tagName: "strong", parentTagName: "p")
+                .AddTagMatchingRule(tagName: "strong", parentTagName: "p")
                 .Build()
         ];
 
@@ -254,7 +254,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .Build()
         ];
 
@@ -273,10 +273,10 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "TestAssembly")
-                .TagMatchingRule(tagName: "p", parentTagName: "body")
+                .AddTagMatchingRule(tagName: "p", parentTagName: "body")
                 .Build()
         ];
 
@@ -295,7 +295,7 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "div")
+                .AddTagMatchingRule(tagName: "div")
                 .Build()
         ];
 
@@ -314,10 +314,10 @@ public class TagHelperFactsTest(ITestOutputHelper testOutput) : ToolingTestBase(
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("TestType", "TestAssembly")
-                .TagMatchingRule(tagName: "p", parentTagName: "div")
+                .AddTagMatchingRule(tagName: "p", parentTagName: "div")
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("TestType2", "TestAssembly")
-                .TagMatchingRule(tagName: "strong", parentTagName: "p")
+                .AddTagMatchingRule(tagName: "strong", parentTagName: "p")
                 .Build()
         ];
 

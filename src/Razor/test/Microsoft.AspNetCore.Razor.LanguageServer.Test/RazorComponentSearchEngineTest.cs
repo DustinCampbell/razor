@@ -204,10 +204,10 @@ public class RazorComponentSearchEngineTest(ITestOutputHelper testOutput) : Lang
     {
         typeName ??= tagName;
         var fullyQualifiedName = $"{namespaceName}.{typeName}";
-        var builder1 = TagHelperDescriptorBuilder.CreateComponent(fullyQualifiedName, assemblyName);
-        builder1.SetTypeName(fullyQualifiedName, namespaceName, typeName);
-        builder1.TagMatchingRule(rule => rule.TagName = tagName);
 
-        return builder1.Build();
+        return TagHelperDescriptorBuilder.CreateComponent(fullyQualifiedName, assemblyName)
+            .TypeName(fullyQualifiedName, namespaceName, typeName)
+            .AddTagMatchingRule(tagName)
+            .Build();
     }
 }

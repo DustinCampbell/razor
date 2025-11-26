@@ -17,57 +17,43 @@ public class AutoClosingTagOnAutoInsertProviderTest(ITestOutputHelper testOutput
     private static readonly TagHelperDescriptor s_catchAllTagHelper =
         TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "TestAssembly")
             .TypeName("TestNamespace.CatchAllTagHelper")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequireTagName("*")
-                .RequireTagStructure(TagStructure.Unspecified))
+            .AddTagMatchingRule("*", tagStructure: TagStructure.Unspecified)
             .Build();
 
     private static readonly TagHelperDescriptor s_unspecifiedInputMirroringTagHelper =
         TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
             .TypeName("TestNamespace.TestTagHelper")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequireTagName("Input")
-                .RequireTagStructure(TagStructure.Unspecified))
+            .AddTagMatchingRule("Input", tagStructure: TagStructure.Unspecified)
             .Build();
 
     private static readonly TagHelperDescriptor s_unspecifiedTagHelper =
         TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
             .TypeName("TestNamespace.TestTagHelper")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequireTagName("test")
-            .RequireTagStructure(TagStructure.Unspecified))
+            .AddTagMatchingRule("test", tagStructure: TagStructure.Unspecified)
             .Build();
 
     private static readonly TagHelperDescriptor s_unspecifiedInputTagHelper =
         TagHelperDescriptorBuilder.CreateTagHelper("TestInputTagHelper", "TestAssembly")
             .TypeName("TestNamespace.TestInputTagHelper")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequireTagName("input")
-                .RequireTagStructure(TagStructure.Unspecified))
+            .AddTagMatchingRule("input", tagStructure: TagStructure.Unspecified)
             .Build();
 
     private static readonly TagHelperDescriptor s_normalOrSelfclosingInputTagHelper =
         TagHelperDescriptorBuilder.CreateTagHelper("TestInputTagHelper", "TestAssembly")
             .TypeName("TestNamespace.TestInputTagHelper")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequireTagName("input")
-                .RequireTagStructure(TagStructure.NormalOrSelfClosing))
+            .AddTagMatchingRule("input", tagStructure: TagStructure.NormalOrSelfClosing)
             .Build();
 
     private static readonly TagHelperDescriptor s_normalOrSelfClosingTagHelper =
         TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper2", "TestAssembly")
             .TypeName("TestNamespace.TestTagHelper2")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequireTagName("test")
-                .RequireTagStructure(TagStructure.NormalOrSelfClosing))
+            .AddTagMatchingRule("test", tagStructure: TagStructure.NormalOrSelfClosing)
             .Build();
 
     private static readonly TagHelperDescriptor s_withoutEndTagTagHelper =
         TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper3", "TestAssembly")
             .TypeName("TestNamespace.TestTagHelper3")
-            .TagMatchingRuleDescriptor(builder => builder
-                .RequireTagName("test")
-                .RequireTagStructure(TagStructure.WithoutEndTag))
+            .AddTagMatchingRule("test", tagStructure: TagStructure.WithoutEndTag)
             .Build();
 
     [Fact]

@@ -70,9 +70,8 @@ internal class ViewComponentTagHelperDescriptorFactory
         if (TryFindInvokeMethod(type, out var method, out var diagnostic))
         {
             var methodParameters = method.Parameters;
-            descriptorBuilder.TagMatchingRule(ruleBuilder =>
+            descriptorBuilder.AddTagMatchingRule(tagName, configure: ruleBuilder =>
             {
-                ruleBuilder.TagName = tagName;
                 AddRequiredAttributes(methodParameters, ruleBuilder);
             });
 

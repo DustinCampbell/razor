@@ -20,7 +20,7 @@ public class ViewComponentTagHelperTargetExtensionTest
                 .Name("Foo")
                 .TypeName("System.Int32")
                 .PropertyName("Foo"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
+            .AddTagMatchingRule("tagcloud")
             .Build();
 
         var extension = new ViewComponentTagHelperTargetExtension();
@@ -69,7 +69,7 @@ public class __Generated__TagCloudViewComponentTagHelper : Microsoft.AspNetCore.
                 .TypeName("System.Collections.Generic.Dictionary<System.String, System.Int32>")
                 .PropertyName("Tags")
                 .AsDictionaryAttribute("foo-", "System.Int32"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
+            .AddTagMatchingRule("tagcloud")
             .Build();
 
         var extension = new ViewComponentTagHelperTargetExtension();

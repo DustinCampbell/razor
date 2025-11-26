@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Reflection;
 
 namespace Microsoft.AspNetCore.Razor.Language;
 
@@ -162,20 +163,6 @@ public static class TestTagHelperDescriptorBuilderExtensions
         return builder;
     }
 
-    public static TagHelperDescriptorBuilder TagMatchingRuleDescriptor(
-        this TagHelperDescriptorBuilder builder,
-        Action<TagMatchingRuleDescriptorBuilder> configure)
-    {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
-
-        builder.TagMatchingRule(configure);
-
-        return builder;
-    }
-
 #nullable enable
 
     public static TagHelperDescriptorBuilder AllowedChildTag(
@@ -233,47 +220,30 @@ public static class TestTagHelperDescriptorBuilderExtensions
         return builder;
     }
 
-    public static TagHelperDescriptorBuilder TagMatchingRule(
-        this TagHelperDescriptorBuilder builder,
-        Action<TagMatchingRuleDescriptorBuilder> configure)
-        => builder.TagMatchingRule(tagName: null, parentTagName: null, tagStructure: TagStructure.Unspecified, configure);
+    public static TagHelperDescriptorBuilder BoundAttribute(
+        this TagHelperDescriptorBuilder builder, string name, PropertyInfo propertyInfo)
+    {
+        var propertyType = propertyInfo.PropertyType;
+
+        return builder.BoundAttribute(name, propertyInfo.Name, propertyType, builder =>
+        {
+            if (propertyType.GetTypeInfo().IsEnum)
+            {
+                builder.AsEnum();
+            }
+        });
+    }
 
     public static TagHelperDescriptorBuilder TagMatchingRule(
         this TagHelperDescriptorBuilder builder,
         string tagName,
         Action<TagMatchingRuleDescriptorBuilder> configure)
-        => builder.TagMatchingRule(tagName, parentTagName: null, tagStructure: TagStructure.Unspecified, configure);
+        => builder.AddTagMatchingRule(tagName, parentTagName: null, tagStructure: TagStructure.Unspecified, configure);
 
     public static TagHelperDescriptorBuilder TagMatchingRule(
         this TagHelperDescriptorBuilder builder,
         string tagName,
         string parentTagName,
         Action<TagMatchingRuleDescriptorBuilder> configure)
-        => builder.TagMatchingRule(tagName, parentTagName, tagStructure: TagStructure.Unspecified, configure);
-
-    public static TagHelperDescriptorBuilder TagMatchingRule(
-        this TagHelperDescriptorBuilder builder,
-        string tagName,
-        TagStructure tagStructure,
-        Action<TagMatchingRuleDescriptorBuilder> configure)
-        => builder.TagMatchingRule(tagName, parentTagName: null, tagStructure, configure);
-
-    public static TagHelperDescriptorBuilder TagMatchingRule(
-        this TagHelperDescriptorBuilder builder,
-        string? tagName = null,
-        string? parentTagName = null,
-        TagStructure tagStructure = TagStructure.Unspecified,
-        Action<TagMatchingRuleDescriptorBuilder>? configure = null)
-    {
-        builder.TagMatchingRule(rule =>
-        {
-            rule.TagName = tagName;
-            rule.ParentTag = parentTagName;
-            rule.TagStructure = tagStructure;
-
-            configure?.Invoke(rule);
-        });
-
-        return builder;
-    }
+        => builder.AddTagMatchingRule(tagName, parentTagName, tagStructure: TagStructure.Unspecified, configure);
 }

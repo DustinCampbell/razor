@@ -352,7 +352,7 @@ public abstract class CodeActionEndToEndTestBase(ITestOutputHelper testOutput) :
                 .TypeName(typeof(Type).FullName)
                 .PropertyName("TItem")
                 .Metadata(new TypeParameterMetadata()));
-            builder.TagMatchingRule(rule => rule.RequireTagName("TestGenericComponent"));
+            builder.AddTagMatchingRule("TestGenericComponent");
             yield return builder.Build();
 
             // Sets up a component to make the following available
@@ -376,7 +376,7 @@ public abstract class CodeActionEndToEndTestBase(ITestOutputHelper testOutput) :
                     GloballyQualifiedTypeName = "global::System.Action<global::Microsoft.AspNetCore.Components.Web.DragEventArgs>",
                     IsDelegateSignature = true
                 }));
-            builder.TagMatchingRule(rule => rule.RequireTagName("TestComponent"));
+            builder.AddTagMatchingRule("TestComponent");
             yield return builder.Build();
         }
     }

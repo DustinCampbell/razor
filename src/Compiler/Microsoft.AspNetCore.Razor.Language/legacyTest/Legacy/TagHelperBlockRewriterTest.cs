@@ -14,8 +14,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     public static readonly TagHelperCollection SymbolBoundAttributes_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("*")
+            .TagMatchingRule("*", builder => builder
                 .AddAttribute("bound"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("[item]")
@@ -89,9 +88,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     public static readonly TagHelperCollection WithoutEndTag_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("input")
-                .RequireTagStructure(TagStructure.WithoutEndTag))
+            .AddTagMatchingRule("input", tagStructure: TagStructure.WithoutEndTag)
             .Build()
     ];
 
@@ -130,14 +127,10 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         return
         [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper1", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("input")
-                    .RequireTagStructure(structure1))
+                .AddTagMatchingRule("input", tagStructure: structure1)
                 .Build(),
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper2", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("input")
-                    .RequireTagStructure(structure2))
+                .AddTagMatchingRule("input", tagStructure: structure2)
                 .Build()
         ];
     }
@@ -229,8 +222,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("*")
+                .TagMatchingRule("*", builder => builder
                     .AddAttribute("@onclick", isDirectiveAttribute: true))
                 .Build(),
         ];
@@ -246,8 +238,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateEventHandler("InputTagHelper1", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("*")
+                .TagMatchingRule("*", builder => builder
                     .AddAttribute("@onclick", isDirectiveAttribute: true))
                 .Build(),
         ];
@@ -427,7 +418,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     public static readonly TagHelperCollection CodeTagHelperAttributes_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("PersonTagHelper", "personAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("person"))
+            .AddTagMatchingRule("person")
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("age")
                 .PropertyName("Age")
@@ -836,7 +827,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     public static readonly TagHelperCollection EmptyTagHelperBoundAttribute_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("mythTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("myth"))
+            .AddTagMatchingRule("myth")
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound")
                 .PropertyName("Bound")
@@ -1248,11 +1239,9 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
     public static readonly TagHelperCollection MinimizedAttribute_TagHelpers =
     [
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("input")
+            .TagMatchingRule("input", builder => builder
                 .AddAttribute("unbound-required"))
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("input")
+            .TagMatchingRule("input", builder => builder
                 .AddAttribute("bound-required-string"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound-required-string")
@@ -1260,8 +1249,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 .TypeName(typeof(string).FullName))
             .Build(),
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper2", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("input")
+            .TagMatchingRule("input", builder => builder
                 .AddAttribute("bound-required-int"))
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound-required-int")
@@ -1269,7 +1257,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 .TypeName(typeof(int).FullName))
             .Build(),
         TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper3", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("input"))
+            .AddTagMatchingRule("input")
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("int-dictionary")
                 .PropertyName("DictionaryOfIntProperty")
@@ -1282,7 +1270,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 .AsDictionaryAttribute("string-prefix-", typeof(string).FullName))
             .Build(),
         TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("bound-string")
                 .PropertyName("BoundRequiredString")
@@ -2117,8 +2105,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("input"))
+                .AddTagMatchingRule("input")
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("boundbool")
                     .PropertyName("BoundBoolProp")
@@ -2143,8 +2130,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
         TagHelperCollection tagHelpers =
         [
             TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("input"))
+                .AddTagMatchingRule("input")
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("boundbool")
                     .PropertyName("BoundBoolProp")
@@ -2154,7 +2140,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                     .PropertyName("BoundBoolDictProp")
                     .TypeName("System.Collections.Generic.IDictionary<string, bool>")
                     .AsDictionary("boundbooldict-", typeof(bool).FullName))
-                .Build(),
+                .Build()
         ];
 
         // Act & Assert
@@ -2178,8 +2164,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 {
                     IsFallback = true
                 })
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("*")
+                .TagMatchingRule("*", builder => builder
                     .AddAttribute("@bind-", RequiredAttributeNameComparison.PrefixMatch, isDirectiveAttribute: true))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("@bind-...")
@@ -2220,8 +2205,7 @@ public class TagHelperBlockRewriterTest : TagHelperRewritingTestBase
                 {
                     IsFallback = true
                 })
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("*")
+                .TagMatchingRule("*", builder => builder
                     .AddAttribute("@bind-", RequiredAttributeNameComparison.PrefixMatch, isDirectiveAttribute: true))
                 .BoundAttributeDescriptor(attribute => attribute
                     .Name("@bind-...")

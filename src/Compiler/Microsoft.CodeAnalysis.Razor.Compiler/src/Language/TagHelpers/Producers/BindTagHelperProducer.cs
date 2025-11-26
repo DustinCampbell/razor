@@ -252,9 +252,8 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
 
         builder.SetMetadata(metadata.Build());
 
-        builder.TagMatchingRule(rule =>
+        builder.AddTagMatchingRule(element ?? string.Empty, configure: rule =>
         {
-            rule.TagName = element;
             if (typeAttribute != null)
             {
                 rule.AddAttribute(
@@ -265,9 +264,8 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
             rule.AddAttribute(attributeName, RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
         });
 
-        builder.TagMatchingRule(rule =>
+        builder.AddTagMatchingRule(element ?? string.Empty, configure: rule =>
         {
-            rule.TagName = element;
             if (typeAttribute != null)
             {
                 rule.AddAttribute(
@@ -448,15 +446,15 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
             }
 
             // Match the component and attribute name
-            builder.TagMatchingRule(rule =>
+            var tagName = tagHelper.TagMatchingRules.Single().TagName;
+
+            builder.AddTagMatchingRule(tagName, configure: rule =>
             {
-                rule.TagName = tagHelper.TagMatchingRules.Single().TagName;
                 rule.AddAttribute($"@bind-{valueAttribute.Name}", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
             });
 
-            builder.TagMatchingRule(rule =>
+            builder.AddTagMatchingRule(tagName, configure: rule =>
             {
-                rule.TagName = tagHelper.TagMatchingRules.Single().TagName;
                 rule.AddAttribute($"@bind-{valueAttribute.Name}:get", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
                 rule.AddAttribute($"@bind-{valueAttribute.Name}:set", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
             });
@@ -530,9 +528,8 @@ internal sealed partial class BindTagHelperProducer : TagHelperProducer
 
         builder.SetMetadata(new BindMetadata() { IsFallback = true });
 
-        builder.TagMatchingRule(rule =>
+        builder.AddTagMatchingRule(tagName: "*", configure: rule =>
         {
-            rule.TagName = "*";
             rule.AddAttribute($"@bind-", RequiredAttributeNameComparison.PrefixMatch, isDirectiveAttribute: true);
         });
 

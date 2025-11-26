@@ -1265,7 +1265,7 @@ private global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeMana
             }
         }
 
-        builder.TagMatchingRule(ruleBuilder => ruleBuilder.RequireTagName(tagName));
+        builder.AddTagMatchingRule(tagName);
 
         var descriptor = builder.Build();
 

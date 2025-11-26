@@ -440,7 +440,7 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
             typeNamespace: "Fully.Qualified",
             typeNameIdentifier: "Component");
         shortComponent.CaseSensitive = true;
-        shortComponent.TagMatchingRule(rule => rule.TagName = "Component");
+        shortComponent.AddTagMatchingRule("Component");
 
         var fullyQualifiedComponent = TagHelperDescriptorBuilder.CreateComponent("Fully.Qualified.Component", "TestAssembly");
         fullyQualifiedComponent.SetTypeName(
@@ -448,7 +448,7 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
             typeNamespace: "Fully.Qualified",
             typeNameIdentifier: "Component");
         fullyQualifiedComponent.CaseSensitive = true;
-        fullyQualifiedComponent.TagMatchingRule(rule => rule.TagName = "Fully.Qualified.Component");
+        fullyQualifiedComponent.AddTagMatchingRule("Fully.Qualified.Component");
 
         var shortGenericComponent = TagHelperDescriptorBuilder.CreateComponent("Fully.Qualified.GenericComponent<T>", "TestAssembly");
         shortGenericComponent.SetTypeName(
@@ -456,7 +456,7 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
             typeNamespace: "Fully.Qualified",
             typeNameIdentifier: "GenericComponent");
         shortGenericComponent.CaseSensitive = true;
-        shortGenericComponent.TagMatchingRule(rule => rule.TagName = "GenericComponent");
+        shortGenericComponent.AddTagMatchingRule("GenericComponent");
 
         var fullyQualifiedGenericComponent = TagHelperDescriptorBuilder.CreateComponent("Fully.Qualified.GenericComponent<T>", "TestAssembly");
         fullyQualifiedGenericComponent.SetTypeName(
@@ -464,7 +464,7 @@ public class ComponentAccessibilityCodeActionProviderTest(ITestOutputHelper test
             typeNamespace: "Fully.Qualified",
             typeNameIdentifier: "GenericComponent");
         fullyQualifiedGenericComponent.CaseSensitive = true;
-        fullyQualifiedGenericComponent.TagMatchingRule(rule => rule.TagName = "Fully.Qualified.GenericComponent");
+        fullyQualifiedGenericComponent.AddTagMatchingRule("Fully.Qualified.GenericComponent");
 
         TagHelperCollection tagHelpers = [shortComponent.Build(), fullyQualifiedComponent.Build(), shortGenericComponent.Build(), fullyQualifiedGenericComponent.Build()];
 

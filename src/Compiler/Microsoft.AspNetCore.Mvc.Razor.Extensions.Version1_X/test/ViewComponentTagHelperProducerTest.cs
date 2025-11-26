@@ -36,9 +36,7 @@ public class ViewComponentTagHelperProducerTest
             .TypeName("__Generated__StringParameterViewComponentTagHelper")
             .Metadata(new ViewComponentMetadata("StringParameter", TypeNameObject.From("StringParameter")))
             .DisplayName("StringParameterViewComponentTagHelper")
-            .TagMatchingRuleDescriptor(rule =>
-                rule
-                .RequireTagName("vc:string-parameter")
+            .TagMatchingRule("vc:string-parameter", builder => builder
                 .AddAttribute("foo")
                 .AddAttribute("bar"))
             .BoundAttributeDescriptor(attribute =>

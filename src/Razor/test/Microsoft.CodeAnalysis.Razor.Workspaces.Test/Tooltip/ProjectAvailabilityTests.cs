@@ -27,11 +27,14 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
     [Fact]
     public async Task GetProjectAvailabilityText_OneProject_ReturnsNull()
     {
-        var builder = TagHelperDescriptorBuilder.CreateComponent("TestTagHelper", "TestAssembly");
-        builder.TagMatchingRule(rule => rule.TagName = "Test");
-        var tagHelperTypeName = "TestNamespace.TestTagHelper";
-        builder.TypeName = tagHelperTypeName;
-        var projectWorkspaceState = ProjectWorkspaceState.Create([builder.Build()]);
+        const string TagHelperTypeName = "TestNamespace.TestTagHelper";
+
+        var tagHelper = TagHelperDescriptorBuilder.CreateComponent("TestTagHelper", "TestAssembly")
+            .AddTagMatchingRule("Test")
+            .TypeName(TagHelperTypeName)
+            .Build();
+
+        var projectWorkspaceState = ProjectWorkspaceState.Create([tagHelper]);
 
         var hostProject = new HostProject(
             "C:/path/to/project.csproj",
@@ -56,7 +59,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
 
         var componentAvailabilityService = new TestComponentAvailabilityService(projectManager);
 
-        var availability = await componentAvailabilityService.GetProjectAvailabilityTextAsync(hostDocument.FilePath, tagHelperTypeName, DisposalToken);
+        var availability = await componentAvailabilityService.GetProjectAvailabilityTextAsync(hostDocument.FilePath, TagHelperTypeName, DisposalToken);
 
         Assert.Null(availability);
     }
@@ -64,11 +67,14 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
     [Fact]
     public async Task GetProjectAvailabilityText_AvailableInAllProjects_ReturnsNull()
     {
-        var builder = TagHelperDescriptorBuilder.CreateComponent("TestTagHelper", "TestAssembly");
-        builder.TagMatchingRule(rule => rule.TagName = "Test");
-        var tagHelperTypeName = "TestNamespace.TestTagHelper";
-        builder.TypeName = tagHelperTypeName;
-        var projectWorkspaceState = ProjectWorkspaceState.Create([builder.Build()]);
+        const string TagHelperTypeName = "TestNamespace.TestTagHelper";
+
+        var tagHelper = TagHelperDescriptorBuilder.CreateComponent("TestTagHelper", "TestAssembly")
+            .AddTagMatchingRule("Test")
+            .TypeName(TagHelperTypeName)
+            .Build();
+
+        var projectWorkspaceState = ProjectWorkspaceState.Create([tagHelper]);
 
         var hostProject1 = new HostProject(
             "C:/path/to/project.csproj",
@@ -104,7 +110,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
 
         var componentAvailabilityService = new TestComponentAvailabilityService(projectManager);
 
-        var availability = await componentAvailabilityService.GetProjectAvailabilityTextAsync(hostDocument.FilePath, tagHelperTypeName, DisposalToken);
+        var availability = await componentAvailabilityService.GetProjectAvailabilityTextAsync(hostDocument.FilePath, TagHelperTypeName, DisposalToken);
 
         Assert.Null(availability);
     }
@@ -112,11 +118,14 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
     [Fact]
     public async Task GetProjectAvailabilityText_NotAvailableInAllProjects_ReturnsText()
     {
-        var builder = TagHelperDescriptorBuilder.CreateComponent("TestTagHelper", "TestAssembly");
-        builder.TagMatchingRule(rule => rule.TagName = "Test");
-        var tagHelperTypeName = "TestNamespace.TestTagHelper";
-        builder.TypeName = tagHelperTypeName;
-        var projectWorkspaceState = ProjectWorkspaceState.Create([builder.Build()]);
+        const string TagHelperTypeName = "TestNamespace.TestTagHelper";
+
+        var tagHelper = TagHelperDescriptorBuilder.CreateComponent("TestTagHelper", "TestAssembly")
+            .AddTagMatchingRule("Test")
+            .TypeName(TagHelperTypeName)
+            .Build();
+
+        var projectWorkspaceState = ProjectWorkspaceState.Create([tagHelper]);
 
         var hostProject1 = new HostProject(
             "C:/path/to/project.csproj",
@@ -151,7 +160,7 @@ public class ProjectAvailabilityTests(ITestOutputHelper testOutput) : ToolingTes
 
         var componentAvailabilityService = new TestComponentAvailabilityService(projectManager);
 
-        var availability = await componentAvailabilityService.GetProjectAvailabilityTextAsync(hostDocument.FilePath, tagHelperTypeName, DisposalToken);
+        var availability = await componentAvailabilityService.GetProjectAvailabilityTextAsync(hostDocument.FilePath, TagHelperTypeName, DisposalToken);
 
         AssertEx.EqualOrDiff("""
 

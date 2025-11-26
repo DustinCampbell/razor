@@ -47,10 +47,9 @@ internal sealed partial class RefTagHelperProducer : TagHelperProducer
         builder.ClassifyAttributesOnly = true;
         builder.SetDocumentation(DocumentationDescriptor.RefTagHelper);
 
-        builder.TagMatchingRule(rule =>
+        builder.AddTagMatchingRule("*", configure: rule =>
         {
-            rule.TagName = "*";
-            rule.AddAttribute($"@ref", isDirectiveAttribute: true);
+            rule.AddAttribute("@ref", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

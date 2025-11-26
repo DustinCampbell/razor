@@ -15,7 +15,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
         TagHelperCollection expectedTagHelpers = [divTagHelper];
         var expectedAttributes = ImmutableArray.Create(
@@ -44,9 +44,9 @@ public class TagHelperBinderTest
     {
         // Arrange
         var multiTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("MultiTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("a"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("img"))
+            .AddTagMatchingRule("div")
+            .AddTagMatchingRule("a")
+            .AddTagMatchingRule("img")
             .Build();
         TagHelperCollection expectedTagHelpers = [multiTagHelper];
         var binder = new TagHelperBinder("", expectedTagHelpers);
@@ -89,15 +89,15 @@ public class TagHelperBinderTest
     {
         // Arrange
         var multiTagHelper1 = TagHelperDescriptorBuilder.CreateTagHelper("MultiTagHelper1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("a"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("img"))
+            .AddTagMatchingRule("div")
+            .AddTagMatchingRule("a")
+            .AddTagMatchingRule("img")
             .Build();
 
         var multiTagHelper2 = TagHelperDescriptorBuilder.CreateTagHelper("MultiTagHelper2", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("table"))
+            .AddTagMatchingRule("div")
+            .AddTagMatchingRule("p")
+            .AddTagMatchingRule("table")
             .Build();
 
         var binder = new TagHelperBinder("", [multiTagHelper1, multiTagHelper2]);
@@ -145,20 +145,11 @@ public class TagHelperBinderTest
         get
         {
             var strongPDivParent = TagHelperDescriptorBuilder.CreateTagHelper("StrongTagHelper", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule =>
-                    rule
-                    .RequireTagName("strong")
-                    .RequireParentTag("p"))
-                .TagMatchingRuleDescriptor(rule =>
-                    rule
-                    .RequireTagName("strong")
-                    .RequireParentTag("div"))
+                .AddTagMatchingRule(tagName: "strong", parentTagName: "p")
+                .AddTagMatchingRule(tagName: "strong", parentTagName: "div")
                 .Build();
             var catchAllPParent = TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule =>
-                    rule
-                    .RequireTagName("*")
-                    .RequireParentTag("p"))
+                .AddTagMatchingRule(tagName: "*", parentTagName: "p")
                 .Build();
 
             // tagName, parentTagName, availableTagHelpers, expectedTagHelpers
@@ -220,35 +211,29 @@ public class TagHelperBinderTest
         get
         {
             var divDescriptor = TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("div")
+                .TagMatchingRule("div", builder => builder
                     .AddAttribute("style"))
                 .Build();
             var inputDescriptor = TagHelperDescriptorBuilder.CreateTagHelper("InputTagHelper", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("input")
+                .TagMatchingRule("input", builder => builder
                     .AddAttribute("class")
                     .AddAttribute("style"))
                 .Build();
             var inputWildcardPrefixDescriptor = TagHelperDescriptorBuilder.CreateTagHelper("InputWildCardAttribute", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName("input")
+                .TagMatchingRule("input", builder => builder
                     .AddAttribute("nodashprefix", RequiredAttributeNameComparison.PrefixMatch))
                 .Build();
             var catchAllDescriptor = TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName(TagHelperMatchingConventions.ElementCatchAllName)
+                .TagMatchingRule(TagHelperMatchingConventions.ElementCatchAllName, builder => builder
                     .AddAttribute("class"))
                 .Build();
             var catchAllDescriptor2 = TagHelperDescriptorBuilder.CreateTagHelper("CatchAllTagHelper2", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName(TagHelperMatchingConventions.ElementCatchAllName)
+                .TagMatchingRule(TagHelperMatchingConventions.ElementCatchAllName, builder => builder
                     .AddAttribute("custom")
                     .AddAttribute("class"))
                 .Build();
             var catchAllWildcardPrefixDescriptor = TagHelperDescriptorBuilder.CreateTagHelper("CatchAllWildCardAttribute", "SomeAssembly")
-                .TagMatchingRuleDescriptor(rule => rule
-                    .RequireTagName(TagHelperMatchingConventions.ElementCatchAllName)
+                .TagMatchingRule(TagHelperMatchingConventions.ElementCatchAllName, builder => builder
                     .AddAttribute("prefix-", RequiredAttributeNameComparison.PrefixMatch))
                 .Build();
             TagHelperCollection defaultAvailableDescriptors =
@@ -376,7 +361,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var catchAllTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName(TagHelperMatchingConventions.ElementCatchAllName))
+            .AddTagMatchingRule(TagHelperMatchingConventions.ElementCatchAllName)
             .Build();
         TagHelperCollection tagHelpers = [catchAllTagHelper];
         var tagHelperBinder = new TagHelperBinder("th", tagHelpers);
@@ -397,7 +382,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var catchAllTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName(TagHelperMatchingConventions.ElementCatchAllName))
+            .AddTagMatchingRule(TagHelperMatchingConventions.ElementCatchAllName)
             .Build();
         TagHelperCollection tagHelpers = [catchAllTagHelper];
         var tagHelperBinder = new TagHelperBinder("th:", tagHelpers);
@@ -428,7 +413,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
         TagHelperCollection tagHelpers = [divTagHelper];
         var tagHelperBinder = new TagHelperBinder("th:", tagHelpers);
@@ -453,7 +438,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName(tagName))
+            .AddTagMatchingRule(tagName)
             .Build();
         TagHelperCollection tagHelpers = [divTagHelper];
         var binder = new TagHelperBinder("th:", tagHelpers);
@@ -474,10 +459,10 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
         var spanTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo2", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("span"))
+            .AddTagMatchingRule("span")
             .Build();
         TagHelperCollection tagHelpers = [divTagHelper, spanTagHelper];
         var binder = new TagHelperBinder(null, tagHelpers);
@@ -498,13 +483,13 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
         var spanTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo2", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("span"))
+            .AddTagMatchingRule("span")
             .Build();
         var catchAllTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo3", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName(TagHelperMatchingConventions.ElementCatchAllName))
+            .AddTagMatchingRule(TagHelperMatchingConventions.ElementCatchAllName)
             .Build();
         TagHelperCollection tagHelpers = [divTagHelper, spanTagHelper, catchAllTagHelper];
         var binder = new TagHelperBinder(null, tagHelpers);
@@ -540,7 +525,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
         TagHelperCollection tagHelpers = [divTagHelper, divTagHelper];
         var binder = new TagHelperBinder(null, tagHelpers);
@@ -563,13 +548,9 @@ public class TagHelperBinderTest
     {
         // Arrange
         var multiRuleTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName(TagHelperMatchingConventions.ElementCatchAllName)
-                .RequireParentTag("body"))
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("div"))
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("span"))
+            .AddTagMatchingRule(TagHelperMatchingConventions.ElementCatchAllName, parentTagName: "body")
+            .AddTagMatchingRule("div")
+            .AddTagMatchingRule("span")
             .Build();
         TagHelperCollection tagHelper = [multiRuleTagHelper];
         var binder = new TagHelperBinder(null, tagHelper);
@@ -595,10 +576,10 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div").RequireParentTag("p"))
+            .AddTagMatchingRule("div", parentTagName: "p")
             .Build();
         var pTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo2", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .Build();
         TagHelperCollection tagHelpers = [divTagHelper, pTagHelper];
         var binder = new TagHelperBinder("th:", tagHelpers);
@@ -626,7 +607,7 @@ public class TagHelperBinderTest
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
             .ClassifyAttributesOnly(true)
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
 
         TagHelperCollection tagHelpers = [divTagHelper];
@@ -650,12 +631,12 @@ public class TagHelperBinderTest
         // Arrange
         var divTagHelper1 = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
             .ClassifyAttributesOnly(true)
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
 
         var divTagHelper2 = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
             .ClassifyAttributesOnly(true)
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
 
         TagHelperCollection tagHelpers = [divTagHelper1, divTagHelper2];
@@ -679,11 +660,11 @@ public class TagHelperBinderTest
         // Arrange
         var divTagHelper1 = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
             .ClassifyAttributesOnly(true)
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
 
         var divTagHelper2 = TagHelperDescriptorBuilder.CreateTagHelper("foo1", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .Build();
 
         TagHelperCollection tagHelpers = [divTagHelper1, divTagHelper2];
@@ -706,7 +687,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("div"))
+            .AddTagMatchingRule("div")
             .SetCaseSensitive()
             .Build();
         TagHelperCollection expectedTagHelpers = [divTagHelper];
@@ -730,8 +711,7 @@ public class TagHelperBinderTest
     {
         // Arrange
         var divTagHelper = TagHelperDescriptorBuilder.CreateTagHelper("DivTagHelper", "SomeAssembly")
-            .TagMatchingRuleDescriptor(rule => rule
-                .RequireTagName("div")
+            .TagMatchingRule("div", builder => builder
                 .AddAttribute("class"))
             .SetCaseSensitive()
             .Build();

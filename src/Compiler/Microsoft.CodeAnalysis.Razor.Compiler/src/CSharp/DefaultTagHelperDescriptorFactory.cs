@@ -88,35 +88,24 @@ internal sealed class DefaultTagHelperDescriptorFactory(bool includeDocumentatio
                 name = name[..^TagHelperNameEnding.Length];
             }
 
-            descriptorBuilder.TagMatchingRule(ruleBuilder =>
-            {
-                var htmlCasedName = HtmlConventions.ToHtmlCase(name);
-                ruleBuilder.TagName = htmlCasedName;
-            });
+            descriptorBuilder.AddTagMatchingRule(HtmlConventions.ToHtmlCase(name));
 
             return;
         }
 
         foreach (var targetElementAttribute in targetElementAttributes)
         {
-            descriptorBuilder.TagMatchingRule(ruleBuilder =>
-            {
-                var tagName = HtmlTargetElementAttribute_Tag(targetElementAttribute);
-                ruleBuilder.TagName = tagName;
+            var tagName = HtmlTargetElementAttribute_Tag(targetElementAttribute);
+            var parentTag = HtmlTargetElementAttribute_ParentTag(targetElementAttribute);
+            var tagStructure = HtmlTargetElementAttribute_TagStructure(targetElementAttribute);
 
-                var parentTag = HtmlTargetElementAttribute_ParentTag(targetElementAttribute);
-                ruleBuilder.ParentTag = parentTag;
+            var requiredAttributeString = HtmlTargetElementAttribute_Attributes(targetElementAttribute);
 
-                var tagStructure = HtmlTargetElementAttribute_TagStructure(targetElementAttribute);
-                ruleBuilder.TagStructure = tagStructure;
+            Action<TagMatchingRuleDescriptorBuilder>? configure = requiredAttributeString is not null
+                ? rule => RequiredAttributeParser.AddRequiredAttributes(requiredAttributeString, rule)
+                : null;
 
-                var requiredAttributeString = HtmlTargetElementAttribute_Attributes(targetElementAttribute);
-
-                if (requiredAttributeString is not null)
-                {
-                    RequiredAttributeParser.AddRequiredAttributes(requiredAttributeString, ruleBuilder);
-                }
-            });
+            descriptorBuilder.AddTagMatchingRule(tagName, parentTag, tagStructure, configure);
         }
     }
 

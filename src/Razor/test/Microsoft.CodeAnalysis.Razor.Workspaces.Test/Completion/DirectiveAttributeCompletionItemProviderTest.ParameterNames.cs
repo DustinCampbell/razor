@@ -49,10 +49,12 @@ public partial class DirectiveAttributeCompletionItemProviderTest
     public void GetAttributeParameterCompletions_NoDirectiveAttributesForTag_ReturnsEmptyCollection()
     {
         // Arrange
-        var descriptor = TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly");
-        descriptor.BoundAttributeDescriptor(boundAttribute => boundAttribute.Name = "Test");
-        descriptor.TagMatchingRule(rule => rule.RequireTagName("*"));
-        var documentContext = TagHelperDocumentContext.GetOrCreate([descriptor.Build()]);
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("CatchAll", "TestAssembly")
+            .BoundAttributeDescriptor(boundAttribute => boundAttribute.Name = "Test")
+            .AddTagMatchingRule("*")
+            .Build();
+
+        var documentContext = TagHelperDocumentContext.GetOrCreate([tagHelper]);
 
         var context = GetDefaultDirectiveAttributeCompletionContext("@bin");
 

@@ -97,7 +97,7 @@ public class InstrumentationPassIntegrationTest : IntegrationTestBase
             }
         }
 
-        builder.TagMatchingRuleDescriptor(ruleBuilder => ruleBuilder.RequireTagName(tagName));
+        builder.AddTagMatchingRule(tagName);
 
         var descriptor = builder.Build();
 

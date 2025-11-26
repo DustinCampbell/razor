@@ -47,10 +47,9 @@ internal sealed partial class KeyTagHelperProducer : TagHelperProducer
         builder.ClassifyAttributesOnly = true;
         builder.SetDocumentation(DocumentationDescriptor.KeyTagHelper);
 
-        builder.TagMatchingRule(rule =>
+        builder.AddTagMatchingRule("*", configure: rule =>
         {
-            rule.TagName = "*";
-            rule.AddAttribute($"@key", isDirectiveAttribute: true);
+            rule.AddAttribute("@key", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

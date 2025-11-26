@@ -426,12 +426,15 @@ public class TypeAccessibilityCodeActionProviderTest(ITestOutputHelper testOutpu
         bool supportsFileCreation = true,
         bool supportsCodeActionResolve = true)
     {
-        var shortComponent = TagHelperDescriptorBuilder.CreateComponent("Fully.Qualified.Component", "TestAssembly");
-        shortComponent.TagMatchingRule(rule => rule.TagName = "Component");
-        var fullyQualifiedComponent = TagHelperDescriptorBuilder.CreateComponent("Fully.Qualified.Component", "TestAssembly");
-        fullyQualifiedComponent.TagMatchingRule(rule => rule.TagName = "Fully.Qualified.Component");
+        var shortComponent = TagHelperDescriptorBuilder.CreateComponent("Fully.Qualified.Component", "TestAssembly")
+            .AddTagMatchingRule("Component")
+            .Build();
 
-        TagHelperCollection tagHelpers = [shortComponent.Build(), fullyQualifiedComponent.Build()];
+        var fullyQualifiedComponent = TagHelperDescriptorBuilder.CreateComponent("Fully.Qualified.Component", "TestAssembly")
+            .AddTagMatchingRule("Fully.Qualified.Component")
+            .Build();
+
+        TagHelperCollection tagHelpers = [shortComponent, fullyQualifiedComponent];
 
         var sourceDocument = TestRazorSourceDocument.Create(text, filePath: filePath, relativePath: filePath);
         var projectEngine = RazorProjectEngine.Create(builder =>

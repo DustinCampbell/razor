@@ -132,16 +132,31 @@ public sealed partial class TagHelperDescriptorBuilder : TagHelperObjectBuilder<
         BoundAttributes.Add(builder);
     }
 
-    public void TagMatchingRule(Action<TagMatchingRuleDescriptorBuilder> configure)
+    public TagHelperDescriptorBuilder AddTagMatchingRule(
+        string tagName,
+        string? parentTagName = null,
+        TagStructure tagStructure = default,
+        Action<TagMatchingRuleDescriptorBuilder>? configure = null)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        var builder = TagMatchingRuleDescriptorBuilder.GetInstance(this);
 
+        builder.TagName = tagName;
+        builder.ParentTag = parentTagName;
+        builder.TagStructure = tagStructure;
+
+        configure?.Invoke(builder);
+        TagMatchingRules.Add(builder);
+
+        return this;
+    }
+
+    public TagHelperDescriptorBuilder TagMatchingRule(Action<TagMatchingRuleDescriptorBuilder> configure)
+    {
         var builder = TagMatchingRuleDescriptorBuilder.GetInstance(this);
         configure(builder);
         TagMatchingRules.Add(builder);
+
+        return this;
     }
 
     internal void SetDocumentation(string? text)

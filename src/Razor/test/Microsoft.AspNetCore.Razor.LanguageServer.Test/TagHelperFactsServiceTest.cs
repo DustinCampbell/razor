@@ -103,19 +103,16 @@ public class TagHelperFactsServiceTest(ITestOutputHelper testOutput) : TagHelper
     public void StringifyAttributes_TagHelperAttribute()
     {
         // Arrange
-        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("WithBoundAttribute", "TestAssembly");
-        tagHelper.SetTypeName("WithBoundAttribute", typeNamespace: null, typeNameIdentifier: null);
-        tagHelper.TagMatchingRule(rule => rule.TagName = "test");
-        tagHelper.BindAttribute(attribute =>
-        {
-            attribute.Name = "bound";
-            attribute.PropertyName = "Bound";
-            attribute.TypeName = typeof(bool).FullName;
-        });
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("WithBoundAttribute", "TestAssembly")
+            .TypeName("WithBoundAttribute")
+            .AddTagMatchingRule("test")
+            .BoundAttribute<bool>(name: "bound", propertyName: "Bound")
+            .Build();
+
         var codeDocument = CreateCodeDocument("""
             @addTagHelper *, TestAssembly
             <test bound='true' />
-            """, isRazorFile: false, tagHelper.Build());
+            """, isRazorFile: false, tagHelper);
         var root = codeDocument.GetRequiredSyntaxRoot();
         var startTag = (MarkupTagHelperStartTagSyntax)root.FindInnermostNode(30 + Environment.NewLine.Length);
 
@@ -136,19 +133,16 @@ public class TagHelperFactsServiceTest(ITestOutputHelper testOutput) : TagHelper
     public void StringifyAttributes_MinimizedTagHelperAttribute()
     {
         // Arrange
-        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("WithBoundAttribute", "TestAssembly");
-        tagHelper.SetTypeName("WithBoundAttribute", typeNamespace: null, typeNameIdentifier: null);
-        tagHelper.TagMatchingRule(rule => rule.TagName = "test");
-        tagHelper.BindAttribute(attribute =>
-        {
-            attribute.Name = "bound";
-            attribute.PropertyName = "Bound";
-            attribute.TypeName = typeof(bool).FullName;
-        });
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("WithBoundAttribute", "TestAssembly")
+            .TypeName("WithBoundAttribute")
+            .AddTagMatchingRule("test")
+            .BoundAttribute<bool>(name: "bound", propertyName: "Bound")
+            .Build();
+
         var codeDocument = CreateCodeDocument("""
             @addTagHelper *, TestAssembly
             <test bound />
-            """, isRazorFile: false, tagHelper.Build());
+            """, isRazorFile: false, tagHelper);
         var root = codeDocument.GetRequiredSyntaxRoot();
         var startTag = (MarkupTagHelperStartTagSyntax)root.FindInnermostNode(30 + Environment.NewLine.Length);
 

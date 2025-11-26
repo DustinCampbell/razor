@@ -50,10 +50,9 @@ internal sealed partial class FormNameTagHelperProducer : TagHelperProducer
         builder.ClassifyAttributesOnly = true;
         builder.SetDocumentation(DocumentationDescriptor.FormNameTagHelper);
 
-        builder.TagMatchingRule(rule =>
+        builder.AddTagMatchingRule("*", configure: rule =>
         {
-            rule.TagName = "*";
-            rule.AddAttribute($"@formname", isDirectiveAttribute: true);
+            rule.AddAttribute("@formname", isDirectiveAttribute: true);
         });
 
         builder.BindAttribute(attribute =>

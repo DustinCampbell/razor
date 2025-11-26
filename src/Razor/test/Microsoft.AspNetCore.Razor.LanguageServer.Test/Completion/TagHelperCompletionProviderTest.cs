@@ -543,16 +543,17 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
     public void GetCompletionAt_AtAttributeEdge_IndexerBoolAttribute_ReturnsCompletionsWithDifferentCommitCharacters()
     {
         // Arrange
-        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly");
-        tagHelper.TagMatchingRule(rule => rule.TagName = "test");
-        tagHelper.SetTypeName("TestTagHelper", typeNamespace: null, typeNameIdentifier: null);
-        tagHelper.BindAttribute(attribute =>
-        {
-            attribute.Name = "bool-val";
-            attribute.PropertyName = "BoolVal";
-            attribute.TypeName = "System.Collections.Generic.IDictionary<System.String, System.Boolean>";
-            attribute.AsDictionary("bool-val-", typeof(bool).FullName);
-        });
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
+            .AddTagMatchingRule("test")
+            .TypeName("TestTagHelper")
+            .BoundAttribute(
+                name: "bool-val",
+                propertyName: "BoolVal",
+                typeName: "System.Collections.Generic.IDictionary<System.String, System.Boolean>",
+                builder => builder
+                    .AsDictionaryAttribute("bool-val-", typeof(bool).FullName))
+            .Build();
+
         var service = CreateTagHelperCompletionProvider();
         var context = CreateRazorCompletionContext(
             """
@@ -560,7 +561,7 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
                 <test $$/>
                 """,
             isRazorFile: false,
-            tagHelpers: [tagHelper.Build()]);
+            tagHelpers: [tagHelper]);
 
         // Act
         var completions = service.GetCompletionItems(context);
@@ -586,16 +587,17 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
     public void GetCompletionAt_AtAttributeEdge_IndexerAttribute_ReturnsCompletions()
     {
         // Arrange
-        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly");
-        tagHelper.TagMatchingRule(rule => rule.TagName = "test");
-        tagHelper.SetTypeName("TestTagHelper", typeNamespace: null, typeNameIdentifier: null);
-        tagHelper.BindAttribute(attribute =>
-        {
-            attribute.Name = "int-val";
-            attribute.PropertyName = "IntVal";
-            attribute.TypeName = "System.Collections.Generic.IDictionary<System.String, System.Int32>";
-            attribute.AsDictionary("int-val-", typeof(int).FullName);
-        });
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
+            .AddTagMatchingRule("test")
+            .TypeName("TestTagHelper")
+            .BoundAttribute(
+                name: "int-val",
+                propertyName: "IntVal",
+                typeName: "System.Collections.Generic.IDictionary<System.String, System.Int32>",
+                builder => builder
+                    .AsDictionaryAttribute("int-val-", typeof(int).FullName))
+            .Build();
+
         var service = CreateTagHelperCompletionProvider();
         var context = CreateRazorCompletionContext(
             """
@@ -603,7 +605,7 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
                 <test $$/>
                 """,
             isRazorFile: false,
-            tagHelpers: [tagHelper.Build()]);
+            tagHelpers: [tagHelper]);
 
         // Act
         var completions = service.GetCompletionItems(context);
@@ -939,7 +941,7 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
             fullName: "TestNamespace.ComponentWithRequiredParams",
             typeNamespace: "TestNamespace",
             typeNameIdentifier: "ComponentWithRequiredParams");
-        componentBuilder.TagMatchingRule(rule => rule.TagName = "ComponentWithRequiredParams");
+        componentBuilder.AddTagMatchingRule("ComponentWithRequiredParams");
         componentBuilder.IsFullyQualifiedNameMatch = true;
         componentBuilder.BindAttribute(attribute =>
         {
@@ -1017,7 +1019,7 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
             fullName: "TestNamespace.ComponentWithRequiredParams",
             typeNamespace: "TestNamespace",
             typeNameIdentifier: "ComponentWithRequiredParams");
-        componentBuilder.TagMatchingRule(rule => rule.TagName = "ComponentWithRequiredParams");
+        componentBuilder.AddTagMatchingRule("ComponentWithRequiredParams");
         componentBuilder.IsFullyQualifiedNameMatch = true;
         componentBuilder.BindAttribute(attribute =>
         {
@@ -1056,7 +1058,7 @@ public class TagHelperCompletionProviderTest(ITestOutputHelper testOutput) : Tag
             fullName: "TestNamespace.ComponentWithoutRequired",
             typeNamespace: "TestNamespace",
             typeNameIdentifier: "ComponentWithoutRequired");
-        componentBuilder.TagMatchingRule(rule => rule.TagName = "ComponentWithoutRequired");
+        componentBuilder.AddTagMatchingRule("ComponentWithoutRequired");
         componentBuilder.IsFullyQualifiedNameMatch = true;
         componentBuilder.BindAttribute(attribute =>
         {

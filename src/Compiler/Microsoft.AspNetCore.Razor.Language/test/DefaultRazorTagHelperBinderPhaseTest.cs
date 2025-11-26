@@ -1270,16 +1270,15 @@ public class DefaultRazorTagHelperContextDiscoveryPhaseTest : RazorProjectEngine
         {
             foreach (var ruleBuilder in ruleBuilders)
             {
-                builder.TagMatchingRuleDescriptor(innerRuleBuilder =>
+                builder.TagMatchingRule(tagName, innerRuleBuilder =>
                 {
-                    innerRuleBuilder.RequireTagName(tagName);
                     ruleBuilder(innerRuleBuilder);
                 });
             }
         }
         else
         {
-            builder.TagMatchingRuleDescriptor(ruleBuilder => ruleBuilder.RequireTagName(tagName));
+            builder.AddTagMatchingRule(tagName);
         }
 
         if (componentFullyQualified)

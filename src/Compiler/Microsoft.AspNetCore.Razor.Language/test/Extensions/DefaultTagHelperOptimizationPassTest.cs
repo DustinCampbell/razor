@@ -25,7 +25,7 @@ public class DefaultTagHelperOptimizationPassTest : RazorProjectEngineTestBase
                 .Name("Foo")
                 .TypeName("System.Int32")
                 .PropertyName("FooProp"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .Build();
 
         var codeDocument = ProjectEngine.CreateCodeDocument(@"

@@ -83,7 +83,7 @@ public class RazorSyntaxFactsServiceTest(ITestOutputHelper testOutput) : RazorTo
             .TypeName("TestTagHelper")
             .BoundAttributeDescriptor(attr => attr.Name("show").TypeName("System.Boolean"))
             .BoundAttributeDescriptor(attr => attr.Name("id").TypeName("System.Int32"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("taghelper"))
+            .AddTagMatchingRule("taghelper")
             .Build();
 
         var engine = CreateProjectEngine(builder =>

@@ -15,16 +15,17 @@ public class RazorCodeDocumentExtensionsTest(ITestOutputHelper testOutput) : Too
     public void GetLanguageKind_TagHelperElementOwnsName()
     {
         // Arrange
-        var descriptor = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly");
-        descriptor.TypeName = "TestTagHelper";
-        descriptor.TagMatchingRule(rule => rule.TagName = "test");
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
+            .TypeName("TestTagHelper")
+            .AddTagMatchingRule("test")
+            .Build();
 
         TestCode code = """
             @addTagHelper *, TestAssembly
             <te$$st>@Name</test>
             """;
 
-        var codeDocument = CreateCodeDocument(code, descriptor.Build());
+        var codeDocument = CreateCodeDocument(code, tagHelper);
 
         // Act
         var languageKind = codeDocument.GetLanguageKind(code.Position, rightAssociative: false);
@@ -37,16 +38,17 @@ public class RazorCodeDocumentExtensionsTest(ITestOutputHelper testOutput) : Too
     public void GetLanguageKind_TagHelpersDoNotOwnTrailingEdge()
     {
         // Arrange
-        var descriptor = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly");
-        descriptor.TypeName = "TestTagHelper";
-        descriptor.TagMatchingRule(rule => rule.TagName = "test");
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
+            .TypeName("TestTagHelper")
+            .AddTagMatchingRule("test")
+            .Build();
 
         TestCode code = """
             @addTagHelper *, TestAssembly
             <test></test>$$@DateTime.Now
             """;
 
-        var codeDocument = CreateCodeDocument(code, descriptor.Build());
+        var codeDocument = CreateCodeDocument(code, tagHelper);
 
         // Act
         var languageKind = codeDocument.GetLanguageKind(code.Position, rightAssociative: false);
@@ -59,22 +61,18 @@ public class RazorCodeDocumentExtensionsTest(ITestOutputHelper testOutput) : Too
     public void GetLanguageKind_TagHelperNestedCSharpAttribute()
     {
         // Arrange
-        var descriptor = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly");
-        descriptor.TypeName = "TestTagHelper";
-        descriptor.TagMatchingRule(rule => rule.TagName = "test");
-        descriptor.BindAttribute(builder =>
-        {
-            builder.Name = "asp-int";
-            builder.TypeName = typeof(int).FullName;
-            builder.PropertyName = "AspInt";
-        });
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
+            .TypeName("TestTagHelper")
+            .AddTagMatchingRule("test")
+            .BoundAttribute<int>(name: "asp-int", propertyName: "AspInt")
+            .Build();
 
         TestCode code = """
             @addTagHelper *, TestAssembly
             <test asp-int='12$$3'></test>
             """;
 
-        var codeDocument = CreateCodeDocument(code, descriptor.Build());
+        var codeDocument = CreateCodeDocument(code, tagHelper);
 
         // Act
         var languageKind = codeDocument.GetLanguageKind(code.Position, rightAssociative: false);
@@ -329,9 +327,10 @@ public class RazorCodeDocumentExtensionsTest(ITestOutputHelper testOutput) : Too
     public void GetLanguageKind_TagHelperInCSharpRightAssociative()
     {
         // Arrange
-        var descriptor = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly");
-        descriptor.TypeName = "TestTagHelper";
-        descriptor.TagMatchingRule(rule => rule.TagName = "test");
+        var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "TestAssembly")
+            .TypeName("TestTagHelper")
+            .AddTagMatchingRule("test")
+            .Build();
 
         TestCode code = """
             @addTagHelper *, TestAssembly
@@ -340,7 +339,7 @@ public class RazorCodeDocumentExtensionsTest(ITestOutputHelper testOutput) : Too
             }
             """;
 
-        var codeDocument = CreateCodeDocument(code, descriptor.Build());
+        var codeDocument = CreateCodeDocument(code, tagHelper);
 
         // Act
         var languageKind = codeDocument.GetLanguageKind(code.Position, rightAssociative: true);

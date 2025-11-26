@@ -140,28 +140,25 @@ internal sealed partial class EventHandlerTagHelperProducer : TagHelperProducer
             EventArgsType = eventArgType
         });
 
-        builder.TagMatchingRule(rule =>
+        builder.AddTagMatchingRule("*", configure: rule =>
         {
-            rule.TagName = "*";
             rule.AddAttribute(attributeName, RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
         });
 
         if (enablePreventDefault)
         {
-            builder.TagMatchingRule(rule =>
+            builder.AddTagMatchingRule("*", configure: rule =>
             {
-                rule.TagName = "*";
                 rule.AddAttribute($"{attributeName}:preventDefault", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
             });
         }
 
         if (enableStopPropagation)
         {
-            builder.TagMatchingRule(rule =>
+            builder.AddTagMatchingRule("*", configure: rule =>
             {
-                rule.TagName = "*";
                 rule.AddAttribute($"{attributeName}:stopPropagation", RequiredAttributeNameComparison.FullMatch, isDirectiveAttribute: true);
-            });
+            }); 
         }
 
         builder.BindAttribute(a =>

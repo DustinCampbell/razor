@@ -17,7 +17,7 @@ internal static class TagHelperCollectionHelpers
         {
             var builder = TagHelperDescriptorBuilder.Create($"TestTagHelper{i}", "TestAssembly");
             builder.TypeName = $"TestTagHelper{i}";
-            builder.TagMatchingRule(rule => rule.TagName = $"test{i}");
+            builder.AddTagMatchingRule($"test{i}");
 
             result.Add(builder.Build());
         }
@@ -54,7 +54,7 @@ internal static class TagHelperCollectionHelpers
             {
                 var builder = TagHelperDescriptorBuilder.Create($"Collection{i}TagHelper{j}", "TestAssembly");
                 builder.TypeName = $"Collection{i}TagHelper{j}";
-                builder.TagMatchingRule(rule => rule.TagName = $"collection{i}test{j}");
+                builder.AddTagMatchingRule($"collection{i}test{j}");
 
                 helpers.Add(builder.Build());
             }

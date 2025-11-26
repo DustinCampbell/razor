@@ -33,7 +33,7 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
             .BoundAttributeDescriptor(attribute => attribute
                 .Name("Foo")
                 .TypeName("System.Int32"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .Build();
 
         var codeDocument = ProjectEngine.CreateCodeDocument(@"
@@ -69,7 +69,7 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
                 .Name("Foo")
                 .TypeName("System.Int32")
                 .PropertyName("Foo"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
+            .AddTagMatchingRule("tagcloud")
             .Build();
 
         var codeDocument = ProjectEngine.CreateCodeDocument(@"
@@ -107,7 +107,7 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
                 .TypeName("System.Collections.Generic.Dictionary<System.String, System.Int32>")
                 .PropertyName("Tags")
                 .AsDictionaryAttribute("foo-", "System.Int32"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
+            .AddTagMatchingRule("tagcloud")
             .Build();
 
         var codeDocument = ProjectEngine.CreateCodeDocument(@"
@@ -144,7 +144,7 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
                 .PropertyName("Foo")
                 .Name("Foo")
                 .TypeName("System.Int32"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
+            .AddTagMatchingRule("p")
             .Build();
 
         var tagHelper2 = TagHelperDescriptorBuilder.CreateViewComponent("TestTagHelper", "TestAssembly")
@@ -154,7 +154,7 @@ public class ViewComponentTagHelperPassTest : RazorProjectEngineTestBase
                 .PropertyName("Foo")
                 .Name("Foo")
                 .TypeName("System.Int32"))
-            .TagMatchingRuleDescriptor(rule => rule.RequireTagName("tagcloud"))
+            .AddTagMatchingRule("tagcloud")
             .Build();
 
         var codeDocument = ProjectEngine.CreateCodeDocument(@"

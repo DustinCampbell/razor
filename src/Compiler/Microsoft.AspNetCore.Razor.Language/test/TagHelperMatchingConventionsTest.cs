@@ -120,7 +120,7 @@ public class TagHelperMatchingConventionsTest
     {
         // Arrange
         var tagHelper = TagHelperDescriptorBuilder.CreateTagHelper("TestTagHelper", "Test")
-            .TagMatchingRuleDescriptor(builder => configure(builder))
+            .TagMatchingRule(configure)
             .Build();
 
         var requiredAttribute = tagHelper.TagMatchingRules[0].Attributes[0];

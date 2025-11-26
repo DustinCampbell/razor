@@ -39,10 +39,13 @@ public class RazorSyntaxTreePartialParserTest(ITestOutputHelper testOutput) : To
     {
         // Arrange
         var edit = (TestEdit)objectEdit;
-        var builder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "TestAssembly");
-        builder.TypeName = "PTagHelper";
-        builder.TagMatchingRule(rule => rule.TagName = "p");
-        TagHelperCollection tagHelpers = [builder.Build()];
+        TagHelperCollection tagHelpers =
+        [
+            TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "TestAssembly")
+                .TypeName("PTagHelper")
+                .AddTagMatchingRule("p")
+                .Build()
+        ];
         var projectEngine = CreateProjectEngine(tagHelpers);
         var projectItem = new TestRazorProjectItem("Index.cshtml")
         {
@@ -97,22 +100,15 @@ public class RazorSyntaxTreePartialParserTest(ITestOutputHelper testOutput) : To
         // Arrange
         var edit = (TestEdit)editObject;
         var partialParseResult = (PartialParseResultInternal)partialParseResultObject;
-        var builder = TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "Test");
-        builder.TypeName = "PTagHelper";
-        builder.TagMatchingRule(rule => rule.TagName = "p");
-        builder.BindAttribute(attribute =>
-        {
-            attribute.Name = "obj-attr";
-            attribute.TypeName = typeof(object).FullName;
-            attribute.PropertyName = "ObjectAttribute";
-        });
-        builder.BindAttribute(attribute =>
-        {
-            attribute.Name = "str-attr";
-            attribute.TypeName = typeof(string).FullName;
-            attribute.PropertyName = "StringAttribute";
-        });
-        TagHelperCollection tagHelpers = [builder.Build()];
+        TagHelperCollection tagHelpers =
+        [
+            TagHelperDescriptorBuilder.CreateTagHelper("PTagHelper", "Test")
+                .TypeName("PTagHelper")
+                .AddTagMatchingRule("p")
+                .BoundAttribute<object>(name: "obj-attr", propertyName: "ObjectAttribute")
+                .BoundAttribute<string>(name: "str-attr", propertyName: "StringAttribute")
+                .Build()
+        ];
         var projectEngine = CreateProjectEngine(tagHelpers);
         var sourceDocument = new TestRazorProjectItem("Index.cshtml")
         {

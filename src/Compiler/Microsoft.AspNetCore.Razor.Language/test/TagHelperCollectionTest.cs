@@ -18,7 +18,7 @@ public class TagHelperCollectionTest
     {
         var builder = TagHelperDescriptorBuilder.Create(name, assemblyName);
         builder.TypeName = name;
-        builder.TagMatchingRule(rule => rule.TagName = name.ToLowerInvariant());
+        builder.AddTagMatchingRule(name.ToLowerInvariant());
         return builder.Build();
     }
 
